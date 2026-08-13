@@ -2397,12 +2397,12 @@ ${aggregatedPrompt}
           // Create merge lock file
           fs.writeFileSync(mergeLockPath, Date.now().toString());
 
+          const fileExt = path.extname(file_name || ".mp3") || ".mp3";
+          const safeFileName = `recording_${targetMeetingId}_${Date.now()}${fileExt}`;
+          const permanentPath = path.join(GLOBAL_UPLOADS_DIR, safeFileName);
+
           try {
             // Merge all chunks
-            const fileExt = path.extname(file_name || ".mp3") || ".mp3";
-            const safeFileName = `recording_${targetMeetingId}_${Date.now()}${fileExt}`;
-
-            const permanentPath = path.join(GLOBAL_UPLOADS_DIR, safeFileName);
 
             // Clear file if it exists
             if (fs.existsSync(permanentPath)) {
