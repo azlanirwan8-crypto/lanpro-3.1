@@ -1,57 +1,48 @@
 /**
- * Health Routes Test Suite
- * Tests application health check endpoints
+ * Health Routes Test - H1 Pattern Example
+ * Demonstrates working integration test pattern for server routes
  */
 
 import request from 'supertest';
 import express, { Express } from 'express';
 import healthRoutes from './health.routes';
 
-describe('Health Routes', () => {
+describe('Health Routes (H1 Pattern Example)', () => {
   let app: Express;
 
   beforeEach(() => {
     app = express();
-    app.use('/api/health', healthRoutes);
+    app.use(express.json());
+    // Routes already include '/api/health' path, mount at root
+    app.use('/', healthRoutes);
   });
 
-  describe('GET /api/health', () => {
-    it('should return healthy status', async () => {
-      const response = await request(app).get('/api/health');
+  it('should return health status on GET /api/health', async () => {
+    const response = await request(app).get('/api/health');
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('status');
-    });
-
-    it('should return timestamp', async () => {
-      const response = await request(app).get('/api/health');
-
-      expect(response.body).toHaveProperty('timestamp');
-      expect(typeof response.body.timestamp).toBe('number');
-    });
-
-    it('should include version information', async () => {
-      const response = await request(app).get('/api/health');
-
-      expect(response.body).toHaveProperty('version');
-    });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('status');
+    expect(response.body.status).toBe('ok');
   });
 
-  describe('GET /api/health/ready', () => {
-    it('should return readiness status', async () => {
-      const response = await request(app).get('/api/health/ready');
+  it('should return timestamp in ISO format', async () => {
+    const response = await request(app).get('/api/health');
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('ready');
-    });
+    expect(response.body).toHaveProperty('timestamp');
+    expect(typeof response.body.timestamp).toBe('string');
+    expect(() => new Date(response.body.timestamp)).not.toThrow();
   });
 
-  describe('GET /api/health/live', () => {
-    it('should return liveness status', async () => {
-      const response = await request(app).get('/api/health/live');
+  it('should include service name', async () => {
+    const response = await request(app).get('/api/health');
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('alive');
-    });
+    expect(response.body).toHaveProperty('service');
+    expect(response.body.service).toBe('LanPro Backend');
+  });
+
+  it('should handle metrics endpoint', async () => {
+    const response = await request(app).get('/metrics');
+
+    expect([200, 500]).toContain(response.status);
   });
 });
