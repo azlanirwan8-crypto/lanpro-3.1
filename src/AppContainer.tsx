@@ -544,6 +544,44 @@ import { ProfileEditModal } from "./features/users/ProfileEditModal";
 const BROWSER_SESSION_ID = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
 
 function AppContainer() {
+  // Store & Notification Hooks
+  const {
+    currentView,
+    setCurrentView,
+    projects,
+    setProjects,
+    selectedProject,
+    setSelectedProject,
+    tasks,
+    setTasks,
+    sprints,
+    setSprints,
+    activityLogs,
+    setActivityLogs,
+    masterData,
+    setMasterData,
+    allUsers,
+    setAllUsers,
+    density,
+    setDensity,
+  } = useAppStore();
+  const { handleAuthApiResponse, triggerNotification } = useAuthNotification();
+
+  // Auth States
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [userRole, setUserRole] = useState<AppRole | null>(null);
+  const [currentUserProfile, setCurrentUserProfile] =
+    useState<UserProfile | null>(null);
+  const [authView, setAuthView] = useState<"login" | "register">("login");
+  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
+  const [pendingModalMessage, setPendingModalMessage] = useState<string>("");
+  const [socket, setSocket] = useState<any>(null);
+  const [showCollisionModal, setShowCollisionModal] = useState(false);
+  const [activeSessionData, setActiveSessionData] = useState<any>(null);
+  const [pendingLoginCredentials, setPendingLoginCredentials] = useState<any>(null);
+
+  // UI States & Controls
   const [swimlaneType, setSwimlaneType] = useState<
     "epics" | "assignees" | "none"
   >("epics");
@@ -824,41 +862,6 @@ function AppContainer() {
     window.addEventListener("auth_expired", handleAuthExpired);
     return () => window.removeEventListener("auth_expired", handleAuthExpired);
   }, []);
-
-  // Auth States
-  const {
-    currentView,
-    setCurrentView,
-    projects,
-    setProjects,
-    selectedProject,
-    setSelectedProject,
-    tasks,
-    setTasks,
-    sprints,
-    setSprints,
-    activityLogs,
-    setActivityLogs,
-    masterData,
-    setMasterData,
-    allUsers,
-    setAllUsers,
-    density,
-    setDensity,
-  } = useAppStore();
-  const { handleAuthApiResponse, triggerNotification } = useAuthNotification();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
-  const [userRole, setUserRole] = useState<AppRole | null>(null);
-  const [currentUserProfile, setCurrentUserProfile] =
-    useState<UserProfile | null>(null);
-  const [authView, setAuthView] = useState<"login" | "register">("login");
-  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
-  const [pendingModalMessage, setPendingModalMessage] = useState<string>("");
-  const [socket, setSocket] = useState<any>(null);
-  const [showCollisionModal, setShowCollisionModal] = useState(false);
-  const [activeSessionData, setActiveSessionData] = useState<any>(null);
-  const [pendingLoginCredentials, setPendingLoginCredentials] = useState<any>(null);
 
   const user: any = currentUser;
   const effectiveRole = useMemo(() => {

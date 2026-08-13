@@ -18,6 +18,8 @@ export const ProfileEditModal = ({
   userProfile: UserProfile | null;
   onProfileUpdated?: (updatedProfile: Partial<UserProfile>) => void;
 }) => {
+  const [selectedAvatar, setSelectedAvatar] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState(
     userProfile?.displayName || "",
   );
@@ -35,25 +37,31 @@ export const ProfileEditModal = ({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    return () => {
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  useEffect(() => {
     if (isOpen) {
       setDisplayName(userProfile?.displayName || "");
       setUsername(userProfile?.username || "");
       setEmail(userProfile?.email || "");
       setPhone(userProfile?.phone || "");
       setPhotoURL(userProfile?.photoURL || "");
+      setSelectedAvatar(null);
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setPreviewUrl(null);
     }
   }, [isOpen, userProfile]);
 
-  
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const docId = userProfile?.id || userProfile?.uid;
-    if (!docId) {
-      toast.error('Sesi user tidak valid');
-      return;
-    }
 
     // Client-side validation
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
@@ -68,36 +76,13 @@ export const ProfileEditModal = ({
       return;
     }
 
-    const formData = new FormData();
-    formData.append('file', file);
-
-    setIsUploading(true);
-    try {
-      const token = localStorage.getItem('lanpro_jwt_token');
-      const res = await fetch(`/api/users/${docId}/avatar`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData
-      });
-      const data = await res.json();
-      if (data.status === 'success') {
-        const newAvatarUrl = data.avatar_url || data.data?.avatar_url || data.data?.photoURL;
-        setPhotoURL(newAvatarUrl);
-        if (onProfileUpdated) {
-          onProfileUpdated({
-            avatar_url: newAvatarUrl,
-            photoURL: newAvatarUrl,
-          });
-        }
-        toast.success('Foto avatar berhasil diunggah!');
-      } else {
-        toast.error(data.message || 'Gagal mengunggah foto avatar');
-      }
-    } catch (err) {
-      toast.error('Terjadi kesalahan jaringan saat mengunggah avatar');
-    } finally {
-      setIsUploading(false);
+    if (previewUrl && previewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl);
     }
+
+    const objectUrl = URL.createObjectURL(file);
+    setSelectedAvatar(file);
+    setPreviewUrl(objectUrl);
   };
 
   const handleUpdateProfile = async () => {
@@ -106,6 +91,38 @@ export const ProfileEditModal = ({
     setLoading(true);
     setError(null);
     try {
+      let finalPhotoURL = photoURL;
+
+      if (selectedAvatar) {
+        setIsUploading(true);
+        const formData = new FormData();
+        formData.append('file', selectedAvatar);
+
+        const token = localStorage.getItem('lanpro_jwt_token');
+        const uploadRes = await fetch(`/api/users/${docId}/avatar`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData
+        });
+        const uploadData = await uploadRes.json();
+
+        if (uploadData.status === 'success') {
+          finalPhotoURL = uploadData.avatar_url || uploadData.data?.avatar_url || uploadData.data?.photoURL || finalPhotoURL;
+          setPhotoURL(finalPhotoURL);
+          if (previewUrl && previewUrl.startsWith('blob:')) {
+            URL.revokeObjectURL(previewUrl);
+          }
+          setPreviewUrl(null);
+          setSelectedAvatar(null);
+        } else {
+          toast.error(uploadData.message || 'Gagal mengunggah foto avatar.');
+          setLoading(false);
+          setIsUploading(false);
+          return;
+        }
+        setIsUploading(false);
+      }
+
       await apiRequest(`/api/profile/update`, {
         method: "PUT",
         body: { 
@@ -115,8 +132,8 @@ export const ProfileEditModal = ({
           phone, 
           currentPassword: currentPassword || undefined, 
           newPassword: newPassword || undefined,
-          photoURL,
-          avatar_url: photoURL
+          photoURL: finalPhotoURL,
+          avatar_url: finalPhotoURL
         },
       });
 
@@ -126,8 +143,8 @@ export const ProfileEditModal = ({
           username,
           email,
           phone,
-          photoURL,
-          avatar_url: photoURL,
+          photoURL: finalPhotoURL,
+          avatar_url: finalPhotoURL,
         });
       }
 
@@ -151,10 +168,15 @@ export const ProfileEditModal = ({
       <div className="space-y-6">
         <div className="flex gap-4 items-center bg-slate-50 p-4 rounded-xl border border-slate-100 relative">
           <div className="relative group cursor-pointer">
-            <UserAvatar user={{ ...userProfile, displayName, username, photoURL } as any} className="w-16 h-16 text-2xl" />
+            <UserAvatar user={{ ...userProfile, displayName, username, photoURL: previewUrl || photoURL } as any} className="w-16 h-16 text-2xl" />
+            {previewUrl && (
+              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[9px] font-semibold px-2 py-0.5 rounded-full shadow-xs whitespace-nowrap z-20">
+                Pratinjau
+              </span>
+            )}
             <label className="absolute inset-0 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity">
-              <span className="text-[10px] font-medium uppercase tracking-wider">{isUploading ? '...' : 'Upload'}</span>
-              <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} disabled={isUploading} />
+              <span className="text-[10px] font-medium uppercase tracking-wider">{isUploading ? '...' : 'Pilih Foto'}</span>
+              <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} disabled={isUploading || loading} />
             </label>
           </div>
           <div className="flex-1">

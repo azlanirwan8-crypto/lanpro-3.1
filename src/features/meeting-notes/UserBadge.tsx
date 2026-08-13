@@ -12,11 +12,14 @@ interface UserBadgeProps {
 
 export const UserBadge = ({ authorId, users = [], className, showRole = false, showName = true }: UserBadgeProps) => {
   const getAuthorDisplay = (id: string, memberList: any[]) => {
-    const user = memberList.find(u => 
-      (u.uid && String(u.uid) === String(id)) || 
-      (u.id && String(u.id) === String(id)) || 
-      (u.username && String(u.username) === String(id)) ||
-      (u.email && String(u.email) === String(id))
+    const list = Array.isArray(memberList) ? memberList : [];
+    const user = list.find(u => 
+      u && (
+        (u.uid && String(u.uid) === String(id)) || 
+        (u.id && String(u.id) === String(id)) || 
+        (u.username && String(u.username) === String(id)) ||
+        (u.email && String(u.email) === String(id))
+      )
     );
     if (!user) {
       if (id === 'admin') return { name: 'Admin Manager', isSystem: true, role: 'admin', userObj: null };

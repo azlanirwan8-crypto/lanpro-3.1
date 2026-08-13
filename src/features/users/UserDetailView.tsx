@@ -104,6 +104,8 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
   }
 
   // Form Edit State
+  const [selectedAvatar, setSelectedAvatar] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [photoURL, setPhotoURL] = useState(user?.avatar_url || user?.photoURL || user?.avatarUrl || "");
   const [editRole, setEditRole] = useState<AppRole>(user.role || 'user');
@@ -115,6 +117,15 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
   const [editPhone, setEditPhone] = useState<string>(user.phone || '');
   const [editPassword, setEditPassword] = useState<string>('');
   const [isSaving, setIsSaving] = useState<boolean>(false);
+
+  // Clean up object URL on unmount or previewUrl change to avoid memory leak
+  useEffect(() => {
+    return () => {
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   // System Permissions Matrix State
   const [editPermissions, setEditPermissions] = useState<UserPermissions>(() => {
@@ -148,6 +159,11 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
   useEffect(() => {
     if (user) {
       setPhotoURL(user.avatar_url || user.photoURL || user.avatarUrl || "");
+      setSelectedAvatar(null);
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setPreviewUrl(null);
       setEditRole(user.role || 'user');
       setEditStatus(user.status || 'approved');
       setEditDepartment(user.department || '');
@@ -210,7 +226,8 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
   };
 
   
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handler Input File (Local Preview Only - Deferred Upload)
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -227,35 +244,18 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
       return;
     }
 
-    const formData = new FormData();
-    formData.append('file', file);
-
-    setIsUploading(true);
-    try {
-      const token = localStorage.getItem('lanpro_jwt_token');
-      const userId = user.id || user.uid;
-      const res = await fetch(`/api/users/${userId}/avatar`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData
-      });
-      const data = await res.json();
-      if (data.status === 'success') {
-        const newAvatarUrl = data.avatar_url || data.data?.avatar_url || data.data?.photoURL;
-        setPhotoURL(newAvatarUrl);
-        toast.success('Foto avatar berhasil diunggah!');
-        if (onUserUpdated) onUserUpdated();
-      } else {
-        toast.error(data.message || 'Gagal mengunggah foto');
-      }
-    } catch (err) {
-      toast.error('Terjadi kesalahan jaringan');
-    } finally {
-      setIsUploading(false);
+    // Memory cleanup for previous object URL
+    if (previewUrl && previewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl);
     }
+
+    // Create local object URL for preview without API call
+    const objectUrl = URL.createObjectURL(file);
+    setSelectedAvatar(file);
+    setPreviewUrl(objectUrl);
   };
 
-
+  // Handler Submit Utama (Simpan Perubahan User)
   const handleSaveUser = async () => {
     if (!editFullName.trim()) {
       toast.error('Nama Lengkap wajib diisi.');
@@ -264,13 +264,47 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
 
     setIsSaving(true);
     try {
+      let finalPhotoURL = photoURL;
+
+      // Deferred avatar upload if user selected a new file
+      if (selectedAvatar) {
+        setIsUploading(true);
+        const formData = new FormData();
+        formData.append('file', selectedAvatar);
+
+        const token = localStorage.getItem('lanpro_jwt_token');
+        const userId = user.id || user.uid;
+        const uploadRes = await fetch(`/api/users/${userId}/avatar`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData
+        });
+        const uploadData = await uploadRes.json();
+
+        if (uploadData.status === 'success') {
+          finalPhotoURL = uploadData.avatar_url || uploadData.data?.avatar_url || uploadData.data?.photoURL || finalPhotoURL;
+          setPhotoURL(finalPhotoURL);
+          if (previewUrl && previewUrl.startsWith('blob:')) {
+            URL.revokeObjectURL(previewUrl);
+          }
+          setPreviewUrl(null);
+          setSelectedAvatar(null);
+        } else {
+          toast.error(uploadData.message || 'Gagal mengunggah foto avatar.');
+          setIsSaving(false);
+          setIsUploading(false);
+          return;
+        }
+        setIsUploading(false);
+      }
+
       const payload: any = {
         displayName: editFullName.trim(),
         email: editEmail.trim(),
         phone: editPhone.trim(),
-        photoURL,
-        avatar_url: photoURL,
-        avatarUrl: photoURL,
+        photoURL: finalPhotoURL,
+        avatar_url: finalPhotoURL,
+        avatarUrl: finalPhotoURL,
       };
 
       if (isAdmin) {
@@ -416,10 +450,15 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
           <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-50 dark:bg-indigo-950/20 rounded-bl-full pointer-events-none opacity-60" />
           
           <div className="relative group cursor-pointer shrink-0 z-10">
-            <UserAvatar user={{ ...user, photoURL } as any} className="w-20 h-20 text-2xl shadow-sm border-2 border-white dark:border-slate-800 ring-2 ring-indigo-50 dark:ring-indigo-950 shrink-0" />
+            <UserAvatar user={{ ...user, photoURL: previewUrl || photoURL } as any} className="w-20 h-20 text-2xl shadow-sm border-2 border-white dark:border-slate-800 ring-2 ring-indigo-50 dark:ring-indigo-950 shrink-0" />
+            {previewUrl && (
+              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[9px] font-semibold px-2 py-0.5 rounded-full shadow-xs whitespace-nowrap z-20">
+                Pratinjau
+              </span>
+            )}
             <label className="absolute inset-0 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity ring-2 ring-indigo-50 dark:ring-indigo-950 border-2 border-white dark:border-slate-800">
-              <span className="text-[10px] font-medium uppercase tracking-wider">{isUploading ? '...' : 'Upload'}</span>
-              <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} disabled={isUploading} />
+              <span className="text-[10px] font-medium uppercase tracking-wider">{isUploading ? '...' : 'Pilih Foto'}</span>
+              <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} disabled={isUploading || isSaving} />
             </label>
           </div>
           

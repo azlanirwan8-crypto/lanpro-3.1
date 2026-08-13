@@ -57,11 +57,14 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   const [imgError, setImgError] = useState(false);
 
   // 1. Resolve user entity or member from members list
-  const member = user || (members && uid ? members.find((m: any) => 
-    (m.uid && String(m.uid) === String(uid)) || 
-    (m.id && String(m.id) === String(uid)) ||
-    (m.username && String(m.username) === String(uid)) ||
-    (m.email && String(m.email) === String(uid))
+  const memberList = Array.isArray(members) ? members : [];
+  const member = user || (memberList.length > 0 && uid ? memberList.find((m: any) => 
+    m && (
+      (m.uid && String(m.uid) === String(uid)) || 
+      (m.id && String(m.id) === String(uid)) ||
+      (m.username && String(m.username) === String(uid)) ||
+      (m.email && String(m.email) === String(uid))
+    )
   ) : undefined);
 
   // 2. Resolve display name

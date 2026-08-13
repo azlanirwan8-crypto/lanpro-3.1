@@ -348,7 +348,8 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
   };
 
   const getAuthorDisplay = (authorId: string) => {
-    const user = users.find((u) => u.uid === authorId);
+    const list = Array.isArray(users) ? users : [];
+    const user = list.find((u) => u && (u.uid === authorId || u.id === authorId || u.username === authorId || u.email === authorId));
     if (!user) {
       if (authorId === "admin") return { name: "Admin Manager", initial: "AM" };
       return { name: authorId || "Unknown", initial: "U" };

@@ -641,7 +641,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
     if (!id || id === "guest" || id === "admin" || id === currentUser?.id || id === currentUser?.uid) {
       return currentUser?.displayName || currentUser?.username || "Administrator";
     }
-    const u = users.find(u => u.id === id || u.uid === id);
+    const list = Array.isArray(users) ? users : [];
+    const u = list.find(u => u && (u.id === id || u.uid === id || u.username === id || u.email === id));
     return u?.displayName || u?.username || currentUser?.displayName || "Administrator";
   };
 
