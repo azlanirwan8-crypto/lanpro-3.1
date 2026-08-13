@@ -9,26 +9,31 @@ import { GoogleGenAI, Type } from "@google/genai";
 
 const router = express.Router();
 
-  router.get("/api/projects", async (req, res) => {
+  router.get("/api/projects", async (req: any, res) => {
     let connection;
     try {
-      // If we need to filter by ownerId or member, we can do it via req.query.userId
-      // For now we get all to mimic previous behaviour first
-      const userId = req.query.userId;
       connection = await mysqlPool.getConnection();
-      
+
+      // Resolve caller identity from the verified JWT — never from a client-supplied
+      // ?userId= query param, which previously let any user list any other user's
+      // projects (or, with no userId at all, every project in the system).
+      const callerId = req.user?.id || req.user?.uid;
+      const [callerRows]: any = await connection.query("SELECT id, role FROM Users WHERE id = ? OR uid = ?", [callerId, callerId]);
+      const callerRole = callerRows[0]?.role;
+      const resolvedCallerId = callerRows[0]?.id || callerId;
+
       let query = "SELECT * FROM Projects ORDER BY createdAt DESC";
       let params: any[] = [];
-      
-      if (userId) {
+
+      if (callerRole !== 'admin') {
         query = `
-          SELECT p.* FROM Projects p 
-          LEFT JOIN ProjectMembers pm ON p.id = pm.projectId 
-          WHERE p.ownerId = ? OR pm.userId = ? 
-          GROUP BY p.id 
+          SELECT p.* FROM Projects p
+          LEFT JOIN ProjectMembers pm ON p.id = pm.projectId
+          WHERE p.ownerId = ? OR pm.userId = ?
+          GROUP BY p.id
           ORDER BY p.createdAt DESC
         `;
-        params = [userId, userId];
+        params = [resolvedCallerId, resolvedCallerId];
       }
 
       const [rows] = await connection.query(query, params);
@@ -351,7 +356,7 @@ const router = express.Router();
     }
   });
 
-  router.get("/api/projects/:id", async (req, res) => {
+  router.get("/api/projects/:id", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { id } = req.params;
       const connection = await mysqlPool.getConnection();
@@ -589,6 +594,8 @@ const router = express.Router();
         ["DELETE FROM TaskCustomFields WHERE taskId IN (SELECT id FROM Tasks WHERE projectId = ?)", [projectId]],
         ["DELETE FROM DiscussionPoints WHERE meetingId IN (SELECT id FROM Meetings WHERE projectId = ?)", [projectId]],
         ["DELETE FROM MilestoneSprints WHERE milestoneId IN (SELECT id FROM Milestones WHERE projectId = ?)", [projectId]],
+        ["DELETE FROM meeting_details WHERE meeting_id IN (SELECT id FROM Meetings WHERE projectId = ?)", [projectId]],
+        ["DELETE FROM QATestCaseExecutionLogs WHERE projectId = ?", [projectId]],
         ["DELETE FROM Tasks WHERE projectId = ?", [projectId]],
         ["DELETE FROM Sprints WHERE projectId = ?", [projectId]],
         ["DELETE FROM ProjectMembers WHERE projectId = ?", [projectId]],
@@ -767,7 +774,7 @@ const router = express.Router();
     }
   });
 
-  router.put("/api/projects/:id/invites", async (req, res) => {
+  router.put("/api/projects/:id/invites", verifyProjectAccess(['admin', 'manager', 'head']), async (req, res) => {
     try {
       const { id } = req.params;
       const { emailToInvite } = req.body;

@@ -14,7 +14,10 @@ export interface UserSession {
 export const activeUserSessions = new Map<string, UserSession>();
 
 export const getJwtSecret = (): string => {
-  return process.env.JWT_SECRET || '1231231231492340234wewefsfsdfsfwe534534tf5654654';
+  if (!process.env.JWT_SECRET) {
+    throw new Error('[SECURITY] JWT_SECRET tidak ditemukan di environment.');
+  }
+  return process.env.JWT_SECRET;
 };
 
 export const generateToken = (user: any): string => {

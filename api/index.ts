@@ -30,8 +30,14 @@ function getServerModule() {
 }
 
 export default async function handler(req: any, res: any) {
-  // CORS Preflight OPTIONS Handling
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  // CORS: only echo back the app's own known origin — never wildcard "*" on an
+  // API authenticated via Authorization header (wildcard + credentials = any
+  // external site can call this API if it obtains a token).
+  const allowedOrigin = process.env.APP_URL;
+  const requestOrigin = req.headers?.origin;
+  if (allowedOrigin && requestOrigin === allowedOrigin) {
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+  }
   res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
   res.setHeader("Access-Control-Allow-Headers", "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, x-user-id");
 

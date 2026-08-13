@@ -7,7 +7,6 @@ import { hashPassword, verifyPassword } from "../helpers/hash";
 import { createAuditLog } from "../services/audit.service";
 import { GoogleGenAI, Type } from "@google/genai";
 import { z } from "zod";
-import admin from 'firebase-admin';
 
 const router = express.Router();
 
@@ -92,37 +91,6 @@ function formatUserForAuthResponse(user: any) {
     }
   });
 
-
-  router.post("/api/auth/google-verify", async (req, res) => {
-      if (!((admin as any).apps && (admin as any).apps.length > 0)) {
-          admin.initializeApp({
-              credential: (admin as any).credential.applicationDefault()
-          });
-      }
-      const { idToken } = req.body;
-      try {
-          const decodedToken = await (admin as any).auth().verifyIdToken(idToken);
-          const email = decodedToken.email;
-          
-          if (!email) {
-              return res.status(400).json({ status: "error", message: "Email not provided by Google." });
-          }
-
-          const [users]: any = await mysqlPool.query("SELECT * FROM Users WHERE email = ?", [email]);
-          
-          if (users.length === 0) {
-              return res.status(403).json({ status: "error", message: `Gagal Sign In: Email ${email} tidak terdaftar dalam sistem. Silakan gunakan email yang terdaftar atau hubungi Administrator.` });
-          }
-          
-          const user = users[0];
-          // Create JWT session
-          const token = generateToken(user);
-          res.json({ status: "success", token, user: formatUserForAuthResponse(user) });
-      } catch (error: any) {
-          console.error("Google verify error:", error);
-          res.status(500).json({ status: "error", message: "Internal server error" });
-      }
-  });
 
   // ============================================
   // LOGIN RATE LIMIT & LOCKOUT TRACKER LOGIC

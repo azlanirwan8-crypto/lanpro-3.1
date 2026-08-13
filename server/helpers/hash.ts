@@ -7,10 +7,7 @@ export const hashPassword = (password: string): string => {
 
 export const verifyPassword = async (password: string, storedHash: string, username?: string): Promise<boolean> => {
   const cleanHash = storedHash ? storedHash.trim() : '';
-  
-  const lowerPassword = password ? password.toLowerCase() : '';
-  const lowerUsername = username ? username.toLowerCase() : '';
-  
+
   // Support legacy/existing pbkdf2 database records
   if (cleanHash.startsWith('pbkdf2$')) {
     try {
@@ -42,18 +39,7 @@ export const verifyPassword = async (password: string, storedHash: string, usern
     }
   }
 
-  // Support plain-text comparisons for seed users (e.g. 'user', 'head', 'manager', 'viewer')
-  if (password === cleanHash || cleanHash === 'firebase-auth-placeholder' || !cleanHash) {
-    return true;
-  }
-
-  // Standard fallback credentials (admin123, password, 123456, lanpro123, admin, or matching username)
-  return (
-    password === 'admin123' ||
-    password === 'password' ||
-    password === '123456' ||
-    password === 'lanpro123' ||
-    password === 'admin' ||
-    (lowerUsername !== '' && lowerPassword === lowerUsername)
-  );
+  // No recognized hash format (bcrypt/pbkdf2) — reject rather than fall back to
+  // placeholder/plain-text/hardcoded-password matches.
+  return false;
 };

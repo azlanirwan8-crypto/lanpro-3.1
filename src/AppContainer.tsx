@@ -54,7 +54,6 @@ import { HeaderAvatarGroup } from "./components/HeaderAvatarGroup";
 import { VelzonSuccessIcon } from "./components/AuthToastContainer";
 import { SingleLoginCollisionModal } from "./components/SingleLoginCollisionModal";
 import { HeaderNetworkStatus } from "./components/HeaderNetworkStatus";
-import { googleSignIn } from "./lib/firebase";
 import { apiRequest, ApiError, setAuthToken, clearAuthToken, getAuthToken, isNetworkOrAuthError } from "./lib/api";
 import { SessionExpiryWarning } from "./components/SessionExpiryWarning";
 import { GlobalSkeleton } from "./components/GlobalSkeleton";
@@ -539,7 +538,7 @@ import {
   Line,
 } from "recharts";
 
-import { cn, ensureDate, safeFormat, TimelineDatePills, Button, Input, Textarea, GoogleIcon, VelzonFloatingParticles } from "./components/ui/CoreUI";
+import { cn, ensureDate, safeFormat, TimelineDatePills, Button, Input, Textarea, VelzonFloatingParticles } from "./components/ui/CoreUI";
 import { AuthHeroPanel, AuthWatermarkPattern, RegisterScreen, LoginSkeletonState, LoginScreen } from "./features/auth/AuthScreens";
 import { ProfileEditModal } from "./features/users/ProfileEditModal";
 const BROWSER_SESSION_ID = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);

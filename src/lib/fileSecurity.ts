@@ -170,7 +170,10 @@ export function validateFileBuffer(
 
 // --- PRESIGNED URL & SECURITY TOKEN GENERATION ---
 const GET_SIGNING_SECRET = (): string => {
-  return process.env.JWT_SECRET || 'lanpro-secure-storage-signing-key-v1';
+  if (!process.env.JWT_SECRET) {
+    throw new Error('[SECURITY] JWT_SECRET tidak ditemukan di environment.');
+  }
+  return process.env.JWT_SECRET;
 };
 
 export function generatePresignedUrl(

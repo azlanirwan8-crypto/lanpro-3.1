@@ -16,24 +16,7 @@ const upload = multer({ dest: GLOBAL_UPLOADS_DIR });
 import fs from "fs";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 import xss from "xss";
-import admin from 'firebase-admin';
-
-let adminInitialized = false;
-
-function ensureAdminInitialized() {
-    if (adminInitialized) return;
-    try {
-        (admin as any).initializeApp({
-            credential: (admin as any).credential.applicationDefault()
-        });
-        adminInitialized = true;
-        console.log("Firebase Admin initialized successfully.");
-    } catch (e) {
-        console.error("Firebase Admin initialization failed:", e);
-    }
-}
 
 // ... (existing imports)
 import mysqlPool, { query } from "./src/lib/db";
@@ -159,72 +142,10 @@ export const app = express();
 async function startServer() {
   const PORT = 3000;
 
-  // ============================================
-  // SECURE PASSWORD HASHING UTILITIES (v1.5 Security Audit)
-  // ============================================
-  const hashPassword = (password: string): string => {
-    return bcrypt.hashSync(password, 10);
-  };
-
-  const verifyPassword = async (password: string, storedHash: string, username?: string): Promise<boolean> => {
-    const cleanHash = storedHash ? storedHash.trim() : '';
-    
-    const lowerPassword = password ? password.toLowerCase() : '';
-    const lowerUsername = username ? username.toLowerCase() : '';
-    
-    // Support legacy/existing pbkdf2 database records
-    if (cleanHash.startsWith('pbkdf2$')) {
-      try {
-        const parts = cleanHash.split('$');
-        if (parts.length !== 4) return false;
-        const iterations = parseInt(parts[1], 10);
-        const salt = parts[2];
-        const originalHash = parts[3];
-        const hash = crypto.pbkdf2Sync(password, salt, iterations, 64, 'sha512').toString('hex');
-        
-        // Prevent timing attacks using timingSafeEqual
-        const hashBuf = Buffer.from(hash, 'hex');
-        const originalBuf = Buffer.from(originalHash, 'hex');
-        if (hashBuf.length !== originalBuf.length) return false;
-        return crypto.timingSafeEqual(hashBuf, originalBuf);
-      } catch (err) {
-        console.error("Error during pbkdf2 verification:", err);
-        return false;
-      }
-    }
-
-    // Standard/Secure Bcrypt comparison for newer hashes
-    if (cleanHash.startsWith('$2a$') || cleanHash.startsWith('$2b$') || cleanHash.startsWith('$2y$')) {
-      try {
-        return await bcrypt.compare(password, cleanHash);
-      } catch (err) {
-        console.error("Error during bcrypt verification:", err);
-        return false;
-      }
-    }
-
-    // Support plain-text comparisons for seed users (e.g. 'user', 'head', 'manager', 'viewer')
-    if (password === cleanHash || cleanHash === 'firebase-auth-placeholder' || !cleanHash) {
-      return true;
-    }
-
-    // Enforce strict authentication: only bcrypt/secure hashes are accepted.
-    // Legacy placeholder handling remains, but no hardcoded passwords.
-    if (cleanHash === 'firebase-auth-placeholder' || !cleanHash) {
-      console.warn(`[SECURITY] User ${username || 'unknown'} has no valid password hash.`);
-      return false;
-    }
-    // Exact plain-text match for seed users with an explicit hash stored.
-    if (password === cleanHash) {
-      return true;
-    }
-    return false;
-  };
-
   // --- KEPATUHAN KEAMANAN (Secrets Injection v1.5) ---
   // Kita mengambil rahasia secara dinamis dari Vault/Secret Manager saat startup
   try {
-    process.env.JWT_SECRET = await getSecret('JWT_SECRET') || process.env.JWT_SECRET || 'lanpro-secure-fallback-jwt-token-key-2026!';
+    process.env.JWT_SECRET = await getSecret('JWT_SECRET') || process.env.JWT_SECRET;
     process.env.DB_PASSWORD = await getSecret('DB_PASSWORD') || process.env.DB_PASSWORD;
 
     // Update pool configuration with the loaded DB_PASSWORD and fallback values
@@ -236,16 +157,12 @@ async function startServer() {
 
     const { updatePoolConfig } = await import('./src/lib/db');
     updatePoolConfig({ host, port, user, password, database });
-    
-    if (!process.env.JWT_SECRET) {
-       console.warn("[SECURITY] JWT_SECRET kosong, menggunakan token fallback aman.");
-       process.env.JWT_SECRET = 'lanpro-secure-fallback-jwt-token-key-2026!';
-    }
   } catch (err) {
     console.warn("[SECURITY] Gagal memuat rahasia dari Secret Manager, menggunakan environment variable lokal.", err);
-    if (!process.env.JWT_SECRET) {
-      process.env.JWT_SECRET = 'lanpro-secure-fallback-jwt-token-key-2026!';
-    }
+  }
+
+  if (!process.env.JWT_SECRET) {
+    throw new Error('[SECURITY] JWT_SECRET tidak ditemukan di environment. Set JWT_SECRET sebelum menjalankan server — tidak ada fallback.');
   }
 
   const httpServer = createServer(app);
@@ -371,7 +288,7 @@ async function startServer() {
     }
 
     // 3. For public image assets like user profile avatars, allow rendering if filename starts with avatar- or is an image
-    if (!isAuthorized && (safeName.startsWith('avatar-') || /\.(png|jpe?g|webp|gif|svg)$/i.test(safeName))) {
+    if (!isAuthorized && (safeName.startsWith('avatar-') || /\.(png|jpe?g|webp|gif)$/i.test(safeName))) {
       isAuthorized = true;
     }
 
@@ -392,7 +309,10 @@ async function startServer() {
   });
 
   const getJwtSecret = (): string => {
-    return process.env.JWT_SECRET || '1231231231492340234wewefsfsdfsfwe534534tf5654654';
+    if (!process.env.JWT_SECRET) {
+      throw new Error('[SECURITY] JWT_SECRET tidak ditemukan di environment.');
+    }
+    return process.env.JWT_SECRET;
   };
 
   const generateToken = (user: any) => {
@@ -506,13 +426,39 @@ async function startServer() {
   // ==========================================
 // WILAYAH III: Core API Engine (Seluruh rute API dengan prefix /api/ disatukan di sini)
 // ==========================================
-  app.get("/api/audit-logs", authenticateJWT, async (req, res) => {
+  app.get("/api/audit-logs", authenticateJWT, async (req: any, res) => {
     console.log(`[AUDIT] Request diterima: ${JSON.stringify(req.query)}`);
     let connection;
     try {
       const { projectId, entityName, entityId, limit } = req.query;
       connection = await mysqlPool.getConnection();
-      
+
+      // Non-admin users may only pull audit logs scoped to a project they belong to —
+      // never a system-wide dump, and never another project's log by guessing its id.
+      const requesterId = req.user?.id || req.user?.uid;
+      const [requesterRows]: any = await connection.query("SELECT id, role FROM Users WHERE id = ? OR uid = ?", [requesterId, requesterId]);
+      const requesterRole = requesterRows[0]?.role;
+      const resolvedRequesterId = requesterRows[0]?.id || requesterId;
+
+      if (requesterRole !== 'admin') {
+        if (!projectId) {
+          connection.release();
+          return res.status(403).json({ status: "error", message: "Akses ditolak: projectId wajib disertakan." });
+        }
+        const [proj]: any = await connection.query("SELECT ownerId FROM Projects WHERE id = ?", [projectId]);
+        const isOwner = proj.length > 0 && proj[0].ownerId === resolvedRequesterId;
+        if (!isOwner) {
+          const [member]: any = await connection.query(
+            "SELECT role FROM ProjectMembers WHERE projectId = ? AND userId = ?",
+            [projectId, resolvedRequesterId]
+          );
+          if (member.length === 0) {
+            connection.release();
+            return res.status(403).json({ status: "error", message: "Akses ditolak: Anda bukan anggota project ini." });
+          }
+        }
+      }
+
       let sql = "SELECT a.*, u.displayName as userName FROM AuditLogs a JOIN Users u ON a.userId = u.id";
       const params: any[] = [];
       const filters = [];
@@ -828,11 +774,21 @@ async function startServer() {
     let connection;
     try {
       const { query: sqlString } = req.body;
-      if (!sqlString) return res.status(400).json({ error: "Query is required" });
-      
+      if (!sqlString || typeof sqlString !== 'string') return res.status(400).json({ error: "Query is required" });
+
+      // DB Explorer is read-only: single SELECT/SHOW/DESCRIBE statement only, no chaining, no mutation keywords.
+      const trimmed = sqlString.trim().replace(/;+\s*$/, '');
+      const isSingleStatement = !trimmed.includes(';');
+      const isReadOnly = /^(SELECT|SHOW|DESCRIBE)\s/i.test(trimmed);
+      const hasForbiddenKeyword = /\b(INSERT|UPDATE|DELETE|DROP|TRUNCATE|ALTER|CREATE|GRANT|REVOKE|EXEC|CALL|MERGE)\b/i.test(trimmed);
+
+      if (!isSingleStatement || !isReadOnly || hasForbiddenKeyword) {
+        return res.status(400).json({ status: "error", message: "DB Explorer hanya mengizinkan satu statement SELECT/SHOW/DESCRIBE read-only." });
+      }
+
       connection = await mysqlPool.getConnection();
-      const [rows] = await connection.query(sqlString);
-      
+      const [rows] = await connection.query(trimmed);
+
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: Database query error:", error);
@@ -936,7 +892,7 @@ async function startServer() {
     }
   });
 
-  app.post("/api/master-data", async (req, res) => {
+  app.post("/api/master-data", verifyGlobalAdmin, async (req, res) => {
     try {
       const { id, type, label, color, icon, order, description, fieldType, dropdownOptions, role_type, roleType } = req.body;
       const rType = role_type || roleType || null;
@@ -977,7 +933,7 @@ async function startServer() {
     }
   });
 
-  app.put("/api/master-data/:id", async (req, res) => {
+  app.put("/api/master-data/:id", verifyGlobalAdmin, async (req, res) => {
     try {
       const { id } = req.params;
       const { label, color, icon, order, description, fieldType, dropdownOptions, role_type, roleType, type } = req.body;
@@ -1025,7 +981,7 @@ async function startServer() {
     }
   });
 
-  app.delete("/api/master-data/:id", async (req, res) => {
+  app.delete("/api/master-data/:id", verifyGlobalAdmin, async (req, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -1236,13 +1192,17 @@ async function startServer() {
         });
       }
       
-      // Parse Excel
-      const xlsx = require("xlsx");
-      const workbook = xlsx.readFile(file.path);
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const data = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
-      
+      // Parse Excel (exceljs — xlsx package has an unpatched high-severity
+      // prototype-pollution/ReDoS advisory and is no longer maintained on npm)
+      const ExcelJS = require("exceljs");
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.readFile(file.path);
+      const worksheet = workbook.worksheets[0];
+      const data: any[][] = [];
+      worksheet.eachRow({ includeEmpty: true }, (row: any) => {
+        data.push((row.values as any[]).slice(1));
+      });
+
       // Validation Headers
       const headers = data[0] as string[];
       if (!headers || headers.length < 4) {
@@ -1345,7 +1305,7 @@ async function startServer() {
     }
   });
 
-  app.post("/api/projects/:projectId/qa-test-suites", async (req, res) => {
+  app.post("/api/projects/:projectId/qa-test-suites", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { projectId } = req.params;
@@ -1374,7 +1334,7 @@ async function startServer() {
     }
   });
 
-  app.put("/api/projects/:projectId/qa-test-suites/:id", async (req, res) => {
+  app.put("/api/projects/:projectId/qa-test-suites/:id", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { projectId, id } = req.params;
@@ -1403,7 +1363,7 @@ async function startServer() {
     }
   });
 
-  app.delete("/api/projects/:projectId/qa-test-suites/:id", async (req, res) => {
+  app.delete("/api/projects/:projectId/qa-test-suites/:id", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { projectId, id } = req.params;
@@ -1479,7 +1439,7 @@ async function startServer() {
     }
   });
 
-  app.post("/api/projects/:projectId/qa-test-cases", async (req, res) => {
+  app.post("/api/projects/:projectId/qa-test-cases", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { projectId } = req.params;
@@ -1530,7 +1490,7 @@ async function startServer() {
     }
   });
 
-  app.put("/api/projects/:projectId/qa-test-cases/:id", async (req, res) => {
+  app.put("/api/projects/:projectId/qa-test-cases/:id", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { projectId, id } = req.params;
@@ -1602,7 +1562,7 @@ async function startServer() {
   });
 
   // Dedicated Save endpoint (Form-Data with comment & single file attachment/evidence upload)
-  app.post("/api/projects/:projectId/qa-test-cases/:id/save", upload.single('evidence'), async (req, res) => {
+  app.post("/api/projects/:projectId/qa-test-cases/:id/save", upload.single('evidence'), verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { projectId, id } = req.params;
@@ -1878,7 +1838,7 @@ async function startServer() {
   });
 
   // Dedicated status update endpoint (Instant with Non-Destructive Execution Run Log)
-  app.patch("/api/projects/:projectId/qa-test-cases/:id/status", async (req, res) => {
+  app.patch("/api/projects/:projectId/qa-test-cases/:id/status", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { projectId, id } = req.params;
@@ -1993,7 +1953,7 @@ async function startServer() {
     }
   });
 
-  app.delete("/api/projects/:projectId/qa-test-cases/:id", async (req, res) => {
+  app.delete("/api/projects/:projectId/qa-test-cases/:id", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { projectId, id } = req.params;
@@ -2008,7 +1968,7 @@ async function startServer() {
     }
   });
 
-  app.post("/api/projects/:projectId/qa-test-cases/sync", async (req, res) => {
+  app.post("/api/projects/:projectId/qa-test-cases/sync", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { projectId } = req.params;
@@ -2124,7 +2084,7 @@ async function startServer() {
   });
 
   // AI-Powered QA Test Case Generator API
-  app.post("/api/projects/:projectId/qa-test-cases/generate-ai", async (req, res) => {
+  app.post("/api/projects/:projectId/qa-test-cases/generate-ai", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { judul, deskripsi, tipeTesting, prioritas } = req.body;
       if (!judul) {
@@ -2419,6 +2379,18 @@ ${aggregatedPrompt}
             fs.rmdirSync(chunksDir);
           } catch (rmErr) {
             console.warn("Gagal menghapus direktori chunk sementara:", rmErr);
+          }
+
+          // Security & Magic Byte Validation on the assembled file — the chunked
+          // path skipped this entirely before, unlike the single-request path below.
+          const mergedBuffer = fs.readFileSync(permanentPath);
+          const mergedVal = validateFileBuffer(mergedBuffer, file_name || `recording${fileExt}`, 120 * 1024 * 1024);
+          if (!mergedVal.valid) {
+            if (fs.existsSync(permanentPath)) fs.unlinkSync(permanentPath);
+            return res.status(400).json({
+              status: "error",
+              message: mergedVal.error || "Gagal Mengunggah Rekaman: Format file tidak didukung atau ukuran melebihi batas maksimum (Max 120MB)."
+            });
           }
 
           // Construct relative production URL
@@ -3891,7 +3863,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.get("/api/projects/:projectId/documents/:id/download", async (req, res) => {
+  app.get("/api/projects/:projectId/documents/:id/download", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -3912,7 +3884,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.post("/api/projects/:projectId/documents", async (req: any, res) => {
+  app.post("/api/projects/:projectId/documents", verifyProjectAccess(['*']), async (req: any, res) => {
     try {
       const { projectId } = req.params;
       const { title, description, type, link, fileData, fileName, fileType, createdBy } = req.body;
@@ -3931,7 +3903,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.put("/api/projects/:projectId/documents/:id", async (req: any, res) => {
+  app.put("/api/projects/:projectId/documents/:id", verifyProjectAccess(['*']), async (req: any, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -3983,7 +3955,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.delete("/api/projects/:projectId/documents/:id", async (req: any, res) => {
+  app.delete("/api/projects/:projectId/documents/:id", verifyProjectAccess(['*']), async (req: any, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -4172,7 +4144,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.post("/api/projects/:projectId/meetings", async (req, res) => {
+  app.post("/api/projects/:projectId/meetings", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { projectId } = req.params;
       const { title, description, meetingLink, authorId, fileData, fileName, fileType } = req.body;
@@ -4191,7 +4163,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.put("/api/projects/:projectId/meetings/:id", async (req: any, res) => {
+  app.put("/api/projects/:projectId/meetings/:id", verifyProjectAccess(['*']), async (req: any, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -4246,7 +4218,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.get("/api/projects/:projectId/meetings/:id/download", async (req, res) => {
+  app.get("/api/projects/:projectId/meetings/:id/download", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -4264,7 +4236,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.delete("/api/projects/:projectId/meetings/:id", async (req: any, res) => {
+  app.delete("/api/projects/:projectId/meetings/:id", verifyProjectAccess(['*']), async (req: any, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -4302,7 +4274,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
   });
 
   // Discussion Points API
-  app.get("/api/projects/:projectId/meetings/:id/discussionPoints", async (req, res) => {
+  app.get("/api/projects/:projectId/meetings/:id/discussionPoints", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { id } = req.params;
       const connection = await mysqlPool.getConnection();
@@ -4315,7 +4287,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.post("/api/projects/:projectId/meetings/:id/discussionPoints", async (req, res) => {
+  app.post("/api/projects/:projectId/meetings/:id/discussionPoints", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { id } = req.params;
       const { parentPointId, authorId, assignTo, concern, fitur, system, surrounding, keterangan, tindakanLanjut, status, targetDate, tanggalUpdateStatus } = req.body;
@@ -4359,7 +4331,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.put("/api/projects/:projectId/meetings/:id/discussionPoints/:pointId", async (req, res) => {
+  app.put("/api/projects/:projectId/meetings/:id/discussionPoints/:pointId", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { pointId } = req.params;
       const { parentPointId, assignTo, concern, fitur, system, surrounding, keterangan, tindakanLanjut, status, targetDate, tanggalUpdateStatus } = req.body;
@@ -4390,7 +4362,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.delete("/api/projects/:projectId/meetings/:id/discussionPoints/:pointId", async (req, res) => {
+  app.delete("/api/projects/:projectId/meetings/:id/discussionPoints/:pointId", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { pointId } = req.params;
       const connection = await mysqlPool.getConnection();
@@ -4491,18 +4463,41 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
         return res.status(400).json({ status: "error", message: "Invalid backup data" });
       }
 
+      // Whitelist of real tables in the live schema (src/lib/pg-migrate.ts).
+      const ALLOWED_TABLES = new Set([
+        'Users', 'Projects', 'ProjectMembers', 'ProjectInvites', 'MasterData', 'Sprints',
+        'Tasks', 'TaskExternalLinks', 'Attachments', 'LinkedTasks', 'Comments', 'TaskCustomFields',
+        'ActivityLogs', 'AuditLogs', 'Milestones', 'MilestoneSprints', 'Meetings', 'DiscussionPoints',
+        'Notifications', 'Messages', 'QATestSuites', 'QATestCases', 'QATestCaseExecutionLogs',
+        'ProjectModules', 'Documents', 'TokenBlacklist', 'discussion_point_comments', 'ai_learning_logs',
+      ]);
+      const SAFE_IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_]*$/;
+
+      // Validate every table/column name BEFORE touching the database — never trust
+      // client-supplied identifiers directly in TRUNCATE/INSERT statements.
+      for (const [table, rows] of Object.entries(data)) {
+        if (!ALLOWED_TABLES.has(table) || !SAFE_IDENTIFIER.test(table)) {
+          return res.status(400).json({ status: "error", message: `Tabel tidak dikenali/tidak diizinkan: ${table}` });
+        }
+        if (!Array.isArray(rows) || rows.length === 0) continue;
+        for (const col of Object.keys(rows[0])) {
+          if (!SAFE_IDENTIFIER.test(col)) {
+            return res.status(400).json({ status: "error", message: `Nama kolom tidak valid pada tabel ${table}: ${col}` });
+          }
+        }
+      }
+
       const connection = await mysqlPool.getConnection();
-      await connection.query("SET FOREIGN_KEY_CHECKS=0;");
 
       for (const [table, rows] of Object.entries(data)) {
         if (!Array.isArray(rows) || rows.length === 0) continue;
-        
+
         await connection.query(`TRUNCATE TABLE \`${table}\``);
-        
+
         const cols = Object.keys(rows[0]);
         const placeholders = cols.map(() => "?").join(", ");
         const sql = `INSERT INTO \`${table}\` (${cols.map((c: string) => `\`${c}\``).join(", ")}) VALUES (${placeholders})`;
-        
+
         for (const row of rows) {
           const values = cols.map((c: string) => {
             const val = row[c];
@@ -4514,13 +4509,12 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
           await connection.query(sql, values);
         }
       }
-      
-      await connection.query("SET FOREIGN_KEY_CHECKS=1;");
+
       connection.release();
       res.json({ status: "success", message: "Restore completed successfully" });
     } catch (e: any) {
       console.error(e);
-      res.status(500).json({ status: "error", message: e.message });
+      res.status(500).json({ status: "error", message: "Restore gagal. Periksa log server untuk detail." });
     }
   });
 

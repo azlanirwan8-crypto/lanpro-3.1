@@ -11,6 +11,9 @@ import { createAuditLog } from "../services/audit.service";
 import { broadcastProjectNotification, sendProjectActivityNotification, checkUpcomingDueDates } from "../services/notification.service";
 import jwt from "jsonwebtoken";
 import { getJwtSecret } from "../middleware/auth";
+import { validateFileBuffer } from "../../src/lib/fileSecurity";
+
+const AVATAR_ALLOWED_EXT = new Set(['png', 'jpg', 'jpeg', 'webp', 'gif']);
 
 const isServerless = !!process.env.VERCEL || !!process.env.AWS_EXECUTION_ENV || process.cwd() === '/var/task' || process.cwd().includes('/var/task');
 const GLOBAL_UPLOADS_DIR = isServerless ? '/tmp/uploads' : path.join(process.cwd(), 'uploads');
@@ -252,8 +255,21 @@ const router = express.Router();
         });
       }
 
-      const ext = path.extname(file.originalname) || '.png';
-      const safeFilename = `avatar-${id}-${Date.now()}${ext.toLowerCase()}`;
+      // Magic-byte + extension validation (same pipeline as file.routes.ts) — avatars
+      // are served publicly without auth, so this is the only gate against a
+      // malicious file (e.g. SVG with embedded <script>) being planted here.
+      const fileBuffer = fs.readFileSync(file.path);
+      const validation = validateFileBuffer(fileBuffer, file.originalname);
+      const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
+      if (!validation.valid || !AVATAR_ALLOWED_EXT.has(ext)) {
+        if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
+        return res.status(400).json({
+          status: "error",
+          message: "Foto profil harus berupa gambar (PNG, JPG, WEBP, atau GIF)."
+        });
+      }
+
+      const safeFilename = `avatar-${id}-${Date.now()}.${ext}`;
       const targetPath = path.join(GLOBAL_UPLOADS_DIR, safeFilename);
 
       // Store in uploads directory

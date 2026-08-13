@@ -11,6 +11,15 @@ import xss from "xss";
 
 const router = express.Router();
 
+// True if `val` (a client-supplied id, e.g. senderId/receiverId/userId in a chat or
+// notification request) actually identifies the authenticated caller — checked
+// against both `id` and `uid` since different tables/flows use either as the
+// user-reference value.
+function matchesCaller(reqUser: any, val: any): boolean {
+  if (val === undefined || val === null) return false;
+  return String(val) === String(reqUser?.id) || String(val) === String(reqUser?.uid);
+}
+
 async function recordExecutionRunLog(
   connection: any,
   projectId: string,
@@ -272,15 +281,19 @@ async function generateContentWithFallback(ai: any, options: any) {
       connection = await mysqlPool.getConnection();
       
       const newId = crypto.randomUUID();
-      
-      // Get project and increment counter
-      const [projRows] = await connection.query("SELECT projectKey, taskCounter FROM Projects WHERE id = ?", [projectId]);
+
+      // Atomic increment-and-read: a prior SELECT-then-UPDATE here let two
+      // concurrent task-creation requests in the same project read the same
+      // taskCounter value and mint two tasks sharing one taskKey (e.g. two
+      // different tasks both ending up as PROJ-42).
+      const [counterRows] = await connection.query(
+        "UPDATE Projects SET taskCounter = COALESCE(taskCounter, 0) + 1 WHERE id = ? RETURNING projectKey, taskCounter",
+        [projectId]
+      );
       let taskKey = "TASK-1";
-      if ((projRows as any[]).length > 0) {
-        const proj = (projRows as any[])[0];
-        let nextCounter = (proj.taskCounter || 0) + 1;
-        taskKey = `${proj.projectKey}-${nextCounter}`;
-        await connection.query("UPDATE Projects SET taskCounter = ? WHERE id = ?", [nextCounter, projectId]);
+      if ((counterRows as any[]).length > 0) {
+        const proj = (counterRows as any[])[0];
+        taskKey = `${proj.projectKey}-${proj.taskCounter}`;
       }
       
       // Extract active authenticated user
@@ -1433,18 +1446,31 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
     }
   });
 
-  router.put("/api/users/:userId/notifications/:id", async (req, res) => {
+  router.put("/api/users/:userId/notifications/:id", async (req: any, res) => {
     let connection;
     try {
-      const { id } = req.params;
+      const { userId, id } = req.params;
       const { read } = req.body;
+
+      if (!matchesCaller(req.user, userId)) {
+        return res.status(403).json({ status: "error", message: "Akses ditolak: Anda hanya dapat mengubah notifikasi milik Anda sendiri." });
+      }
+
       connection = await mysqlPool.getConnection();
-      
+
+      const [notifRows]: any = await connection.query("SELECT recipientId FROM Notifications WHERE id = ?", [id]);
+      if (notifRows.length === 0) {
+        return res.status(404).json({ status: "error", message: "Notifikasi tidak ditemukan." });
+      }
+      if (!matchesCaller(req.user, notifRows[0].recipientId)) {
+        return res.status(403).json({ status: "error", message: "Akses ditolak: notifikasi ini bukan milik Anda." });
+      }
+
       await connection.query(
         "UPDATE Notifications SET `read` = ? WHERE id = ?",
         [read ? true : false, id]
       );
-      
+
       res.json({ status: "success", message: "Notification updated" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: PUT /api/users/:userId/notifications/:id error:", error);
@@ -1457,12 +1483,15 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
   // ============================================
   // LIVE CHAT WIDGET ENDPOINTS (LanPro Chat System)
   // ============================================
-  router.get("/api/chat/last-messages", async (req, res) => {
+  router.get("/api/chat/last-messages", async (req: any, res) => {
     let connection;
     try {
       const { userId } = req.query;
       if (!userId) {
         return res.status(400).json({ status: "error", message: "userId diperlukan." });
+      }
+      if (!matchesCaller(req.user, userId)) {
+        return res.status(403).json({ status: "error", message: "Akses ditolak: Anda hanya dapat melihat percakapan Anda sendiri." });
       }
       connection = await mysqlPool.getConnection();
       
@@ -1518,12 +1547,15 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
     }
   });
 
-  router.get("/api/chat/messages", async (req, res) => {
+  router.get("/api/chat/messages", async (req: any, res) => {
     let connection;
     try {
       const { senderId, receiverId } = req.query;
       if (!senderId || !receiverId) {
         return res.status(400).json({ status: "error", message: "senderId dan receiverId diperlukan." });
+      }
+      if (!matchesCaller(req.user, senderId) && !matchesCaller(req.user, receiverId)) {
+        return res.status(403).json({ status: "error", message: "Akses ditolak: Anda bukan bagian dari percakapan ini." });
       }
 
       connection = await mysqlPool.getConnection();
@@ -1547,12 +1579,15 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
     }
   });
 
-  router.post("/api/chat/messages", async (req, res) => {
+  router.post("/api/chat/messages", async (req: any, res) => {
     let connection;
     try {
       const { senderId, receiverId, message, timestamp } = req.body;
       if (!senderId || !receiverId || !message) {
         return res.status(400).json({ status: "error", message: "senderId, receiverId, dan message diperlukan." });
+      }
+      if (!matchesCaller(req.user, senderId)) {
+        return res.status(403).json({ status: "error", message: "Akses ditolak: Anda tidak dapat mengirim pesan mengatasnamakan pengguna lain." });
       }
 
       const id = crypto.randomUUID();
@@ -1571,12 +1606,15 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
     }
   });
 
-  router.put("/api/chat/messages/read", async (req, res) => {
+  router.put("/api/chat/messages/read", async (req: any, res) => {
     let connection;
     try {
       const { senderId, receiverId } = req.body;
       if (!senderId || !receiverId) {
         return res.status(400).json({ status: "error", message: "senderId dan receiverId diperlukan." });
+      }
+      if (!matchesCaller(req.user, receiverId)) {
+        return res.status(403).json({ status: "error", message: "Akses ditolak: Anda hanya dapat menandai percakapan Anda sendiri sebagai dibaca." });
       }
 
       connection = await mysqlPool.getConnection();
@@ -1594,12 +1632,15 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
     }
   });
 
-  router.get("/api/chat/unread-counts", async (req, res) => {
+  router.get("/api/chat/unread-counts", async (req: any, res) => {
     let connection;
     try {
       const { userId } = req.query;
       if (!userId) {
         return res.status(400).json({ status: "error", message: "userId diperlukan." });
+      }
+      if (!matchesCaller(req.user, userId)) {
+        return res.status(403).json({ status: "error", message: "Akses ditolak: Anda hanya dapat melihat notifikasi Anda sendiri." });
       }
 
       connection = await mysqlPool.getConnection();

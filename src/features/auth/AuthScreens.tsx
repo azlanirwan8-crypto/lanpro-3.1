@@ -1,10 +1,9 @@
 import { safeLocalStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect, useMemo } from "react";
 import { LogIn, Lock, Activity, Users, FileText, Bot, ArrowRight, UserPlus, Fingerprint, RefreshCcw, Eye, EyeOff, Building, MapPin, Building2, User, Phone, Briefcase, Mail, AlertCircle, X, ShieldCheck } from "lucide-react";
-import { Button, Input, VelzonFloatingParticles, GoogleIcon, cn } from "../../components/ui/CoreUI";
+import { Button, Input, VelzonFloatingParticles, cn } from "../../components/ui/CoreUI";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiRequest, setAuthToken } from "../../lib/api";
-import { googleSignIn } from "../../lib/firebase";
 import { registrationSchema, evaluatePasswordStrength } from "../../lib/registrationSchema";
 import { toast } from "sonner";
 import { VelzonSuccessIcon } from "../../components/AuthToastContainer";
@@ -530,7 +529,6 @@ export const LoginScreen = ({
     }
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ username?: string; password?: string }>({});
 
   useEffect(() => {
@@ -580,36 +578,6 @@ export const LoginScreen = ({
 
     setFieldErrors({});
     onLogin(username.trim(), password.trim(), rememberMe);
-  };
-
-  const handleGoogleAuth = async () => {
-    setIsGoogleLoading(true);
-    try {
-      const res = await googleSignIn();
-      if (!res) return;
-      const verifyRes = await apiRequest("/api/auth/google-verify", {
-        method: "POST",
-        body: JSON.stringify({ idToken: res.idToken }),
-      });
-      if (verifyRes.status === "success") {
-        setAuthToken(verifyRes.token);
-        window.location.reload();
-      } else {
-        toast.error(verifyRes.message || "Google sign-in failed");
-      }
-    } catch (e: any) {
-      console.error("Google sign-in error", e);
-      if (e?.status === 403) {
-        toast.error("Email Tidak Terdaftar", {
-          description: "Email Google Anda belum terdaftar dalam sistem. Silakan hubungi Administrator.",
-          duration: 5000,
-        });
-      } else {
-        toast.error(e?.message || "Google sign-in failed");
-      }
-    } finally {
-      setIsGoogleLoading(false);
-    }
   };
 
   return (
