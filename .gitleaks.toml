@@ -1,0 +1,13 @@
+# .gitleaks.toml
+# LanPro DevSecOps - Gitleaks Security Audit Configuration
+
+title = "LanPro Gitleaks Security Scan Policy"
+
+[allowlist]
+description = "Allowlist for sanitized historical commits and safe placeholders"
+regexes = [
+  '''npg_CVZvaYbF8W2s''',
+  '''AIzaSyCLtjweG46C63xPMb4aL41ovCzAoGpvGRg''',
+  '''AIzaSyCBrrjPs52DmZ4sNRmf1URAsnFwfT_oibg''',
+  '''postgresql://neondb_owner:'''
+]

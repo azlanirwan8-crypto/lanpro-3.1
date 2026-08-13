@@ -1,0 +1,56 @@
+// import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
+
+/**
+ * LanPro v1.5 - Enterprise Secrets Manager Client
+ * Role: Principal DevSecOps Architect
+ * Deskripsi: Mengambil kunci rahasia secara aman dari Cloud Provider (GCP) saat startup.
+ */
+
+const fallbackSecrets: Record<string, string> = {
+  JWT_SECRET: process.env.JWT_SECRET || '',
+  DATABASE_URL: process.env.DATABASE_URL || '',
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+  DB_PASSWORD: process.env.DB_PASSWORD || ''
+};
+
+let client: any = null;
+
+export async function getSecret(name: string): Promise<string> {
+  // 1. Mencoba mengambil dari Environment Variable (Lokal/Dev/Vercel)
+  if (process.env[name]) {
+    return process.env[name] as string;
+  }
+
+  // 2. Jika di Vercel atau non-GCP, gunakan fallback otomatis agar siap pakai tanpa setting
+  if (process.env.VERCEL || process.env.NODE_ENV !== 'production') {
+    if (fallbackSecrets[name]) {
+      return fallbackSecrets[name];
+    }
+    return '';
+  }
+
+  try {
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT || 'lanpro-bni-project';
+    if (!client) {
+      const { SecretManagerServiceClient } = await import('@google-cloud/secret-manager');
+      client = new SecretManagerServiceClient();
+    }
+    const [version] = await client.accessSecretVersion({
+      name: `projects/${projectId}/secrets/${name}/versions/latest`,
+    }, {
+      timeout: 1500, // 1.5 seconds timeout to prevent hanging on startup in dev environments
+    });
+
+    const payload = version.payload?.data?.toString();
+    if (!payload) {
+      throw new Error(`Rahasia ${name} kosong atau tidak ditemukan.`);
+    }
+
+    // Secret retrieved successfully
+    return payload;
+  } catch (err) {
+    console.warn(`[SECURITY] Gagal mengambil kunci '${name}' dari Vault, menggunakan fallback bawaan.`);
+    if (fallbackSecrets[name]) return fallbackSecrets[name];
+    return '';
+  }
+}
