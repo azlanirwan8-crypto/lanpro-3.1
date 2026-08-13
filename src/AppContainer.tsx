@@ -559,7 +559,11 @@ function AppContainer() {
   
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
-    return (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system';
+    try {
+      return (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system';
+    } catch {
+      return 'system';
+    }
   });
   const [isThemeOpen, setIsThemeOpen] = useState(false);
 
@@ -582,7 +586,9 @@ function AppContainer() {
     };
 
     applyTheme(theme);
-    localStorage.setItem('theme', theme);
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {}
 
     if (theme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -657,7 +663,10 @@ function AppContainer() {
   useEffect(() => {
 
     // Initial Auth Restoration (LanPro v1.3)
-    const token = localStorage.getItem("lanpro_jwt_token");
+    let token = null;
+    try {
+      token = localStorage.getItem("lanpro_jwt_token");
+    } catch (e) {}
 
     if (!token) {
         setIsLoggedIn(false);
@@ -666,9 +675,10 @@ function AppContainer() {
     }
     
     // Restoration logic from session user if exists
-    const sessionPayload =
-      sessionStorage.getItem("sessionUser") ||
-      localStorage.getItem("sessionUser");
+    let sessionPayload = null;
+    try {
+      sessionPayload = sessionStorage.getItem("sessionUser") || localStorage.getItem("sessionUser");
+    } catch (e) {}
     
 
 
@@ -706,10 +716,25 @@ function AppContainer() {
                 console.error("Failed to parse verifiedUser permissions:", e);
               }
             }
-            setCurrentUser(verifiedUser);
-            setCurrentUserProfile(verifiedUser);
-            setUserRole(verifiedUser.role);
+            const rawAvatar = verifiedUser.avatar_url || verifiedUser.photoURL || verifiedUser.avatarUrl || null;
+            const normalizedUser = {
+              ...verifiedUser,
+              avatar_url: rawAvatar,
+              photoURL: rawAvatar,
+              avatarUrl: rawAvatar,
+            };
+            setCurrentUser(normalizedUser);
+            setCurrentUserProfile(normalizedUser);
+            setUserRole(normalizedUser.role);
             setIsLoggedIn(true);
+            try {
+              const isRemember = localStorage.getItem("rememberUser") === "true";
+              if (isRemember) {
+                localStorage.setItem("sessionUser", JSON.stringify(normalizedUser));
+              } else {
+                sessionStorage.setItem("sessionUser", JSON.stringify(normalizedUser));
+              }
+            } catch (e) {}
           }
         } else {
           console.warn("Token verification returned non-success state");
@@ -1281,6 +1306,10 @@ function AppContainer() {
       
       const userData = data.user as UserProfile;
       userData.permissions = typeof userData.permissions === 'string' ? JSON.parse(userData.permissions) : userData.permissions;
+      const rawAvatar = userData.avatar_url || userData.photoURL || userData.avatarUrl || null;
+      userData.avatar_url = rawAvatar || undefined;
+      userData.photoURL = rawAvatar || undefined;
+      userData.avatarUrl = rawAvatar || undefined;
       
       // Prefetch critical dashboard data to prevent blank shell flashing
       try {
@@ -1746,6 +1775,26 @@ function AppContainer() {
              }, 1000);
           }
        }
+    });
+
+    socket.on("user_avatar_updated", (event) => {
+      const refs = realTimeRefs.current;
+      if (refs && typeof refs.fetchAllUsers === 'function') {
+        refs.fetchAllUsers();
+      }
+      if (event && event.userId) {
+        if (refs && refs.currentUser && (refs.currentUser.id === event.userId || refs.currentUser.uid === event.userId)) {
+          const updated = {
+            ...refs.currentUser,
+            photoURL: event.avatar_url || event.photoURL,
+            avatar_url: event.avatar_url || event.photoURL,
+            avatarUrl: event.avatar_url || event.photoURL
+          };
+          setCurrentUser(updated);
+          setCurrentUserProfile(updated);
+          localStorage.setItem("sessionUser", JSON.stringify(updated));
+        }
+      }
     });
 
     socket.on("PRESENCE_UPDATE", (users: any[]) => {
@@ -5864,6 +5913,13 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
               setCurrentUser(newUser);
               setCurrentUserProfile(newUser);
               localStorage.setItem("sessionUser", JSON.stringify(newUser));
+              setAllUsers((prevUsers) =>
+                prevUsers.map((u) =>
+                  u.id === newUser.id || u.uid === newUser.uid
+                    ? { ...u, ...updatedProfile }
+                    : u
+                )
+              );
             }
           }}
         />

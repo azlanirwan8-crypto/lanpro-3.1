@@ -46,6 +46,9 @@ export interface UserProfile {
   email?: string;
   displayName?: string;
   photoURL?: string;
+  avatar_url?: string;
+  avatarUrl?: string;
+  avatar?: string;
   phone?: string;
   position?: string;
   department?: string;

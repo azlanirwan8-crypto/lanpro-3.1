@@ -7,6 +7,7 @@ import { RenderIcon } from '../../components/RenderIcon';
 import { useAppStore } from '../../store/useAppStore';
 import { cn } from '../../lib/utils';
 import { Layers } from 'lucide-react';
+import { UserAvatar } from '../../components/ui/UserAvatar';
 
 const getStatusStyle = (label: string) => {
   const lower = label.toLowerCase();
@@ -286,18 +287,13 @@ export const BoardView: React.FC<KanbanBoardProps> = (props) => {
                           isCompact ? "p-2.5" : "p-3"
                         )}>
                           <div className="flex items-center gap-2 mb-1.5">
-                            <div className={cn(
-                              "w-5 h-5 rounded-full flex items-center justify-center font-medium text-[10px] uppercase overflow-hidden shrink-0",
-                              isUnassigned ? "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300" : "bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300"
-                            )}>
-                              {isUnassigned ? (
-                                '?'
-                              ) : member.photoURL ? (
-                                <img src={member.photoURL} alt="avatar" className="w-full h-full object-cover" />
-                              ) : (
-                                (member.displayName || '?').charAt(0).toUpperCase()
-                              )}
-                            </div>
+                            {isUnassigned ? (
+                              <div className="w-5 h-5 rounded-full flex items-center justify-center font-medium text-[10px] uppercase bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 shrink-0">
+                                ?
+                              </div>
+                            ) : (
+                              <UserAvatar user={member} className="w-5 h-5 text-[10px]" />
+                            )}
                             <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">
                               {isUnassigned ? 'Unassigned' : 'Assignee'}
                             </span>

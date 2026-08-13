@@ -556,25 +556,35 @@ export const LoginScreen = ({
   loading?: boolean;
   loadingText?: string;
 }) => {
-  const [username, setUsername] = useState(
-    () => localStorage.getItem("savedUsername") || "",
-  );
+  const [username, setUsername] = useState(() => {
+    try {
+      return localStorage.getItem("savedUsername") || "";
+    } catch {
+      return "";
+    }
+  });
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(
-    () => localStorage.getItem("rememberUser") === "true",
-  );
+  const [rememberMe, setRememberMe] = useState(() => {
+    try {
+      return localStorage.getItem("rememberUser") === "true";
+    } catch {
+      return false;
+    }
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ username?: string; password?: string }>({});
 
   useEffect(() => {
-    if (rememberMe) {
-      localStorage.setItem("savedUsername", username);
-      localStorage.setItem("rememberUser", "true");
-    } else {
-      localStorage.removeItem("savedUsername");
-      localStorage.setItem("rememberUser", "false");
-    }
+    try {
+      if (rememberMe) {
+        localStorage.setItem("savedUsername", username);
+        localStorage.setItem("rememberUser", "true");
+      } else {
+        localStorage.removeItem("savedUsername");
+        localStorage.setItem("rememberUser", "false");
+      }
+    } catch {}
   }, [username, rememberMe]);
 
   const handleUsernameChange = (val: string) => {

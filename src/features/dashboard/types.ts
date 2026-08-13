@@ -9,6 +9,7 @@ export interface DashboardViewProps {
   setCurrentView: (view: any) => void;
   setSelectedTaskForDetail: (task: Task) => void;
   setIsTaskDetailModalOpen: (isOpen: boolean) => void;
+  setIsNewTaskModalOpen?: (isOpen: boolean) => void;
   userRole?: string | null;
   currentUser?: UserProfile | null;
   fetchTasks?: () => Promise<void>;

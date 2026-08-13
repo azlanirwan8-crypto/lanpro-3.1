@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { validateFileClient } from "../lib/fileSecurity";
 import { apiRequest } from "../lib/api";
 import { UserProfile } from "../types";
+import { UserAvatar } from "./ui/UserAvatar";
 import { usePresence } from "../contexts/PresenceContext";
 
 interface ChatMessage {
@@ -756,18 +757,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                           >
                             {/* Avatar with Dot indicator */}
                             <div className="relative shrink-0">
-                              {targetUser.photoURL ? (
-                                <img 
-                                  src={targetUser.photoURL} 
-                                  alt={targetUser?.displayName} 
-                                  className="w-9 h-9 rounded-full object-cover border border-slate-100 shadow-sm"
-                                  referrerPolicy="no-referrer"
-                                />
-                              ) : (
-                                <div className="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-medium border border-slate-200">
-                                  {initials}
-                                </div>
-                              )}
+                              <UserAvatar user={targetUser} className="w-9 h-9 border border-slate-100 text-xs" />
                               {/* Online / Offline Indicator Dot */}
                               <span 
                                 className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white shadow-sm ${
@@ -832,17 +822,8 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 text-white flex items-center justify-center border border-purple-500/30">
                           <Bot className="w-3.5 h-3.5 text-yellow-200" />
                         </div>
-                      ) : activeChatUser.photoURL ? (
-                        <img 
-                          src={activeChatUser.photoURL} 
-                          alt={activeChatUser?.displayName} 
-                          className="w-8 h-8 rounded-full object-cover border border-slate-700 shadow-sm"
-                          referrerPolicy="no-referrer"
-                        />
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-medium border border-slate-700">
-                          {(activeChatUser?.displayName || activeChatUser?.username || "U").substring(0, 2).toUpperCase()}
-                        </div>
+                        <UserAvatar user={activeChatUser} className="w-8 h-8 border border-slate-700 text-xs" />
                       )}
                       
                       {activeChatUser.id !== "group" && activeChatUser.id !== "lanpro-ai" && (

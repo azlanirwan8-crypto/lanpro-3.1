@@ -291,7 +291,18 @@ async function startServer() {
     }
   }
 
-  // --- AUTO MIGRATION: MOVED TO npm run db:migrate ---
+  // --- AUTO MIGRATION ON STARTUP (Non-blocking background execution) ---
+  (async () => {
+    try {
+      const { runMigrations } = await import('./src/lib/pg-migrate');
+      const { getPgPool } = await import('./src/lib/db');
+      console.log("[SERVER] Memulai auto-migrasi schema PostgreSQL...");
+      await runMigrations(getPgPool());
+      console.log("[SERVER] Auto-migrasi schema PostgreSQL selesai.");
+    } catch (migErr: any) {
+      console.warn("[SERVER] Warning auto-migrasi schema:", migErr.message);
+    }
+  })();
   // ==========================================
 // WILAYAH II: Keamanan (Middleware Global, authenticateJWT, verifyProjectAccess)
 // ==========================================
@@ -357,6 +368,11 @@ async function startServer() {
           isAuthorized = true;
         } catch {}
       }
+    }
+
+    // 3. For public image assets like user profile avatars, allow rendering if filename starts with avatar- or is an image
+    if (!isAuthorized && (safeName.startsWith('avatar-') || /\.(png|jpe?g|webp|gif|svg)$/i.test(safeName))) {
+      isAuthorized = true;
     }
 
     if (!isAuthorized) {
@@ -4637,10 +4653,25 @@ app.use(errorHandler);
     const viteModuleName = "vite";
     const { createServer: createViteServer } = await import(viteModuleName);
     const vite = await createViteServer({
-      server: { middlewareMode: true, hmr: process.env.DISABLE_HMR !== "false" ? false : true },
+      server: { middlewareMode: true, hmr: { server: httpServer } },
       appType: "spa",
     });
     app.use(vite.middlewares);
+    app.get('*', async (req, res, next) => {
+      if (req.originalUrl.startsWith('/api')) {
+        return next();
+      }
+      try {
+        const indexPath = path.join(process.cwd(), 'index.html');
+        const fs = await import('fs');
+        let template = await fs.promises.readFile(indexPath, 'utf-8');
+        template = await vite.transformIndexHtml(req.originalUrl, template);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
+      } catch (e) {
+        vite.ssrFixStacktrace(e as Error);
+        next(e);
+      }
+    });
   } else {
     // Production setup for static files
     const distPath = path.join(process.cwd(), 'dist');
@@ -4659,6 +4690,15 @@ app.use(errorHandler);
     console.log("[SERVERLESS] Running in serverless mode. Skipping httpServer.listen.");
     return;
   }
+
+  httpServer.on('error', (err: any) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`[SERVER] Port ${PORT} is already in use. Exiting cleanly...`);
+      process.exit(1);
+    } else {
+      console.error("[SERVER] Fatal server error:", err);
+    }
+  });
 
   httpServer.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);

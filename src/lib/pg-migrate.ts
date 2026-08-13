@@ -30,16 +30,34 @@ export async function runMigrations(pool: Pool): Promise<void> {
         position          VARCHAR(255),
         phone             VARCHAR(50),
         "lastSeen"        VARCHAR(50),
+        "avatar_url"      TEXT,
         "avatarUrl"       TEXT,
         "photoUrl"        TEXT,
+        "photoURL"        TEXT,
+        permissions       TEXT,
+        "currentSessionToken" TEXT,
         "createdAt"       TIMESTAMP DEFAULT NOW(),
         "updatedAt"       TIMESTAMP DEFAULT NOW()
       );
-      ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "photoUrl" TEXT;
-      ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "photoURL" TEXT;
-      ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "avatarUrl" TEXT;
-      ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "permissions" TEXT;
     `);
+
+    const userAlters = [
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "photoUrl" TEXT',
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "photoURL" TEXT',
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "avatarUrl" TEXT',
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "avatar_url" TEXT',
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "permissions" TEXT',
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "currentSessionToken" TEXT',
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "phone" VARCHAR(50)',
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "lastSeen" VARCHAR(50)',
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "department" VARCHAR(255)',
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "position" VARCHAR(255)',
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "nama_lengkap" VARCHAR(255)',
+      'ALTER TABLE "Users" ADD COLUMN IF NOT EXISTS "displayName" VARCHAR(255)',
+    ];
+    for (const stmt of userAlters) {
+      try { await client.query(stmt); } catch (e: any) { console.warn('[PG-MIGRATE] Alter warning:', e.message); }
+    }
 
     // ── MasterData ──────────────────────────────────────────────────────────
     await client.query(`

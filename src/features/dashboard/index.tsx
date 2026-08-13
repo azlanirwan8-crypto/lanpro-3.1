@@ -40,6 +40,7 @@ import {
   Wallet,
   Download,
   Plus,
+  Filter,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -115,6 +116,13 @@ export function DashboardView(props: DashboardViewProps) {
     estimationAccuracyData,
     estimationStats,
   } = useDashboard(props);
+
+  const [selectedSprintFilter, setSelectedSprintFilter] = useState<string>("ALL");
+
+  const filteredTasks = useMemo(() => {
+    if (selectedSprintFilter === "ALL") return tasks;
+    return tasks.filter((t) => String(t.sprintId || '') === selectedSprintFilter);
+  }, [tasks, selectedSprintFilter]);
 
   // 1. KODE REFACTOR AGREGASI DATA (REACT / HELPER FUNCTION)
   const myPersonalMetrics = useMemo(() => {
@@ -455,6 +463,7 @@ export function DashboardView(props: DashboardViewProps) {
   }, [selectedProject, currentUser]);
 
   const taskTypeBreakdown = useMemo(() => {
+    const scopeTasks = filteredTasks;
     const counts: Record<string, number> = {
       epic: 0,
       story: 0,
@@ -462,21 +471,25 @@ export function DashboardView(props: DashboardViewProps) {
       bug: 0,
       subtask: 0,
     };
-    tasks.forEach((t) => {
+    scopeTasks.forEach((t) => {
       const type = (t.type || 'task').toLowerCase();
       if (counts[type] !== undefined) counts[type]++;
       else counts['task']++;
     });
+
+    const totalScopeCount = Object.values(counts).reduce((a, b) => a + b, 0);
+
     return [
-      { name: 'Epic', value: counts.epic || 0, color: '#8b5cf6', pct: totalTasks ? Math.round(((counts.epic || 0) / totalTasks) * 100) : 0 },
-      { name: 'Story', value: counts.story || 0, color: '#10b981', pct: totalTasks ? Math.round(((counts.story || 0) / totalTasks) * 100) : 0 },
-      { name: 'Task', value: counts.task || 0, color: '#3b82f6', pct: totalTasks ? Math.round(((counts.task || 0) / totalTasks) * 100) : 0 },
-      { name: 'Bug', value: counts.bug || 0, color: '#ef4444', pct: totalTasks ? Math.round(((counts.bug || 0) / totalTasks) * 100) : 0 },
-      { name: 'Subtask', value: counts.subtask || 0, color: '#06b6d4', pct: totalTasks ? Math.round(((counts.subtask || 0) / totalTasks) * 100) : 0 },
+      { name: 'Epic', value: counts.epic || 0, color: '#8b5cf6', pct: totalScopeCount ? Math.round(((counts.epic || 0) / totalScopeCount) * 100) : 0 },
+      { name: 'Story', value: counts.story || 0, color: '#10b981', pct: totalScopeCount ? Math.round(((counts.story || 0) / totalScopeCount) * 100) : 0 },
+      { name: 'Task', value: counts.task || 0, color: '#3b82f6', pct: totalScopeCount ? Math.round(((counts.task || 0) / totalScopeCount) * 100) : 0 },
+      { name: 'Bug', value: counts.bug || 0, color: '#ef4444', pct: totalScopeCount ? Math.round(((counts.bug || 0) / totalScopeCount) * 100) : 0 },
+      { name: 'Subtask', value: counts.subtask || 0, color: '#06b6d4', pct: totalScopeCount ? Math.round(((counts.subtask || 0) / totalScopeCount) * 100) : 0 },
     ];
-  }, [tasks, totalTasks]);
+  }, [filteredTasks]);
 
   const statusBreakdown = useMemo(() => {
+    const scopeTasks = filteredTasks;
     const statusMap: Record<string, number> = {
       'To Do': 0,
       'In Progress': 0,
@@ -484,26 +497,38 @@ export function DashboardView(props: DashboardViewProps) {
       'Done': 0,
       'Blocked': 0
     };
-    tasks.forEach(t => {
+    scopeTasks.forEach(t => {
       const s = t.status || 'To Do';
       if (statusMap[s] !== undefined) statusMap[s]++;
       else statusMap[s] = (statusMap[s] || 0) + 1;
     });
+
+    const totalScopeCount = Object.values(statusMap).reduce((a, b) => a + b, 0);
+
     return Object.entries(statusMap).map(([name, value]) => ({
       name,
       value,
-      pct: totalTasks ? Math.round((value / totalTasks) * 100) : 0,
+      pct: totalScopeCount ? Math.round((value / totalScopeCount) * 100) : 0,
       color: name === 'Done' || name === 'Selesai' ? '#10b981' :
              name === 'In Progress' ? '#3b82f6' :
              name === 'In Review' ? '#8b5cf6' :
              name === 'Blocked' ? '#ef4444' : '#64748b'
     }));
-  }, [tasks, totalTasks]);
+  }, [filteredTasks]);
 
   const epicsList = useMemo(() => {
     const epicTasks = tasks.filter(t => (t.type?.toLowerCase() === 'epic') || (t.category?.toLowerCase() === 'epic'));
     return epicTasks.map(epic => {
-      const childTasks = tasks.filter(t => t.parentId === epic.id);
+      const epicIdStr = String(epic.id || '').toLowerCase();
+      const epicKeyStr = String(epic.key || '').toLowerCase();
+      const childTasks = tasks.filter(t => {
+        const pId = String(t.parentId || '').toLowerCase();
+        const eId = String((t as any).epicId || '').toLowerCase();
+        const lId = String((t as any).linkedEpicId || '').toLowerCase();
+        return (pId && (pId === epicIdStr || pId === epicKeyStr)) || 
+               (eId && (eId === epicIdStr || eId === epicKeyStr)) || 
+               (lId && (lId === epicIdStr || lId === epicKeyStr));
+      });
       const childTotal = childTasks.length;
       const childCompleted = childTasks.filter(t => t.status === 'Done' || t.status === 'Selesai').length;
       const progress = childTotal === 0 ? (epic.status === 'Done' || epic.status === 'Selesai' ? 100 : 0) : Math.round((childCompleted / childTotal) * 100);
@@ -568,12 +593,39 @@ export function DashboardView(props: DashboardViewProps) {
             <h2 className="text-xl font-medium text-slate-800 dark:text-slate-100 flex items-center gap-2">
               {getGreeting()}, {currentUser?.displayName || "Administrator"}!
             </h2>
-
+            <p className="text-xs text-slate-500 mt-1">Ringkasan performa tim, progres sprint, dan alokasi tugas real-time.</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Global Filter by Sprint */}
+            <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300">
+              <Filter className="w-3.5 h-3.5 text-slate-500" />
+              <span>Sprint:</span>
+              <select
+                value={selectedSprintFilter}
+                onChange={(e) => setSelectedSprintFilter(e.target.value)}
+                className="bg-transparent font-medium text-slate-800 dark:text-slate-100 outline-none cursor-pointer"
+              >
+                <option value="ALL">Semua Sprint ({tasks.length} tasks)</option>
+                {props.sprints.map((s) => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Quick Action: Create Task */}
+            {props.setIsNewTaskModalOpen && (
+              <button
+                onClick={() => props.setIsNewTaskModalOpen?.(true)}
+                className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white px-3.5 py-2 rounded-lg text-xs font-medium shadow-sm transition-all cursor-pointer shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Task Baru</span>
+              </button>
+            )}
+
             <div className="flex items-center gap-2 bg-indigo-50/70 dark:bg-slate-800 px-3 py-2 rounded-lg border border-indigo-100 dark:border-slate-700 text-xs font-medium text-indigo-700 dark:text-slate-300">
               <Zap className="w-3.5 h-3.5 text-indigo-500" />
-              <span>Sprint: {activeSprint?.name || 'No Active Sprint'} ({sprintDaysLeft} days left)</span>
+              <span>Aktif: {activeSprint?.name || 'Tidak ada Sprint Aktif'} ({sprintDaysLeft} hari tersisa)</span>
             </div>
           </div>
         </div>
@@ -809,9 +861,9 @@ export function DashboardView(props: DashboardViewProps) {
                     <Users className="w-4 h-4 text-indigo-500" />
                     Task Workload Distribution per User
                   </h3>
-                  <p className="text-[11px] text-slate-400 mt-0.5 font-medium">Alokasi & penyelesaian task tiap anggota tim</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5 font-medium">Alokasi & penyelesaian task tiap anggota tim dengan indikator beban kerja</p>
                 </div>
-                <button onClick={() => props.setCurrentView('team')} className="text-xs font-medium text-indigo-600 hover:underline">
+                <button onClick={() => props.setCurrentView('team')} className="text-xs font-medium text-indigo-600 hover:underline cursor-pointer">
                   Manage Team
                 </button>
               </div>
@@ -824,7 +876,8 @@ export function DashboardView(props: DashboardViewProps) {
                       <th className="py-2.5 px-2">Active Tasks</th>
                       <th className="py-2.5 px-2">Done Tasks</th>
                       <th className="py-2.5 px-2">Total Allocated</th>
-                      <th className="py-2.5 px-2 text-right">Progress Bar</th>
+                      <th className="py-2.5 px-2">Status Beban</th>
+                      <th className="py-2.5 px-2 text-right">Progress</th>
                     </tr>
                   </thead>
                   <tbody className="text-xs divide-y divide-slate-100 dark:divide-slate-800 font-medium text-slate-700 dark:text-slate-300">
@@ -832,6 +885,34 @@ export function DashboardView(props: DashboardViewProps) {
                       workloadData.map((user, idx) => {
                         const totalUserTasks = user.Done + user.Active;
                         const pct = totalUserTasks ? Math.round((user.Done / totalUserTasks) * 100) : 0;
+
+                        let capacityBadge = null;
+                        if (user.Active >= 5) {
+                          capacityBadge = (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                              ⚠️ Overload ({user.Active})
+                            </span>
+                          );
+                        } else if (user.Active >= 3) {
+                          capacityBadge = (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-100 text-amber-800 border border-amber-200">
+                              ⚡ Heavy ({user.Active})
+                            </span>
+                          );
+                        } else if (user.Active >= 1) {
+                          capacityBadge = (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
+                              ✅ Balanced ({user.Active})
+                            </span>
+                          );
+                        } else {
+                          capacityBadge = (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                              💤 Available
+                            </span>
+                          );
+                        }
+
                         return (
                           <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
                             <td className="py-3 px-2">
@@ -845,6 +926,7 @@ export function DashboardView(props: DashboardViewProps) {
                             <td className="py-3 px-2 font-medium text-blue-600">{user.Active}</td>
                             <td className="py-3 px-2 font-medium text-emerald-600">{user.Done}</td>
                             <td className="py-3 px-2 font-medium text-slate-800 dark:text-slate-100">{totalUserTasks}</td>
+                            <td className="py-3 px-2">{capacityBadge}</td>
                             <td className="py-3 px-2 text-right">
                               <div className="flex items-center justify-end gap-2">
                                 <span className="text-[11px] font-medium text-slate-500 w-9">{pct}%</span>
@@ -858,7 +940,7 @@ export function DashboardView(props: DashboardViewProps) {
                       })
                     ) : (
                       <tr>
-                        <td colSpan={5} className="py-6 text-center text-slate-400 italic">No task allocations recorded yet.</td>
+                        <td colSpan={6} className="py-6 text-center text-slate-400 italic">Belum ada alokasi task untuk anggota tim.</td>
                       </tr>
                     )}
                   </tbody>

@@ -1,60 +1,45 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
+import { UserAvatar } from '../../components/ui/UserAvatar';
 
 interface UserBadgeProps {
   authorId: string;
-  users: { uid: string; displayName?: string | null; username?: string | null; role?: string }[];
+  users: any[];
   className?: string;
   showRole?: boolean;
   showName?: boolean;
 }
 
-export const UserBadge = ({ authorId, users, className, showRole = false, showName = true }: UserBadgeProps) => {
+export const UserBadge = ({ authorId, users = [], className, showRole = false, showName = true }: UserBadgeProps) => {
   const getAuthorDisplay = (id: string, memberList: any[]) => {
-    const user = memberList.find(u => u.uid === id);
+    const user = memberList.find(u => 
+      (u.uid && String(u.uid) === String(id)) || 
+      (u.id && String(u.id) === String(id)) || 
+      (u.username && String(u.username) === String(id)) ||
+      (u.email && String(u.email) === String(id))
+    );
     if (!user) {
-      if (id === 'admin') return { name: 'Admin Manager', initial: 'AM', isSystem: true, role: 'admin' };
-      return { name: id || 'Unknown', initial: 'U', isSystem: false, role: 'member' };
+      if (id === 'admin') return { name: 'Admin Manager', isSystem: true, role: 'admin', userObj: null };
+      return { name: id || 'Unknown', isSystem: false, role: 'member', userObj: null };
     }
-    const name = user.role === 'admin' ? 'Admin' : (user?.displayName || user?.username || 'User');
-    const initial = name.split(' ').filter(Boolean).map((n: string) => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
-    return { name, initial, isSystem: false, role: user.role };
+    const name = user.displayName || user.nama_lengkap || user.name || user.username || 'User';
+    return { name, isSystem: false, role: user.role, userObj: user };
   };
 
-  const { name, initial, role } = getAuthorDisplay(authorId, users);
-
-  // Generate consistent color hash based on author ID
-  const getAvatarColor = (id: string) => {
-    let hash = 0;
-    for (let i = 0; i < id.length; i++) {
-      hash = id.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const colors = [
-      "bg-indigo-55 bg-indigo-50/80 text-indigo-700 border-indigo-200/40",
-      "bg-emerald-55 bg-emerald-50/80 text-emerald-700 border-emerald-200/40",
-      "bg-sky-55 bg-sky-50/80 text-sky-700 border-sky-200/40",
-      "bg-amber-55 bg-amber-50/80 text-amber-705 text-amber-800 border-amber-200/40",
-      "bg-rose-55 bg-rose-50/80 text-rose-700 border-rose-200/40",
-      "bg-purple-55 bg-purple-50/80 text-purple-700 border-purple-200/40",
-      "bg-cyan-55 bg-cyan-50/80 text-cyan-700 border-cyan-200/40",
-      "bg-teal-55 bg-teal-50/80 text-teal-700 border-teal-200/40"
-    ];
-    return colors[Math.abs(hash) % colors.length];
-  };
-
-  const colorClasses = getAvatarColor(authorId);
+  const { name, role, userObj } = getAuthorDisplay(authorId, users);
 
   return (
     <div 
       className={cn("inline-flex items-center gap-2 max-w-full text-left group/avatar relative cursor-pointer", className)}
       title={name}
     >
-      <div className={cn(
-        "w-6 h-6 rounded-md flex items-center justify-center text-[9px] font-medium border tracking-wider uppercase shrink-0 select-none shadow-sm/30 group-hover/avatar:scale-110 transition-transform",
-        colorClasses
-      )}>
-        {initial}
-      </div>
+      <UserAvatar
+        user={userObj}
+        uid={authorId}
+        members={users}
+        name={name}
+        className="w-6 h-6 text-[9px] shrink-0 group-hover/avatar:scale-110 transition-transform"
+      />
       {showName && (
         <div className="flex flex-col min-w-0">
           <span className="truncate text-xs font-medium text-slate-700 leading-tight">

@@ -24,3 +24,21 @@ export const safeFormat = (dateValue: any, formatStr: string, fallback: string =
     return fallback;
   }
 };
+
+export const humanizeActivityAction = (action?: string, details?: any): string => {
+  if (!action) return "melakukan aktivitas sistem";
+  const act = action.toLowerCase().trim();
+
+  if (act.includes("sprint_completed") || act.includes("completesprint") || act.includes("sprint completed")) return "menyelesaikan Sprint";
+  if (act.includes("sprint_started") || act.includes("startsprint") || act.includes("sprint started")) return "memulai Sprint baru";
+  if (act.includes("task_created") || act.includes("create_task") || act.includes("createtask") || act.includes("task created")) return "membuat task baru";
+  if (act.includes("status_changed") || act.includes("update_status") || act.includes("updatestatus") || act.includes("status changed")) return "mengubah status task";
+  if (act.includes("task_updated") || act.includes("update_task") || act.includes("updatetask") || act.includes("task updated")) return "memperbarui detail task";
+  if (act.includes("comment_added") || act.includes("add_comment") || act.includes("addcomment") || act.includes("comment added")) return "menambahkan komentar";
+  if (act.includes("avatar_uploaded") || act.includes("upload_avatar") || act.includes("avatar uploaded")) return "memperbarui foto profil";
+  if (act.includes("member_added") || act.includes("add_member") || act.includes("member added")) return "menambahkan anggota tim";
+  if (act.includes("project_created") || act.includes("create_project") || act.includes("project created")) return "membuat proyek baru";
+  if (act.includes("file_uploaded") || act.includes("upload_file") || act.includes("file uploaded")) return "mengunggah dokumen";
+
+  return act.replace(/_/g, " ");
+};

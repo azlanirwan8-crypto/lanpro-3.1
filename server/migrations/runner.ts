@@ -34,6 +34,9 @@ export async function runMigrations() {
       await addCol("Users", "phone", "VARCHAR(50)");
       await addCol("Users", "lastSeen", "VARCHAR(50)");
       await addCol("Users", "currentSessionToken", "TEXT");
+      await addCol("Users", "avatar_url", "TEXT");
+      await addCol("Users", "avatarUrl", "TEXT");
+      await addCol("Users", "photoURL", "TEXT");
       await addCol("Tasks", "orderIndex", "INT NOT NULL DEFAULT 0");
       await addCol("Tasks", "isBlocked", "TINYINT(1) DEFAULT 0");
       await addCol("Tasks", "dueDate", "VARCHAR(50)");

@@ -1,5 +1,8 @@
 import express from "express";
 import crypto from "crypto";
+import fs from "fs";
+import path from "path";
+import multer from "multer";
 import mysqlPool from "../../src/lib/db";
 import { authenticateJWT, activeUserSessions, verifyGlobalAdmin } from "../middleware/auth";
 import { verifyProjectAccess } from "../middleware/rbac";
@@ -8,6 +11,13 @@ import { createAuditLog } from "../services/audit.service";
 import { broadcastProjectNotification, sendProjectActivityNotification, checkUpcomingDueDates } from "../services/notification.service";
 import jwt from "jsonwebtoken";
 import { getJwtSecret } from "../middleware/auth";
+
+const isServerless = !!process.env.VERCEL || !!process.env.AWS_EXECUTION_ENV || process.cwd() === '/var/task' || process.cwd().includes('/var/task');
+const GLOBAL_UPLOADS_DIR = isServerless ? '/tmp/uploads' : path.join(process.cwd(), 'uploads');
+if (!fs.existsSync(GLOBAL_UPLOADS_DIR)) {
+  fs.mkdirSync(GLOBAL_UPLOADS_DIR, { recursive: true });
+}
+const upload = multer({ dest: GLOBAL_UPLOADS_DIR, limits: { fileSize: 5 * 1024 * 1024 } });
 
 const isRedisConnected = false;
 const pubClient: any = null;
@@ -62,7 +72,7 @@ const router = express.Router();
       
       // Query all users to get their latest lastSeen and presence status
       const [rows]: any = await connection.query(
-        "SELECT id, uid, username, nama_lengkap, email, displayName, photoURL, role, status, lastSeen, department, position, permissions, phone FROM Users"
+        "SELECT id, uid, username, nama_lengkap, email, displayName, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar_url, COALESCE(avatar_url, photoURL, avatarUrl) AS photoURL, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar, role, status, lastSeen, department, position, permissions, phone FROM Users"
       );
       
       // Process database rows, parsing permissions if needed
@@ -162,7 +172,7 @@ const router = express.Router();
         const connection = await mysqlPool.getConnection();
         try {
           const [rows]: any = await connection.query(
-            "SELECT id, uid, username, nama_lengkap, email, displayName, photoURL, role, status, lastSeen, department, position, permissions, phone FROM Users"
+            "SELECT id, uid, username, nama_lengkap, email, displayName, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar_url, COALESCE(avatar_url, photoURL, avatarUrl) AS photoURL, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar, role, status, lastSeen, department, position, permissions, phone FROM Users"
           );
           const processedUsers = rows.map((u: any) => {
             try { if (u.permissions && typeof u.permissions === 'string') u.permissions = JSON.parse(u.permissions); } catch (e) {}
@@ -192,7 +202,7 @@ const router = express.Router();
 
   router.get("/api/users", async (req, res) => {
     try {
-      const rows = await query("SELECT id, uid, username, nama_lengkap, email, displayName, role, status, permissions, phone, department, position, photoURL AS avatar, createdAt, lastSeen FROM Users");
+      const rows = await query("SELECT id, uid, username, nama_lengkap, email, displayName, role, status, permissions, phone, department, position, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar_url, COALESCE(avatar_url, photoURL, avatarUrl) AS photoURL, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar, createdAt, lastSeen FROM Users");
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/users error:", error);
@@ -204,7 +214,7 @@ const router = express.Router();
     try {
       const { id } = req.params;
       const connection = await mysqlPool.getConnection();
-      const [rows] = await connection.query("SELECT id, uid, username, nama_lengkap, email, displayName, role, status, permissions, phone, department, position, photoURL AS avatar, createdAt, lastSeen FROM Users WHERE id = ?", [id]);
+      const [rows] = await connection.query("SELECT id, uid, username, nama_lengkap, email, displayName, role, status, permissions, phone, department, position, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar_url, COALESCE(avatar_url, photoURL, avatarUrl) AS photoURL, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar, createdAt, lastSeen FROM Users WHERE id = ? OR uid = ?", [id, id]);
       connection.release();
       if ((rows as any[]).length > 0) {
         let user = (rows as any[])[0];
@@ -216,6 +226,80 @@ const router = express.Router();
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/users/:id error:", error);
       res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+    }
+  });
+
+  // 🖼️ UPLOAD AVATAR ENDPOINT: POST /api/users/:id/avatar
+  router.post("/api/users/:id/avatar", authenticateJWT, upload.single('file'), async (req: any, res: any) => {
+    try {
+      const { id } = req.params;
+      const currentUserId = req.user?.id || req.user?.uid;
+      const currentUserRole = String(req.user?.role || req.user?.system_role || '').toLowerCase();
+      const isAdmin = ['sadm', 'admn', 'admin', 'system admin', 'super admin'].includes(currentUserRole);
+
+      if (!isAdmin && String(id) !== String(currentUserId)) {
+        return res.status(403).json({
+          status: "error",
+          message: "Akses ditolak: Anda hanya dapat memperbarui foto profil Anda sendiri."
+        });
+      }
+
+      const file = req.file || (req.files && req.files[0]);
+      if (!file) {
+        return res.status(400).json({
+          status: "error",
+          message: "File gambar avatar wajib disertakan."
+        });
+      }
+
+      const ext = path.extname(file.originalname) || '.png';
+      const safeFilename = `avatar-${id}-${Date.now()}${ext.toLowerCase()}`;
+      const targetPath = path.join(GLOBAL_UPLOADS_DIR, safeFilename);
+
+      // Store in uploads directory
+      fs.renameSync(file.path, targetPath);
+
+      const avatarUrl = `/uploads/${safeFilename}`;
+
+      const connection = await mysqlPool.getConnection();
+      await connection.query(
+        "UPDATE Users SET avatar_url = ?, photoURL = ?, avatarUrl = ? WHERE id = ? OR uid = ?",
+        [avatarUrl, avatarUrl, avatarUrl, id, id]
+      );
+
+      const [rows]: any = await connection.query(
+        "SELECT id, uid, username, nama_lengkap, email, displayName, role, status, permissions, phone, department, position, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar_url, COALESCE(avatar_url, photoURL, avatarUrl) AS photoURL, createdAt, lastSeen FROM Users WHERE id = ? OR uid = ?",
+        [id, id]
+      );
+      connection.release();
+
+      const updatedUser = rows && rows[0] ? rows[0] : { id, avatar_url: avatarUrl, photoURL: avatarUrl };
+
+      // Socket.IO broadcast
+      const io = req.app.get('io') || (req as any).io;
+      if (io) {
+        io.emit("data_changed", { path: `/api/users/${id}`, method: "PUT" });
+        io.emit("data_changed", { path: `/api/users`, method: "GET" });
+        io.emit("user_avatar_updated", { userId: id, avatar_url: avatarUrl, user: updatedUser });
+      }
+
+      return res.json({
+        status: "success",
+        message: "Foto profil berhasil diperbarui",
+        avatar_url: avatarUrl,
+        data: {
+          id: id,
+          avatar_url: avatarUrl,
+          photoURL: avatarUrl,
+          user: updatedUser
+        }
+      });
+    } catch (error: any) {
+      console.error("LOG ANOMALI CRITICAL: POST /api/users/:id/avatar error:", error);
+      return res.status(500).json({
+        status: "error",
+        message: "Gagal memperbarui foto profil: " + error.message
+      });
     }
   });
 
@@ -234,7 +318,8 @@ const router = express.Router();
         });
       }
 
-      let { role, system_role, status, account_status, department, position, permissions, displayName, username, email, phone, passwordHash, password, photoURL } = req.body;
+      let { role, system_role, status, account_status, department, position, permissions, displayName, username, email, phone, passwordHash, password, photoURL, avatar_url } = req.body;
+      const effectiveAvatar = avatar_url || photoURL;
 
       // If user is NOT admin, automatically strip out sensitive system/organizational attributes
       if (!isAdmin) {
@@ -266,7 +351,10 @@ const router = express.Router();
         updates.push('email = ?'); 
         values.push(email && email.trim() !== "" ? email.trim() : null); 
       }
-      if (photoURL !== undefined) { updates.push('photoURL = ?'); values.push(photoURL); }
+      if (effectiveAvatar !== undefined) { 
+        updates.push('photoURL = ?', 'avatar_url = ?', 'avatarUrl = ?'); 
+        values.push(effectiveAvatar, effectiveAvatar, effectiveAvatar); 
+      }
       if (phone !== undefined) { 
         updates.push('phone = ?'); 
         values.push(phone && phone.trim() !== "" ? phone.trim() : null); 
@@ -309,7 +397,8 @@ const router = express.Router();
   router.put("/api/profile/update", authenticateJWT, async (req: any, res: any) => {
     try {
       const { id } = req.user;
-      const { displayName, username, email, phone, currentPassword, newPassword, photoURL } = req.body;
+      const { displayName, username, email, phone, currentPassword, newPassword, photoURL, avatar_url } = req.body;
+      const effectiveAvatar = avatar_url || photoURL;
       const connection = await mysqlPool.getConnection();
 
       const [users]: any = await connection.query("SELECT * FROM Users WHERE id = ?", [id]);
@@ -328,7 +417,18 @@ const router = express.Router();
         await connection.query("UPDATE Users SET passwordHash = ? WHERE id = ?", [hashPassword(newPassword), id]);
       }
 
-      await connection.query("UPDATE Users SET displayName = ?, username = ?, email = ?, phone = ?, photoURL = ? WHERE id = ?", [displayName, username, email, phone, photoURL || user.photoURL, id]);
+      const finalAvatar = effectiveAvatar !== undefined ? effectiveAvatar : (user.avatar_url || user.photoURL);
+
+      await connection.query(
+        "UPDATE Users SET displayName = ?, username = ?, email = ?, phone = ?, photoURL = ?, avatar_url = ?, avatarUrl = ? WHERE id = ?", 
+        [displayName, username, email, phone, finalAvatar, finalAvatar, finalAvatar, id]
+      );
+
+      const io = req.app.get('io') || (req as any).io;
+      if (io) {
+        io.emit("data_changed", { path: `/api/users/${id}`, method: "PUT" });
+        io.emit("data_changed", { path: `/api/users`, method: "GET" });
+      }
 
       connection.release();
       res.json({ status: "success", message: "Profile updated" });

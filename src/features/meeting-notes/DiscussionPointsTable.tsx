@@ -19,6 +19,7 @@ import {
   type MasterData,
 } from "../../types";
 import { StyledDropdown } from "../../components/ui/CommonComponents";
+import { UserAvatar } from "../../components/ui/UserAvatar";
 import { AiMeetingCompanion } from "./AiMeetingCompanion";
 import { cn } from "../../lib/utils";
 import {
@@ -875,7 +876,10 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                         isMine ? "items-end" : "items-start"
                       )}>
                         {!isMine && (
-                          <span className="text-[10px]  text-slate-500 mb-0.5 ml-1">{authorName}</span>
+                          <div className="flex items-center gap-1.5 mb-1 ml-1">
+                            <UserAvatar uid={commentUserId} members={users} name={authorName} className="w-4 h-4 text-[9px]" />
+                            <span className="text-[10px] text-slate-500 font-medium">{authorName}</span>
+                          </div>
                         )}
                         <div className={cn(
                           "px-3.5 py-2 rounded-2xl relative shadow-sm group",

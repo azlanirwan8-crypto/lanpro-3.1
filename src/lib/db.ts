@@ -93,7 +93,7 @@ export function convertToPostgres(sql: string, params: any[] = []): { text: stri
 
   // 7. Auto-quote camelCase column names
   const camelCaseCols = [
-    'passwordHash', 'displayName', 'avatarUrl', 'photoUrl', 'createdAt', 'updatedAt',
+    'passwordHash', 'displayName', 'avatarUrl', 'photoUrl', 'avatar_url', 'createdAt', 'updatedAt',
     'ownerId', 'projectId', 'sprintId', 'taskKey', 'assigneeId', 'assigneeEmail',
     'reporterId', 'projectRisk', 'storyPoints', 'orderIndex', 'isBlocked', 'dueDate',
     'milestoneId', 'moduleId', 'linkedEpicId', 'parentTaskId', 'parentAdminId', 'parentId',
@@ -300,6 +300,10 @@ export async function query<T>(sql: string, values?: any[]): Promise<T> {
     console.error(`  SQL: ${sql.substring(0, 120)}`);
     throw err;
   }
+}
+
+export function getPgPool(): Pool {
+  return pgPool;
 }
 
 export function getDbMode(): 'pg' | 'local' {

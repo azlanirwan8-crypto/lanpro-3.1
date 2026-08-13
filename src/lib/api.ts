@@ -39,19 +39,27 @@ export function isNetworkOrAuthError(e: any): boolean {
 }
 
 export const getAuthToken = () => {
-    return localStorage.getItem("lanpro_jwt_token");
+    try {
+      return localStorage.getItem("lanpro_jwt_token");
+    } catch (e) {
+      return null;
+    }
 };
 
 export const setAuthToken = (token: string) => {
-    localStorage.setItem("lanpro_jwt_token", token);
+    try {
+      localStorage.setItem("lanpro_jwt_token", token);
+    } catch (e) {}
 };
 
 export const clearAuthToken = () => {
-    localStorage.removeItem("lanpro_jwt_token");
-    localStorage.removeItem("sessionUser");
-    sessionStorage.removeItem("sessionUser");
-    localStorage.removeItem("isAdminMode");
-    sessionStorage.removeItem("isAdminMode");
+    try {
+      localStorage.removeItem("lanpro_jwt_token");
+      localStorage.removeItem("sessionUser");
+      sessionStorage.removeItem("sessionUser");
+      localStorage.removeItem("isAdminMode");
+      sessionStorage.removeItem("isAdminMode");
+    } catch (e) {}
 };
 
 interface FetchOptions extends RequestInit {

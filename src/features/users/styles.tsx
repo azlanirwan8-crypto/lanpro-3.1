@@ -49,54 +49,5 @@ export const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-md' 
   );
 };
 
-export const UserAvatar = ({ user, className = '' }: { user?: UserProfile | null, className?: string }) => {
-  const [imgError, setImgError] = React.useState(false);
-  
-  if (!user) {
-    return (
-      <div className={`w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 shrink-0 ${className}`}>
-        <Users className="w-4 h-4" />
-      </div>
-    );
-  }
-
-  const getInitials = (name: string) => {
-    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-  };
-
-  const getColors = (id: string = '') => {
-    const colors = [
-      'bg-blue-100 text-blue-700 border-blue-200',
-      'bg-indigo-100 text-indigo-700 border-indigo-200',
-      'bg-purple-100 text-purple-700 border-purple-200',
-      'bg-pink-100 text-pink-700 border-pink-200',
-      'bg-rose-100 text-rose-700 border-rose-200',
-      'bg-amber-100 text-amber-700 border-amber-200',
-      'bg-emerald-100 text-emerald-700 border-emerald-200',
-      'bg-cyan-100 text-cyan-700 border-cyan-200',
-    ];
-    let hash = 0;
-    const targetId = id || '';
-    for (let i = 0; i < targetId.length; i++) {
-        hash = targetId.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return colors[Math.abs(hash) % colors.length];
-  };
-
-  if (user.photoURL && !imgError) {
-    return (
-      <img 
-        src={user.photoURL} 
-        alt={user?.displayName || user?.username} 
-        className={`w-8 h-8 rounded-full object-cover shrink-0 ${className}`} 
-        onError={() => setImgError(true)}
-      />
-    );
-  }
-
-  return (
-    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium border shrink-0 ${getColors(user?.id)} ${className}`}>
-      {user?.displayName ? getInitials(user?.displayName) : getInitials(user?.username || '')}
-    </div>
-  );
-};
+import { UserAvatar } from '../../components/ui/UserAvatar';
+export { UserAvatar };

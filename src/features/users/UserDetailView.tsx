@@ -105,7 +105,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
 
   // Form Edit State
   const [isUploading, setIsUploading] = useState(false);
-  const [photoURL, setPhotoURL] = useState(user?.photoURL || "");
+  const [photoURL, setPhotoURL] = useState(user?.avatar_url || user?.photoURL || user?.avatarUrl || "");
   const [editRole, setEditRole] = useState<AppRole>(user.role || 'user');
   const [editStatus, setEditStatus] = useState<'approved' | 'pending' | 'rejected'>(user.status || 'approved');
   const [editDepartment, setEditDepartment] = useState<string>(user.department || '');
@@ -147,6 +147,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
   // Sync state when user changes
   useEffect(() => {
     if (user) {
+      setPhotoURL(user.avatar_url || user.photoURL || user.avatarUrl || "");
       setEditRole(user.role || 'user');
       setEditStatus(user.status || 'approved');
       setEditDepartment(user.department || '');
@@ -232,15 +233,18 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
     setIsUploading(true);
     try {
       const token = localStorage.getItem('lanpro_jwt_token');
-      const res = await fetch('/api/v1/upload-document', {
+      const userId = user.id || user.uid;
+      const res = await fetch(`/api/users/${userId}/avatar`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData
       });
       const data = await res.json();
       if (data.status === 'success') {
-        setPhotoURL(data.data.protectedUrl || data.data.url);
-        toast.success('Foto berhasil diunggah, klik Simpan untuk menerapkan perubahan.');
+        const newAvatarUrl = data.avatar_url || data.data?.avatar_url || data.data?.photoURL;
+        setPhotoURL(newAvatarUrl);
+        toast.success('Foto avatar berhasil diunggah!');
+        if (onUserUpdated) onUserUpdated();
       } else {
         toast.error(data.message || 'Gagal mengunggah foto');
       }
@@ -263,7 +267,10 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
       const payload: any = {
         displayName: editFullName.trim(),
         email: editEmail.trim(),
-        phone: editPhone.trim()
+        phone: editPhone.trim(),
+        photoURL,
+        avatar_url: photoURL,
+        avatarUrl: photoURL,
       };
 
       if (isAdmin) {

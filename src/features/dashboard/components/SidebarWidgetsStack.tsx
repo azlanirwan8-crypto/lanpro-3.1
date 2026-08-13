@@ -9,7 +9,7 @@ import {
   Video,
   Globe,
 } from "lucide-react";
-import { ensureDate } from "../../../lib/utils";
+import { ensureDate, humanizeActivityAction } from "../../../lib/utils";
 import { cn } from "../../../lib/utils";
 
 const isDueSoon24h = (endDate?: string | Date | null) => {
@@ -347,8 +347,8 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
               <div key={log.id} className="flex gap-2.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
                 <div>
-                  <div className="text-[11px] text-slate-350 font-medium leading-tight">
-                    <span className="text-white font-medium">{author}</span> {log.action}
+                  <div className="text-[11px] text-slate-300 font-medium leading-tight">
+                    <span className="text-white font-medium">{author}</span> {humanizeActivityAction(log.action)}
                   </div>
                   <div className="text-[9px] text-slate-400 mt-0.5">
                     {formatDistanceToNow(ensureDate(log.createdAt), {

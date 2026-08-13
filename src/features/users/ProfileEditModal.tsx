@@ -49,16 +49,22 @@ export const ProfileEditModal = ({
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const docId = userProfile?.id || userProfile?.uid;
+    if (!docId) {
+      toast.error('Sesi user tidak valid');
+      return;
+    }
+
     // Client-side validation
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
     if (!allowedTypes.includes(file.type)) {
-      toast.error('Format file tidak didukung (gunakan JPG, PNG, atau WEBP)');
+      toast.error('Format file tidak didukung (gunakan JPG, PNG, WEBP, GIF, atau SVG)');
       return;
     }
     
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
-      toast.error('Ukuran file maksimal 2MB');
+      toast.error('Ukuran file maksimal 5MB');
       return;
     }
 
@@ -68,20 +74,27 @@ export const ProfileEditModal = ({
     setIsUploading(true);
     try {
       const token = localStorage.getItem('lanpro_jwt_token');
-      const res = await fetch('/api/v1/upload-document', {
+      const res = await fetch(`/api/users/${docId}/avatar`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData
       });
       const data = await res.json();
       if (data.status === 'success') {
-        setPhotoURL(data.data.protectedUrl || data.data.url);
-        toast.success('Foto berhasil diunggah');
+        const newAvatarUrl = data.avatar_url || data.data?.avatar_url || data.data?.photoURL;
+        setPhotoURL(newAvatarUrl);
+        if (onProfileUpdated) {
+          onProfileUpdated({
+            avatar_url: newAvatarUrl,
+            photoURL: newAvatarUrl,
+          });
+        }
+        toast.success('Foto avatar berhasil diunggah!');
       } else {
-        toast.error(data.message || 'Gagal mengunggah foto');
+        toast.error(data.message || 'Gagal mengunggah foto avatar');
       }
     } catch (err) {
-      toast.error('Terjadi kesalahan jaringan');
+      toast.error('Terjadi kesalahan jaringan saat mengunggah avatar');
     } finally {
       setIsUploading(false);
     }
@@ -102,7 +115,8 @@ export const ProfileEditModal = ({
           phone, 
           currentPassword: currentPassword || undefined, 
           newPassword: newPassword || undefined,
-          photoURL 
+          photoURL,
+          avatar_url: photoURL
         },
       });
 
@@ -113,6 +127,7 @@ export const ProfileEditModal = ({
           email,
           phone,
           photoURL,
+          avatar_url: photoURL,
         });
       }
 

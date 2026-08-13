@@ -11,7 +11,33 @@ import admin from 'firebase-admin';
 
 const router = express.Router();
 
-
+function formatUserForAuthResponse(user: any) {
+  if (!user) return user;
+  const avatar = user.avatar_url || user.photoURL || user.avatarUrl || user.avatar || null;
+  let parsedPermissions = user.permissions;
+  if (typeof user.permissions === 'string') {
+    try {
+      parsedPermissions = JSON.parse(user.permissions);
+    } catch (e) {}
+  }
+  return {
+    id: user.id,
+    uid: user.uid || user.id,
+    username: user.username,
+    displayName: user.displayName || user.nama_lengkap || user.name || user.username,
+    nama_lengkap: user.nama_lengkap || user.displayName || user.name,
+    email: user.email,
+    role: user.role,
+    status: user.status,
+    permissions: parsedPermissions,
+    department: user.department,
+    position: user.position,
+    phone: user.phone,
+    avatar_url: avatar,
+    photoURL: avatar,
+    avatarUrl: avatar,
+  };
+}
 
   router.get("/api/auth/verify", authenticateJWT, async (req: any, res) => {
     let connection;
@@ -22,12 +48,12 @@ const router = express.Router();
         [req.user.id || req.user.uid, req.user.uid || req.user.id]
       );
       if (rows.length === 0) {
-        return res.json({ status: "success", user: req.user });
+        return res.json({ status: "success", user: formatUserForAuthResponse(req.user) });
       }
-      res.json({ status: "success", user: rows[0] });
+      res.json({ status: "success", user: formatUserForAuthResponse(rows[0]) });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: Verify token error:", error);
-      res.json({ status: "success", user: req.user });
+      res.json({ status: "success", user: formatUserForAuthResponse(req.user) });
     } finally {
       if (connection) connection.release();
     }
@@ -56,20 +82,7 @@ const router = express.Router();
       return res.json({
         status: "success",
         token: newToken,
-        user: {
-          id: user.id,
-          uid: user.uid,
-          username: user.username,
-          displayName: user.displayName,
-          nama_lengkap: user.nama_lengkap,
-          email: user.email,
-          role: user.role,
-          status: user.status,
-          permissions: user.permissions,
-          department: user.department,
-          position: user.position,
-          phone: user.phone
-        }
+        user: formatUserForAuthResponse(user)
       });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: Refresh token error:", error);
@@ -104,7 +117,7 @@ const router = express.Router();
           const user = users[0];
           // Create JWT session
           const token = generateToken(user);
-          res.json({ status: "success", token, user });
+          res.json({ status: "success", token, user: formatUserForAuthResponse(user) });
       } catch (error: any) {
           console.error("Google verify error:", error);
           res.status(500).json({ status: "error", message: "Internal server error" });
@@ -343,20 +356,7 @@ const router = express.Router();
       }
       return res.json({
         status: "success",
-        user: {
-          id: user.id,
-          uid: user.uid,
-          username: user.username,
-          displayName: user.displayName,
-          nama_lengkap: user.nama_lengkap,
-          email: user.email,
-          role: user.role,
-          status: user.status,
-          permissions: user.permissions,
-          department: user.department,
-          position: user.position,
-          phone: user.phone
-        },
+        user: formatUserForAuthResponse(user),
         token
       });
     } catch (error: any) {
@@ -418,20 +418,7 @@ const router = express.Router();
 
       return res.json({
         status: "success",
-        user: {
-          id: user.id,
-          uid: user.uid,
-          username: user.username,
-          displayName: user.displayName,
-          nama_lengkap: user.nama_lengkap,
-          email: user.email,
-          role: user.role,
-          status: user.status,
-          permissions: user.permissions,
-          department: user.department,
-          position: user.position,
-          phone: user.phone
-        },
+        user: formatUserForAuthResponse(user),
         token
       });
     } catch (e) {

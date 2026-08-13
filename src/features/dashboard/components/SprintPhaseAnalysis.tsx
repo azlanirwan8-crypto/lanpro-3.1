@@ -1,6 +1,7 @@
 import React from "react";
 import { Zap, LayoutGrid, UserCircle } from "lucide-react";
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, Cell } from "recharts";
+import { UserAvatar } from "../../../components/ui/UserAvatar";
 
 interface SprintPhaseAnalysisProps {
   activeSprint: any;
@@ -120,15 +121,7 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
                     <div key={member.uid} className="group/user px-1">
                       <div className="flex justify-between items-center mb-1.5">
                         <div className="flex items-center gap-2 truncate">
-                          <div className="w-5 h-5 rounded-full bg-indigo-50 border border-indigo-100 overflow-hidden flex items-center justify-center shrink-0">
-                            {member?.photoURL ? (
-                              <img src={member.photoURL} alt="" />
-                            ) : (
-                              <span className="text-[8px] font-medium">
-                                {member?.displayName ? member.displayName[0] : (member?.username ? member.username[0] : "?")}
-                              </span>
-                            )}
-                          </div>
+                          <UserAvatar user={member} className="w-5 h-5 text-[8px] border border-indigo-100 shrink-0" />
                           <span className="text-[10px] font-medium text-slate-700 truncate uppercase tracking-tight">
                             {member?.displayName || member?.username || "Unknown"}
                           </span>

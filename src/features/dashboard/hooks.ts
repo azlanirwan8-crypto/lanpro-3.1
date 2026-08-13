@@ -35,7 +35,7 @@ export const useDashboard = (props: DashboardViewProps) => {
   const completionPercentage = totalTasks === 0 ? 0 : Math.round((completedTasks.length / totalTasks) * 100);
 
   // Sprint Data
-  const activeSprint = sprints.find(s => s.status === 'active');
+  const activeSprint = sprints.find(s => ['active', 'in_progress', 'ongoing', 'in progress'].includes(String(s?.status || '').toLowerCase()));
   let sprintProgress = 0;
   let sprintTotalTasks = 0;
   let sprintCompletedTasks = 0;

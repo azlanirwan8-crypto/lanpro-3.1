@@ -135,6 +135,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
             setCurrentView={setCurrentView}
             setSelectedTaskForDetail={setSelectedTaskForDetail}
             setIsTaskDetailModalOpen={setIsTaskDetailModalOpen}
+            setIsNewTaskModalOpen={setIsNewTaskModalOpen}
             userRole={effectiveRole}
             currentUser={currentUser}
             fetchTasks={fetchTasks}
@@ -149,7 +150,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
             projectId={selectedProject?.id}
             userRole={effectiveRole}
             currentUser={currentUserProfile || currentUser}
-            projectMembers={projectMembers}
+            projectMembers={projectMembers && projectMembers.length > 0 ? projectMembers : allUsers}
             masterData={masterData || []}
             permissions={currentUserProfile?.permissions}
           />

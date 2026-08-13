@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { UserAvatar } from '../../components/ui/UserAvatar';
 import { 
   Book, 
   Plus, 
@@ -881,9 +882,12 @@ export const WikiView: React.FC<WikiViewProps> = ({
                           </td>
                           <td className="py-2.5 px-4 text-slate-700 font-medium whitespace-nowrap">
                             <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-indigo-100 text-[#405189] flex items-center justify-center text-[10px] font-semibold shrink-0">
-                                {creatorName ? creatorName.charAt(0).toUpperCase() : "A"}
-                              </div>
+                              <UserAvatar
+                                uid={doc.createdBy}
+                                members={users}
+                                name={creatorName}
+                                className="w-6 h-6 text-[10px]"
+                              />
                               <span className="truncate max-w-[130px]">{creatorName}</span>
                             </div>
                           </td>

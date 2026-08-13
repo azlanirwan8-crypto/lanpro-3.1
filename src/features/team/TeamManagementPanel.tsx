@@ -4,6 +4,7 @@ import {
   Clock, Shield, Mail, User, X, Star, FileText, Briefcase
 } from 'lucide-react';
 import { UserProfile, Project, Task, AppRole, MasterData } from '../../types';
+import { UserAvatar } from '../../components/ui/UserAvatar';
 import { toast } from 'sonner';
 import { apiRequest } from '../../lib/api';
 
@@ -342,18 +343,7 @@ export const TeamManagementPanel = ({
 
                   {/* Avatar Centered Overlap */}
                   <div className="relative -mt-8 mx-auto z-10">
-                    {person.photoURL ? (
-                      <img 
-                        src={person.photoURL} 
-                        alt={name} 
-                        className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-md bg-white"
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 rounded-full border-4 border-white shadow-md bg-indigo-600 flex items-center justify-center text-white font-medium text-base">
-                        {initials}
-                      </div>
-                    )}
+                    <UserAvatar user={person} className="w-16 h-16 border-4 border-white shadow-md text-base" />
                     <div 
                       className={`w-3.5 h-3.5 rounded-full border-2 border-white absolute bottom-0 right-0 shadow-2xs ${
                         person.isPending ? 'bg-amber-500' : 'bg-emerald-500'
@@ -430,13 +420,7 @@ export const TeamManagementPanel = ({
                         <td className="px-5 py-3.5">
                           <div className="flex items-center gap-3">
                             <div className="relative">
-                              {person.photoURL ? (
-                                <img src={person.photoURL} alt={name} className="w-9 h-9 rounded-full object-cover border border-slate-200" referrerPolicy="no-referrer" />
-                              ) : (
-                                <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white font-medium text-xs">
-                                  {initials}
-                                </div>
-                              )}
+                              <UserAvatar user={person} className="w-9 h-9 border border-slate-200 text-xs" />
                               <div className={`w-2.5 h-2.5 rounded-full border border-white absolute bottom-0 right-0 ${person.isPending ? 'bg-amber-500' : 'bg-emerald-500'}`} />
                             </div>
                             <div>
@@ -505,17 +489,7 @@ export const TeamManagementPanel = ({
             {/* Profile Detail Content */}
             <div className="p-6 pt-0 relative">
               <div className="-mt-12 mb-4 flex items-end justify-between">
-                {selectedProfileUser.photoURL ? (
-                  <img 
-                    src={selectedProfileUser.photoURL} 
-                    alt="avatar" 
-                    className="w-20 h-20 rounded-full border-4 border-white shadow-md bg-white object-cover" 
-                  />
-                ) : (
-                  <div className="w-20 h-20 rounded-full border-4 border-white shadow-md bg-indigo-600 text-white flex items-center justify-center font-medium text-xl">
-                    {(selectedProfileUser.displayName || '?').charAt(0).toUpperCase()}
-                  </div>
-                )}
+                <UserAvatar user={selectedProfileUser} className="w-20 h-20 border-4 border-white shadow-md text-xl" />
                 <span className="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full border border-emerald-200">
                   Joined Project
                 </span>

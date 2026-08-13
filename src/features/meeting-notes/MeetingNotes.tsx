@@ -35,6 +35,7 @@ import {
 } from "../../types";
 import { DiscussionPointsTable } from "./DiscussionPointsTable";
 import { UserBadge } from "./UserBadge";
+import { UserAvatar } from "../../components/ui/UserAvatar";
 import { AiMeetingCompanion } from "./AiMeetingCompanion";
 import { Sparkles, Brain } from "lucide-react";
 import { hasPermission } from "../../lib/permissions";
@@ -514,9 +515,12 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                           </td>
                           <td className="py-3 px-4 text-slate-700 font-medium">
                             <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-indigo-100 text-[#405189] flex items-center justify-center text-[10px] font-medium shrink-0">
-                                {author.initial}
-                              </div>
+                              <UserAvatar
+                                uid={meeting.authorId}
+                                members={users && users.length > 0 ? users : projectMembers}
+                                name={author.name}
+                                className="w-6 h-6 text-[10px]"
+                              />
                               <span className="truncate">{author.name}</span>
                             </div>
                           </td>

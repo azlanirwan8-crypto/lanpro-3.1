@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { UserAvatar } from "../../../components/ui/UserAvatar";
 import { format } from "date-fns";
 import { 
   ShieldCheck, 
@@ -20,7 +21,7 @@ import {
   FileSpreadsheet
 } from "lucide-react";
 import { motion } from "motion/react";
-import { ensureDate } from "../../../lib/utils";
+import { ensureDate, humanizeActivityAction } from "../../../lib/utils";
 import { cn } from "../../../lib/utils";
 
 interface TeamLeadMonitorCenterProps {
@@ -272,9 +273,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                   <div>
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white font-medium flex items-center justify-center text-sm shadow-md">
-                          {(member.displayName || member.email || 'U').charAt(0).toUpperCase()}
-                        </div>
+                        <UserAvatar user={member} className="w-10 h-10 text-sm shadow-md rounded-xl shrink-0" />
                         <div>
                           <h4 className="font-medium text-white text-sm tracking-tight">{member.displayName || member.email}</h4>
                           <span className="text-[10px] text-indigo-400 font-medium">{member.department || 'Anggota Tim'}</span>
@@ -483,12 +482,10 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
               activityLogs.slice(0, 15).map((log, idx) => (
                 <div key={log.id || idx} className="bg-slate-800/60 border border-slate-700/60 p-3.5 rounded-xl flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-violet-500/20 text-violet-400 flex items-center justify-center font-medium text-xs">
-                      {(log.userName || log.userEmail || 'U').charAt(0).toUpperCase()}
-                    </div>
+                    <UserAvatar uid={log.userId} members={projectMembers} name={log.userName || log.userEmail} className="w-8 h-8 text-xs rounded-lg shrink-0" />
                     <div>
                       <p className="text-xs text-white font-medium">
-                        <strong className="text-indigo-300">{log.userName || log.userEmail || 'Anggota Tim'}</strong> {log.action || log.description || 'melakukan pembaruan'}
+                        <strong className="text-indigo-300">{log.userName || log.userEmail || 'Anggota Tim'}</strong> {humanizeActivityAction(log.action || log.description)}
                       </p>
                       <span className="text-[10px] text-slate-400 font-mono">
                         {log.timestamp ? format(ensureDate(log.timestamp), 'dd MMM yyyy, HH:mm') : 'Baru saja'}
