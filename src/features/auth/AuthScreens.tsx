@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { LogIn, Lock, Activity, Users, FileText, Bot, ArrowRight, UserPlus, Fingerprint, RefreshCcw, Eye, EyeOff, Building, MapPin, Building2, User, Phone, Briefcase, Mail, AlertCircle, X } from "lucide-react";
+import { LogIn, Lock, Activity, Users, FileText, Bot, ArrowRight, UserPlus, Fingerprint, RefreshCcw, Eye, EyeOff, Building, MapPin, Building2, User, Phone, Briefcase, Mail, AlertCircle, X, ShieldCheck } from "lucide-react";
 import { Button, Input, VelzonFloatingParticles, GoogleIcon, cn } from "../../components/ui/CoreUI";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiRequest, setAuthToken } from "../../lib/api";
@@ -76,42 +76,41 @@ export const AuthHeroPanel = () => (
 );
 
 export const AuthWatermarkPattern = () => (
-  <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-3 lg:opacity-[0.04] select-none">
+  <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-10 select-none">
     <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" preserveAspectRatio="none">
-      <g stroke="#0f172a" strokeWidth="1.5" fill="none">
+      <g stroke="#405189" strokeWidth="1.2" fill="none">
         {/* Kanban Wireframe Columns */}
         <rect x="60" y="80" width="200" height="340" rx="14" strokeDasharray="6 6" />
         <rect x="290" y="80" width="200" height="440" rx="14" />
         <rect x="520" y="80" width="200" height="300" rx="14" strokeDasharray="6 6" />
         
         {/* Kanban Task Cards */}
-        <rect x="80" y="110" width="160" height="75" rx="8" fill="#0f172a" fillOpacity="0.04" />
-        <rect x="80" y="200" width="160" height="95" rx="8" fill="#0f172a" fillOpacity="0.04" />
+        <rect x="80" y="110" width="160" height="75" rx="8" fill="#405189" fillOpacity="0.03" />
+        <rect x="80" y="200" width="160" height="95" rx="8" fill="#405189" fillOpacity="0.03" />
         
-        <rect x="310" y="110" width="160" height="85" rx="8" fill="#0f172a" fillOpacity="0.06" />
-        <rect x="310" y="215" width="160" height="120" rx="8" fill="#0f172a" fillOpacity="0.06" />
-        <rect x="310" y="350" width="160" height="85" rx="8" fill="#0f172a" fillOpacity="0.06" />
+        <rect x="310" y="110" width="160" height="85" rx="8" fill="#405189" fillOpacity="0.05" />
+        <rect x="310" y="215" width="160" height="120" rx="8" fill="#405189" fillOpacity="0.05" />
+        <rect x="310" y="350" width="160" height="85" rx="8" fill="#405189" fillOpacity="0.05" />
 
-        <rect x="540" y="110" width="160" height="110" rx="8" fill="#0f172a" fillOpacity="0.04" />
-        <rect x="540" y="240" width="160" height="75" rx="8" fill="#0f172a" fillOpacity="0.04" />
+        <rect x="540" y="110" width="160" height="110" rx="8" fill="#405189" fillOpacity="0.03" />
+        <rect x="540" y="240" width="160" height="75" rx="8" fill="#405189" fillOpacity="0.03" />
 
         {/* Sprint Velocity & Network Connection Curves */}
-        <path d="M 80 620 Q 240 520 400 640 T 720 540 T 820 480" strokeWidth="3" stroke="#6366f1" />
-        <path d="M 80 700 L 260 580 L 440 660 L 620 520 L 800 600" strokeWidth="2" strokeDasharray="5 5" stroke="#06b6d4" />
+        <path d="M 80 620 Q 240 520 400 640 T 720 540 T 820 480" strokeWidth="2.5" stroke="#405189" />
+        <path d="M 80 700 L 260 580 L 440 660 L 620 520 L 800 600" strokeWidth="1.5" strokeDasharray="5 5" stroke="#3577f1" />
         
         {/* Nodes */}
-        <circle cx="80" cy="620" r="7" fill="#6366f1" />
-        <circle cx="400" cy="640" r="9" fill="#6366f1" />
-        <circle cx="720" cy="540" r="7" fill="#6366f1" />
-        <circle cx="820" cy="480" r="8" fill="#6366f1" />
+        <circle cx="80" cy="620" r="6" fill="#405189" />
+        <circle cx="400" cy="640" r="8" fill="#405189" />
+        <circle cx="720" cy="540" r="6" fill="#405189" />
+        <circle cx="820" cy="480" r="7" fill="#405189" />
 
-        <circle cx="80" cy="700" r="6" fill="#06b6d4" />
-        <circle cx="260" cy="580" r="6" fill="#06b6d4" />
-        <circle cx="440" cy="660" r="6" fill="#06b6d4" />
-        <circle cx="620" cy="520" r="6" fill="#06b6d4" />
-        <circle cx="800" cy="600" r="6" fill="#06b6d4" />
+        <circle cx="80" cy="700" r="5" fill="#3577f1" />
+        <circle cx="260" cy="580" r="5" fill="#3577f1" />
+        <circle cx="440" cy="660" r="5" fill="#3577f1" />
+        <circle cx="620" cy="520" r="5" fill="#3577f1" />
+        <circle cx="800" cy="600" r="5" fill="#3577f1" />
       </g>
-      <text x="750" y="850" fontSize="13" fontWeight="900" fill="#0f172a" opacity="0.25" fontFamily="sans-serif" textAnchor="end" letterSpacing="2">LANPRO AGILE WORKSPACE</text>
     </svg>
   </div>
 );
@@ -216,31 +215,29 @@ export const RegisterScreen = ({
 
   return (
     <motion.div 
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.25 }}
-      className="w-full max-w-md space-y-6 mx-auto relative z-10 font-sans"
+      className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100/90 p-8 sm:p-10 relative z-10 font-sans mx-auto"
     >
-      <div className="space-y-1.5">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <h2 className="text-3xl font-medium text-slate-900 tracking-tight">
-            Create Account
-          </h2>
-          <p className="text-slate-500 text-xs font-medium mt-1">
-            Join LanPro to manage projects and workflows
-          </p>
-        </motion.div>
+      {/* Velzon Header */}
+      <div className="text-center space-y-1.5 mb-6">
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#405189] text-white shadow-md shadow-[#405189]/25 mb-1">
+          <UserPlus className="w-6 h-6 text-amber-400" />
+        </div>
+        <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
+          Create New Account
+        </h2>
+        <p className="text-xs font-medium text-slate-500">
+          Join LanPro to manage projects and workflows
+        </p>
       </div>
 
-      <form className="space-y-3.5" onSubmit={handleRegisterSubmit}>
+      <form className="space-y-4" onSubmit={handleRegisterSubmit}>
         {/* FULL NAME INPUT */}
-        <div className="space-y-1">
-          <label className="text-[11px] font-medium text-slate-700 uppercase tracking-wider ml-0.5">
+        <div className="space-y-1.5">
+          <label className="text-xs font-semibold text-slate-700 tracking-wide block">
             Full Name <span className="text-rose-500">*</span>
           </label>
           <input
@@ -251,12 +248,12 @@ export const RegisterScreen = ({
             onChange={(e) => handleNameChange(e.target.value)}
             placeholder="John Doe"
             className={cn(
-              "w-full px-4 py-3 bg-slate-50 border rounded-xl focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
+              "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
               fieldErrors.name ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
             )}
           />
           {fieldErrors.name && (
-            <p className="text-[11px] font-medium text-rose-500 ml-0.5 flex items-center gap-1">
+            <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{fieldErrors.name}</span>
             </p>
@@ -264,8 +261,8 @@ export const RegisterScreen = ({
         </div>
 
         {/* EMAIL ADDRESS INPUT */}
-        <div className="space-y-1">
-          <label className="text-[11px] font-medium text-slate-700 uppercase tracking-wider ml-0.5">
+        <div className="space-y-1.5">
+          <label className="text-xs font-semibold text-slate-700 tracking-wide block">
             Email Address <span className="text-rose-500">*</span>
           </label>
           <input
@@ -275,12 +272,12 @@ export const RegisterScreen = ({
             onChange={(e) => handleEmailChange(e.target.value)}
             placeholder="john.doe@company.com"
             className={cn(
-              "w-full px-4 py-3 bg-slate-50 border rounded-xl focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
+              "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
               fieldErrors.email ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
             )}
           />
           {fieldErrors.email && (
-            <p className="text-[11px] font-medium text-rose-500 ml-0.5 flex items-center gap-1">
+            <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{fieldErrors.email}</span>
             </p>
@@ -288,9 +285,9 @@ export const RegisterScreen = ({
         </div>
 
         {/* USERNAME INPUT */}
-        <div className="space-y-1">
-          <label className="text-[11px] font-medium text-slate-700 uppercase tracking-wider ml-0.5">
-            Username <span className="text-rose-500">*</span> (Huruf saja)
+        <div className="space-y-1.5">
+          <label className="text-xs font-semibold text-slate-700 tracking-wide block">
+            Username <span className="text-rose-500">*</span> <span className="text-[11px] text-slate-400 font-normal">(Huruf saja, maks 10)</span>
           </label>
           <input
             type="text"
@@ -300,12 +297,12 @@ export const RegisterScreen = ({
             onChange={handleUsernameChange}
             placeholder="johndoe"
             className={cn(
-              "w-full px-4 py-3 bg-slate-50 border rounded-xl focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
+              "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
               fieldErrors.username ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
             )}
           />
           {fieldErrors.username && (
-            <p className="text-[11px] font-medium text-rose-500 ml-0.5 flex items-center gap-1">
+            <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{fieldErrors.username}</span>
             </p>
@@ -313,8 +310,8 @@ export const RegisterScreen = ({
         </div>
 
         {/* PASSWORD INPUT & STRENGTH METER */}
-        <div className="space-y-1">
-          <label className="text-[11px] font-medium text-slate-700 uppercase tracking-wider ml-0.5">
+        <div className="space-y-1.5">
+          <label className="text-xs font-semibold text-slate-700 tracking-wide block">
             Password <span className="text-rose-500">*</span>
           </label>
           <div className="relative">
@@ -325,14 +322,14 @@ export const RegisterScreen = ({
               onChange={(e) => handlePasswordChange(e.target.value)}
               placeholder="••••••••"
               className={cn(
-                "w-full pl-4 pr-11 py-3 bg-slate-50 border rounded-xl focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
+                "w-full pl-4 pr-11 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
                 fieldErrors.password ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
               )}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer transition-colors"
+              className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-[#405189] focus:outline-none cursor-pointer transition-colors"
               title={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -341,7 +338,7 @@ export const RegisterScreen = ({
 
           {/* Password Strength Indicator Bar */}
           {password.length > 0 && (
-            <div className="mt-2 space-y-1.5 p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl">
+            <div className="mt-2 space-y-1.5 p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg">
               <div className="flex items-center justify-between text-[11px] font-medium">
                 <span className="text-slate-600">Password Strength:</span>
                 <span className={passStrength.color}>{passStrength.label}</span>
@@ -372,7 +369,7 @@ export const RegisterScreen = ({
           )}
 
           {fieldErrors.password && (
-            <p className="text-[11px] font-medium text-rose-500 ml-0.5 flex items-center gap-1 mt-1">
+            <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{fieldErrors.password}</span>
             </p>
@@ -382,7 +379,7 @@ export const RegisterScreen = ({
         <button
           type="submit"
           disabled={isRegistering}
-          className="w-full bg-[#405189] text-white py-3.5 rounded-xl font-medium uppercase tracking-wider text-xs hover:bg-[#364574] transition-all shadow-lg shadow-[#405189]/25 active:scale-[0.98] mt-4 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full bg-[#405189] text-white py-3 rounded-lg font-semibold uppercase tracking-wider text-xs hover:bg-[#364574] transition-all shadow-md shadow-[#405189]/20 active:scale-[0.99] mt-3 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isRegistering ? (
             <>
@@ -398,12 +395,12 @@ export const RegisterScreen = ({
         </button>
       </form>
 
-      <p className="text-center text-xs font-medium text-slate-500 pt-4 border-t border-slate-100">
+      <p className="text-center text-xs font-medium text-slate-500 pt-5 mt-4 border-t border-slate-100">
         Already have an account?{" "}
         <button
           type="button"
           onClick={onBackToLogin}
-          className="text-[#405189] font-medium hover:text-[#364574] transition-colors ml-1 cursor-pointer hover:underline"
+          className="text-[#405189] font-semibold hover:text-[#364574] transition-colors ml-1 cursor-pointer hover:underline"
         >
           Sign In
         </button>
@@ -429,7 +426,7 @@ export const RegisterScreen = ({
             <VelzonSuccessIcon />
 
             <div className="space-y-2">
-              <h3 className="text-xl font-medium text-slate-800 tracking-tight">
+              <h3 className="text-xl font-bold text-slate-800 tracking-tight">
                 Well done !
               </h3>
               <p className="text-sm text-slate-500 font-normal leading-relaxed px-2">
@@ -441,7 +438,7 @@ export const RegisterScreen = ({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSuccessModalConfirm}
-              className="px-8 py-2.5 bg-[#405189] hover:bg-[#364574] text-white rounded-md text-sm font-medium shadow-md transition-all cursor-pointer min-w-[120px] mt-2"
+              className="px-8 py-2.5 bg-[#405189] hover:bg-[#364574] text-white rounded-md text-sm font-semibold shadow-md transition-all cursor-pointer min-w-[120px] mt-2"
             >
               Ke Halaman Login
             </motion.button>
@@ -455,23 +452,24 @@ export const RegisterScreen = ({
 export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) => {
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.25 }}
-      className="w-full max-w-md space-y-6 mx-auto relative z-10 font-sans"
+      className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100/90 p-8 sm:p-10 relative z-10 font-sans mx-auto space-y-6"
     >
       {/* Title & Subtitle Skeleton */}
-      <div className="space-y-2">
-        <div className="h-8 w-32 bg-slate-200 rounded-lg animate-pulse" />
-        <div className="h-3.5 w-60 bg-slate-100 rounded animate-pulse" />
+      <div className="text-center space-y-2 flex flex-col items-center">
+        <div className="w-12 h-12 rounded-2xl bg-slate-200 animate-pulse mb-1" />
+        <div className="h-7 w-40 bg-slate-200 rounded-lg animate-pulse" />
+        <div className="h-3.5 w-56 bg-slate-100 rounded animate-pulse" />
       </div>
 
       {/* Shimmer Input Skeleton Cards */}
       <div className="space-y-4 pt-2">
         <div className="space-y-1.5">
-          <div className="h-3 w-20 bg-slate-200 rounded animate-pulse" />
-          <div className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl relative overflow-hidden">
+          <div className="h-3.5 w-20 bg-slate-200 rounded animate-pulse" />
+          <div className="w-full h-11 bg-slate-50 border border-slate-200 rounded-lg relative overflow-hidden">
             <motion.div 
               className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-200/60 to-transparent"
               animate={{ x: ["-100%", "200%"] }}
@@ -481,8 +479,8 @@ export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) =>
         </div>
 
         <div className="space-y-1.5">
-          <div className="h-3 w-20 bg-slate-200 rounded animate-pulse" />
-          <div className="w-full h-12 bg-slate-50 border border-slate-200 rounded-xl relative overflow-hidden">
+          <div className="h-3.5 w-20 bg-slate-200 rounded animate-pulse" />
+          <div className="w-full h-11 bg-slate-50 border border-slate-200 rounded-lg relative overflow-hidden">
             <motion.div 
               className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-200/60 to-transparent"
               animate={{ x: ["-100%", "200%"] }}
@@ -491,16 +489,8 @@ export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) =>
           </div>
         </div>
 
-        {/* Remember Me Skeleton */}
-        <div className="flex items-center justify-between pt-1">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-slate-200 animate-pulse" />
-            <div className="h-3 w-24 bg-slate-200 rounded animate-pulse" />
-          </div>
-        </div>
-
         {/* Skeleton Submit Button */}
-        <div className="w-full h-12 bg-slate-100 border border-slate-200/60 rounded-xl relative overflow-hidden mt-3">
+        <div className="w-full h-11 bg-slate-100 border border-slate-200/60 rounded-lg relative overflow-hidden mt-3">
           <motion.div 
             className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-200/40 to-transparent"
             animate={{ x: ["-100%", "200%"] }}
@@ -513,26 +503,26 @@ export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) =>
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="p-4 rounded-xl bg-slate-900/5 border border-[#405189]/20 backdrop-blur-xs flex items-center gap-3.5 mt-2 shadow-xs"
+        className="p-3.5 rounded-xl bg-slate-50 border border-[#405189]/20 flex items-center gap-3 mt-2 shadow-xs"
       >
-        <div className="w-9 h-9 rounded-lg bg-[#405189] flex items-center justify-center shrink-0 shadow-sm relative overflow-hidden">
+        <div className="w-8 h-8 rounded-lg bg-[#405189] flex items-center justify-center shrink-0 shadow-sm relative overflow-hidden">
           <motion.div 
             className="absolute inset-0 bg-gradient-to-tr from-amber-400/40 via-indigo-500/40 to-cyan-400/40"
             animate={{ opacity: [0.3, 0.9, 0.3] }}
             transition={{ duration: 1.8, repeat: Number.POSITIVE_INFINITY }}
           />
-          <span className="text-white text-xs font-medium relative z-10">LP</span>
+          <span className="text-white text-xs font-bold relative z-10">LP</span>
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-xs font-medium text-slate-800 tracking-tight flex items-center gap-1.5">
-            <span>{loadingText || "Memverifikasi Akses Workspace"}</span>
+          <div className="text-xs font-semibold text-slate-800 tracking-tight flex items-center gap-1.5">
+            <span>{loadingText || "Authenticating..."}</span>
             <span className="flex space-x-1">
               <span className="w-1 h-1 bg-[#405189] rounded-full animate-bounce" />
               <span className="w-1 h-1 bg-[#405189] rounded-full animate-bounce [animation-delay:0.2s]" />
               <span className="w-1 h-1 bg-[#405189] rounded-full animate-bounce [animation-delay:0.4s]" />
             </span>
           </div>
-          <div className="w-full bg-slate-200 rounded-full h-1.5 mt-2 overflow-hidden relative">
+          <div className="w-full bg-slate-200 rounded-full h-1.5 mt-1.5 overflow-hidden relative">
             <motion.div 
               className="bg-gradient-to-r from-amber-400 via-[#3577f1] to-cyan-400 h-full rounded-full"
               animate={{ width: ["10%", "90%", "35%", "95%"] }}
@@ -655,42 +645,41 @@ export const LoginScreen = ({
   };
 
   return (
-    <div className="grid grid-cols-1 grid-rows-1 w-full max-w-md mx-auto relative">
-      <AnimatePresence>
+    <div className="w-full max-w-md mx-auto relative">
+      <AnimatePresence mode="wait">
         {loading ? (
-          <div key="login-skeleton" className="col-start-1 row-start-1 w-full">
+          <div key="login-skeleton" className="w-full">
             <LoginSkeletonState loadingText={loadingText} />
           </div>
         ) : (
           <motion.div 
-            key="login-form"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
+            key="login-form-card"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.25 }}
-            className="col-start-1 row-start-1 w-full space-y-6 relative z-10 font-sans"
+            className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100/90 p-8 sm:p-10 relative z-10 font-sans mx-auto"
           >
-            <div className="space-y-1.5">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
-              >
-                <h2 className="text-3xl font-medium text-slate-900 tracking-tight">
-                  Sign In
-                </h2>
-                <p className="text-slate-500 text-xs font-medium mt-1">
-                  Enter your credentials to access your workspace
-                </p>
-              </motion.div>
+            {/* Velzon Card Header */}
+            <div className="text-center space-y-1.5 mb-6">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#405189] text-white shadow-md shadow-[#405189]/25 mb-1">
+                <ShieldCheck className="w-6 h-6 text-amber-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
+                Welcome Back !
+              </h2>
+              <p className="text-xs font-medium text-slate-500">
+                Sign in to continue to LanPro Workspace
+              </p>
             </div>
 
             <form
               className="space-y-4"
               onSubmit={handleLoginSubmit}
             >
-              <div className="space-y-1">
-                <label className="text-[11px] font-medium text-slate-700 uppercase tracking-wider ml-0.5">
+              {/* USERNAME FIELD */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700 tracking-wide block">
                   Username <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -699,20 +688,21 @@ export const LoginScreen = ({
                   value={username}
                   onChange={(e) => handleUsernameChange(e.target.value)}
                   className={cn(
-                    "w-full px-4 py-3.5 bg-slate-50 border rounded-xl focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
+                    "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
                     fieldErrors.username ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
                   )}
                 />
                 {fieldErrors.username && (
-                  <p className="text-[11px] font-medium text-rose-500 ml-0.5 flex items-center gap-1 mt-0.5">
+                  <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{fieldErrors.username}</span>
                   </p>
                 )}
               </div>
 
-              <div className="space-y-1">
-                <label className="text-[11px] font-medium text-slate-700 uppercase tracking-wider ml-0.5">
+              {/* PASSWORD FIELD */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700 tracking-wide block">
                   Password <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
@@ -722,27 +712,28 @@ export const LoginScreen = ({
                     value={password}
                     onChange={(e) => handlePasswordChange(e.target.value)}
                     className={cn(
-                      "w-full pl-4 pr-11 py-3.5 bg-slate-50 border rounded-xl focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
+                      "w-full pl-4 pr-11 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
                       fieldErrors.password ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
                     )}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-[#405189] focus:outline-none cursor-pointer transition-colors"
                     title={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
                 {fieldErrors.password && (
-                  <p className="text-[11px] font-medium text-rose-500 ml-0.5 flex items-center gap-1 mt-0.5">
+                  <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{fieldErrors.password}</span>
                   </p>
                 )}
               </div>
 
+              {/* REMEMBER ME */}
               <div className="flex items-center justify-between pt-1">
                 <label className="flex items-center gap-2 cursor-pointer select-none">
                   <input
@@ -757,22 +748,23 @@ export const LoginScreen = ({
                 </label>
               </div>
 
+              {/* SIGN IN BUTTON */}
               <button
                 type="submit"
                 disabled={loading || !username.trim() || !password.trim()}
-                className="w-full bg-[#405189] text-white py-3.5 rounded-xl font-medium uppercase tracking-wider text-xs hover:bg-[#364574] transition-all shadow-lg shadow-[#405189]/25 active:scale-[0.98] mt-2 flex items-center justify-center gap-2.5 group cursor-pointer disabled:bg-[#405189]/60 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full bg-[#405189] text-white py-3 rounded-lg font-semibold uppercase tracking-wider text-xs hover:bg-[#364574] transition-all shadow-md shadow-[#405189]/20 active:scale-[0.99] mt-3 flex items-center justify-center gap-2.5 group cursor-pointer disabled:bg-[#405189]/60 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 <span>Sign In</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </form>
 
-            <p className="text-center text-xs font-medium text-slate-500 pt-4 border-t border-slate-100">
+            <p className="text-center text-xs font-medium text-slate-500 pt-5 mt-4 border-t border-slate-100">
               Don't have an account?{" "}
               <button
                 type="button"
                 onClick={onRegisterClick}
-                className="text-[#405189] font-medium hover:text-[#364574] transition-colors ml-1 cursor-pointer hover:underline"
+                className="text-[#405189] font-semibold hover:text-[#364574] transition-colors ml-1 cursor-pointer hover:underline"
               >
                 Sign Up
               </button>
@@ -783,5 +775,6 @@ export const LoginScreen = ({
     </div>
   );
 };
+
 
 

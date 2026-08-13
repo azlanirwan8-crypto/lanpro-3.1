@@ -4051,7 +4051,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
         <AuthHeroPanel />
 
         {/* Form Side with Watermark & Animated Form Switching */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 lg:p-12 bg-white relative overflow-y-auto min-h-screen">
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 lg:p-12 bg-[#f3f3f9] relative overflow-y-auto min-h-screen">
           <AuthWatermarkPattern />
 
           <AnimatePresence mode="wait">

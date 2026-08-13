@@ -15,7 +15,12 @@ function getServerModule() {
   if (serverModule) return serverModule;
   if (serverLoadError) throw serverLoadError;
   try {
-    serverModule = requireFunc("../dist/server.cjs");
+    // Try multiple possible relative resolution locations on Vercel lambda
+    try {
+      serverModule = requireFunc("../dist/server.cjs");
+    } catch {
+      serverModule = requireFunc(path.join(process.cwd(), "dist", "server.cjs"));
+    }
     return serverModule;
   } catch (err) {
     serverLoadError = err;
@@ -25,6 +30,15 @@ function getServerModule() {
 }
 
 export default async function handler(req: any, res: any) {
+  // CORS Preflight OPTIONS Handling
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,PATCH,DELETE,POST,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, x-user-id");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
   console.log(`[VERCEL] Incoming request: ${req.method} ${req.url}`);
   
   try {
