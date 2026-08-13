@@ -47,7 +47,7 @@ export const createAutomatedNotification = async (
     const notificationId = crypto.randomUUID();
     await conn.query(
       "INSERT INTO Notifications (id, recipientId, senderId, title, message, type, relatedId, `read`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [notificationId, resolvedRecipientId, senderId || null, title, message, type, relatedId || null, 0]
+      [notificationId, resolvedRecipientId, senderId || null, title, message, type, relatedId || null, false]
     );
     
     console.log(`[AUTOMATED NOTIFICATION] Sent notification of type ${type} to user ${resolvedRecipientId}`);
@@ -122,7 +122,7 @@ export const broadcastProjectNotification = async (
       const notificationId = crypto.randomUUID();
       await conn.query(
         "INSERT INTO Notifications (id, recipientId, senderId, title, message, type, relatedId, `read`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        [notificationId, resolvedRecipientId, senderId || null, title, message, type, relatedId || null, 0]
+        [notificationId, resolvedRecipientId, senderId || null, title, message, type, relatedId || null, false]
       );
       
       if (io) {
@@ -241,7 +241,7 @@ export const sendProjectActivityNotification = async (
       const notificationId = crypto.randomUUID();
       await conn.query(
         "INSERT INTO Notifications (id, recipientId, senderId, title, message, type, relatedId, `read`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        [notificationId, resolvedRecipientId, triggerUserId || null, title, message, type, relatedId, 0]
+        [notificationId, resolvedRecipientId, triggerUserId || null, title, message, type, relatedId, false]
       );
       
       if (io) {
@@ -405,7 +405,7 @@ export const createNotification = async (
     
     for (const recipient of finalRecipients) {
       const notifId = crypto.randomUUID();
-      rowPlaceholders.push("(?, ?, ?, ?, ?, ?, ?, 0)");
+      rowPlaceholders.push("(?, ?, ?, ?, ?, ?, ?, false)");
       queryValues.push(notifId, recipient, triggerUserId || null, title, message, 'task', taskId);
     }
     

@@ -1,6 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
+import App from './App';
 import './index.css';
 
 interface Props {
@@ -52,7 +52,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-import { AuthNotificationProvider } from './components/AuthToastContainer.tsx';
+import { AuthNotificationProvider } from './components/AuthToastContainer';
 
 // Global Event Listener for unhandledrejection to suppress benign WebSocket/Vite issues before rendering
 window.addEventListener('unhandledrejection', (event) => {

@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../lib/safeStorage";
 import React from 'react';
 import { usePresence } from '../contexts/PresenceContext';
 import { UserAvatar } from './ui/UserAvatar';
@@ -14,7 +15,7 @@ export const HeaderAvatarGroup: React.FC<HeaderAvatarGroupProps> = ({ allUsers, 
   // Retain the last stable list of online users to prevent flashing/flickering back to 1 avatar
   const [stableOnlineUsers, setStableOnlineUsers] = React.useState<UserProfile[]>(() => {
     try {
-      const cached = localStorage.getItem('lanpro_cached_header_online_users');
+      const cached = safeLocalStorage.getItem('lanpro_cached_header_online_users');
       return cached ? JSON.parse(cached) : onlineUsers;
     } catch {
       return onlineUsers;
@@ -25,7 +26,7 @@ export const HeaderAvatarGroup: React.FC<HeaderAvatarGroupProps> = ({ allUsers, 
     if (onlineUsers && onlineUsers.length > 1) {
       setStableOnlineUsers(onlineUsers);
       try {
-        localStorage.setItem('lanpro_cached_header_online_users', JSON.stringify(onlineUsers));
+        safeLocalStorage.setItem('lanpro_cached_header_online_users', JSON.stringify(onlineUsers));
       } catch (e) {
         console.warn('Failed to cache online users in localStorage:', e);
       }
@@ -34,7 +35,7 @@ export const HeaderAvatarGroup: React.FC<HeaderAvatarGroupProps> = ({ allUsers, 
       const timer = setTimeout(() => {
         setStableOnlineUsers(onlineUsers);
         try {
-          localStorage.setItem('lanpro_cached_header_online_users', JSON.stringify(onlineUsers));
+          safeLocalStorage.setItem('lanpro_cached_header_online_users', JSON.stringify(onlineUsers));
         } catch (e) {}
       }, 10000);
       return () => clearTimeout(timer);
@@ -42,7 +43,7 @@ export const HeaderAvatarGroup: React.FC<HeaderAvatarGroupProps> = ({ allUsers, 
       if (onlineUsers && onlineUsers.length > 0) {
         setStableOnlineUsers(onlineUsers);
         try {
-          localStorage.setItem('lanpro_cached_header_online_users', JSON.stringify(onlineUsers));
+          safeLocalStorage.setItem('lanpro_cached_header_online_users', JSON.stringify(onlineUsers));
         } catch (e) {}
       }
     }

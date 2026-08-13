@@ -212,22 +212,7 @@ function formatUserForAuthResponse(user: any) {
       attempt.blockedUntil = null;
     }
 
-    // Check if user account status is pending / inactive / not approved
-    if (user.status === 'pending' || user.status === 'unapproved' || user.status === 'inactive' || (user.status && user.status !== 'approved' && user.status !== 'active' && user.status !== 'rejected')) {
-      return {
-        success: false,
-        status: 403,
-        message: `halo ${matchedUsername} akun anda belum di aktifkan, silahkan hubungi admin ya`
-      };
-    }
-
-    if (user.status === 'rejected') {
-      return {
-        success: false,
-        status: 403,
-        message: "Akun Anda telah ditolak oleh Admin."
-      };
-    }
+    // Status checks are now performed in the login controller after password verification
 
     // 2. Verify password
     const isValid = await verifyPassword(passwordInput, user.passwordHash, user.username);
@@ -284,12 +269,12 @@ function formatUserForAuthResponse(user: any) {
       const user = authResult.user;
       const userId = user.id || user.uid;
 
-      if (user.status === 'rejected') { 
-        return res.status(403).json({ status: "error", message: "Akun Anda telah ditolak oleh Admin." });
+      if (user.status === 'PENDING' || user.status === 'pending') { 
+        return res.status(403).json({ error: "Akun Anda sedang menunggu persetujuan Administrator." });
       }
 
-      if (user.status === 'pending') { 
-        return res.status(403).json({ status: "pending", message: "Akun Anda belum aktif. Silakan hubungi admin atau verifikasi email Anda." });
+      if (user.status === 'REJECTED' || user.status === 'rejected') { 
+        return res.status(403).json({ error: "Pendaftaran akun Anda ditolak." });
       }
 
       // --- SESSION COLLISION CHECK (Database-backed, no bypass) ---
@@ -494,7 +479,7 @@ function formatUserForAuthResponse(user: any) {
       
       const insertDisplayName = displayName || nama_lengkap || name || username;
       const insertRole = role || 'user';
-      const insertStatus = status || 'approved'; // Nilai default saat daftar adalah 'approved' agar aktif langsung
+      const insertStatus = 'PENDING';
       const insertDepartment = department || null;
       const insertPosition = position || null;
       const insertPermissions = permissions ? JSON.stringify(permissions) : null;

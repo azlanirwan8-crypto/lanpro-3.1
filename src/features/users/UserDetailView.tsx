@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect } from 'react';
 import { UserProfile, Project, Task, AppRole, UserPermissions } from '../../types';
 import { UserAvatar } from './styles';
@@ -84,7 +85,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
 }) => {
   const effectiveCurrentUser = currentUser || (() => {
     try {
-      const stored = localStorage.getItem('lanpro_user');
+      const stored = safeLocalStorage.getItem('lanpro_user');
       return stored ? JSON.parse(stored) : null;
     } catch (e) {
       return null;

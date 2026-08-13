@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../lib/safeStorage";
 /**
  * LanPro - Client-Side Cache Helper (SWR Caching System)
  * Stores local state snapshot to localStorage for instantaneous loading (Stale-While-Revalidate).
@@ -10,7 +11,7 @@ export const CacheManager = {
         timestamp: Date.now(),
         data,
       };
-      localStorage.setItem(`lanpro_cache_${key}`, JSON.stringify(payload));
+      safeLocalStorage.setItem(`lanpro_cache_${key}`, JSON.stringify(payload));
     } catch (e) {
       console.warn("Failed to save to client-side cache:", e);
     }
@@ -18,7 +19,7 @@ export const CacheManager = {
 
   get: <T>(key: string): T | null => {
     try {
-      const cached = localStorage.getItem(`lanpro_cache_${key}`);
+      const cached = safeLocalStorage.getItem(`lanpro_cache_${key}`);
       if (!cached) return null;
       const parsed = JSON.parse(cached);
       return parsed.data as T;
@@ -30,7 +31,7 @@ export const CacheManager = {
 
   getWithMeta: (key: string) => {
     try {
-      const cached = localStorage.getItem(`lanpro_cache_${key}`);
+      const cached = safeLocalStorage.getItem(`lanpro_cache_${key}`);
       if (!cached) return null;
       return JSON.parse(cached);
     } catch (e) {
@@ -39,7 +40,9 @@ export const CacheManager = {
   },
 
   clear: (key: string) => {
-    localStorage.removeItem(`lanpro_cache_${key}`);
+    try {
+      safeLocalStorage.removeItem(`lanpro_cache_${key}`);
+    } catch (e) {}
   },
 
   clearAll: () => {
@@ -47,7 +50,7 @@ export const CacheManager = {
       const keys = Object.keys(localStorage);
       keys.forEach((k) => {
         if (k.startsWith("lanpro_cache_")) {
-          localStorage.removeItem(k);
+          safeLocalStorage.removeItem(k);
         }
       });
     } catch (e) {
@@ -63,7 +66,7 @@ export const CacheManager = {
       const details: { key: string; size: string; count: number; lastUpdated?: string }[] = [];
 
       cacheKeys.forEach((k) => {
-        const val = localStorage.getItem(k) || "";
+        const val = safeLocalStorage.getItem(k) || "";
         const bytes = val.length * 2; // UTF-16 characters are 2 bytes
         totalSize += bytes;
 

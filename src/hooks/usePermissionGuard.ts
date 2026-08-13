@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../lib/safeStorage";
 import { hasPermission } from '../lib/permissions';
 import { UserProfile } from '../types';
 
@@ -7,7 +8,7 @@ export const usePermissionGuard = (
     isOwner: boolean = false
 ): boolean => {
     const sessionStr = typeof window !== 'undefined' 
-        ? (sessionStorage.getItem("sessionUser") || localStorage.getItem("sessionUser"))
+        ? (safeSessionStorage.getItem("sessionUser") || safeLocalStorage.getItem("sessionUser"))
         : null;
         
     if (!sessionStr) return false;

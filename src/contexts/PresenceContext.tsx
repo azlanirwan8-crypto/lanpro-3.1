@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../lib/safeStorage";
 import React, { createContext, useContext, useEffect, useState, useMemo, useRef } from 'react';
 import { UserProfile } from '../types';
 import { apiRequest } from '../lib/api';
@@ -40,7 +41,7 @@ export const PresenceProvider: React.FC<{
   // Retain last known successful state in local state + localStorage to prevent screen flashing/avatar resets
   const [retainedOnlineUsers, setRetainedOnlineUsers] = useState<UserProfile[]>(() => {
     try {
-      const stored = localStorage.getItem('lanpro_last_online_users');
+      const stored = safeLocalStorage.getItem('lanpro_last_online_users');
       return stored ? JSON.parse(stored) : [];
     } catch {
       return [];
@@ -60,7 +61,7 @@ export const PresenceProvider: React.FC<{
         setAllUsers(latestAllUsers);
         
         if (online.length > 0) {
-          localStorage.setItem('lanpro_last_online_users', JSON.stringify(online));
+          safeLocalStorage.setItem('lanpro_last_online_users', JSON.stringify(online));
           setRetainedOnlineUsers(online);
         }
       }
@@ -79,7 +80,7 @@ export const PresenceProvider: React.FC<{
         setHttpOnlineUsers(online);
         
         if (online.length > 0) {
-          localStorage.setItem('lanpro_last_online_users', JSON.stringify(online));
+          safeLocalStorage.setItem('lanpro_last_online_users', JSON.stringify(online));
           setRetainedOnlineUsers(online);
         }
       }
@@ -119,7 +120,7 @@ export const PresenceProvider: React.FC<{
     const onPresenceSync = (users: UserProfile[]) => {
       setSocketOnlineUsers(users);
       if (users.length > 0) {
-        localStorage.setItem('lanpro_last_online_users', JSON.stringify(users));
+        safeLocalStorage.setItem('lanpro_last_online_users', JSON.stringify(users));
         setRetainedOnlineUsers(users);
       }
     };

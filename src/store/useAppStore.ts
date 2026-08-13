@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../lib/safeStorage";
 import { create } from 'zustand';
 import { Project, Task, Sprint, ActivityLog, MasterData, UserProfile } from '../types';
 import { CacheManager } from '../lib/cache';
@@ -127,9 +128,17 @@ export const useAppStore = create<AppState>((set) => ({
     return { allUsers: nextVal };
   }),
 
-  density: (localStorage.getItem('view_density') as 'comfortable' | 'compact') || 'comfortable',
+  density: (() => {
+    try {
+      return (safeLocalStorage.getItem('view_density') as 'comfortable' | 'compact') || 'comfortable';
+    } catch {
+      return 'comfortable';
+    }
+  })(),
   setDensity: (density) => {
-    localStorage.setItem('view_density', density);
+    try {
+      safeLocalStorage.setItem('view_density', density);
+    } catch {}
     set({ density });
   },
 }));

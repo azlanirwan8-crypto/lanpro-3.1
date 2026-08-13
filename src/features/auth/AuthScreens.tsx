@@ -1,3 +1,4 @@
+import { safeLocalStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect, useMemo } from "react";
 import { LogIn, Lock, Activity, Users, FileText, Bot, ArrowRight, UserPlus, Fingerprint, RefreshCcw, Eye, EyeOff, Building, MapPin, Building2, User, Phone, Briefcase, Mail, AlertCircle, X, ShieldCheck } from "lucide-react";
 import { Button, Input, VelzonFloatingParticles, GoogleIcon, cn } from "../../components/ui/CoreUI";
@@ -427,10 +428,10 @@ export const RegisterScreen = ({
 
             <div className="space-y-2">
               <h3 className="text-xl font-bold text-slate-800 tracking-tight">
-                Well done !
+                Registrasi berhasil!
               </h3>
               <p className="text-sm text-slate-500 font-normal leading-relaxed px-2">
-                Akun Anda telah berhasil didaftarkan di platform LanPro. Silakan hubungi Admin untuk diaktifkan sebelum Anda dapat masuk.
+                Silakan tunggu Administrator menyetujui akun Anda sebelum bisa Login.
               </p>
             </div>
 
@@ -515,7 +516,7 @@ export const LoginScreen = ({
 }) => {
   const [username, setUsername] = useState(() => {
     try {
-      return localStorage.getItem("savedUsername") || "";
+      return safeLocalStorage.getItem("savedUsername") || "";
     } catch {
       return "";
     }
@@ -523,7 +524,7 @@ export const LoginScreen = ({
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(() => {
     try {
-      return localStorage.getItem("rememberUser") === "true";
+      return safeLocalStorage.getItem("rememberUser") === "true";
     } catch {
       return false;
     }
@@ -535,11 +536,11 @@ export const LoginScreen = ({
   useEffect(() => {
     try {
       if (rememberMe) {
-        localStorage.setItem("savedUsername", username);
-        localStorage.setItem("rememberUser", "true");
+        safeLocalStorage.setItem("savedUsername", username);
+        safeLocalStorage.setItem("rememberUser", "true");
       } else {
-        localStorage.removeItem("savedUsername");
-        localStorage.setItem("rememberUser", "false");
+        safeLocalStorage.removeItem("savedUsername");
+        safeLocalStorage.setItem("rememberUser", "false");
       }
     } catch {}
   }, [username, rememberMe]);

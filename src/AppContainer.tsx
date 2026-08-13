@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage, safeJsonParse } from "./lib/safeStorage";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import React, { useState, useEffect, useRef, useMemo } from "react";
@@ -574,8 +575,6 @@ function AppContainer() {
   const [currentUserProfile, setCurrentUserProfile] =
     useState<UserProfile | null>(null);
   const [authView, setAuthView] = useState<"login" | "register">("login");
-  const [isPendingModalOpen, setIsPendingModalOpen] = useState(false);
-  const [pendingModalMessage, setPendingModalMessage] = useState<string>("");
   const [socket, setSocket] = useState<any>(null);
   const [showCollisionModal, setShowCollisionModal] = useState(false);
   const [activeSessionData, setActiveSessionData] = useState<any>(null);
@@ -598,7 +597,7 @@ function AppContainer() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
     try {
-      return (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system';
+      return (safeLocalStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system';
     } catch {
       return 'system';
     }
@@ -625,7 +624,7 @@ function AppContainer() {
 
     applyTheme(theme);
     try {
-      localStorage.setItem('theme', theme);
+      safeLocalStorage.setItem('theme', theme);
     } catch {}
 
     if (theme === 'system') {
@@ -703,7 +702,7 @@ function AppContainer() {
     // Initial Auth Restoration (LanPro v1.3)
     let token = null;
     try {
-      token = localStorage.getItem("lanpro_jwt_token");
+      token = safeLocalStorage.getItem("lanpro_jwt_token");
     } catch (e) {}
 
     if (!token) {
@@ -715,7 +714,7 @@ function AppContainer() {
     // Restoration logic from session user if exists
     let sessionPayload = null;
     try {
-      sessionPayload = sessionStorage.getItem("sessionUser") || localStorage.getItem("sessionUser");
+      sessionPayload = safeSessionStorage.getItem("sessionUser") || safeLocalStorage.getItem("sessionUser");
     } catch (e) {}
     
 
@@ -735,7 +734,7 @@ function AppContainer() {
 
     // Verify token with backend to prevent expired/invalid session and parallel error toasts
     const verifySession = async () => {
-      const token = localStorage.getItem("lanpro_jwt_token");
+      const token = safeLocalStorage.getItem("lanpro_jwt_token");
       if (!token) {
         setLoading(false);
 
@@ -766,11 +765,11 @@ function AppContainer() {
             setUserRole(normalizedUser.role);
             setIsLoggedIn(true);
             try {
-              const isRemember = localStorage.getItem("rememberUser") === "true";
+              const isRemember = safeLocalStorage.getItem("rememberUser") === "true";
               if (isRemember) {
-                localStorage.setItem("sessionUser", JSON.stringify(normalizedUser));
+                safeLocalStorage.setItem("sessionUser", JSON.stringify(normalizedUser));
               } else {
-                sessionStorage.setItem("sessionUser", JSON.stringify(normalizedUser));
+                safeSessionStorage.setItem("sessionUser", JSON.stringify(normalizedUser));
               }
             } catch (e) {}
           }
@@ -792,7 +791,7 @@ function AppContainer() {
   }, []);
 
   const handleLogout = async (silent = false) => {
-    const wasLoggedIn = isLoggedIn || !!currentUser || !!localStorage.getItem("lanpro_jwt_token");
+    const wasLoggedIn = isLoggedIn || !!currentUser || !!safeLocalStorage.getItem("lanpro_jwt_token");
     const activeUserId = currentUser?.id || currentUser?.uid;
 
     if (activeUserId) {
@@ -807,9 +806,9 @@ function AppContainer() {
         // Silently ignore logout network exceptions
       }
     }
-    localStorage.removeItem("isAdminMode");
-    localStorage.removeItem("sessionUser");
-    sessionStorage.removeItem("sessionUser");
+    safeLocalStorage.removeItem("isAdminMode");
+    safeLocalStorage.removeItem("sessionUser");
+    safeSessionStorage.removeItem("sessionUser");
     clearAuthToken();
     
     if (socket) {
@@ -1284,9 +1283,9 @@ function AppContainer() {
         } catch (e) {}
 
         if (remember) {
-          localStorage.setItem("isAdminMode", "true");
+          safeLocalStorage.setItem("isAdminMode", "true");
         } else {
-          sessionStorage.setItem("isAdminMode", "true");
+          safeSessionStorage.setItem("isAdminMode", "true");
         }
       }
 
@@ -1308,7 +1307,13 @@ function AppContainer() {
       }
       
       const userData = data.user as UserProfile;
-      userData.permissions = typeof userData.permissions === 'string' ? JSON.parse(userData.permissions) : userData.permissions;
+      if (userData.permissions && typeof userData.permissions === 'string') {
+        try {
+          userData.permissions = JSON.parse(userData.permissions);
+        } catch (e) {
+          console.error("Failed to parse user permissions on login:", e);
+        }
+      }
       const rawAvatar = userData.avatar_url || userData.photoURL || userData.avatarUrl || null;
       userData.avatar_url = rawAvatar || undefined;
       userData.photoURL = rawAvatar || undefined;
@@ -1361,11 +1366,11 @@ function AppContainer() {
       setPendingLoginCredentials(null);
 
       if (remember) {
-        localStorage.setItem("sessionUser", JSON.stringify(userData));
-        localStorage.setItem("rememberUser", "true");
+        safeLocalStorage.setItem("sessionUser", JSON.stringify(userData));
+        safeLocalStorage.setItem("rememberUser", "true");
       } else {
-        sessionStorage.setItem("sessionUser", JSON.stringify(userData));
-        localStorage.removeItem("rememberUser");
+        safeSessionStorage.setItem("sessionUser", JSON.stringify(userData));
+        safeLocalStorage.removeItem("rememberUser");
       }
 
       toast.success(
@@ -1399,13 +1404,19 @@ function AppContainer() {
       } else {
         console.error("Login error:", e);
       }
-      if (errStatus === 403 || (e.message && (e.message.includes("belum aktif") || e.message.includes("belum di aktifkan") || e.message.includes("pending")))) {
-        let cleanMsg = e.message || "";
-        if (!cleanMsg || cleanMsg.includes("Rute API") || cleanMsg.includes("Status: 403") || cleanMsg.includes("Response bukan") || cleanMsg.includes("Server error")) {
-          cleanMsg = `halo ${username} akun anda belum di aktifkan, silahkan hubungi admin ya`;
+      if (errStatus === 403 || (e.message && (e.message.includes("menunggu persetujuan") || e.message.includes("ditolak") || e.message.includes("belum aktif") || e.message.includes("belum di aktifkan") || e.message.includes("pending")))) {
+        let cleanMsg = e.message || `Akun ${username} belum dapat diakses. Silakan hubungi admin.`;
+        if (cleanMsg.includes("Rute API") || cleanMsg.includes("Status: 403") || cleanMsg.includes("Response bukan") || cleanMsg.includes("Server error")) {
+          cleanMsg = `Akun ${username} belum dapat diakses. Silakan hubungi admin.`;
         }
-        setPendingModalMessage(cleanMsg);
-        setIsPendingModalOpen(true);
+        
+        const isRejected = cleanMsg.toLowerCase().includes("ditolak");
+        Swal.fire({
+          icon: isRejected ? 'error' : 'warning',
+          title: isRejected ? 'Pendaftaran Ditolak' : 'Akses Ditolak',
+          text: cleanMsg,
+          confirmButtonColor: '#405189'
+        });
       } else if (errStatus === 429 || (e.message && e.message.toLowerCase().includes("terblokir"))) {
         handleAuthApiResponse(429, { message: e.message });
       } else if (e.message && (e.message.toLowerCase().includes("salah") || e.message.toLowerCase().includes("credentials") || e.message.toLowerCase().includes("tidak ditemukan"))) {
@@ -1490,8 +1501,13 @@ function AppContainer() {
       setIsInitialDataLoading(true);
     }
     const timer = setTimeout(async () => {
-      await fetchProjects();
-      setIsInitialDataLoading(false);
+      try {
+        await fetchProjects();
+      } catch (e) {
+        console.error("Error fetching projects during initial load:", e);
+      } finally {
+        setIsInitialDataLoading(false);
+      }
     }, 300);
     return () => clearTimeout(timer);
   }, [currentUser?.uid, userRole, isLoggedIn]);
@@ -1668,10 +1684,17 @@ function AppContainer() {
 
         return;
       }
-      const storedUser = localStorage.getItem("sessionUser");
-      const activeUser = currentUser || (storedUser ? JSON.parse(storedUser) : null);
+      const storedUser = safeLocalStorage.getItem("sessionUser");
+      let activeUser = currentUser;
+      if (!activeUser && storedUser) {
+        try {
+          activeUser = JSON.parse(storedUser);
+        } catch (e) {
+          activeUser = null;
+        }
+      }
       const currentUserId = activeUser?.id || activeUser?.uid;
-      const currentToken = localStorage.getItem("lanpro_jwt_token");
+      const currentToken = safeLocalStorage.getItem("lanpro_jwt_token");
       
       if (currentUserId && currentUserId.toString() === data.userId && currentToken !== data.newToken) {
         toast.error("Sesi Anda telah diakhiri karena login di perangkat/browser lain.");
@@ -1795,7 +1818,7 @@ function AppContainer() {
           };
           setCurrentUser(updated);
           setCurrentUserProfile(updated);
-          localStorage.setItem("sessionUser", JSON.stringify(updated));
+          safeLocalStorage.setItem("sessionUser", JSON.stringify(updated));
         }
       }
     });
@@ -3137,7 +3160,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
 
     // 1. Update QA Test Case status in localStorage / suites to "Retest"
     try {
-      const cachedSuites = localStorage.getItem(`lanpro_qa_suites_${selectedProject.id}`);
+      const cachedSuites = safeLocalStorage.getItem(`lanpro_qa_suites_${selectedProject.id}`);
       if (cachedSuites) {
         const parsedSuites = JSON.parse(cachedSuites);
         let updatedAny = false;
@@ -3158,7 +3181,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
         }));
 
         if (updatedAny) {
-          localStorage.setItem(`lanpro_qa_suites_${selectedProject.id}`, JSON.stringify(updatedSuites));
+          safeLocalStorage.setItem(`lanpro_qa_suites_${selectedProject.id}`, JSON.stringify(updatedSuites));
         }
       }
       window.dispatchEvent(new CustomEvent("lanpro_qa_retest_updated", { detail: { bugKey, taskId: taskToUpdate.id } }));
@@ -4103,30 +4126,6 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
           }}
           isLoading={loading}
         />
-
-        {/* Pending Approval Modal */}
-        <Modal
-          isOpen={isPendingModalOpen}
-          onClose={() => setIsPendingModalOpen(false)}
-          title="Akun Belum Aktif / Pending Approval"
-        >
-          <div className="space-y-4 font-sans">
-            <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-              <div className="text-xs text-amber-800 leading-relaxed font-medium">
-                {pendingModalMessage || "Akun Anda telah terdaftar tetapi belum diaktifkan oleh Administrator Sistem. Semua akun baru memerlukan peninjauan dan persetujuan keamanan sebelum dapat mengakses dasbor utama."}
-              </div>
-            </div>
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setIsPendingModalOpen(false)}
-                className="px-4 py-2 bg-[#405189] text-white rounded-xl text-xs font-medium hover:bg-[#364574] transition-all"
-              >
-                Dimengerti
-              </button>
-            </div>
-          </div>
-        </Modal>
       </div>
     );
   }
@@ -4198,7 +4197,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
         onSessionExtended={(newUser) => {
           setCurrentUser(newUser);
           setCurrentUserProfile(newUser);
-          localStorage.setItem("sessionUser", JSON.stringify(newUser));
+          safeLocalStorage.setItem("sessionUser", JSON.stringify(newUser));
         }}
       />
 
@@ -5915,7 +5914,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
               const newUser = { ...currentUser, ...updatedProfile };
               setCurrentUser(newUser);
               setCurrentUserProfile(newUser);
-              localStorage.setItem("sessionUser", JSON.stringify(newUser));
+              safeLocalStorage.setItem("sessionUser", JSON.stringify(newUser));
               setAllUsers((prevUsers) =>
                 prevUsers.map((u) =>
                   u.id === newUser.id || u.uid === newUser.uid

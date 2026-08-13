@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Sparkles, FileText, Plus, Trash2, CheckSquare, Square, 
@@ -151,7 +152,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
   const loadProjectSources = async () => {
     setLoadingSources(true);
     try {
-      const token = localStorage.getItem('token') || '';
+      const token = safeLocalStorage.getItem('token') || '';
       const initialSources: Source[] = [];
 
       // 1. Fetch Wiki / Dokumentasi
@@ -257,7 +258,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
     setIsGenerating(true);
 
     try {
-      const token = localStorage.getItem('token') || '';
+      const token = safeLocalStorage.getItem('token') || '';
       const response = await fetch('/api/notebooklm/chat', {
         method: 'POST',
         headers: {
@@ -304,7 +305,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
     setActiveTab('overview');
 
     try {
-      const token = localStorage.getItem('token') || '';
+      const token = safeLocalStorage.getItem('token') || '';
       const response = await fetch('/api/notebooklm/generate-overview', {
         method: 'POST',
         headers: {
@@ -348,7 +349,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
     if (!text.trim()) return;
     setIsAudioLoading(true);
     try {
-      const token = localStorage.getItem('token') || '';
+      const token = safeLocalStorage.getItem('token') || '';
       const response = await fetch('/api/notebooklm/generate-audio', {
         method: 'POST',
         headers: {

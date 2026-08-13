@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import { confirmDeleteAlert, showSuccessAlert } from "../../lib/sweetalert";
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
@@ -478,7 +479,7 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
         formData.append('totalChunks', totalChunks.toString());
         formData.append('fileSize', file.size.toString());
 
-        const token = localStorage.getItem("lanpro_jwt_token");
+        const token = safeLocalStorage.getItem("lanpro_jwt_token");
         lastResponse = await axios.post(`/api/v1/meetings/${meeting.id}/upload-recording`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -530,7 +531,7 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
 
   const handleCancelProcessing = async () => {
     try {
-      const token = localStorage.getItem("lanpro_jwt_token");
+      const token = safeLocalStorage.getItem("lanpro_jwt_token");
       await axios.post(`/api/v1/meetings/${meeting.id}/cancel`, {}, {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
@@ -661,7 +662,7 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
     if (isProcessingState) {
       pollInterval = setInterval(async () => {
         try {
-          const token = localStorage.getItem("lanpro_jwt_token");
+          const token = safeLocalStorage.getItem("lanpro_jwt_token");
           const response = await axios.get(`/api/v1/meetings/${meeting.id}/status`, {
             headers: token ? { Authorization: `Bearer ${token}` } : {}
           });

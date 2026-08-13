@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect, useRef } from "react";
 import { ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
@@ -11,7 +12,7 @@ import { QADetailDrawer } from "./components/QADetailDrawer";
 import { QAModals } from "./components/QAModals";
 
 const apiFetch = async (url: string, options: any = {}) => {
-  const token = localStorage.getItem("lanpro_jwt_token");
+  const token = safeLocalStorage.getItem("lanpro_jwt_token");
   const headers = new Headers(options.headers || {});
   if (token) {
     headers.set("Authorization", `Bearer ${token}`);
@@ -177,14 +178,14 @@ export function TestQAPanel({
   // Save state helper
   const saveSuitesToStorage = (updatedSuites: QATestSuite[]) => {
     setSuites(updatedSuites);
-    localStorage.setItem(`lanpro_qa_suites_${selectedProject.id}`, JSON.stringify(updatedSuites));
+    safeLocalStorage.setItem(`lanpro_qa_suites_${selectedProject.id}`, JSON.stringify(updatedSuites));
   };
 
   // Lock helper
   const acquireLockForCurrentUser = () => {
     const lockKey = `lanpro_qa_lock_${selectedSuiteId}`;
     const newLock = { lockedBy: currentUserUid, userName: currentUserName, lockedAt: Date.now() };
-    localStorage.setItem(lockKey, JSON.stringify(newLock));
+    safeLocalStorage.setItem(lockKey, JSON.stringify(newLock));
     setLockState(newLock);
     setRemainingTime(900);
   };
@@ -196,7 +197,7 @@ export function TestQAPanel({
 
   const releaseLockManually = () => {
     const lockKey = `lanpro_qa_lock_${selectedSuiteId}`;
-    localStorage.removeItem(lockKey);
+    safeLocalStorage.removeItem(lockKey);
     setLockState({ lockedBy: null, userName: null, lockedAt: null });
     toast.info("Lock dilepaskan.");
   };

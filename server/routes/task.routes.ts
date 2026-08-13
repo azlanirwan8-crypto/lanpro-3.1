@@ -789,8 +789,8 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       checkUpdate('acceptanceCriteria', acceptanceCriteria);
       
       if (isBlocked !== undefined) {
-        const oldBlockedVal = oldTask.isBlocked === true || oldTask.isBlocked === 1 ? 1 : 0;
-        const newBlockedVal = isBlocked ? 1 : 0;
+        const oldBlockedVal = oldTask.isBlocked === true || oldTask.isBlocked === 1 ? true : false;
+        const newBlockedVal = isBlocked ? true : false;
         if (newBlockedVal !== oldBlockedVal) {
           updates.push("isBlocked = ?");
           values.push(newBlockedVal);
@@ -846,7 +846,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
 
         // 4. Automated notifications for Blocked task status or isBlocked flag changes
         const isNowBlockedStatus = (changedFields.status && changedFields.status.toLowerCase() === 'blocked' && (!oldTask.status || oldTask.status.toLowerCase() !== 'blocked'));
-        const isNowBlockedFlag = (changedFields.isBlocked !== undefined && changedFields.isBlocked === 1 && (!oldTask.isBlocked || oldTask.isBlocked === 0));
+        const isNowBlockedFlag = (changedFields.isBlocked !== undefined && changedFields.isBlocked === true && (!oldTask.isBlocked || oldTask.isBlocked === false));
         
         if (isNowBlockedStatus || isNowBlockedFlag) {
           const recipientId = changedFields.assigneeId !== undefined ? changedFields.assigneeId : oldTask.assigneeId;
@@ -1421,7 +1421,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       
       await connection.query(
         "INSERT INTO Notifications (id, recipientId, senderId, title, message, type, relatedId, `read`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        [newId, userId, senderId || null, title || "New Notification", message || "", type || "system", relatedId || null, read ? 1 : 0]
+        [newId, userId, senderId || null, title || "New Notification", message || "", type || "system", relatedId || null, read ? true : false]
       );
       
       res.json({ status: "success", data: { id: newId, type, title, message, relatedId, senderId, read } });
@@ -1442,7 +1442,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       
       await connection.query(
         "UPDATE Notifications SET `read` = ? WHERE id = ?",
-        [read ? 1 : 0, id]
+        [read ? true : false, id]
       );
       
       res.json({ status: "success", message: "Notification updated" });
@@ -1559,10 +1559,10 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       connection = await mysqlPool.getConnection();
       await connection.query(
         "INSERT INTO Messages (id, senderId, receiverId, message, timestamp, `read`) VALUES (?, ?, ?, ?, ?, ?)",
-        [id, senderId, receiverId, message, timestamp || new Date().toISOString(), 0]
+        [id, senderId, receiverId, message, timestamp || new Date().toISOString(), false]
       );
 
-      res.json({ status: "success", data: { id, senderId, receiverId, message, timestamp, read: 0 } });
+      res.json({ status: "success", data: { id, senderId, receiverId, message, timestamp, read: false } });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/chat/messages error:", error);
       res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
@@ -1604,7 +1604,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
 
       connection = await mysqlPool.getConnection();
       const [rows] = await connection.query(
-        "SELECT senderId, COUNT(*) as count FROM Messages WHERE receiverId = ? AND `read` = 0 GROUP BY senderId",
+        "SELECT senderId, COUNT(*) as count FROM Messages WHERE receiverId = ? AND `read` = false GROUP BY senderId",
         [userId]
       );
       res.json({ status: "success", data: rows });
@@ -1728,7 +1728,7 @@ Balasan Anda harus singkat (1-3 kalimat saja) layaknya pesan instan di Slack ata
       const connection = await mysqlPool.getConnection();
       await connection.query(
         "INSERT INTO Messages (id, senderId, receiverId, message, timestamp, `read`) VALUES (?, ?, ?, ?, ?, ?)",
-        [id, senderId, receiverId, replyText, timestamp, 0]
+        [id, senderId, receiverId, replyText, timestamp, false]
       );
       connection.release();
 
@@ -1740,7 +1740,7 @@ Balasan Anda harus singkat (1-3 kalimat saja) layaknya pesan instan di Slack ata
           receiverId,
           message: replyText,
           timestamp,
-          read: 0
+          read: false
         }
       });
     } catch (error: any) {

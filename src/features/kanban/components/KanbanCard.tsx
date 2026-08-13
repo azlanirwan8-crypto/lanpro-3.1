@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../../../lib/safeStorage";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn, ensureDate } from '../../../lib/utils';
@@ -69,7 +70,7 @@ export const KanbanCard = React.memo<KanbanCardProps>(({ task, mArr, pArr, onCli
 
   // Load QA test status for this task
   const projectId = task.projectId || 'default';
-  const savedQA = localStorage.getItem(`qa_test_cases_${projectId}`);
+  const savedQA = safeLocalStorage.getItem(`qa_test_cases_${projectId}`);
   let qaStatus: 'passed' | 'failed' | 'blocked' | 'untested' | null = null;
   if (savedQA) {
     try {

@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { 
   Plus, Trash2, ArrowRight, Save, RotateCcw, 
@@ -1426,7 +1427,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     if (currentUserProfile?.displayName) return currentUserProfile.displayName;
     if (currentUserProfile?.username) return currentUserProfile.username;
     try {
-      const saved = sessionStorage.getItem("sessionUser") || localStorage.getItem("sessionUser");
+      const saved = safeSessionStorage.getItem("sessionUser") || safeLocalStorage.getItem("sessionUser");
       if (saved) {
         const u = JSON.parse(saved);
         return u?.displayName || u?.username || u?.email || "Administrator";
@@ -1440,7 +1441,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   // BOLA & Authorization Check (LanPro v1.4)
   const effectiveUser = currentUserProfile || (() => {
     try {
-      const stored = localStorage.getItem('sessionUser') || localStorage.getItem('lanpro_user') || sessionStorage.getItem('sessionUser');
+      const stored = safeLocalStorage.getItem('sessionUser') || safeLocalStorage.getItem('lanpro_user') || safeSessionStorage.getItem('sessionUser');
       return stored ? JSON.parse(stored) : null;
     } catch (e) {
       return null;
@@ -2603,7 +2604,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   useEffect(() => {
     const projId = selectedProject?.id || selectedProject?.key || 'default';
     const listKey = `lanpro_flowcharts_${projId}`;
-    const saved = localStorage.getItem(listKey);
+    const saved = safeLocalStorage.getItem(listKey);
     let initialList: FlowchartData[] = [];
     if (saved) {
       try {
@@ -2651,7 +2652,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
             if (apiFlowcharts.length > 0) {
               setFlowcharts(apiFlowcharts);
-              localStorage.setItem(listKey, JSON.stringify(apiFlowcharts));
+              safeLocalStorage.setItem(listKey, JSON.stringify(apiFlowcharts));
             }
           }
         })
@@ -2665,7 +2666,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const createDefaultInitialFlowchart = (currentList: FlowchartData[]) => {
     const projId = selectedProject?.id || selectedProject?.key || 'default';
     setFlowcharts(currentList);
-    localStorage.setItem(`lanpro_flowcharts_${projId}`, JSON.stringify(currentList));
+    safeLocalStorage.setItem(`lanpro_flowcharts_${projId}`, JSON.stringify(currentList));
     
     // Set active flow states to empty (not pre-selected)
     setSelectedFlowId(null);
@@ -2861,7 +2862,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         return f;
       });
       try {
-        localStorage.setItem(`lanpro_flowcharts_${projId}`, JSON.stringify(updatedList));
+        safeLocalStorage.setItem(`lanpro_flowcharts_${projId}`, JSON.stringify(updatedList));
       } catch (err) {
         console.warn("Storage quota exceeded, could not save locally:", err);
       }
@@ -2905,7 +2906,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         return f;
       });
       try {
-        localStorage.setItem(`lanpro_flowcharts_${projId}`, JSON.stringify(updatedList));
+        safeLocalStorage.setItem(`lanpro_flowcharts_${projId}`, JSON.stringify(updatedList));
       } catch (err) {
         console.warn("Storage quota exceeded, could not save locally:", err);
       }
@@ -2917,7 +2918,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         try {
           const workspaceData = {
             projectId: projId,
-            flowcharts: JSON.parse(localStorage.getItem(`lanpro_flowcharts_${projId}`) || "[]")
+            flowcharts: JSON.parse(safeLocalStorage.getItem(`lanpro_flowcharts_${projId}`) || "[]")
           };
           await onSaveFlowcharts(workspaceData);
         } catch (err) {
@@ -2943,7 +2944,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     const projId = selectedProject?.id || selectedProject?.key || 'default';
     const remaining = flowcharts.filter(f => f.id !== id);
     setFlowcharts(remaining);
-    localStorage.setItem(`lanpro_flowcharts_${projId}`, JSON.stringify(remaining));
+    safeLocalStorage.setItem(`lanpro_flowcharts_${projId}`, JSON.stringify(remaining));
     
     if (selectedFlowId === id) {
       if (remaining.length > 0) {
@@ -3003,7 +3004,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
       const updated = [newFlow, ...flowcharts];
       setFlowcharts(updated);
-      localStorage.setItem(listKey, JSON.stringify(updated));
+      safeLocalStorage.setItem(listKey, JSON.stringify(updated));
       setSelectedFlowId(null);
       setNodes([]);
       setEdges([]);
@@ -3050,7 +3051,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       });
 
       setFlowcharts(updated);
-      localStorage.setItem(listKey, JSON.stringify(updated));
+      safeLocalStorage.setItem(listKey, JSON.stringify(updated));
       toast.success("Dokumentasi berhasil diperbarui!");
       setIsModalOpen(false);
 

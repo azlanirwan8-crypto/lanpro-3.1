@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { UserAvatar } from '../../components/ui/UserAvatar';
 import { 
@@ -102,7 +103,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
   // Permission states & BOLA Check (LanPro v1.4)
   const effectiveUser = currentUser || (() => {
     try {
-      const stored = localStorage.getItem('sessionUser') || localStorage.getItem('lanpro_user') || sessionStorage.getItem('sessionUser');
+      const stored = safeLocalStorage.getItem('sessionUser') || safeLocalStorage.getItem('lanpro_user') || safeSessionStorage.getItem('sessionUser');
       return stored ? JSON.parse(stored) : null;
     } catch (e) {
       return null;
@@ -152,7 +153,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
   const commentsStorageKey = `lanpro_doc_comments_${projectId}`;
   const [docCommentsMap, setDocCommentsMap] = useState<Record<string, Array<{id: string, userId: string, userName: string, text: string, createdAt: string}>>>(() => {
     try {
-      const saved = localStorage.getItem(commentsStorageKey);
+      const saved = safeLocalStorage.getItem(commentsStorageKey);
       if (saved) return JSON.parse(saved);
     } catch (err) {
       console.error(err);
@@ -179,7 +180,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
     };
     setDocCommentsMap(updatedMap);
     try {
-      localStorage.setItem(commentsStorageKey, JSON.stringify(updatedMap));
+      safeLocalStorage.setItem(commentsStorageKey, JSON.stringify(updatedMap));
     } catch (e) {
       console.error(e);
     }

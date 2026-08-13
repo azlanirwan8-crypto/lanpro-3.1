@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useEffect, useState, useMemo } from "react";
 import { toast } from "sonner";
 import { format, formatDistanceToNow, isSameDay } from "date-fns";
@@ -285,7 +286,7 @@ export function DashboardView(props: DashboardViewProps) {
     >
   >(() => {
     try {
-      const saved = localStorage.getItem(
+      const saved = safeLocalStorage.getItem(
         `waterfall_gates_${selectedProject?.id || "default"}`,
       );
       return saved
@@ -385,7 +386,7 @@ export function DashboardView(props: DashboardViewProps) {
   useEffect(() => {
     if (!selectedProject) return;
     try {
-      const saved = localStorage.getItem(
+      const saved = safeLocalStorage.getItem(
         `waterfall_gates_${selectedProject.id}`,
       );
       if (saved) {
@@ -431,7 +432,7 @@ export function DashboardView(props: DashboardViewProps) {
     };
 
     setWaterfallGates(updated);
-    localStorage.setItem(
+    safeLocalStorage.setItem(
       `waterfall_gates_${selectedProject.id}`,
       JSON.stringify(updated),
     );

@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "./safeStorage";
 import { toast } from "sonner";
 
 /**
@@ -40,7 +41,7 @@ export function isNetworkOrAuthError(e: any): boolean {
 
 export const getAuthToken = () => {
     try {
-      return localStorage.getItem("lanpro_jwt_token");
+      return safeLocalStorage.getItem("lanpro_jwt_token");
     } catch (e) {
       return null;
     }
@@ -48,17 +49,17 @@ export const getAuthToken = () => {
 
 export const setAuthToken = (token: string) => {
     try {
-      localStorage.setItem("lanpro_jwt_token", token);
+      safeLocalStorage.setItem("lanpro_jwt_token", token);
     } catch (e) {}
 };
 
 export const clearAuthToken = () => {
     try {
-      localStorage.removeItem("lanpro_jwt_token");
-      localStorage.removeItem("sessionUser");
-      sessionStorage.removeItem("sessionUser");
-      localStorage.removeItem("isAdminMode");
-      sessionStorage.removeItem("isAdminMode");
+      safeLocalStorage.removeItem("lanpro_jwt_token");
+      safeLocalStorage.removeItem("sessionUser");
+      safeSessionStorage.removeItem("sessionUser");
+      safeLocalStorage.removeItem("isAdminMode");
+      safeSessionStorage.removeItem("isAdminMode");
     } catch (e) {}
 };
 

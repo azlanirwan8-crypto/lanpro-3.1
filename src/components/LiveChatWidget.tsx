@@ -1,3 +1,4 @@
+import { safeLocalStorage, safeSessionStorage } from "../lib/safeStorage";
 import React, { useState, useEffect, useRef } from "react";
 import { 
   MessageSquare, Send, ArrowLeft, Search, X, 
@@ -151,7 +152,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
             body: { senderId: activeChatUser.id, receiverId: currentUser.id }
           });
         } else {
-          localStorage.setItem(`last_read_group_${currentUser.id}`, new Date().toISOString());
+          safeLocalStorage.setItem(`last_read_group_${currentUser.id}`, new Date().toISOString());
         }
         playNotificationSound();
       } else {
@@ -211,7 +212,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                 body: { senderId: activeChatUser.id, receiverId: currentUser.id }
               });
             } else {
-              localStorage.setItem(`last_read_group_${currentUser.id}`, new Date().toISOString());
+              safeLocalStorage.setItem(`last_read_group_${currentUser.id}`, new Date().toISOString());
             }
             setUnreadCounts(prev => ({
               ...prev,
@@ -251,7 +252,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
           // Calculate unread count for Group Chat based on localStorage last read
           const lastMsgGroup = previews["group"];
           if (lastMsgGroup) {
-            const lastReadStr = localStorage.getItem(`last_read_group_${currentUser.id}`);
+            const lastReadStr = safeLocalStorage.getItem(`last_read_group_${currentUser.id}`);
             if (lastReadStr) {
               const lastRead = new Date(lastReadStr);
               const msgTs = new Date(lastMsgGroup.timestamp);
