@@ -149,52 +149,80 @@ export async function apiRequest(url: string, options: FetchOptions = {}, retrie
         }));
     }
     
-    // v1.4 Hardening: Check Content-Type before parsing JSON
-    const contentType = response.headers.get("content-type");
-    const isJson = contentType && contentType.includes("application/json");
-
+    // v1.6 Hardening: Safe JSON / Text parsing with fallback & Vercel error sanitization
     let responseData: any = null;
-    if (isJson) {
-        responseData = await response.json().catch(() => ({}));
-    } else {
-        responseData = await response.text().catch(() => "");
+
+    const contentType = response.headers.get("content-type") || "";
+    const isJsonHeader = contentType.includes("application/json");
+
+    try {
+        if (isJsonHeader) {
+            responseData = await response.json().catch(async () => {
+                const text = await response.clone().text().catch(() => "");
+                try { return JSON.parse(text); } catch { return text; }
+            });
+        } else {
+            const rawText = await response.text().catch(() => "");
+            try {
+                responseData = JSON.parse(rawText);
+            } catch {
+                responseData = rawText;
+            }
+        }
+    } catch (err) {
+        responseData = null;
     }
 
     // v1.4: Enhanced Auth & Session Handling
     // v1.5: Only logout on 401 (Unauthenticated). 403 (Forbidden) should just show the error without clearing token.
     if (response.status === 401) {
         if (!url.includes("/api/auth/")) {
-            const message = isJson && responseData ? responseData.message : "Sesi berakhir. Silakan login kembali.";
+            const message = (responseData && typeof responseData === "object" && responseData.message)
+                ? responseData.message
+                : "Sesi berakhir. Silakan login kembali.";
             
             clearAuthToken();
             window.dispatchEvent(new Event("auth_expired"));
-            // Trigger a page reload or state change if needed, but for now just throw
-            throw new Error(message || "Sesi berakhir. Silakan login kembali.");
+            throw new ApiError(message, 401, { authError: true });
         }
     }
 
     if (!response.ok) {
         let message = `Server error: ${response.status}`;
         let errorData: any = {};
-        if (isJson && responseData && typeof responseData === "object") {
+
+        if (responseData && typeof responseData === "object" && !Array.isArray(responseData)) {
             errorData = responseData;
-            message = responseData.message || message;
-        } else {
-            const text = typeof responseData === "string" ? responseData : "";
-            if (text.includes("<html>")) {
+            message = responseData.message || responseData.error || message;
+        } else if (typeof responseData === "string" && responseData.trim().length > 0) {
+            const text = responseData.trim();
+            if (text.includes("<html>") || text.includes("<!DOCTYPE") || text.startsWith("An error") || text.includes("Vercel")) {
                 if (response.status === 403) {
-                    message = "Akun Anda belum aktif. Silakan hubungi admin.";
+                    message = "Akses ditolak. Silakan periksa hak akses Anda.";
                 } else if (response.status === 401) {
-                    message = "Kata sandi atau nama pengguna yang Anda masukkan salah.";
+                    message = "Sesi autentikasi tidak valid.";
                 } else if (response.status === 429) {
-                    message = "Terlalu banyak percobaan. Silakan tunggu beberapa saat lagi.";
+                    message = "Terlalu banyak permintaan. Silakan tunggu beberapa saat.";
+                } else if (response.status >= 500) {
+                    message = `Gagal memproses permintaan pada server (${response.status}). Silakan coba beberapa saat lagi.`;
                 } else {
                     message = `Terjadi kesalahan pada server (${response.status}).`;
                 }
-            } else if (text.trim().length > 0) {
-                message = text.trim();
+            } else {
+                message = text;
             }
         }
+
+        // Sanitize any raw JS syntax error or unhandled Vercel error text
+        if (typeof message === "string" && (
+            message.includes("Unexpected token") || 
+            message.includes("is not valid JSON") || 
+            message.startsWith("An error occurred") ||
+            message.includes("JSON.parse")
+        )) {
+            message = `Gagal memproses respons dari server (${response.status}). Silakan coba beberapa saat lagi.`;
+        }
+
         throw new ApiError(message, response.status, errorData);
     }
     

@@ -98,15 +98,12 @@ export const ProfileEditModal = ({
         const formData = new FormData();
         formData.append('file', selectedAvatar);
 
-        const token = localStorage.getItem('lanpro_jwt_token');
-        const uploadRes = await fetch(`/api/users/${docId}/avatar`, {
+        const uploadData = await apiRequest(`/api/users/${docId}/avatar`, {
           method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
           body: formData
         });
-        const uploadData = await uploadRes.json();
 
-        if (uploadData.status === 'success') {
+        if (uploadData && (uploadData.status === 'success' || uploadData.avatar_url)) {
           finalPhotoURL = uploadData.avatar_url || uploadData.data?.avatar_url || uploadData.data?.photoURL || finalPhotoURL;
           setPhotoURL(finalPhotoURL);
           if (previewUrl && previewUrl.startsWith('blob:')) {
@@ -115,7 +112,7 @@ export const ProfileEditModal = ({
           setPreviewUrl(null);
           setSelectedAvatar(null);
         } else {
-          toast.error(uploadData.message || 'Gagal mengunggah foto avatar.');
+          toast.error(uploadData?.message || 'Gagal mengunggah foto avatar.');
           setLoading(false);
           setIsUploading(false);
           return;

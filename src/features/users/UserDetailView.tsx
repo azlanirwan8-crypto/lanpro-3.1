@@ -141,15 +141,10 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
 
   // Fetch users for Sub-Team / PIC subordinate selection
   useEffect(() => {
-    fetch('/api/users', {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('lanpro_jwt_token')}`
-      }
-    })
-      .then(res => res.json())
+    apiRequest('/api/users')
       .then(data => {
-        if (data.status === 'success') {
-          setAvailableUsers(data.data || []);
+        if (data) {
+          setAvailableUsers(Array.isArray(data) ? data : (data.data || []));
         }
       })
       .catch(() => {});
@@ -272,16 +267,13 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
         const formData = new FormData();
         formData.append('file', selectedAvatar);
 
-        const token = localStorage.getItem('lanpro_jwt_token');
         const userId = user.id || user.uid;
-        const uploadRes = await fetch(`/api/users/${userId}/avatar`, {
+        const uploadData = await apiRequest(`/api/users/${userId}/avatar`, {
           method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
           body: formData
         });
-        const uploadData = await uploadRes.json();
 
-        if (uploadData.status === 'success') {
+        if (uploadData && (uploadData.status === 'success' || uploadData.avatar_url)) {
           finalPhotoURL = uploadData.avatar_url || uploadData.data?.avatar_url || uploadData.data?.photoURL || finalPhotoURL;
           setPhotoURL(finalPhotoURL);
           if (previewUrl && previewUrl.startsWith('blob:')) {
@@ -290,7 +282,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
           setPreviewUrl(null);
           setSelectedAvatar(null);
         } else {
-          toast.error(uploadData.message || 'Gagal mengunggah foto avatar.');
+          toast.error(uploadData?.message || 'Gagal mengunggah foto avatar.');
           setIsSaving(false);
           setIsUploading(false);
           return;
