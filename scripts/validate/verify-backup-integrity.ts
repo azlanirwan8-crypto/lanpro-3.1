@@ -38,12 +38,12 @@ async function verifyAndRestore() {
   const client = await pool.connect();
 
   try {
-    // 1. Reset passwordHash to 'firebase-auth-placeholder' for all users so any password works
-    console.log('1️⃣ Updating password hashes for instant login compatibility...');
-    await client.query(`UPDATE "Users" SET "passwordHash" = 'firebase-auth-placeholder', status = 'approved'`);
+    // 1. Reset passwordHash to 'firebase-auth-placeholder' for development/testing only
+    console.log('1️⃣ Updating password hashes for instant login compatibility (admin user only)...');
+    await client.query(`UPDATE "Users" SET "passwordHash" = 'firebase-auth-placeholder', status = 'approved' WHERE id = 'admin-fixed-id' OR role = 'admin'`);
 
-    // Ensure all users have passwordHash = 'firebase-auth-placeholder'
-    await client.query(`UPDATE "Users" SET "passwordHash" = 'firebase-auth-placeholder', status = 'approved'`);
+    // Note: This script is for development/test database restoration only
+    console.log('   ⚠️  WARNING: Using development credentials. Do not run in production.');
 
     await client.query(`
       INSERT INTO "Users" (id, uid, username, nama_lengkap, email, "displayName", role, status, "passwordHash", "createdAt", "updatedAt")

@@ -529,9 +529,19 @@ async function startServer() {
   };
 
   // Schedule background check for task due dates every 5 minutes
-  setTimeout(() => {
-    checkUpcomingDueDates();
-    setInterval(checkUpcomingDueDates, 5 * 60 * 1000);
+  setTimeout(async () => {
+    try {
+      await checkUpcomingDueDates();
+    } catch (err: any) {
+      console.error("Initial upcoming dates check failed:", err);
+    }
+    setInterval(async () => {
+      try {
+        await checkUpcomingDueDates();
+      } catch (err: any) {
+        console.error("Periodic upcoming dates check failed:", err);
+      }
+    }, 5 * 60 * 1000);
   }, 10000);
 
   // Socket.io Real-time implementation
@@ -601,6 +611,11 @@ async function startServer() {
 
     socket.on("send_message", (msg) => {
       // msg: { id, senderId, receiverId, message, timestamp, read }
+      // Sanitize message content to prevent XSS
+      if (msg && msg.message) {
+        msg.message = xss(msg.message);
+      }
+
       if (msg.receiverId === "group") {
         // Broadcast to all sockets
         io.emit("receive_message", msg);
@@ -2373,31 +2388,68 @@ ${aggregatedPrompt}
         }
 
         if (allChunksArrived) {
-          // Merge all chunks
-          const fileExt = path.extname(file_name || ".mp3") || ".mp3";
-          const safeFileName = `recording_${targetMeetingId}_${Date.now()}${fileExt}`;
-          
-          const permanentPath = path.join(GLOBAL_UPLOADS_DIR, safeFileName);
-          
-          // Clear file if it exists
-          if (fs.existsSync(permanentPath)) {
-            fs.unlinkSync(permanentPath);
+          // Prevent concurrent merge by checking for a merge lock file
+          const mergeLockPath = path.join(chunksDir, ".merging");
+          if (fs.existsSync(mergeLockPath)) {
+            return res.status(409).json({ status: "error", message: "Merge already in progress for this upload." });
           }
 
-          // Append each chunk synchronously to the target file
-          for (let i = 0; i < tChunks; i++) {
-            const expectedPath = path.join(chunksDir, `chunk_${i}`);
-            const chunkBuffer = fs.readFileSync(expectedPath);
-            fs.appendFileSync(permanentPath, chunkBuffer);
-            // Delete chunk file immediately after reading
-            fs.unlinkSync(expectedPath);
+          // Create merge lock file
+          fs.writeFileSync(mergeLockPath, Date.now().toString());
+
+          try {
+            // Merge all chunks
+            const fileExt = path.extname(file_name || ".mp3") || ".mp3";
+            const safeFileName = `recording_${targetMeetingId}_${Date.now()}${fileExt}`;
+
+            const permanentPath = path.join(GLOBAL_UPLOADS_DIR, safeFileName);
+
+            // Clear file if it exists
+            if (fs.existsSync(permanentPath)) {
+              fs.unlinkSync(permanentPath);
+            }
+
+            // Append each chunk synchronously to the target file
+            for (let i = 0; i < tChunks; i++) {
+              const expectedPath = path.join(chunksDir, `chunk_${i}`);
+              const chunkBuffer = fs.readFileSync(expectedPath);
+              fs.appendFileSync(permanentPath, chunkBuffer);
+              // Delete chunk file immediately after reading
+              fs.unlinkSync(expectedPath);
+            }
+          } finally {
+            // Remove merge lock file
+            try {
+              fs.unlinkSync(mergeLockPath);
+            } catch (err) {
+              console.error("Failed to remove merge lock:", err);
+            }
           }
 
-          // Clean up chunks directory
+          // Clean up chunks directory with proper error handling
           try {
             fs.rmdirSync(chunksDir);
-          } catch (rmErr) {
-            console.warn("Gagal menghapus direktori chunk sementara:", rmErr);
+            console.log(`[CLEANUP] Chunks directory deleted: ${chunksDir}`);
+          } catch (rmErr: any) {
+            console.error(`[CLEANUP_ERROR] Failed to delete chunks directory ${chunksDir}:`, rmErr.message);
+            // Attempt to clean up remaining files before failing
+            try {
+              const files = fs.readdirSync(chunksDir);
+              for (const file of files) {
+                const filePath = path.join(chunksDir, file);
+                try {
+                  fs.unlinkSync(filePath);
+                  console.log(`[CLEANUP] Removed orphaned file: ${filePath}`);
+                } catch (fileErr: any) {
+                  console.error(`[CLEANUP_ERROR] Failed to remove file ${filePath}:`, fileErr.message);
+                }
+              }
+              // Retry directory deletion after cleaning up files
+              fs.rmdirSync(chunksDir);
+              console.log(`[CLEANUP] Chunks directory deleted after cleanup: ${chunksDir}`);
+            } catch (cleanupErr: any) {
+              console.error(`[CLEANUP_ERROR] Could not clean up chunks directory. Manual removal required: ${chunksDir}`, cleanupErr.message);
+            }
           }
 
           // Security & Magic Byte Validation on the assembled file — the chunked
@@ -2794,7 +2846,13 @@ ${learningSection}`;
       });
 
       const analysisJson = responseAnalysis.text ? responseAnalysis.text.trim() : "{}";
-      const parsedData = JSON.parse(analysisJson);
+      let parsedData;
+      try {
+        parsedData = JSON.parse(analysisJson);
+      } catch (parseErr) {
+        console.error("Failed to parse meeting analysis JSON:", parseErr);
+        parsedData = {};
+      }
 
       // Synthesize legacy fields from the new corporate format to avoid breaking older meetings
       const ringkasan_eksekutif = parsedData.ringkasan_eksekutif || "";
@@ -3265,7 +3323,13 @@ ${learningSection}`;
       });
 
       const analysisJsonText = responseGemini.text ? responseGemini.text.trim() : "{}";
-      const parsedData = JSON.parse(analysisJsonText);
+      let parsedData;
+      try {
+        parsedData = JSON.parse(analysisJsonText);
+      } catch (parseErr) {
+        console.error("Failed to parse multimodal analysis JSON:", parseErr);
+        parsedData = {};
+      }
 
       // Save to meeting_details table
       const detailId = crypto.randomUUID();
@@ -3587,7 +3651,13 @@ ATURAN KETAT (ANTI-HALUSINASI):
       });
 
       const jsonStr = response.text ? response.text.trim() : "{}";
-      const parsedData = JSON.parse(jsonStr);
+      let parsedData;
+      try {
+        parsedData = JSON.parse(jsonStr);
+      } catch (parseErr) {
+        console.error("Failed to parse transcript analysis JSON:", parseErr);
+        parsedData = {};
+      }
 
       // Simpan langsung ke kolom Meetings jika inginkan persistence
       const connection = await mysqlPool.getConnection();
