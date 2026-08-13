@@ -52,25 +52,25 @@ export const SprintSection: React.FC<SprintSectionProps> = ({
             "border-slate-200/60 bg-slate-50/40 opacity-95",
             isExpanded && sprint.status !== 'active' ? "border-[#405189]/30" : ""
           )}>
-            <div className="px-4 py-3 flex items-center justify-between cursor-pointer hover:bg-slate-50/70 transition border-b border-slate-100" onClick={() => setExpandedSprintId(isExpanded ? "" : sprint.id)}>
-              <div className="flex items-center gap-3 min-w-0">
+            <div className="px-4 py-3 flex items-center justify-between gap-3 cursor-pointer hover:bg-slate-50/70 transition border-b border-slate-100" onClick={() => setExpandedSprintId(isExpanded ? "" : sprint.id)}>
+              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                 <ChevronDown className={cn("w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0", isExpanded ? "rotate-0" : "-rotate-90")} />
-                <div className="flex items-center gap-2 min-w-0">
-                  <h3 className="font-bold text-slate-800 text-sm truncate shrink-0 max-w-[160px] sm:max-w-[280px]">
+                <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                  <h3 className="font-bold text-slate-800 text-sm truncate min-w-0 flex-1">
                     {sprint.name?.trim() || "Fase Tanpa Judul"}
                   </h3>
-                  <span className={cn("text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border shrink-0", 
+                  <span className={cn("text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border shrink-0 whitespace-nowrap", 
                     sprint.status === 'active' ? (isOverdue ? "bg-red-50 text-red-700 border-red-200" : "bg-emerald-50 text-emerald-700 border-emerald-200") : 
                     sprint.status === 'planned' ? "bg-slate-100 text-slate-600 border-slate-200/60" : "bg-blue-50 text-blue-700 border-blue-100"
                   )}>
                     {sprint.status === 'active' ? (isOverdue ? 'OVERDUE' : 'ACTIVE') : sprint.status === 'planned' ? 'PLANNED' : 'COMPLETED'}
                   </span>
-                </div>
-                <div className={cn("hidden md:flex items-center gap-1 text-xs font-medium shrink-0 ml-1.5", isOverdue ? "text-red-500 font-medium" : "text-slate-500")}>
-                  <Calendar className={cn("w-3.5 h-3.5 shrink-0", isOverdue ? "text-red-500" : "text-slate-400")} />
-                  <span>
-                    {sprint.startDate && sprint.endDate ? `${format(ensureDate(sprint.startDate), 'MMM d, yyyy')} - ${format(ensureDate(sprint.endDate), 'MMM d, yyyy')}` : 'Belum ada tanggal'}
-                  </span>
+                  <div className={cn("hidden md:flex items-center gap-1 text-xs font-medium shrink-0 whitespace-nowrap ml-0.5", isOverdue ? "text-red-500 font-medium" : "text-slate-500")}>
+                    <Calendar className={cn("w-3.5 h-3.5 shrink-0", isOverdue ? "text-red-500" : "text-slate-400")} />
+                    <span>
+                      {sprint.startDate && sprint.endDate ? `${format(ensureDate(sprint.startDate), 'MMM d, yyyy')} - ${format(ensureDate(sprint.endDate), 'MMM d, yyyy')}` : 'Belum ada tanggal'}
+                    </span>
+                  </div>
                 </div>
               </div>
 

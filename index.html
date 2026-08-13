@@ -66,18 +66,36 @@
     <script>
       (function() {
         window.addEventListener('error', function(event) {
-          // Suppress benign resize observer errors and extension script errors
-          if (event.message && (
-            event.message.indexOf("ResizeObserver") !== -1 ||
-            event.message.indexOf("Script error") !== -1 ||
-            event.message.indexOf("Extension") !== -1
-          )) {
+          var msg = (event && (event.message || (event.error && event.error.message))) || '';
+          var msgLower = String(msg).toLowerCase();
+          
+          // Suppress benign runtime, network, CDN, chunk, and extension script errors
+          if (
+            !msg ||
+            msgLower.includes("resizeobserver") ||
+            msgLower.includes("script error") ||
+            msgLower.includes("extension") ||
+            msgLower.includes("failed to fetch") ||
+            msgLower.includes("gagal terhubung") ||
+            msgLower.includes("networkerror") ||
+            msgLower.includes("load failed") ||
+            msgLower.includes("chunkloaderror") ||
+            msgLower.includes("websocket") ||
+            msgLower.includes("lordicon") ||
+            msgLower.includes("rate") ||
+            msgLower.includes("503") ||
+            msgLower.includes("429")
+          ) {
+            console.warn("[SUPPRESSED GLOBAL ERROR]", msg || event);
             return;
           }
           showErrorBanner("Kesalahan Global Terdeteksi", event.error || event.message);
         });
         window.addEventListener('unhandledrejection', function(event) {
           console.warn("Penolakan Janji Tidak Ditangani (Tersemat):", event.reason);
+          if (event && typeof event.preventDefault === 'function') {
+            event.preventDefault();
+          }
         });
 
         function showErrorBanner(title, error) {

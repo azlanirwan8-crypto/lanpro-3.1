@@ -5,6 +5,16 @@ import { cn } from '../../lib/utils';
 import { Portal } from './Portal';
 
 declare global {
+  namespace React.JSX {
+    interface IntrinsicElements {
+      'lord-icon': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
+        src?: string;
+        trigger?: string;
+        colors?: string;
+        style?: React.CSSProperties;
+      }, HTMLElement>;
+    }
+  }
   namespace JSX {
     interface IntrinsicElements {
       'lord-icon': any;
