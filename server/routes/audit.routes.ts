@@ -19,9 +19,10 @@ router.get("/api/audit-logs", authenticateJWT, async (req, res) => {
     if (entityId) { filters.push("a.entityId = ?"); params.push(entityId); }
 
     if (filters.length > 0) sql += " WHERE " + filters.join(" AND ");
-    
+
     sql += " ORDER BY a.createdAt DESC LIMIT ?";
-    params.push(parseInt(limit as string) || 50);
+    const limitValue = Math.min(Math.max(parseInt(limit as string) || 50, 1), 500);
+    params.push(limitValue);
 
     const [rows] = await connection.query(sql, params);
     res.json({ status: "success", data: rows });

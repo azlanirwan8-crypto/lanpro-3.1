@@ -153,6 +153,7 @@ function formatUserForAuthResponse(user: any) {
     const user = rows[0];
     const matchedUsername = user.username || usernameInput;
     const userKey = (user.username || usernameInput).trim().toLowerCase();
+    const userId = user.id || user.uid;
 
     let attempt = loginAttemptsMap.get(userKey);
     if (!attempt) {
@@ -166,6 +167,19 @@ function formatUserForAuthResponse(user: any) {
     if (attempt.blockedUntil && now < attempt.blockedUntil) {
       const remainingMs = attempt.blockedUntil - now;
       const timeStr = formatRemainingTime(remainingMs);
+      setImmediate(async () => {
+        try {
+          const logConn = await mysqlPool.getConnection();
+          await logConn.query(
+            `INSERT INTO AuditLogs (id, userId, projectId, actionType, entityName, entityId, oldValues, newValues)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [crypto.randomUUID(), userId, null, 'LOGIN_BLOCKED', 'Authentication', userId, null, JSON.stringify({ reason: 'Rate limit exceeded (5 min block)' })]
+          );
+          logConn.release();
+        } catch (logErr) {
+          console.error("Failed to log blocked login attempt:", logErr);
+        }
+      });
       return {
         success: false,
         status: 429,
@@ -183,10 +197,25 @@ function formatUserForAuthResponse(user: any) {
     // Status checks are now performed in the login controller after password verification
 
     // 2. Verify password
-    const isValid = await verifyPassword(passwordInput, user.passwordHash, user.username);
+    const isValid = await verifyPassword(passwordInput, user.passwordHash);
 
     if (!isValid) {
       attempt.count += 1;
+
+      // Log failed attempt to audit trail
+      setImmediate(async () => {
+        try {
+          const logConn = await mysqlPool.getConnection();
+          await logConn.query(
+            `INSERT INTO AuditLogs (id, userId, projectId, actionType, entityName, entityId, oldValues, newValues)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [crypto.randomUUID(), userId, null, 'LOGIN_FAILED', 'Authentication', userId, null, JSON.stringify({ attempt: attempt.count })]
+          );
+          logConn.release();
+        } catch (logErr) {
+          console.error("Failed to log failed login attempt:", logErr);
+        }
+      });
 
       // 3. Reached 5 failed attempts -> Block for 5 minutes (300,000 ms)
       if (attempt.count >= 5) {
@@ -323,7 +352,7 @@ function formatUserForAuthResponse(user: any) {
     try {
       const { username, password } = req.body;
       if (!username || !password) return res.status(400).json({ status: "error" });
-      
+
       const authResult = await handleUserAuthentication(username, password);
       if (authResult.success === false) {
         return res.status(authResult.status).json({
@@ -337,6 +366,21 @@ function formatUserForAuthResponse(user: any) {
       const userId = user.id || user.uid;
 
       const token = generateToken(user);
+
+      // Log force logout
+      setImmediate(async () => {
+        try {
+          const logConn = await mysqlPool.getConnection();
+          await logConn.query(
+            `INSERT INTO AuditLogs (id, userId, projectId, actionType, entityName, entityId, oldValues, newValues)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [crypto.randomUUID(), userId, null, 'FORCE_LOGOUT', 'Authentication', userId, null, JSON.stringify({ action: 'User initiated force logout from another device' })]
+          );
+          logConn.release();
+        } catch (logErr) {
+          console.error("Failed to log force logout:", logErr);
+        }
+      });
       
       const parser = new UAParser(req.headers['user-agent']);
       const browserInfo = parser.getBrowser();

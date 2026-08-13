@@ -16,43 +16,60 @@ export const maskSensitiveData = (data: any): any => {
   return masked;
 };
 
+export interface AuditLogInput {
+  userId: string;
+  projectId: string | null;
+  actionType: 'CREATE' | 'UPDATE' | 'DELETE';
+  entityName: string;
+  entityId: string;
+  oldValues: any;
+  newValues: any;
+  io?: any;
+}
+
 export const createAuditLog = async (
   arg1: any,
-  arg2: any,
-  arg3: any,
-  arg4: any,
-  arg5: any,
-  arg6: any,
-  arg7: any,
+  arg2?: any,
+  arg3?: any,
+  arg4?: any,
+  arg5?: any,
+  arg6?: any,
+  arg7?: any,
   arg8?: any
-) => {
-  let io: any = null;
-  let userId: string;
-  let projectId: string | null;
-  let actionType: 'CREATE' | 'UPDATE' | 'DELETE';
-  let entityName: string;
-  let entityId: string;
-  let oldValues: any;
-  let newValues: any;
+): Promise<void> => {
+  let input: AuditLogInput;
 
-  if (arg8 !== undefined) {
-    io = arg1;
-    userId = arg2;
-    projectId = arg3;
-    actionType = arg4;
-    entityName = arg5;
-    entityId = arg6;
-    oldValues = arg7;
-    newValues = arg8;
-  } else {
-    userId = arg1;
-    projectId = arg2;
-    actionType = arg3;
-    entityName = arg4;
-    entityId = arg5;
-    oldValues = arg6;
-    newValues = arg7;
+  // New signature: single object parameter
+  if (typeof arg1 === 'object' && arg1.userId && !arg2) {
+    input = arg1;
   }
+  // Old signature: legacy 7-8 parameter format (with optional io)
+  else if (arg8 !== undefined) {
+    input = {
+      io: arg1,
+      userId: arg2,
+      projectId: arg3,
+      actionType: arg4,
+      entityName: arg5,
+      entityId: arg6,
+      oldValues: arg7,
+      newValues: arg8
+    };
+  }
+  // Old signature: legacy 7 parameter format (no io)
+  else {
+    input = {
+      userId: arg1,
+      projectId: arg2,
+      actionType: arg3,
+      entityName: arg4,
+      entityId: arg5,
+      oldValues: arg6,
+      newValues: arg7
+    };
+  }
+
+  const { userId, projectId, actionType, entityName, entityId, oldValues, newValues, io } = input;
   setImmediate(async () => {
     let logConn;
     try {

@@ -5,7 +5,7 @@ export const hashPassword = (password: string): string => {
   return bcrypt.hashSync(password, 10);
 };
 
-export const verifyPassword = async (password: string, storedHash: string, username?: string): Promise<boolean> => {
+export const verifyPassword = async (password: string, storedHash: string): Promise<boolean> => {
   const cleanHash = storedHash ? storedHash.trim() : '';
 
   // Support legacy/existing pbkdf2 database records
@@ -16,8 +16,13 @@ export const verifyPassword = async (password: string, storedHash: string, usern
       const iterations = parseInt(parts[1], 10);
       const salt = parts[2];
       const originalHash = parts[3];
-      const hash = crypto.pbkdf2Sync(password, salt, iterations, 64, 'sha512').toString('hex');
-      
+      const hash = await new Promise<string>((resolve, reject) => {
+        crypto.pbkdf2(password, salt, iterations, 64, 'sha512', (err, derived) => {
+          if (err) reject(err);
+          else resolve(derived.toString('hex'));
+        });
+      });
+
       // Prevent timing attacks using timingSafeEqual
       const hashBuf = Buffer.from(hash, 'hex');
       const originalBuf = Buffer.from(originalHash, 'hex');
