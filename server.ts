@@ -31,6 +31,7 @@ import { TERMINAL_STATUSES } from "./src/lib/constants";
 // ... (existing code)
 
 
+import { authenticateJWT, verifyGlobalAdmin, getJwtSecret, generateToken } from './server/middleware/auth.ts';
 import healthRoutes from "./server/routes/health.routes";
 import systemRoutes from "./server/routes/system.routes";
 import auditRoutes from "./server/routes/audit.routes";
@@ -308,80 +309,6 @@ async function startServer() {
     return res.sendFile(targetPath);
   });
 
-  const getJwtSecret = (): string => {
-    if (!process.env.JWT_SECRET) {
-      throw new Error('[SECURITY] JWT_SECRET tidak ditemukan di environment.');
-    }
-    return process.env.JWT_SECRET;
-  };
-
-  const generateToken = (user: any) => {
-    return jwt.sign(
-      { id: user.id, uid: user.uid, username: user.username, role: user.role, displayName: user.displayName },
-      getJwtSecret(),
-      { expiresIn: '2h' }
-    );
-  };
-
-  const verifyGlobalAdmin = (req: any, res: any, next: any) => {
-    if (req.user?.role === 'admin') {
-      next();
-    } else {
-      res.status(403).json({ status: "error", message: "Akses ditolak: Hanya Global Admin yang memiliki izin." });
-    }
-  };
-
-  const authenticateJWT = (req: any, res: any, next: any) => {
-    const authHeader = req.headers?.authorization;
-    
-    if (!authHeader) {
-      return res.status(401).json({ 
-        status: "error", 
-        message: "Akses ditolak: Token autentikasi tidak ditemukan." 
-      });
-    }
-
-    if (authHeader.startsWith('Bearer ')) {
-      const parts = authHeader.split(' ');
-      const token = parts.length === 2 ? parts[1] : null;
-      
-      if (!token) {
-        return res.status(401).json({ 
-          status: "error", 
-          message: "Format token tidak valid." 
-        });
-      }
-
-      jwt.verify(token, getJwtSecret(), (err: any, user: any) => {
-        if (err) {
-          return res.status(401).json({ 
-            status: "error", 
-            message: "Sesi Anda telah berakhir atau token tidak valid. Silakan login kembali." 
-          });
-        }
-
-        // Single login concurrent session check
-        const userId = user.id || user.uid;
-        if (userId) {
-          const activeSession = activeUserSessions.get(userId.toString());
-          if (activeSession && activeSession.token !== token) {
-            return res.status(401).json({
-              status: "error",
-              message: "Sesi Anda telah diakhiri karena akun Anda telah masuk di perangkat/browser lain."
-            });
-          }
-        }
-
-        req.user = user;
-        next();
-      });
-    } else {
-      res.status(401).json({ 
-        status: "error", 
-        message: "Akses ditolak: Format Authorization bukan Bearer." 
-      });
-    }
-  };
 
   // Attach io to req for routes to use
   app.use((req, res, next) => {
