@@ -487,7 +487,7 @@ function formatUserForAuthResponse(user: any) {
         return res.status(400).json({ status: "error", message: "Email sudah digunakan oleh akun lain." });
       }
 
-      const uid = req.body.uid || req.body.id || Date.now().toString(36) + Math.random().toString(36).substring(2);
+      const uid = (req.body.uid || req.body.id || Date.now().toString(36) + Math.random().toString(36).substring(2)).toString().trim();
       
       const insertDisplayName = displayName || nama_lengkap || name || username;
       const insertRole = role || 'user';
@@ -516,7 +516,7 @@ function formatUserForAuthResponse(user: any) {
       });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: Register error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }

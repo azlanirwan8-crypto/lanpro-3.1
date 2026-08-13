@@ -204,7 +204,7 @@ async function generateContentWithFallback(ai: any, options: any) {
       res.json({ status: "success", data: tasks });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/projects/:projectId/tasks error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -267,7 +267,7 @@ async function generateContentWithFallback(ai: any, options: any) {
       res.json({ status: "success", data: tasks });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/projects/:projectId/team-tasks error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -403,7 +403,7 @@ async function generateContentWithFallback(ai: any, options: any) {
       });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/projects/:projectId/tasks error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -439,7 +439,7 @@ async function generateContentWithFallback(ai: any, options: any) {
         connection.release();
       }
       console.error("Reorder tasks error:", error);
-      res.status(500).json({ status: "error", message: error.message || "Failed to reorder tasks" });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -776,7 +776,13 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       const changedFields: any = {};
       const newValues: any = {};
 
+      const ALLOWED_TASK_COLUMNS = ['title', 'description', 'status', 'type', 'priority', 'assigneeId', 'sprintId', 'parentId', 'dueDate', 'storyPoints', 'startDate', 'endDate', 'estimatedHours', 'loggedHours', 'acceptanceCriteria', 'isBlocked'];
+
       const checkUpdate = (field: string, val: any) => {
+        if (!ALLOWED_TASK_COLUMNS.includes(field)) {
+          console.warn(`Attempted to update disallowed task field: ${field}`);
+          return;
+        }
         if (val !== undefined && val !== oldTask[field]) {
           updates.push(`${field} = ?`);
           values.push(val);
@@ -970,7 +976,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", data: { id, ...changedFields } });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: PUT /api/projects/:projectId/tasks/:id error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1034,7 +1040,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", message: "Task deleted" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: DELETE /api/projects/:projectId/tasks/:id error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1119,7 +1125,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", message: `Successfully deleted ${deletableTaskIds.length} tasks`, deletedIds: deletableTaskIds });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/projects/:projectId/tasks/bulk-delete error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1138,7 +1144,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/projects/:projectId/tasks/:taskId/comments error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1168,7 +1174,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", data: { id: newId, taskId, content, authorId: effectiveAuthorId } });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/projects/:projectId/tasks/:taskId/comments error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1187,7 +1193,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/projects/:projectId/activity error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1219,7 +1225,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", data: { id: newId } });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/projects/:projectId/activity error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1417,7 +1423,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", data: filteredNotifications.slice(0, 50) });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/users/:userId/notifications error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1440,7 +1446,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", data: { id: newId, type, title, message, relatedId, senderId, read } });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/users/:userId/notifications error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1474,7 +1480,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", message: "Notification updated" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: PUT /api/users/:userId/notifications/:id error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1541,7 +1547,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", data: allRows });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/chat/last-messages error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1573,7 +1579,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/chat/messages error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1600,7 +1606,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", data: { id, senderId, receiverId, message, timestamp, read: false } });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/chat/messages error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1626,7 +1632,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", message: "Pesan berhasil ditandai sebagai dibaca." });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: PUT /api/chat/messages/read error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1651,7 +1657,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/chat/unread-counts error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1846,7 +1852,7 @@ Balasan Anda harus singkat (1-3 kalimat saja) layaknya pesan instan di Slack ata
       res.json({ status: "success", data: { id: newId, sourceTaskId: taskId, targetTaskId, relationType } });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/projects/:projectId/tasks/:taskId/links error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1871,7 +1877,7 @@ Balasan Anda harus singkat (1-3 kalimat saja) layaknya pesan instan di Slack ata
       res.json({ status: "success", message: "Task link deleted" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: DELETE /api/projects/:projectId/tasks/:taskId/links/:linkId error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }

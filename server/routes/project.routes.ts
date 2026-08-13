@@ -74,7 +74,7 @@ const router = express.Router();
       res.json({ status: "success", data: projects });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/projects error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -395,7 +395,7 @@ const router = express.Router();
       }
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/projects/:id error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -429,7 +429,7 @@ const router = express.Router();
       res.json({ status: "success", data: { id: newId, name, projectKey: pKey, description, ownerId: resolvedOwnerId, status: status || 'Active', category: category || 'Agile' }});
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/projects error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -460,7 +460,7 @@ const router = express.Router();
       res.json({ status: "success", message: "Layout updated" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: PUT /api/projects/:projectId/dashboard-layout error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -476,7 +476,10 @@ const router = express.Router();
       const updates = [];
       const values = [];
       const changedFields: any = {};
-      
+
+      // Whitelist: Only allow these column names in dynamic updates
+      const ALLOWED_COLUMNS = ['name', 'description', 'status', 'projectKey', 'ownerId', 'category', 'taskCounter', 'dashboardLayout'];
+
       if (name !== undefined) { updates.push("name = ?"); values.push(name); changedFields.name = name; }
       if (description !== undefined) { updates.push("description = ?"); values.push(description); changedFields.description = description; }
       if (status !== undefined) { updates.push("status = ?"); values.push(status); changedFields.status = status; }
@@ -507,7 +510,7 @@ const router = express.Router();
       res.json({ status: "success", message: "Project updated" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: PUT /api/projects error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -734,7 +737,7 @@ const router = express.Router();
       res.json({ status: "success", message: "Members updated" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: PUT /api/projects/:id/members error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -770,7 +773,7 @@ const router = express.Router();
       res.json({ status: "success", message: "Member removed from project" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: DELETE /api/projects/:id/members/:userId error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -789,7 +792,7 @@ const router = express.Router();
       res.json({ status: "success", message: "Invite added" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: PUT /api/projects/:id/invites error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 

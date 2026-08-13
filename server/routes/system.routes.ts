@@ -21,7 +21,7 @@ router.post("/api/db-query", verifyGlobalAdmin, async (req, res) => {
     res.json({ status: "success", data: rows });
   } catch (error: any) {
     console.error("LOG ANOMALI CRITICAL: Database query error:", error);
-    res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+    res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
   } finally {
     if (connection) connection.release();
   }
@@ -59,7 +59,7 @@ router.get("/api/db-schema", verifyGlobalAdmin, async (req, res) => {
     res.json({ status: "success", tables: schema, stats: tableStats });
   } catch (error: any) {
     console.error("LOG ANOMALI CRITICAL: Database query error:", error);
-    res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: Gagal mengambil schema database. - " + error.message });
+    res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
   } finally {
     if (connection) connection.release();
   }
@@ -82,7 +82,7 @@ router.post("/api/migrate-db", verifyGlobalAdmin, async (req, res) => {
     res.json({ status: "success", message: "Migrasi database berhasil dijalankan! Tabel sudah terbuat." });
   } catch (error: any) {
     console.error("LOG ANOMALI CRITICAL: Migration error:", error);
-    res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: Gagal menjalankan migrasi database. - " + error.message });
+    res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
   }
 });
 

@@ -476,7 +476,7 @@ async function startServer() {
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("[AUDIT] Error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -750,7 +750,7 @@ async function startServer() {
       res.send(buffer);
     } catch (error: any) {
       console.error("Error generating or downloading BRD Word document:", error);
-      res.status(500).json({ status: "error", message: "Gagal membuat dokumen Word BRD: " + error.message });
+      res.status(500).json({ status: "error", message: "Gagal membuat dokumen Word BRD" });
     }
   });
 
@@ -763,7 +763,7 @@ async function startServer() {
       res.json({ status: "success", message: "Koneksi ke database MySQL berhasil!" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: Database connection error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: Gagal terhubung ke database. - " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -792,7 +792,7 @@ async function startServer() {
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: Database query error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -831,7 +831,7 @@ async function startServer() {
       res.json({ status: "success", tables: schema, stats: tableStats });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: Database query error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: Gagal mengambil schema database. - " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -858,7 +858,7 @@ async function startServer() {
       res.json({ status: "success", message: "Migrasi database berhasil dijalankan! Tabel sudah terbuat." });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: Migration error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: Gagal menjalankan migrasi database. - " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -876,7 +876,7 @@ async function startServer() {
       res.json({ status: "success", message: "Broadcast triggered" });
     } catch (error: any) {
       console.error("Error simulating WA broadcast:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -888,7 +888,7 @@ async function startServer() {
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/master-data error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -929,7 +929,7 @@ async function startServer() {
       res.json({ status: "success", data: { id: newId, type, label: itemLabel, color, icon, order, description, fieldType, dropdownOptions, role_type: rType } });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/master-data error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -977,7 +977,7 @@ async function startServer() {
       res.json({ status: "success", message: "MasterData updated" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: PUT /api/master-data error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -1017,7 +1017,7 @@ async function startServer() {
     } catch (error: any) {
       if (connection) connection.release();
       console.error("LOG ANOMALI CRITICAL: DELETE /api/master-data error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -1037,7 +1037,7 @@ async function startServer() {
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: GET /api/projects/:projectId/sprints error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1070,7 +1070,7 @@ async function startServer() {
       res.json({ status: "success", data: { id: newId, projectId, name, goal, startDate, endDate, status: status || 'planned' }});
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/projects/:projectId/sprints error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1102,7 +1102,7 @@ async function startServer() {
       res.json({ status: "success", message: "Sprint updated" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: PUT /api/projects/:projectId/sprints/:id error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1117,7 +1117,7 @@ async function startServer() {
       res.json({ status: "success", message: "Sprint deleted" });
     } catch (error: any) {
       console.error("LOG ANOMALI CRITICAL: DELETE /api/projects/:projectId/sprints/:id error:", error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -1136,7 +1136,7 @@ async function startServer() {
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("GET /api/projects/:projectId/qa-test-suites error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1299,7 +1299,7 @@ async function startServer() {
       });
     } catch (error: any) {
       console.error("POST /api/v1/qa/test-case/bulk-upload error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1328,7 +1328,7 @@ async function startServer() {
       res.json({ status: "success", message: "Test Suite created", data: suite });
     } catch (error: any) {
       console.error("POST /api/projects/:projectId/qa-test-suites error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1357,7 +1357,7 @@ async function startServer() {
       res.json({ status: "success", message: "Test Suite updated" });
     } catch (error: any) {
       console.error("PUT /api/projects/:projectId/qa-test-suites/:id error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1394,7 +1394,7 @@ async function startServer() {
     } catch (error: any) {
       if (connection) await connection.rollback();
       console.error("DELETE /api/projects/:projectId/qa-test-suites/:id error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1433,7 +1433,7 @@ async function startServer() {
       res.json({ status: "success", data: parsed });
     } catch (error: any) {
       console.error("GET /api/projects/:projectId/qa-test-cases error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1484,7 +1484,7 @@ async function startServer() {
       res.json({ status: "success", message: "Test Case created" });
     } catch (error: any) {
       console.error("POST /api/projects/:projectId/qa-test-cases error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1555,7 +1555,7 @@ async function startServer() {
       res.json({ status: "success", message: "Test Case updated" });
     } catch (error: any) {
       console.error("PUT /api/projects/:projectId/qa-test-cases/:id error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1699,7 +1699,7 @@ async function startServer() {
       });
     } catch (error: any) {
       console.error("POST /api/projects/:projectId/qa-test-cases/:id/save error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1831,7 +1831,7 @@ async function startServer() {
       res.json({ status: "success", data: logs || [] });
     } catch (error: any) {
       console.error("GET execution-history error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1947,7 +1947,7 @@ async function startServer() {
       res.json({ status: "success", message: "Status updated successfully", statusValue: status, bugKey: createdBugKey });
     } catch (error: any) {
       console.error("PATCH /api/projects/:projectId/qa-test-cases/:id/status error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -1962,7 +1962,7 @@ async function startServer() {
       res.json({ status: "success", message: "Test Case deleted" });
     } catch (error: any) {
       console.error("DELETE /api/projects/:projectId/qa-test-cases/:id error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -2077,7 +2077,7 @@ async function startServer() {
       res.json({ status: "success", message: `Successfully synced ${testCases.length} test cases` });
     } catch (error: any) {
       console.error("POST /api/projects/:projectId/qa-test-cases/sync error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -2150,7 +2150,13 @@ Berikan langkah-langkah pengujian (langkah-langkah nyata yang harus dilakukan te
       });
 
       const jsonStr = response.text ? response.text.trim() : "{}";
-      const parsedData = JSON.parse(jsonStr);
+      let parsedData;
+      try {
+        parsedData = JSON.parse(jsonStr);
+      } catch (parseErr) {
+        console.error("JSON parse error in QA test generation:", parseErr);
+        parsedData = {};
+      }
 
       res.json({
         status: "success",
@@ -2290,7 +2296,13 @@ ${aggregatedPrompt}
       });
 
       const responseText = response.text ? response.text.trim() : "[]";
-      const testCases = JSON.parse(responseText);
+      let testCases;
+      try {
+        testCases = JSON.parse(responseText);
+      } catch (parseErr) {
+        console.error("JSON parse error in test cases generation:", parseErr);
+        testCases = [];
+      }
 
       res.json({
         status: "success",
@@ -2332,6 +2344,13 @@ ${aggregatedPrompt}
         const cIndex = parseInt(chunkIndex as string);
         const tChunks = parseInt(totalChunks as string);
         const originalSize = parseInt(fileSize as string) || file.size;
+
+        if (isNaN(cIndex) || cIndex < 0 || cIndex >= tChunks) {
+          return res.status(400).json({ status: "error", message: "Invalid chunk index or total chunks." });
+        }
+        if (isNaN(tChunks) || tChunks <= 0) {
+          return res.status(400).json({ status: "error", message: "Invalid total chunks value." });
+        }
 
         // Temporary directory for chunks
         const chunksDir = path.join(GLOBAL_UPLOADS_DIR, "chunks", targetMeetingId);
@@ -3774,7 +3793,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error("GET /api/project-modules error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -3795,7 +3814,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       res.json({ status: "success", message: "Module created" });
     } catch (error: any) {
       console.error("POST /api/project-modules error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -3814,7 +3833,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       res.json({ status: "success", message: "Module updated" });
     } catch (error: any) {
       console.error("PUT /api/project-modules/:id error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -3838,7 +3857,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     } catch (error: any) {
       if (connection) await connection.rollback();
       console.error("DELETE /api/project-modules/:id error:", error);
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -3857,7 +3876,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -3878,7 +3897,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       }
     } catch (error: any) {
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -3899,7 +3918,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       res.json({ status: "success", data: { id: newId, projectId, title, description, type, link, fileName, fileType, createdBy: currentUserId } });
     } catch (error: any) {
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -3951,7 +3970,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     } catch (error: any) {
       if (connection) connection.release();
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -3988,7 +4007,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     } catch (error: any) {
       if (connection) connection.release();
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
   // Milestones API (Hybrid Value-Added)
@@ -4003,29 +4022,57 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
         [projectId]
       );
 
-      // Hybrid Logic: Calculate Progress based on Linked Sprints' Story Points
+      // Optimization: Get ALL milestone-sprint links in ONE query
+      const [allMilestoneLinks]: any = await connection.query(
+        "SELECT milestoneId, sprintId FROM MilestoneSprints WHERE milestoneId IN (SELECT id FROM Milestones WHERE projectId = ?)",
+        [projectId]
+      );
+
+      // Map milestoneId -> sprintIds
+      const milestoneSprintMap = new Map<string, string[]>();
+      for (const link of allMilestoneLinks) {
+        if (!milestoneSprintMap.has(link.milestoneId)) {
+          milestoneSprintMap.set(link.milestoneId, []);
+        }
+        milestoneSprintMap.get(link.milestoneId)!.push(link.sprintId);
+      }
+
+      // Get stats for ALL sprints in ONE query
+      const allSprintIds = new Set<string>();
+      milestoneSprintMap.forEach(sprints => sprints.forEach(s => allSprintIds.add(s)));
+
+      let sprintStatsMap = new Map<string, any>();
+      if (allSprintIds.size > 0) {
+        const [stats]: any = await connection.query(`
+          SELECT
+            sprintId,
+            SUM(CASE WHEN status = 'Done' THEN storyPoints ELSE 0 END) as donePoints,
+            SUM(storyPoints) as totalPoints
+          FROM Tasks
+          WHERE sprintId IN (?) AND storyPoints IS NOT NULL
+          GROUP BY sprintId
+        `, [Array.from(allSprintIds)]);
+
+        stats.forEach((stat: any) => {
+          sprintStatsMap.set(stat.sprintId, stat);
+        });
+      }
+
+      // Calculate progress for each milestone using pre-fetched data
       for (const ms of milestones) {
-        // Find linked sprints
-        const [linkedSprints]: any = await connection.query(
-          "SELECT sprintId FROM MilestoneSprints WHERE milestoneId = ?",
-          [ms.id]
-        );
-        const sprintIds = linkedSprints.map((s: any) => s.sprintId);
-
+        const sprintIds = milestoneSprintMap.get(ms.id) || [];
         if (sprintIds.length > 0) {
-          const [stats]: any = await connection.query(`
-            SELECT 
-              SUM(CASE WHEN status = 'Done' THEN storyPoints ELSE 0 END) as donePoints,
-              SUM(storyPoints) as totalPoints
-            FROM Tasks 
-            WHERE sprintId IN (?) AND storyPoints IS NOT NULL
-          `, [sprintIds]);
-
-          const total = stats[0].totalPoints || 0;
-          const done = stats[0].donePoints || 0;
-          ms.progress = total > 0 ? Math.round((done / total) * 100) : 0;
-          ms.totalStoryPoints = total;
-          ms.doneStoryPoints = done;
+          let totalPoints = 0, donePoints = 0;
+          sprintIds.forEach(sprintId => {
+            const stat = sprintStatsMap.get(sprintId);
+            if (stat) {
+              totalPoints += stat.totalPoints || 0;
+              donePoints += stat.donePoints || 0;
+            }
+          });
+          ms.progress = totalPoints > 0 ? Math.round((donePoints / totalPoints) * 100) : 0;
+          ms.totalStoryPoints = totalPoints;
+          ms.doneStoryPoints = donePoints;
         } else {
           ms.progress = 0;
         }
@@ -4103,7 +4150,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       await createAuditLog(userId as string, projectId, 'UPDATE', 'Milestones', id, null, req.body);
       res.json({ status: "success", message: "Milestone updated" });
     } catch (error: any) {
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -4121,7 +4168,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       
       res.json({ status: "success", message: "Milestone deleted" });
     } catch (error: any) {
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -4140,7 +4187,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -4159,7 +4206,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       res.json({ status: "success", data: { id: newId, projectId, title, description, meetingLink, authorId: effectiveAuthorId, fileName, fileType } });
     } catch (error: any) {
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -4214,7 +4261,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     } catch (error: any) {
       if (connection) connection.release();
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -4230,7 +4277,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
          res.status(404).json({ status: "error", message: "Meeting atau berkas tidak ditemukan" });
       }
     } catch (error: any) {
-      res.status(500).json({ status: "error", message: error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     } finally {
       if (connection) connection.release();
     }
@@ -4269,7 +4316,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     } catch (error: any) {
       if (connection) connection.release();
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -4283,7 +4330,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       res.json({ status: "success", data: rows });
     } catch (error: any) {
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -4327,7 +4374,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       res.json({ status: "success", data: { id: newId, meetingId: id } });
     } catch (error: any) {
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -4358,7 +4405,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       res.json({ status: "success", message: "Point updated" });
     } catch (error: any) {
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 
@@ -4371,7 +4418,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       res.json({ status: "success", message: "Point deleted" });
     } catch (error: any) {
       console.error(error);
-      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
     }
   });
 

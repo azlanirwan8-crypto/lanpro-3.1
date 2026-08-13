@@ -42,7 +42,9 @@ const router = express.Router();
     try {
       const authHeader = req.headers.authorization;
       if (!authHeader) return res.status(401).json({ status: "error" });
-      const token = authHeader.split(" ")[1];
+      const parts = authHeader.split(" ");
+      if (parts.length < 2) return res.status(401).json({ status: "error" });
+      const token = parts[1];
       const decoded = jwt.verify(token, getJwtSecret()) as any;
       const userId = decoded.id;
       

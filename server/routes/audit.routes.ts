@@ -28,7 +28,7 @@ router.get("/api/audit-logs", authenticateJWT, async (req, res) => {
     res.json({ status: "success", data: rows });
   } catch (error: any) {
     console.error("[AUDIT] Error:", error);
-    res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server: " + error.message });
+    res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
   } finally {
     if (connection) connection.release();
   }

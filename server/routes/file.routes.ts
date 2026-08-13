@@ -47,6 +47,10 @@ router.post("/api/v1/upload-document", authenticateJWT, upload.single('file'), a
     const userId = req.user?.id || req.user?.uid || 'guest';
     const presignedUrl = generatePresignedUrl(safeFilename, userId, 60);
 
+    const tokenParts = presignedUrl.split('token=');
+    const tokenValue = tokenParts.length > 1 ? tokenParts[1] : '';
+    const protectedUrl = tokenValue ? `/uploads/${safeFilename}?token=${tokenValue}` : `/uploads/${safeFilename}`;
+
     return res.json({
       status: "success",
       message: "Dokumen berhasil diunggah dan diamankan.",
@@ -55,14 +59,14 @@ router.post("/api/v1/upload-document", authenticateJWT, upload.single('file'), a
         originalName: file.originalname,
         size: fileBuffer.length,
         url: presignedUrl,
-        protectedUrl: `/uploads/${safeFilename}?token=${presignedUrl.split('token=')[1]}`
+        protectedUrl
       }
     });
   } catch (err: any) {
     console.error("POST /api/v1/upload-document error:", err);
     return res.status(500).json({ 
       status: "error", 
-      message: "Gagal Mengunggah Dokumen: Terjadi kesalahan server (" + err.message + ")" 
+      message: "Gagal Mengunggah Dokumen: Terjadi kesalahan server" 
     });
   }
 });
@@ -94,11 +98,14 @@ router.get("/api/v1/files/secure-stream", async (req: any, res: any) => {
     if (!isAuthorized && req.headers?.authorization) {
       const authHeader = req.headers.authorization;
       if (authHeader.startsWith('Bearer ')) {
-        const jwtToken = authHeader.split(' ')[1];
-        try {
-          jwt.verify(jwtToken, getJwtSecret());
-          isAuthorized = true;
-        } catch {}
+        const parts = authHeader.split(' ');
+        const jwtToken = parts.length > 1 ? parts[1] : null;
+        if (jwtToken) {
+          try {
+            jwt.verify(jwtToken, getJwtSecret());
+            isAuthorized = true;
+          } catch {}
+        }
       }
     }
 
