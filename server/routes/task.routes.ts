@@ -78,7 +78,7 @@ async function generateContentWithFallback(ai: any, options: any) {
       
       // Check user role / admin status
       const [uRoleRows]: any = await connection.query("SELECT role FROM Users WHERE id = ? OR uid = ?", [userId, userId]);
-      const role = uRoleRows[0]?.role || 'viewer';
+      const role = (uRoleRows && uRoleRows.length > 0 && uRoleRows[0]?.role) || 'viewer';
       const isAdminOrManager = ['admin', 'manager', 'head'].includes(role.toLowerCase());
 
       let tasksRows: any = [];
@@ -282,19 +282,24 @@ async function generateContentWithFallback(ai: any, options: any) {
       
       const newId = crypto.randomUUID();
 
-      // Atomic increment-and-read: a prior SELECT-then-UPDATE here let two
-      // concurrent task-creation requests in the same project read the same
-      // taskCounter value and mint two tasks sharing one taskKey (e.g. two
-      // different tasks both ending up as PROJ-42).
-      const [counterRows] = await connection.query(
-        "UPDATE Projects SET taskCounter = COALESCE(taskCounter, 0) + 1 WHERE id = ? RETURNING projectKey, taskCounter",
+      // Atomic increment-and-read with SELECT...FOR UPDATE to prevent race conditions
+      await connection.query("START TRANSACTION");
+      const [lockRows] = await connection.query(
+        "SELECT id, projectKey, taskCounter FROM Projects WHERE id = ? FOR UPDATE",
         [projectId]
       );
+
       let taskKey = "TASK-1";
-      if ((counterRows as any[]).length > 0) {
-        const proj = (counterRows as any[])[0];
-        taskKey = `${proj.projectKey}-${proj.taskCounter}`;
+      if ((lockRows as any[]).length > 0) {
+        const proj = (lockRows as any[])[0];
+        const newCounter = (proj.taskCounter || 0) + 1;
+        await connection.query(
+          "UPDATE Projects SET taskCounter = ? WHERE id = ?",
+          [newCounter, projectId]
+        );
+        taskKey = `${proj.projectKey}-${newCounter}`;
       }
+      await connection.query("COMMIT");
       
       // Extract active authenticated user
       const authenticatedUserStr = (req as any).user?.uid || (req as any).user?.id || req.headers['x-user-id'];
@@ -377,7 +382,7 @@ async function generateContentWithFallback(ai: any, options: any) {
       await createAuditLog(userIdStr as string, projectId, 'CREATE', 'Tasks', newId, null, req.body);
 
       // Trigger automatic broadcast notifications to all team members of this project
-      sendProjectActivityNotification(projectId, userIdStr, 'create_task', { taskId: newId })
+      await sendProjectActivityNotification(projectId, userIdStr, 'create_task', { taskId: newId })
         .catch(err => console.error("Create task notification broadcast failed:", err));
 
       res.json({
@@ -943,28 +948,43 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
 
         // Trigger activity notification using createNotification for status or assignee changes or description or AC changes
         const ioInstance = req.app.get('io');
+        const notificationPromises = [];
+
         if (changedFields.status) {
-          createNotification(ioInstance, projectId, id, userId as string, 'update_task', {
-            field: 'status',
-            oldValue: oldTask.status,
-            newValue: changedFields.status
-          }).catch(err => console.error("Update status notification failed:", err));
+          notificationPromises.push(
+            createNotification(ioInstance, projectId, id, userId as string, 'update_task', {
+              field: 'status',
+              oldValue: oldTask.status,
+              newValue: changedFields.status
+            }).catch(err => console.error("Update status notification failed:", err))
+          );
         } else if (changedFields.assigneeId !== undefined) {
-          createNotification(ioInstance, projectId, id, userId as string, 'update_task', {
-            field: 'assigneeId',
-            oldValue: oldTask.assigneeId,
-            newValue: changedFields.assigneeId
-          }).catch(err => console.error("Update assignee notification failed:", err));
+          notificationPromises.push(
+            createNotification(ioInstance, projectId, id, userId as string, 'update_task', {
+              field: 'assigneeId',
+              oldValue: oldTask.assigneeId,
+              newValue: changedFields.assigneeId
+            }).catch(err => console.error("Update assignee notification failed:", err))
+          );
         } else if (changedFields.description !== undefined) {
-          createNotification(ioInstance, projectId, id, userId as string, 'update_task', {
-            field: 'deskripsi',
-            newValue: 'Deskripsi diperbarui'
-          }).catch(err => console.error("Update description notification failed:", err));
+          notificationPromises.push(
+            createNotification(ioInstance, projectId, id, userId as string, 'update_task', {
+              field: 'deskripsi',
+              newValue: 'Deskripsi diperbarui'
+            }).catch(err => console.error("Update description notification failed:", err))
+          );
         } else if (changedFields.acceptanceCriteria !== undefined) {
-          createNotification(ioInstance, projectId, id, userId as string, 'update_task', {
-            field: 'acceptanceCriteria',
-            newValue: 'Acceptance Criteria diperbarui'
-          }).catch(err => console.error("Update AC notification failed:", err));
+          notificationPromises.push(
+            createNotification(ioInstance, projectId, id, userId as string, 'update_task', {
+              field: 'acceptanceCriteria',
+              newValue: 'Acceptance Criteria diperbarui'
+            }).catch(err => console.error("Update AC notification failed:", err))
+          );
+        }
+
+        // Wait for all notifications to complete before responding
+        if (notificationPromises.length > 0) {
+          await Promise.allSettled(notificationPromises);
         }
 
         // Trigger immediate check if dueDate is updated to be within 24 hours

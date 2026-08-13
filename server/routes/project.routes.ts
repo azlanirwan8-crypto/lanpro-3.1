@@ -353,6 +353,11 @@ const router = express.Router();
     } catch (e: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/projects/generate-bni-demo error:", e);
       res.status(500).json({ status: "error", message: e.message });
+    } finally {
+      // Ensure connection is released even if error occurs
+      if (connection && typeof connection.release === 'function') {
+        connection.release().catch((err: any) => console.error("Failed to release connection:", err));
+      }
     }
   });
 

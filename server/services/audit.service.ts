@@ -71,7 +71,7 @@ export const createAuditLog = async (
 
   const { userId, projectId, actionType, entityName, entityId, oldValues, newValues, io } = input;
   setImmediate(async () => {
-    let logConn;
+    let logConn: any = null;
     try {
       logConn = await mysqlPool.getConnection();
       const logId = crypto.randomUUID();

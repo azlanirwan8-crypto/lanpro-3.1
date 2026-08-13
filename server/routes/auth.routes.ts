@@ -311,10 +311,14 @@ function formatUserForAuthResponse(user: any) {
       }
 
       // Update database session
-      await mysqlPool.query(
+      const [updateResult]: any = await mysqlPool.query(
         "UPDATE Users SET currentSessionToken = ?, lastSeen = ? WHERE id = ?",
         [token, String(Date.now()), userId.toString()]
       );
+
+      if (updateResult.affectedRows === 0) {
+        return res.status(404).json({ status: "error", message: "User tidak ditemukan." });
+      }
 
       activeUserSessions.set(userId.toString(), {
         token,
@@ -390,10 +394,14 @@ function formatUserForAuthResponse(user: any) {
       const device = `${osInfo.name || 'Unknown'} ${osInfo.version || ''}`.trim();
 
       // Update database session
-      await mysqlPool.query(
+      const [updateResult]: any = await mysqlPool.query(
         "UPDATE Users SET currentSessionToken = ?, lastSeen = ? WHERE id = ?",
         [token, String(Date.now()), userId.toString()]
       );
+
+      if (updateResult.affectedRows === 0) {
+        return res.status(404).json({ status: "error", message: "User tidak ditemukan." });
+      }
 
       activeUserSessions.set(userId.toString(), {
         token,
