@@ -84,9 +84,36 @@ async function startServer() {
   }
 
   const httpServer = createServer(app);
+
+  // Daftar origin yang boleh membuka koneksi Socket.IO.
+  //
+  // Sebelumnya origin: "*" — situs mana pun bisa membuka koneksi realtime ke
+  // server ini atas nama pengunjung yang sedang login.
+  //
+  // Di development daftar localhost dibuka agar Vite tetap berfungsi. Di
+  // production hanya ALLOWED_ORIGINS / APP_URL yang diterima; bila keduanya
+  // kosong, koneksi lintas-origin ditolak seluruhnya (aman secara bawaan).
+  const isProduction = process.env.NODE_ENV === "production";
+  const configuredOrigins = (process.env.ALLOWED_ORIGINS || process.env.APP_URL || "")
+    .split(",")
+    .map((o) => o.trim())
+    .filter((o) => o && o !== "MY_APP_URL");
+
+  const allowedOrigins = isProduction
+    ? configuredOrigins
+    : [...configuredOrigins, "http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5173"];
+
   const io = new Server(httpServer, {
     cors: {
-      origin: "*",
+      origin: (origin, callback) => {
+        // Request tanpa header Origin (curl, health check, klien non-browser)
+        // tidak tunduk pada same-origin policy, jadi tidak diblokir di sini.
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        console.warn(`[CORS] Koneksi Socket.IO ditolak dari origin: ${origin}`);
+        return callback(new Error("Origin tidak diizinkan"), false);
+      },
+      credentials: true,
       methods: ["GET", "POST", "PUT", "DELETE"]
     }
   });
@@ -143,8 +170,32 @@ async function startServer() {
 // ==========================================
 
   // 1. Basic Security Headers (Helmet)
+  // Content-Security-Policy adalah lapisan pertahanan XSS terakhir: bila suatu
+  // saat ada payload yang lolos sanitasi, CSP mencegahnya benar-benar dieksekusi.
+  //
+  // Sebelumnya CSP dimatikan total karena merusak HMR Vite. Mematikannya di
+  // production adalah harga yang terlalu mahal untuk kenyamanan development,
+  // jadi kini hanya dilonggarkan saat dev: HMR butuh websocket ke Vite dan
+  // eval untuk modul yang di-transform.
   app.use(helmet({
-    contentSecurityPolicy: false, // Nonaktifkan CSP karena berpotensi merusak HMR Vite di lokal
+    contentSecurityPolicy: isProduction
+      ? {
+          directives: {
+            defaultSrc: ["'self'"],
+            // 'unsafe-inline' pada script masih diperlukan selama bundle
+            // memuat inline script; hilangkan setelah beralih ke nonce.
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://apis.google.com"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            fontSrc: ["'self'", "data:", "https://fonts.gstatic.com"],
+            imgSrc: ["'self'", "data:", "blob:", "https:"],
+            connectSrc: ["'self'", "https:", "wss:"],
+            objectSrc: ["'none'"],
+            frameAncestors: ["'none'"],
+            baseUri: ["'self'"],
+            formAction: ["'self'"],
+          },
+        }
+      : false, // dev: dimatikan agar HMR Vite tetap berfungsi
     crossOriginEmbedderPolicy: false
   }));
 
@@ -162,6 +213,31 @@ async function startServer() {
     }
   });
   app.use(globalLimiter);
+
+  // 2b. Rate limit khusus endpoint autentikasi (Anti Brute Force)
+  //
+  // globalLimiter (1000 request / 5 menit) tidak menahan brute force sama
+  // sekali: 1000 percobaan password per IP sudah lebih dari cukup untuk
+  // menebak kredensial lemah. Endpoint login/register karena itu diberi
+  // pembatas terpisah yang jauh lebih ketat.
+  //
+  // Berbeda dari globalLimiter, pembatas ini TIDAK membebaskan localhost —
+  // brute force dari mesin lokal tetap brute force, dan pembebasan itu akan
+  // membuat pengujian keamanan memberi rasa aman palsu.
+  const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 menit
+    max: 10,                  // 10 percobaan per IP per jendela waktu
+    message: {
+      status: "error",
+      message: "Terlalu banyak percobaan masuk. Silakan coba lagi dalam 15 menit.",
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+    // Percobaan yang berhasil tidak ikut dihitung, sehingga pengguna sah yang
+    // sesekali salah ketik tidak ikut terkunci.
+    skipSuccessfulRequests: true,
+  });
+  app.use(["/api/auth/login", "/api/auth/register"], authLimiter);
 
   app.use(express.json({ limit: '100mb' }));
   app.use(express.urlencoded({ extended: true, limit: '100mb' }));

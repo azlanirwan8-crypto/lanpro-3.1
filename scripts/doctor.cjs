@@ -180,8 +180,55 @@ if (hits.length === 0) {
   }
 }
 
-// ── 5. Koneksi database sungguhan ─────────────────────────────────
-section('5. Uji koneksi database');
+// ── 5. Konfigurasi keamanan ───────────────────────────────────────
+// Memeriksa invarian yang pernah gagal di repo ini, agar tidak terulang diam-diam.
+section('5. Konfigurasi keamanan');
+
+// 5a. Allowlist gitleaks tidak boleh memuat nilai rahasia.
+//     Versi lama file ini mendaftar-putihkan password Neon dan dua Google API
+//     key secara harfiah, sehingga pemindai bungkam pada kebocoran sungguhan.
+try {
+  const gl = fs.readFileSync(path.join(ROOT, '.gitleaks.toml'), 'utf8');
+  const nilaiRahasia = [
+    [/AIza[0-9A-Za-z_-]{30,}/, 'Google API key'],
+    [/npg_[A-Za-z0-9]{8,}/, 'password Neon'],
+    [/postgres(ql)?:\/\/[^\s'"]+:[^\s'"@]+@/, 'connection string berkredensial'],
+  ];
+  const bocor = nilaiRahasia.filter(([re]) => re.test(gl)).map(([, label]) => label);
+  if (bocor.length) {
+    fail(`.gitleaks.toml memuat nilai rahasia di allowlist: ${bocor.join(', ')}`,
+         'Kecualikan COMMIT-nya (commits = [...]), bukan nilai rahasianya');
+  } else {
+    ok('.gitleaks.toml tidak mendaftar-putihkan nilai rahasia');
+  }
+} catch {
+  warn('.gitleaks.toml tidak ditemukan', 'Pemindaian rahasia di CI tidak aktif');
+}
+
+// 5b. Socket.IO tidak boleh menerima origin mana pun.
+// 5c. Endpoint autentikasi harus punya pembatas laju sendiri (anti brute force).
+try {
+  const srv = fs.readFileSync(path.join(ROOT, 'server.ts'), 'utf8');
+
+  if (/cors:\s*\{[^}]*origin:\s*["']\*["']/.test(srv)) {
+    fail('Socket.IO menerima origin mana pun (origin: "*")',
+         'Batasi ke daftar origin yang diizinkan');
+  } else {
+    ok('Socket.IO memakai daftar origin terbatas');
+  }
+
+  if (/\/api\/auth\/login["'\s,\]]/.test(srv) && /authLimiter/.test(srv)) {
+    ok('Endpoint autentikasi punya pembatas laju sendiri');
+  } else {
+    fail('Endpoint login tidak punya pembatas laju khusus',
+         'Tambahkan rateLimit ketat pada /api/auth/login dan /register');
+  }
+} catch {
+  warn('server.ts tidak terbaca, pemeriksaan konfigurasi dilewati');
+}
+
+// ── 6. Koneksi database sungguhan ─────────────────────────────────
+section('6. Uji koneksi database');
 
 (async () => {
   if (!process.env.DATABASE_URL) {
