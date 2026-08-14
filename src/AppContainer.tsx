@@ -32,6 +32,7 @@ import { CacheManager } from "./lib/cache";
 import { useMasterData } from "./hooks/useMasterData";
 import { useAuth } from "./hooks/useAuth";
 import { useAppModals } from "./hooks/useAppModals";
+import { useAppTheme } from "./hooks/useAppTheme";
 import { MeetingNotes } from "./features/meeting-notes/MeetingNotes";
 import { WikiView } from "./features/wiki";
 import { NotebookLM } from "./features/notebook-lm";
@@ -631,6 +632,14 @@ function AppContainer() {
     openSyncModal, closeSyncModal, closeAllModals
   } = useAppModals();
 
+  // Theme & Appearance Management
+  const {
+    theme, setTheme, isThemeOpen, setIsThemeOpen,
+    isFullscreen, setIsFullscreen, toggleTheme, getEffectiveTheme,
+    isDarkMode, isLightMode, toggleThemeDropdown, openThemeDropdown,
+    closeThemeDropdown, toggleFullscreen, enterFullscreen, exitFullscreen
+  } = useAppTheme();
+
   // UI States & Controls
   const [swimlaneType, setSwimlaneType] = useState<
     "epics" | "assignees" | "none"
@@ -647,19 +656,9 @@ function AppContainer() {
   const notificationsRef = useRef<HTMLDivElement>(null);
   const themeDropdownRef = useRef<HTMLDivElement>(null);
   
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
-    try {
-      return (safeLocalStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system';
-    } catch {
-      return 'system';
-    }
-  });
-  const [isThemeOpen, setIsThemeOpen] = useState(false);
-
   useEffect(() => {
     const root = document.documentElement;
-    
+
     const applyTheme = (currentTheme: 'light' | 'dark' | 'system') => {
       if (currentTheme === 'dark') {
         root.classList.add('dark');
