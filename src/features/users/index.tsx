@@ -250,24 +250,8 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
     setIsEditModalOpen,
     isViewModalOpen,
     setIsViewModalOpen,
-    editRole,
-    setEditRole,
-    editStatus,
-    setEditStatus,
-    editPermissions,
-    setEditPermissions,
-    editDepartment,
-    setEditDepartment,
-    editPosition,
-    setEditPosition,
-    editFullName,
-    setEditFullName,
-    editEmail,
-    setEditEmail,
-    editPassword,
-    setEditPassword,
-    editPhone,
-    setEditPhone,
+    editForm,
+    updateEditField,
     currentPage,
     setCurrentPage,
     itemsPerPage,
@@ -1064,12 +1048,12 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">System Role</label>
                                 <select
-                                    value={editRole}
+                                    value={editForm.role}
                                     onChange={(e) => {
                                       const newRole = e.target.value as AppRole;
-                                      setEditRole(newRole);
+                                      updateEditField('role', newRole);
                                       // Synchronize checked permissions directly with role defaults!
-                                      setEditPermissions(ROLE_DEFAULT_PERMISSIONS[newRole] || ROLE_DEFAULT_PERMISSIONS.user);
+                                      updateEditField('permissions', ROLE_DEFAULT_PERMISSIONS[newRole] || ROLE_DEFAULT_PERMISSIONS.user);
                                     }}
                                     className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-xs font-medium text-slate-700 cursor-pointer"
                                 >
@@ -1098,25 +1082,25 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                             </div>
 
                             {/* Beautiful dynamic helper/description card under the System Role selector */}
-                            {editRole && (
-                              ROLE_DESCRIPTIONS[editRole] ? (
+                            {editForm.role && (
+                              ROLE_DESCRIPTIONS[editForm.role] ? (
                                 <div className={cn(
                                   "p-3 rounded-xl border text-[11px] leading-relaxed transition-all flex gap-3 animate-in fade-in duration-200",
-                                  editRole === 'admin' ? "bg-rose-50/55 border-rose-100/65 text-rose-800" :
-                                  editRole === 'head' ? "bg-purple-50/55 border-purple-100/65 text-purple-800" :
-                                  editRole === 'manager' ? "bg-blue-50/55 border-blue-100/65 text-blue-800" :
-                                  editRole === 'user' ? "bg-indigo-50/55 border-indigo-100/65 text-indigo-800" :
+                                  editForm.role === 'admin' ? "bg-rose-50/55 border-rose-100/65 text-rose-800" :
+                                  editForm.role === 'head' ? "bg-purple-50/55 border-purple-100/65 text-purple-800" :
+                                  editForm.role === 'manager' ? "bg-blue-50/55 border-blue-100/65 text-blue-800" :
+                                  editForm.role === 'user' ? "bg-indigo-50/55 border-indigo-100/65 text-indigo-800" :
                                   "bg-slate-50 border-slate-200/50 text-slate-700"
                                 )}>
                                   <div className="shrink-0 mt-0.5">
-                                    {ROLE_DESCRIPTIONS[editRole].icon}
+                                    {ROLE_DESCRIPTIONS[editForm.role].icon}
                                   </div>
                                   <div className="space-y-0.5">
                                       <p className="font-medium text-[10px] uppercase tracking-wider text-slate-800">
-                                         {ROLE_DESCRIPTIONS[editRole].label} Authorization
+                                         {ROLE_DESCRIPTIONS[editForm.role].label} Authorization
                                       </p>
                                       <p className="font-medium text-[11px] text-slate-500 leading-snug">
-                                         {ROLE_DESCRIPTIONS[editRole].desc}
+                                         {ROLE_DESCRIPTIONS[editForm.role].desc}
                                       </p>
                                   </div>
                                 </div>
@@ -1127,7 +1111,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                                   </div>
                                   <div className="space-y-0.5">
                                       <p className="font-medium text-[10px] uppercase tracking-wider text-slate-800">
-                                         {editRole} Authorization
+                                         {editForm.role} Authorization
                                       </p>
                                       <p className="font-medium text-[11px] text-slate-500 leading-snug">
                                          Custom system role defined in master data. Configure permissions manually using the overrides grid below.
@@ -1141,8 +1125,8 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Account Status</label>
                                 <select
-                                    value={editStatus}
-                                    onChange={(e) => setEditStatus(e.target.value as any)}
+                                    value={editForm.status}
+                                    onChange={(e) => updateEditField('status', e.target.value as any)}
                                     className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-xs font-medium text-slate-700 cursor-pointer"
                                 >
                                     <option value="approved">Active / Approved</option>
@@ -1155,8 +1139,8 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Department</label>
                                 <select
-                                    value={editDepartment}
-                                    onChange={(e) => setEditDepartment(e.target.value)}
+                                    value={editForm.department}
+                                    onChange={(e) => updateEditField('department', e.target.value)}
                                     className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
                                 >
                                     <option value="">Select Department</option>
@@ -1170,8 +1154,8 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Position</label>
                                 <select
-                                    value={editPosition}
-                                    onChange={(e) => setEditPosition(e.target.value)}
+                                    value={editForm.position}
+                                    onChange={(e) => updateEditField('position', e.target.value)}
                                     className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500/20 cursor-pointer"
                                 >
                                     <option value="">Select Position</option>
@@ -1185,8 +1169,8 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Full Name</label>
                                 <Input
-                                    value={editFullName}
-                                    onChange={(e: any) => setEditFullName(e.target.value)}
+                                    value={editForm.fullName}
+                                    onChange={(e: any) => updateEditField('fullName', e.target.value)}
                                     placeholder="Enter full name"
                                     className="!py-2.5 !text-xs !bg-white"
                                 />
@@ -1196,8 +1180,8 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Email</label>
                                 <Input
-                                    value={editEmail}
-                                    onChange={(e: any) => setEditEmail(e.target.value)}
+                                    value={editForm.email}
+                                    onChange={(e: any) => updateEditField('email', e.target.value)}
                                     placeholder="Enter email address"
                                     className="!py-2.5 !text-xs !bg-white"
                                 />
@@ -1207,8 +1191,8 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Nomor HP / WhatsApp</label>
                                 <Input
-                                    value={editPhone}
-                                    onChange={(e: any) => setEditPhone(e.target.value)}
+                                    value={editForm.phone}
+                                    onChange={(e: any) => updateEditField('phone', e.target.value)}
                                     placeholder="Contoh: 081234567890"
                                     className="!py-2.5 !text-xs !bg-white"
                                 />
@@ -1226,7 +1210,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                                             for (let i = 0; i < 12; i++) {
                                                 pass += chars.charAt(Math.floor(Math.random() * chars.length));
                                             }
-                                            setEditPassword(pass);
+                                            updateEditField('password', pass);
                                             navigator.clipboard.writeText(pass);
                                             toast.success(`Password acak dibuat: "${pass}". Berhasil disalin ke clipboard!`);
                                         }}
@@ -1237,8 +1221,8 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                                 </div>
                                 <Input
                                     type="text"
-                                    value={editPassword}
-                                    onChange={(e: any) => setEditPassword(e.target.value)}
+                                    value={editForm.password}
+                                    onChange={(e: any) => updateEditField('password', e.target.value)}
                                     placeholder="Masukkan password baru untuk mengubah (kosongkan jika tidak)"
                                     className="!py-2.5 !text-xs !bg-white"
                                 />
@@ -1256,7 +1240,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                                 <p className="text-[11px] text-slate-500 font-medium leading-normal mt-1">Configure explicit permission overrides for this user account. Hover headers or modules for detailed permission insights.</p>
                             </div>
 
-                            {editRole === 'admin' && (
+                            {editForm.role === 'admin' && (
                                 <div className="flex items-center gap-1.5 text-amber-600 bg-amber-50/50 border border-amber-100/65 px-3 py-2.5 rounded-xl text-xs font-medium leading-normal">
                                     <ShieldAlert className="w-4 h-4 shrink-0 text-amber-500" />
                                     <span><strong>Administrator Role</strong> defaults to full access, but explicitly customized module permissions and overrides will be strictly enforced.</span>
@@ -1298,9 +1282,9 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                                                         </div>
                                                     </td>
                                                     {(['read', 'create', 'update', 'delete'] as const).map(action => {
-                                                        const isChecked = editPermissions[module]?.[action];
+                                                        const isChecked = editForm.permissions[module]?.[action];
                                                         const actionLabel = action === 'read' ? 'view' : action === 'create' ? 'write key' : action === 'update' ? 'edit' : 'delete';
-                                                        const isDefaultGranted = ROLE_DEFAULT_PERMISSIONS[editRole]?.[module]?.[action];
+                                                        const isDefaultGranted = ROLE_DEFAULT_PERMISSIONS[editForm.role]?.[module]?.[action];
                                                         const isOverride = isChecked !== isDefaultGranted;
 
                                                         const tooltipText = isChecked

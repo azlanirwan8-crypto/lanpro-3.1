@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { UserProfile, AppRole, UserPermissions } from '../../types';
-import { DEFAULT_PERMISSIONS } from './types';
+import {
+  DEFAULT_PERMISSIONS,
+  createEmptyEditForm,
+  type EditUserForm,
+} from './types';
 import { isNetworkOrAuthError } from '../../lib/api';
 import {
   fetchUsers as fetchUsersApi,
@@ -19,15 +23,25 @@ export const useAdminUsers = () => {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   
   // Edit State
-  const [editRole, setEditRole] = useState<AppRole>('user');
-  const [editStatus, setEditStatus] = useState<UserProfile['status']>('pending');
-  const [editPermissions, setEditPermissions] = useState<UserPermissions>(DEFAULT_PERMISSIONS);
-  const [editDepartment, setEditDepartment] = useState('');
-  const [editPosition, setEditPosition] = useState('');
-  const [editFullName, setEditFullName] = useState('');
-  const [editEmail, setEditEmail] = useState('');
-  const [editPassword, setEditPassword] = useState('');
-  const [editPhone, setEditPhone] = useState('');
+  //
+  // Sembilan field ini sebelumnya sembilan useState terpisah, sehingga hook
+  // mengembalikan 18 nilai (9 state + 9 setter) yang harus dioper satu per satu
+  // ke modal edit. Digabung menjadi satu objek: hook cukup mengembalikan tiga
+  // hal (editForm, setEditForm, updateEditField), dan modal cukup menerima itu.
+  const [editForm, setEditForm] = useState<EditUserForm>(createEmptyEditForm());
+
+  /**
+   * Mengubah satu field pada form edit.
+   *
+   * Memakai bentuk fungsional agar aman terhadap perubahan beruntun — mis.
+   * ketika beberapa field diubah dalam satu event handler.
+   */
+  const updateEditField = <K extends keyof EditUserForm>(
+    field: K,
+    value: EditUserForm[K],
+  ) => {
+    setEditForm(prev => ({ ...prev, [field]: value }));
+  };
 
   const [saving, setSaving] = useState(false);
 
@@ -72,18 +86,18 @@ export const useAdminUsers = () => {
     setSaving(true);
     try {
       const payload: any = {
-        role: editRole,
-        status: editStatus,
-        permissions: cleanUserPermissions(editPermissions),
-        department: editDepartment,
-        position: editPosition,
-        displayName: editFullName,
-        email: editEmail,
-        phone: editPhone
+        role: editForm.role,
+        status: editForm.status,
+        permissions: cleanUserPermissions(editForm.permissions),
+        department: editForm.department,
+        position: editForm.position,
+        displayName: editForm.fullName,
+        email: editForm.email,
+        phone: editForm.phone
       };
 
-      if (editPassword.trim()) {
-        payload.passwordHash = editPassword.trim();
+      if (editForm.password.trim()) {
+        payload.passwordHash = editForm.password.trim();
       }
 
       const data = await updateUser(selectedUser.id, payload);
@@ -132,15 +146,20 @@ export const useAdminUsers = () => {
 
   const openEditModal = (user: UserProfile) => {
     setSelectedUser(user);
-    setEditRole(user.role);
-    setEditStatus(user.status);
-    setEditDepartment(user.department || '');
-    setEditPosition(user.position || '');
-    setEditFullName(user?.displayName || '');
-    setEditEmail(user?.email || '');
-    setEditPhone(user.phone || '');
-    setEditPassword('');
-    setEditPermissions(user.permissions ? { ...DEFAULT_PERMISSIONS, ...user.permissions } : DEFAULT_PERMISSIONS);
+    // Satu pembaruan state menggantikan sembilan pemanggilan setter terpisah.
+    setEditForm({
+      role: user.role,
+      status: user.status,
+      department: user.department || '',
+      position: user.position || '',
+      fullName: user?.displayName || '',
+      email: user?.email || '',
+      phone: user.phone || '',
+      password: '',
+      permissions: user.permissions
+        ? { ...DEFAULT_PERMISSIONS, ...user.permissions }
+        : DEFAULT_PERMISSIONS,
+    });
     setIsEditModalOpen(true);
   };
 
@@ -150,13 +169,16 @@ export const useAdminUsers = () => {
   };
 
   const togglePermission = (moduleName: keyof UserPermissions, action: 'create' | 'read' | 'update' | 'delete') => {
-    setEditPermissions(prev => {
-      const currentModule = prev[moduleName] || { create: false, read: false, update: false, delete: false };
+    setEditForm(prev => {
+      const currentModule = prev.permissions[moduleName] || { create: false, read: false, update: false, delete: false };
       return {
         ...prev,
-        [moduleName]: {
-          ...currentModule,
-          [action]: !currentModule[action]
+        permissions: {
+          ...prev.permissions,
+          [moduleName]: {
+            ...currentModule,
+            [action]: !currentModule[action]
+          }
         }
       };
     });
@@ -212,24 +234,10 @@ export const useAdminUsers = () => {
     setIsEditModalOpen,
     isViewModalOpen,
     setIsViewModalOpen,
-    editRole,
-    setEditRole,
-    editStatus,
-    setEditStatus,
-    editPermissions,
-    setEditPermissions,
-    editDepartment,
-    setEditDepartment,
-    editPosition,
-    setEditPosition,
-    editFullName,
-    setEditFullName,
-    editEmail,
-    setEditEmail,
-    editPassword,
-    setEditPassword,
-    editPhone,
-    setEditPhone,
+    // Menggantikan 18 nilai sebelumnya (9 state + 9 setter).
+    editForm,
+    setEditForm,
+    updateEditField,
     currentPage,
     setCurrentPage,
     itemsPerPage,
