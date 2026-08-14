@@ -153,11 +153,18 @@ export function executeSqlInMemory(_sql: string, _params?: any[]): never {
 // ─────────────────────────────────────────────
 // PostgreSQL Connection Pool
 // ─────────────────────────────────────────────
-const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL || 'postgresql://neondb_owner:npg_CVZvaYbF8W2s@ep-dawn-shape-aulnhaw2-pooler.c-10.us-east-1.aws.neon.tech/neondb?channel_binding=require&sslmode=require';
+// Tidak ada fallback kredensial di sini secara sengaja: connection string yang
+// di-hardcode akan membocorkan rahasia produksi ke source control. Konfigurasi
+// yang hilang harus gagal secara terbuka, bukan diam-diam memakai kredensial lain.
+const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL || '';
 
 if (!connectionString) {
-  console.warn('[DB] Warning: No DATABASE_URL or POSTGRES_URL configured in environment.');
+  console.error('[DB] DATABASE_URL/POSTGRES_URL belum di-set. Tidak ada kredensial fallback — semua query akan gagal.');
 }
+
+// Menyimpan string yang dipakai pool aktif, agar updatePoolConfig bisa melewati
+// teardown yang tidak perlu ketika konfigurasinya sebenarnya tidak berubah.
+let activeConnectionString = connectionString;
 
 let pgPool: Pool = createPgPool();
 
@@ -315,12 +322,26 @@ export function setDbMode(_mode: 'mysql' | 'pg' | 'local') {
 
 }
 
-export function updatePoolConfig(config: any) {
-
+/**
+ * Membangun ulang pool dengan connection string baru.
+ *
+ * Hanya membaca `connectionString`. Parameter gaya MySQL yang terpisah
+ * (host/port/user/password/database) TIDAK didukung — adapter ini bekerja
+ * sepenuhnya lewat satu URL Postgres.
+ *
+ * Rebuild dilewati jika string-nya tidak berubah: versi sebelumnya selalu
+ * memanggil pgPool.end() lebih dulu, yang membunuh query startup `SELECT 1`
+ * yang masih berjalan dan memunculkan peringatan "Cannot connect" palsu.
+ */
+export function updatePoolConfig(config: { connectionString?: string } = {}) {
   const newConnStr = config.connectionString || connectionString;
-  pgPool.end().catch(() => {});
-  pgPool = createPgPool(newConnStr);
 
+  if (newConnStr === activeConnectionString) return;
+
+  const oldPool = pgPool;
+  activeConnectionString = newConnStr;
+  pgPool = createPgPool(newConnStr);
+  oldPool.end().catch(() => {});
 }
 
 export default poolProxy;

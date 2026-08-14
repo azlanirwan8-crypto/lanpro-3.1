@@ -64,23 +64,23 @@ async function startServer() {
   // Kita mengambil rahasia secara dinamis dari Vault/Secret Manager saat startup
   try {
     process.env.JWT_SECRET = await getSecret('JWT_SECRET') || process.env.JWT_SECRET;
-    process.env.DB_PASSWORD = await getSecret('DB_PASSWORD') || process.env.DB_PASSWORD;
+    process.env.DATABASE_URL = await getSecret('DATABASE_URL') || process.env.DATABASE_URL;
 
-    // Update pool configuration with the loaded DB_PASSWORD and fallback values
-    const host = process.env.DB_HOST || 'mysql-1a54cff3-azlanirwan8-lanpro.e.aivencloud.com';
-    const port = process.env.DB_PORT || '10509';
-    const user = process.env.DB_USER || 'avnadmin';
-    const password = process.env.DB_PASSWORD;
-    const database = process.env.DB_NAME || 'defaultdb';
-
+    // Adapter database bekerja lewat satu URL Postgres. Parameter terpisah gaya
+    // MySQL (host/port/user/password/database) diabaikan oleh updatePoolConfig,
+    // jadi mengirimkannya dulu membuat blok ini tidak berefek apa pun.
     const { updatePoolConfig } = await import('./src/lib/db');
-    updatePoolConfig({ host, port, user, password, database });
+    updatePoolConfig({ connectionString: process.env.DATABASE_URL });
   } catch (err) {
     console.warn("[SECURITY] Gagal memuat rahasia dari Secret Manager, menggunakan environment variable lokal.", err);
   }
 
   if (!process.env.JWT_SECRET) {
     throw new Error('[SECURITY] JWT_SECRET tidak ditemukan di environment. Set JWT_SECRET sebelum menjalankan server — tidak ada fallback.');
+  }
+
+  if (!process.env.DATABASE_URL && !process.env.POSTGRES_URL) {
+    throw new Error('[SECURITY] DATABASE_URL tidak ditemukan di environment. Set DATABASE_URL sebelum menjalankan server — tidak ada kredensial fallback.');
   }
 
   const httpServer = createServer(app);
