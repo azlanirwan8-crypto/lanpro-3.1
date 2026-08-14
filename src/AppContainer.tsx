@@ -38,6 +38,9 @@ import { useAppUI } from "./hooks/useAppUI";
 import { useAppPagination } from "./hooks/useAppPagination";
 import { useNewTaskForm } from "./hooks/useNewTaskForm";
 import { useNewSprintForm } from "./hooks/useNewSprintForm";
+import { useNewProjectForm } from "./hooks/useNewProjectForm";
+import { useTaskSelection } from "./hooks/useTaskSelection";
+import { useAppSync } from "./hooks/useAppSync";
 import { MeetingNotes } from "./features/meeting-notes/MeetingNotes";
 import { WikiView } from "./features/wiki";
 import { NotebookLM } from "./features/notebook-lm";
@@ -912,8 +915,16 @@ function AppContainer() {
     Set<string>
   >(new Set());
   const [inviteEmail, setInviteEmail] = useState("");
-  const [newProjectName, setNewProjectName] = useState("");
-  const [newProjectKey, setNewProjectKey] = useState("");
+
+  const {
+    newProjectName,
+    setNewProjectName,
+    newProjectKey,
+    setNewProjectKey,
+    newProjectDescription,
+    setNewProjectDescription,
+    resetForm: resetNewProjectForm,
+  } = useNewProjectForm();
 
   const {
     newTaskTitle,
@@ -988,48 +999,21 @@ function AppContainer() {
 
   const handleSetIsTaskDetailModalOpen = setIsTaskDetailModalOpen;
 
-
-  // Latency & Ping Monitor States
-  const [apiLatency, setApiLatency] = useState<number | null>(null);
-  const [latencyStatus, setLatencyStatus] = useState<'excellent' | 'warning' | 'poor' | 'offline'>('excellent');
-
-  const checkLatency = async () => {
-    const startTime = performance.now();
-    try {
-      const response = await fetch("/api/health-check", { 
-        method: "GET",
-        cache: "no-store",
-        headers: { "Cache-Control": "no-cache" }
-      });
-      const duration = Math.round(performance.now() - startTime);
-      
-      if (response.ok) {
-        setApiLatency(duration);
-        if (duration < 150) {
-          setLatencyStatus('excellent');
-        } else if (duration < 500) {
-          setLatencyStatus('warning');
-        } else {
-          setLatencyStatus('poor');
-        }
-      } else {
-        setApiLatency(null);
-        setLatencyStatus('offline');
-      }
-    } catch (e) {
-      setApiLatency(null);
-      setLatencyStatus('offline');
-    }
-  };
-
-  useEffect(() => {
-    setApiLatency(12);
-    setLatencyStatus('excellent');
-  }, []);
-
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [cacheStats, setCacheStats] = useState<any>(null);
-  const [lastSyncedTime, setLastSyncedTime] = useState<string>("Baru saja");
+  const {
+    socketConnected,
+    setSocketConnected,
+    apiLatency,
+    setApiLatency,
+    latencyStatus,
+    setLatencyStatus,
+    isSyncing,
+    setIsSyncing,
+    cacheStats,
+    setCacheStats,
+    lastSyncedTime,
+    setLastSyncedTime,
+    checkLatency,
+  } = useAppSync();
 
   // Global Keyboard Shortcuts
   useEffect(() => {
@@ -1113,9 +1097,8 @@ function AppContainer() {
   >("blocks");
   const [taskLinkTargetId, setTaskLinkTargetId] = useState("");
 
-  const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const { selectedTaskIds, setSelectedTaskIds } = useTaskSelection();
+
   const [projectMembers, setProjectMembers] = useState<UserProfile[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newCommentText, setNewCommentText] = useState("");
@@ -1373,8 +1356,6 @@ function AppContainer() {
       selectedProject
     };
   });
-
-  const [socketConnected, setSocketConnected] = useState(false);
 
   useEffect(() => {
     // Vercel friendly socket config
@@ -2229,8 +2210,6 @@ function AppContainer() {
     }
   };
 
-  const [newProjectDescription, setNewProjectDescription] = useState("");
-
   const handleCreateProject = async () => {
     const effectiveUserId = currentUser?.uid || user?.uid;
     if (!effectiveUserId || !newProjectName.trim() || !newProjectKey.trim()) {
@@ -2250,9 +2229,7 @@ function AppContainer() {
       });
 
       if (data.status === "success") {
-        setNewProjectName("");
-        setNewProjectKey("");
-        setNewProjectDescription("");
+        resetNewProjectForm();
         setIsNewProjectModalOpen(false);
         toast.success("Project created successfully");
         fetchProjects();
