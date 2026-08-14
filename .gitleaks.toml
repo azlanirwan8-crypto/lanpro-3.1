@@ -1,13 +1,37 @@
 # .gitleaks.toml
-# LanPro DevSecOps - Gitleaks Security Audit Configuration
+# LanPro DevSecOps — Kebijakan Pemindaian Rahasia
 
 title = "LanPro Gitleaks Security Scan Policy"
 
+# ─────────────────────────────────────────────────────────────────────────────
+# PRINSIP
+#
+# JANGAN PERNAH menuliskan nilai rahasia di dalam allowlist.
+#
+# Versi sebelumnya file ini mendaftar-putihkan password Neon dan dua Google API
+# key secara harfiah. Akibatnya pemindai dibungkam tepat pada rahasia yang
+# paling perlu dideteksi: ketika password Neon ter-hardcode di src/lib/db.ts dan
+# ter-push ke repo publik, CI tidak menandainya sama sekali.
+#
+# Jika sebuah commit lama memang mengandung rahasia yang sudah dirotasi,
+# kecualikan COMMIT-nya (lihat commits di bawah), bukan nilainya. Dengan begitu
+# kemunculan BARU pola yang sama tetap tertangkap.
+# ─────────────────────────────────────────────────────────────────────────────
+
 [allowlist]
-description = "Allowlist for sanitized historical commits and safe placeholders"
-regexes = [
-  '''npg_CVZvaYbF8W2s''',
-  '''AIzaSyCLtjweG46C63xPMb4aL41ovCzAoGpvGRg''',
-  '''AIzaSyCBrrjPs52DmZ4sNRmf1URAsnFwfT_oibg''',
-  '''postgresql://neondb_owner:'''
+description = "Pengecualian berbasis commit dan path, tanpa nilai rahasia"
+
+# Commit historis yang sudah diketahui mengandung kredensial dan SUDAH dirotasi.
+# Password Neon di commit ini terbukti mati (auth ditolak 28P01, 14 Agu 2026).
+# Dua Google API key di commit yang sama masih perlu dicabut di Google Cloud.
+commits = [
+  "05f4d2e",
+  "6a46d30",
+]
+
+# File contoh berisi placeholder, bukan nilai sungguhan.
+paths = [
+  '''\.env\.example$''',
+  '''(^|/)package-lock\.json$''',
+  '''(^|/)bun\.lock$''',
 ]
