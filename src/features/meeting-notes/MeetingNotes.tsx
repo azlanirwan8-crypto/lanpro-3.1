@@ -39,7 +39,7 @@ import { UserAvatar } from "../../components/ui/UserAvatar";
 import { AiMeetingCompanion } from "./AiMeetingCompanion";
 import { Sparkles, Brain } from "lucide-react";
 import { hasPermission } from "../../lib/permissions";
-import { apiRequest } from "../../lib/api";
+import { downloadMeetingFile, resolveUserId } from "./services/meeting.service";
 
 interface MeetingNotesProps {
   projectId: string;
@@ -114,9 +114,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
   const handleDownloadMeeting = async (meetingId: string, fName: string) => {
     toast.info("Mengunduh berkas lampiran...");
     try {
-      const data = await apiRequest(`/api/projects/${projectId}/meetings/${meetingId}/download`, {
-        headers: { 'x-user-id': currentUser?.id || currentUser?.uid || "guest" }
-      });
+      const data = await downloadMeetingFile(projectId, meetingId, resolveUserId(currentUser));
       if (data.status === "success" && data.data && data.data.fileData) {
         const { fileData, fileName } = data.data;
         const link = document.createElement('a');
