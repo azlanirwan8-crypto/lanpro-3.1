@@ -1750,7 +1750,7 @@ function AppContainer() {
     if (isNewSprintModalOpen && !newSprintName) {
       setNewSprintName(`Fase ${sprints.length + 1}`);
     }
-  }, [isSyncModalOpen, isNewSprintModalOpen, newSprintName, sprints.length]);
+  }, [isSyncModalOpen, isNewSprintModalOpen, sprints.length]);
 
   const handleCreateSprint = async () => {
     if (!selectedProject) return;
