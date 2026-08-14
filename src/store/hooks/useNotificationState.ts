@@ -1,25 +1,22 @@
 import { useNotificationStore } from '../stores';
 
-export const useNotificationState = () => {
-  return useNotificationStore((state) => ({
-    notifications: state.notifications,
-    comments: state.comments,
-    newCommentText: state.newCommentText,
-    uploadProgress: state.uploadProgress,
-  }));
-};
+/** Selector atomik — lihat catatan di useAuthState.ts. */
+export const useNotificationState = () => ({
+  notifications: useNotificationStore((s) => s.notifications),
+  comments: useNotificationStore((s) => s.comments),
+  newCommentText: useNotificationStore((s) => s.newCommentText),
+  uploadProgress: useNotificationStore((s) => s.uploadProgress),
+});
 
-export const useNotificationActions = () => {
-  return useNotificationStore((state) => ({
-    addNotification: state.addNotification,
-    removeNotification: state.removeNotification,
-    clearNotifications: state.clearNotifications,
-    setComments: state.setComments,
-    setNewCommentText: state.setNewCommentText,
-    setUploadProgress: state.setUploadProgress,
-    updateUploadProgress: state.updateUploadProgress,
-  }));
-};
+export const useNotificationActions = () => ({
+  addNotification: useNotificationStore((s) => s.addNotification),
+  removeNotification: useNotificationStore((s) => s.removeNotification),
+  clearNotifications: useNotificationStore((s) => s.clearNotifications),
+  setComments: useNotificationStore((s) => s.setComments),
+  setNewCommentText: useNotificationStore((s) => s.setNewCommentText),
+  setUploadProgress: useNotificationStore((s) => s.setUploadProgress),
+  updateUploadProgress: useNotificationStore((s) => s.updateUploadProgress),
+});
 
 export const useNotification = () => ({
   ...useNotificationState(),

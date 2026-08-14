@@ -7,9 +7,23 @@ export type AppRole = 'admin' | 'manager' | 'member' | 'viewer';
 
 type SetStateAction<S> = S | ((prevState: S) => S);
 
+/**
+ * Semua tampilan yang bisa dituju aplikasi.
+ *
+ * Sebelumnya union ini ditulis ulang inline di beberapa tempat, sehingga
+ * konsumen seperti useAuth memakai `string` yang lebih longgar dan memicu
+ * ketidakcocokan tipe. Satu tipe bernama menjaga semuanya konsisten.
+ */
+export type AppView =
+  | 'dashboard' | 'board' | 'list' | 'timeline' | 'master' | 'access'
+  | 'activity' | 'sprints' | 'users' | 'meetingNotes' | 'backup'
+  | 'planning' | 'issueList' | 'connect' | 'dbExplorer' | 'wiki'
+  | 'notebooklm' | 'flowchart' | 'auditLog' | 'qa'
+  | 'settingsIntegration' | 'issueDetail' | 'userDetail';
+
 interface AppState {
-  currentView: 'dashboard' | 'board' | 'list' | 'timeline' | 'master' | 'access' | 'activity' | 'sprints' | 'users' | 'meetingNotes' | 'backup' | 'planning' | 'issueList' | 'connect' | 'dbExplorer' | 'wiki' | 'notebooklm' | 'flowchart' | 'auditLog' | 'qa' | 'settingsIntegration' | 'issueDetail' | 'userDetail';
-  setCurrentView: (view: SetStateAction<'dashboard' | 'board' | 'list' | 'timeline' | 'master' | 'access' | 'activity' | 'sprints' | 'users' | 'meetingNotes' | 'backup' | 'planning' | 'issueList' | 'connect' | 'dbExplorer' | 'wiki' | 'notebooklm' | 'flowchart' | 'auditLog' | 'qa' | 'settingsIntegration' | 'issueDetail' | 'userDetail'>) => void;
+  currentView: AppView;
+  setCurrentView: (view: SetStateAction<AppView>) => void;
 
   projects: Project[];
   setProjects: (projects: SetStateAction<Project[]>) => void;

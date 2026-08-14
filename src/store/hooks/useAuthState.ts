@@ -1,37 +1,42 @@
 import { useAuthStore } from '../stores';
 
-export const useAuthState = () => {
-  return useAuthStore((state) => ({
-    isLoggedIn: state.isLoggedIn,
-    currentUser: state.currentUser,
-    userRole: state.userRole,
-    currentUserProfile: state.currentUserProfile,
-    authView: state.authView,
-    showCollisionModal: state.showCollisionModal,
-    activeSessionData: state.activeSessionData,
-    pendingLoginCredentials: state.pendingLoginCredentials,
-    isAuthLoading: state.isAuthLoading,
-    loginStatusText: state.loginStatusText,
-    effectiveRole: state.effectiveRole,
-  }));
-};
+/**
+ * Setiap nilai diambil lewat selector atomik yang terpisah.
+ *
+ * Sebelumnya hook ini memakai satu selector yang mengembalikan objek literal.
+ * Di Zustand v5 objek baru pada tiap pemanggilan dianggap sebagai snapshot yang
+ * selalu berubah, sehingga React me-render ulang tanpa henti
+ * ("Maximum update depth exceeded"). Selector atomik mengembalikan referensi
+ * yang stabil, jadi render ulang hanya terjadi saat nilainya benar-benar berubah.
+ */
+export const useAuthState = () => ({
+  isLoggedIn: useAuthStore((s) => s.isLoggedIn),
+  currentUser: useAuthStore((s) => s.currentUser),
+  userRole: useAuthStore((s) => s.userRole),
+  currentUserProfile: useAuthStore((s) => s.currentUserProfile),
+  authView: useAuthStore((s) => s.authView),
+  showCollisionModal: useAuthStore((s) => s.showCollisionModal),
+  activeSessionData: useAuthStore((s) => s.activeSessionData),
+  pendingLoginCredentials: useAuthStore((s) => s.pendingLoginCredentials),
+  isAuthLoading: useAuthStore((s) => s.isAuthLoading),
+  loginStatusText: useAuthStore((s) => s.loginStatusText),
+  effectiveRole: useAuthStore((s) => s.effectiveRole),
+});
 
-export const useAuthActions = () => {
-  return useAuthStore((state) => ({
-    setIsLoggedIn: state.setIsLoggedIn,
-    setCurrentUser: state.setCurrentUser,
-    setUserRole: state.setUserRole,
-    setCurrentUserProfile: state.setCurrentUserProfile,
-    setAuthView: state.setAuthView,
-    setShowCollisionModal: state.setShowCollisionModal,
-    setActiveSessionData: state.setActiveSessionData,
-    setPendingLoginCredentials: state.setPendingLoginCredentials,
-    setIsAuthLoading: state.setIsAuthLoading,
-    setLoginStatusText: state.setLoginStatusText,
-    setEffectiveRole: state.setEffectiveRole,
-    clearAuth: state.clearAuth,
-  }));
-};
+export const useAuthActions = () => ({
+  setIsLoggedIn: useAuthStore((s) => s.setIsLoggedIn),
+  setCurrentUser: useAuthStore((s) => s.setCurrentUser),
+  setUserRole: useAuthStore((s) => s.setUserRole),
+  setCurrentUserProfile: useAuthStore((s) => s.setCurrentUserProfile),
+  setAuthView: useAuthStore((s) => s.setAuthView),
+  setShowCollisionModal: useAuthStore((s) => s.setShowCollisionModal),
+  setActiveSessionData: useAuthStore((s) => s.setActiveSessionData),
+  setPendingLoginCredentials: useAuthStore((s) => s.setPendingLoginCredentials),
+  setIsAuthLoading: useAuthStore((s) => s.setIsAuthLoading),
+  setLoginStatusText: useAuthStore((s) => s.setLoginStatusText),
+  setEffectiveRole: useAuthStore((s) => s.setEffectiveRole),
+  clearAuth: useAuthStore((s) => s.clearAuth),
+});
 
 export const useAuth = () => ({
   ...useAuthState(),

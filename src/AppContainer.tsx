@@ -34,7 +34,7 @@ import { useAuth as useAuthHook } from "./hooks/useAuth";
 import { useAppModals } from "./hooks/useAppModals";
 import { useAppTheme } from "./hooks/useAppTheme";
 import { useAppNotifications } from "./hooks/useAppNotifications";
-import { useAuth as useAuthStore, useUI as useUIStore, useProject as useProjectStore, useNotification as useNotificationStore } from "./store";
+import { useProjectStore, useNotificationStore } from "./store";
 import { useAppUI } from "./hooks/useAppUI";
 import { useAppPagination } from "./hooks/useAppPagination";
 import { useNewTaskForm } from "./hooks/useNewTaskForm";
@@ -579,6 +579,34 @@ function AppContainer() {
   } = useAppStore();
   const { handleAuthApiResponse, triggerNotification } = useAuthNotification();
 
+  // Dideklarasikan sebelum useAuthHook karena hook itu menerimanya sebagai argumen.
+  // Bila dideklarasikan di bawah, pemanggilan useAuthHook mengaksesnya dalam
+  // temporal dead zone dan AppContainer gagal render.
+  const projectMembers = useProjectStore((s) => s.projectMembers);
+  const setProjectMembers = useProjectStore((s) => s.setProjectMembers);
+
+  const [confirmAction, setConfirmAction] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    variant?: 'danger' | 'warning' | 'info';
+    confirmText?: string;
+    cancelText?: string;
+    isAlert?: boolean;
+    isLoading?: boolean;
+    closeOnBackdropClick?: boolean;
+  } | null>(null);
+
+  // useMasterData butuh isLoggedIn yang justru dihasilkan useAuthHook, sehingga
+  // setternya tidak bisa dideklarasikan lebih dulu. useAuthHook hanya memakainya
+  // di dalam callback (bukan saat render), jadi indirection lewat ref aman:
+  // wrapper di bawah stabil, dan isinya diisi setelah useMasterData dipanggil.
+  const masterDataSettersRef = useRef<{
+    setNewTaskStatus?: (status: string) => void;
+    setNewTaskPriority?: (priority: string) => void;
+  }>({});
+
   // Auth Hook - handles all authentication logic
   const {
     isLoggedIn,
@@ -600,7 +628,14 @@ function AppContainer() {
     handleLogoutRequest,
     handleManualLogin,
     handleRegister,
-  } = useAuth(
+    setIsLoggedIn,
+    setCurrentUser,
+    setUserRole,
+    setCurrentUserProfile,
+    setShowCollisionModal,
+    setPendingLoginCredentials,
+    fetchAllUsers,
+  } = useAuthHook(
     setSelectedProject,
     setProjects,
     setTasks,
@@ -609,11 +644,15 @@ function AppContainer() {
     setActivityLogs,
     setCurrentView,
     setAllUsers,
-    setNewTaskStatus,
-    setNewTaskPriority,
+    (status) => masterDataSettersRef.current.setNewTaskStatus?.(status),
+    (priority) => masterDataSettersRef.current.setNewTaskPriority?.(priority),
     setMasterData,
     setConfirmAction,
   );
+
+  // Alias currentUser. Harus tepat setelah useAuthHook karena useAppNotifications
+  // di bawah membacanya saat render.
+  const user: any = currentUser;
 
   // Modal & Detail Panel Management
   const {
@@ -869,7 +908,7 @@ function AppContainer() {
     return () => window.removeEventListener("auth_expired", handleAuthExpired);
   }, []);
 
-  const user: any = currentUser;
+  // 'user' dideklarasikan di atas, tepat setelah useAuthHook.
 
   // User fetching and profile updates now handled by useAuth hook
   // See src/hooks/useAuth.ts for fetchAllUsers and profile update listeners
@@ -947,6 +986,10 @@ function AppContainer() {
   } = useNewTaskForm();
 
   const { newTaskStatus, setNewTaskStatus, newTaskPriority, setNewTaskPriority } = useMasterData(isLoggedIn, currentUser?.uid);
+
+  // Menghubungkan setter asli ke wrapper stabil yang sudah diberikan ke useAuthHook.
+  masterDataSettersRef.current.setNewTaskStatus = setNewTaskStatus;
+  masterDataSettersRef.current.setNewTaskPriority = setNewTaskPriority;
 
   const [allProjectTasksForStats, setAllProjectTasksForStats] = useState<
     Task[]
@@ -1066,11 +1109,9 @@ function AppContainer() {
   const [isAddingLink, setIsAddingLink] = useState(false);
 
   // Use store for upload progress
-  const { uploadProgress, setUploadProgress, updateUploadProgress } = useNotificationStore((state) => ({
-    uploadProgress: state.uploadProgress,
-    setUploadProgress: state.setUploadProgress,
-    updateUploadProgress: state.updateUploadProgress,
-  }));
+  const uploadProgress = useNotificationStore((s) => s.uploadProgress);
+  const setUploadProgress = useNotificationStore((s) => s.setUploadProgress);
+  const updateUploadProgress = useNotificationStore((s) => s.updateUploadProgress);
 
   // Linked Tasks states
   const [isAddingTaskLink, setIsAddingTaskLink] = useState(false);
@@ -1081,36 +1122,17 @@ function AppContainer() {
 
   const { selectedTaskIds, setSelectedTaskIds } = useTaskSelection();
 
-  // Use store for project members and comments
-  const { projectMembers, setProjectMembers } = useProjectStore((state) => ({
-    projectMembers: state.projectMembers,
-    setProjectMembers: state.setProjectMembers,
-  }));
-
-  const { comments, newCommentText, setComments, setNewCommentText } = useNotificationStore((state) => ({
-    comments: state.comments,
-    newCommentText: state.newCommentText,
-    setComments: state.setComments,
-    setNewCommentText: state.setNewCommentText,
-  }));
+  // projectMembers dideklarasikan di atas, sebelum useAuthHook.
+  const comments = useNotificationStore((s) => s.comments);
+  const newCommentText = useNotificationStore((s) => s.newCommentText);
+  const setComments = useNotificationStore((s) => s.setComments);
+  const setNewCommentText = useNotificationStore((s) => s.setNewCommentText);
   const [mentionState, setMentionState] = useState<{
     active: boolean;
     query: string;
     index: number;
   }>({ active: false, query: "", index: -1 });
-  const [confirmAction, setConfirmAction] = useState<{
-    isOpen: boolean;
-    title: string;
-    message: string;
-    onConfirm: () => void;
-    variant?: 'danger' | 'warning' | 'info';
-    confirmText?: string;
-    cancelText?: string;
-    isAlert?: boolean;
-    isLoading?: boolean;
-    closeOnBackdropClick?: boolean;
-  } | null>(null);
-
+  // confirmAction dideklarasikan di atas, sebelum useAuthHook.
 
   const exportTasksToCSV = () => {
     if (!selectedProject || tasks.length === 0) {

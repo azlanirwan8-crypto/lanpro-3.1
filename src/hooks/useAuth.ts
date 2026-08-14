@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { toast } from 'sonner';
+import type { AppView } from '../store/useAppStore';
 import Swal from 'sweetalert2';
 import {
   UserProfile,
@@ -45,6 +46,17 @@ interface UseAuthReturn {
   handleLogoutRequest: () => void;
   handleManualLogin: (username: string, password: string, remember: boolean, force?: boolean) => Promise<void>;
   handleRegister: (username: string, password: string, name: string, email: string) => Promise<{ success: boolean; message?: string }>;
+
+  // State auth dimiliki hook ini. Setter-setter di bawah diekspos karena
+  // AppContainer memakainya langsung (mis. saat update profil dan penanganan
+  // sesi ganda). Tanpa ini AppContainer merujuk nama yang tidak terdefinisi.
+  setIsLoggedIn: (value: boolean) => void;
+  setCurrentUser: (user: any) => void;
+  setUserRole: (role: AppRole | null) => void;
+  setCurrentUserProfile: (profile: any) => void;
+  setShowCollisionModal: (show: boolean) => void;
+  setPendingLoginCredentials: (creds: any) => void;
+  fetchAllUsers: () => Promise<void>;
 }
 
 export function useAuth(
@@ -54,7 +66,7 @@ export function useAuth(
   setSprints?: (sprints: any[]) => void,
   setProjectMembers?: (members: any[]) => void,
   setActivityLogs?: (logs: any[]) => void,
-  setCurrentView?: (view: string) => void,
+  setCurrentView?: (view: AppView) => void,
   setAllUsers?: (users: UserProfile[]) => void,
   setNewTaskStatus?: (status: string) => void,
   setNewTaskPriority?: (priority: string) => void,
@@ -485,5 +497,12 @@ export function useAuth(
     handleLogoutRequest,
     handleManualLogin,
     handleRegister,
+    setIsLoggedIn,
+    setCurrentUser,
+    setUserRole,
+    setCurrentUserProfile,
+    setShowCollisionModal,
+    setPendingLoginCredentials,
+    fetchAllUsers,
   };
 }

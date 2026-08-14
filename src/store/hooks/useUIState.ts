@@ -1,43 +1,40 @@
 import { useUIStore } from '../stores';
 
-export const useUIState = () => {
-  return useUIStore((state) => ({
-    isDarkMode: state.isDarkMode,
-    selectedTheme: state.selectedTheme,
-    isSidebarOpen: state.isSidebarOpen,
-    density: state.density,
-    activeModal: state.activeModal,
-    isTaskDetailOpen: state.isTaskDetailOpen,
-    isProjectModalOpen: state.isProjectModalOpen,
-    isSprintModalOpen: state.isSprintModalOpen,
-    isUserModalOpen: state.isUserModalOpen,
-    isSettingsOpen: state.isSettingsOpen,
-    selectedView: state.selectedView,
-    isFullscreen: state.isFullscreen,
-    showKanban: state.showKanban,
-    isLoadingModal: state.isLoadingModal,
-  }));
-};
+/** Selector atomik — lihat catatan di useAuthState.ts. */
+export const useUIState = () => ({
+  isDarkMode: useUIStore((s) => s.isDarkMode),
+  selectedTheme: useUIStore((s) => s.selectedTheme),
+  isSidebarOpen: useUIStore((s) => s.isSidebarOpen),
+  density: useUIStore((s) => s.density),
+  activeModal: useUIStore((s) => s.activeModal),
+  isTaskDetailOpen: useUIStore((s) => s.isTaskDetailOpen),
+  isProjectModalOpen: useUIStore((s) => s.isProjectModalOpen),
+  isSprintModalOpen: useUIStore((s) => s.isSprintModalOpen),
+  isUserModalOpen: useUIStore((s) => s.isUserModalOpen),
+  isSettingsOpen: useUIStore((s) => s.isSettingsOpen),
+  selectedView: useUIStore((s) => s.selectedView),
+  isFullscreen: useUIStore((s) => s.isFullscreen),
+  showKanban: useUIStore((s) => s.showKanban),
+  isLoadingModal: useUIStore((s) => s.isLoadingModal),
+});
 
-export const useUIActions = () => {
-  return useUIStore((state) => ({
-    setIsDarkMode: state.setIsDarkMode,
-    setSelectedTheme: state.setSelectedTheme,
-    setIsSidebarOpen: state.setIsSidebarOpen,
-    toggleSidebar: state.toggleSidebar,
-    setDensity: state.setDensity,
-    setActiveModal: state.setActiveModal,
-    setIsTaskDetailOpen: state.setIsTaskDetailOpen,
-    setIsProjectModalOpen: state.setIsProjectModalOpen,
-    setIsSprintModalOpen: state.setIsSprintModalOpen,
-    setIsUserModalOpen: state.setIsUserModalOpen,
-    setIsSettingsOpen: state.setIsSettingsOpen,
-    setSelectedView: state.setSelectedView,
-    setIsFullscreen: state.setIsFullscreen,
-    setShowKanban: state.setShowKanban,
-    setIsLoadingModal: state.setIsLoadingModal,
-  }));
-};
+export const useUIActions = () => ({
+  setIsDarkMode: useUIStore((s) => s.setIsDarkMode),
+  setSelectedTheme: useUIStore((s) => s.setSelectedTheme),
+  setIsSidebarOpen: useUIStore((s) => s.setIsSidebarOpen),
+  toggleSidebar: useUIStore((s) => s.toggleSidebar),
+  setDensity: useUIStore((s) => s.setDensity),
+  setActiveModal: useUIStore((s) => s.setActiveModal),
+  setIsTaskDetailOpen: useUIStore((s) => s.setIsTaskDetailOpen),
+  setIsProjectModalOpen: useUIStore((s) => s.setIsProjectModalOpen),
+  setIsSprintModalOpen: useUIStore((s) => s.setIsSprintModalOpen),
+  setIsUserModalOpen: useUIStore((s) => s.setIsUserModalOpen),
+  setIsSettingsOpen: useUIStore((s) => s.setIsSettingsOpen),
+  setSelectedView: useUIStore((s) => s.setSelectedView),
+  setIsFullscreen: useUIStore((s) => s.setIsFullscreen),
+  setShowKanban: useUIStore((s) => s.setShowKanban),
+  setIsLoadingModal: useUIStore((s) => s.setIsLoadingModal),
+});
 
 export const useUI = () => ({
   ...useUIState(),

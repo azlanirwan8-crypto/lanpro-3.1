@@ -1,38 +1,35 @@
 import { useProjectStore } from '../stores';
 
-export const useProjectState = () => {
-  return useProjectStore((state) => ({
-    selectedProject: state.selectedProject,
-    selectedProjectId: state.selectedProjectId,
-    projects: state.projects,
-    tasks: state.tasks,
-    sprints: state.sprints,
-    projectMembers: state.projectMembers,
-    activityLogs: state.activityLogs,
-    masterData: state.masterData,
-    allUsers: state.allUsers,
-    taskFilters: state.taskFilters,
-    selectedTasks: state.selectedTasks,
-  }));
-};
+/** Selector atomik — lihat catatan di useAuthState.ts. */
+export const useProjectState = () => ({
+  selectedProject: useProjectStore((s) => s.selectedProject),
+  selectedProjectId: useProjectStore((s) => s.selectedProjectId),
+  projects: useProjectStore((s) => s.projects),
+  tasks: useProjectStore((s) => s.tasks),
+  sprints: useProjectStore((s) => s.sprints),
+  projectMembers: useProjectStore((s) => s.projectMembers),
+  activityLogs: useProjectStore((s) => s.activityLogs),
+  masterData: useProjectStore((s) => s.masterData),
+  allUsers: useProjectStore((s) => s.allUsers),
+  taskFilters: useProjectStore((s) => s.taskFilters),
+  selectedTasks: useProjectStore((s) => s.selectedTasks),
+});
 
-export const useProjectActions = () => {
-  return useProjectStore((state) => ({
-    setSelectedProject: state.setSelectedProject,
-    setSelectedProjectId: state.setSelectedProjectId,
-    setProjects: state.setProjects,
-    setTasks: state.setTasks,
-    setSprints: state.setSprints,
-    setProjectMembers: state.setProjectMembers,
-    setActivityLogs: state.setActivityLogs,
-    setMasterData: state.setMasterData,
-    setAllUsers: state.setAllUsers,
-    setTaskFilters: state.setTaskFilters,
-    setSelectedTasks: state.setSelectedTasks,
-    toggleTaskSelection: state.toggleTaskSelection,
-    clearProjectData: state.clearProjectData,
-  }));
-};
+export const useProjectActions = () => ({
+  setSelectedProject: useProjectStore((s) => s.setSelectedProject),
+  setSelectedProjectId: useProjectStore((s) => s.setSelectedProjectId),
+  setProjects: useProjectStore((s) => s.setProjects),
+  setTasks: useProjectStore((s) => s.setTasks),
+  setSprints: useProjectStore((s) => s.setSprints),
+  setProjectMembers: useProjectStore((s) => s.setProjectMembers),
+  setActivityLogs: useProjectStore((s) => s.setActivityLogs),
+  setMasterData: useProjectStore((s) => s.setMasterData),
+  setAllUsers: useProjectStore((s) => s.setAllUsers),
+  setTaskFilters: useProjectStore((s) => s.setTaskFilters),
+  setSelectedTasks: useProjectStore((s) => s.setSelectedTasks),
+  toggleTaskSelection: useProjectStore((s) => s.toggleTaskSelection),
+  clearProjectData: useProjectStore((s) => s.clearProjectData),
+});
 
 export const useProject = () => ({
   ...useProjectState(),
