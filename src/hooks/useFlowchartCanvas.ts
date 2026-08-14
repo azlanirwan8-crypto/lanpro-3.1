@@ -109,6 +109,9 @@ export function useFlowchartCanvas() {
     panOffset,
     zoomLevel,
     isPanning,
+    // Titik awal geser. Dibutuhkan pemanggil yang menangani sendiri gerak mouse
+    // untuk menghitung selisih posisi.
+    panStart,
     canvasTheme,
     isSnapToGrid,
 
@@ -119,6 +122,12 @@ export function useFlowchartCanvas() {
     // Setters (for external control)
     setPanOffset,
     setZoomLevel,
+    // setIsPanning dan setPanStart sebelumnya tidak diekspor, padahal
+    // FlowchartContainer men-destructure setIsPanning dan memakai panStart.
+    // Akibatnya setIsPanning bernilai undefined dan panStart tidak terdefinisi,
+    // sehingga menggeser kanvas melempar error saat dijalankan.
+    setIsPanning,
+    setPanStart,
     setCanvasTheme,
     setIsSnapToGrid,
 

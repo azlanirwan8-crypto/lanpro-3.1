@@ -133,6 +133,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const canvasHook = useFlowchartCanvas();
   const {
     panOffset, setPanOffset, zoomLevel, setZoomLevel, isPanning, setIsPanning,
+    panStart, setPanStart,
     canvasTheme, setCanvasTheme, isSnapToGrid, setIsSnapToGrid,
     canvasContainerRef, isPanningRef, startCanvasPanning, updatePanOffset, stopCanvasPanning,
     toggleCanvasTheme, toggleGridSnap, resetZoom, resetPan, resetCanvas, applyGridSnap
@@ -162,6 +163,10 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const historyHook = useFlowchartHistory();
   const {
     historyStack, historyIndex, activeSimNodeId, isSimulating, simCancelRef,
+    // Keempat setter di bawah dipakai langsung oleh handleApplyImportReplace dan
+    // handleSimulateFlow. Sebelumnya tidak ikut di-destructure, sehingga kedua
+    // handler itu melempar ReferenceError begitu tombolnya ditekan.
+    setHistoryStack, setHistoryIndex, setActiveSimNodeId, setIsSimulating,
     recordHistory, handleUndo, handleRedo, canUndo, canRedo, clearHistory, initializeHistory,
     getHistoryDepth, getHistoryPosition, startSimulation, stopSimulation, cancelSimulation
   } = historyHook;
