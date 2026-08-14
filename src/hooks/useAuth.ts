@@ -16,7 +16,6 @@ import {
   safeLocalStorage,
   safeSessionStorage,
 } from '../lib/safeStorage';
-import { useAuthNotification } from './useAuthNotification';
 
 // Browser session ID for collision detection
 const BROWSER_SESSION_ID = typeof window !== 'undefined' ? window.sessionStorage.getItem('browserSessionId') ||
@@ -62,7 +61,15 @@ export function useAuth(
   setMasterData?: (data: any[]) => void,
   setConfirmAction?: (action: any) => void,
 ): UseAuthReturn {
-  const { handleAuthApiResponse } = useAuthNotification();
+  const handleAuthApiResponse = (status: number, data: any) => {
+    if (status === 429) {
+      toast.error('Terlalu banyak percobaan. Silakan tunggu beberapa menit.');
+    } else if (status === 401) {
+      toast.error(data?.message || 'Username atau password salah.');
+    } else {
+      toast.error(data?.message || 'Terjadi kesalahan saat login.');
+    }
+  };
 
   // Auth States
   const [isLoggedIn, setIsLoggedIn] = useState(false);

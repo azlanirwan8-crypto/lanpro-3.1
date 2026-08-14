@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 export interface FlowNode {
   id: string;
-  type: string;
+  type: "oval" | "rect" | "diamond" | "cylinder" | "text" | "sticky" | "cloud" | "circle" | "card" | "parallelogram" | "document" | "subprocess" | "actor" | "folder" | "decision" | "predefined" | "database" | "triangle" | "pentagon" | "hexagon" | "octagon" | "star" | "arrowRight" | "arrowLeft" | "arrowLeftRight" | "trapezoid" | "cross" | "curlyLeft" | "curlyRight" | "chevron" | "delay" | "callout" | "awsLambda" | "awsEc2" | "awsS3" | "awsVpc" | "awsRds" | "awsCloudwatch" | "awsDynamo" | "umlClass" | "umlInterface" | "umlUseCase" | "umlBoundary" | "umlControl" | "umlEntity" | "umlNote" | "multiDocument" | "manualInput" | "manualOperation" | "preparation" | "display" | "summingJunction" | "collate" | "connectorOr" | "sort" | "merge" | "azureUser" | "azureSql" | "azureFunctions" | "azureKeyVault" | "azureCosmos" | "azurePowerBi" | "azureVm" | "azureStorage" | "bpmnActivity" | "bpmnEvent" | "bpmnGateway" | "bpmnDataStore" | "bpmnDataObject" | "bpmnEventEnd";
   x: number;
   y: number;
   label: string;
