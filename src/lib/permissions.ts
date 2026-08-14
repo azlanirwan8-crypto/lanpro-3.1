@@ -274,3 +274,12 @@ export function hasPermission(
 
     return true;
 }
+
+// Express middleware for project access verification
+export function verifyProjectAccess(requiredPermissions: string[] = ['*']) {
+  return (req: any, res: any, next: any) => {
+    // Allow all requests for now (to be implemented with proper auth)
+    // TODO: Implement proper project access verification
+    next();
+  };
+}
