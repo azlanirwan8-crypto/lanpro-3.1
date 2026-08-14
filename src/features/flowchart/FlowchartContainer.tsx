@@ -5,6 +5,7 @@ import { useFlowchartUI } from "../../hooks/useFlowchartUI";
 import { useFlowchartHistory } from "../../hooks/useFlowchartHistory";
 import { useFlowchartSelection } from "../../hooks/useFlowchartSelection";
 import { useFlowchartList } from "../../hooks/useFlowchartList";
+import { useFlowchartNodes } from "../../hooks/useFlowchartNodes";
 import { 
   Plus, Trash2, ArrowRight, Save, RotateCcw, 
   Sparkles, ExternalLink, Eye, Check,
@@ -1545,6 +1546,18 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     removeDocumentFromFlowchart
   } = listHook;
 
+  // Node & Edge Management
+  const nodesHook = useFlowchartNodes();
+  const {
+    nodes, setNodes, edges, setEdges,
+    addNode, updateNode, deleteNode, deleteNodes, updateNodePosition,
+    updateNodeSize, updateNodeLabel, updateNodeColor, updateNodeStyle,
+    copyNodes, pasteNodes, getNode, getNodes,
+    addEdge, updateEdgeLabel, deleteEdge, deleteNodeEdges, getNodeEdges,
+    getEdge, getIncomingEdges, getOutgoingEdges, clearCanvas, loadContent,
+    getContent, getNodeCount, getEdgeCount, nodeExists, edgeExists
+  } = nodesHook;
+
   const currentFlowMetadata = useMemo(() => {
     return getCurrentFlowchart();
   }, [flowcharts, selectedFlowId]);
@@ -1556,10 +1569,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   }, [selectedFlowId, currentFlowMetadata, canModifyFlowchart]);
 
 
-  // Drawing States (for currently editing flowchart)
-  const [nodes, setNodes] = useState<FlowNode[]>([]);
-  const [edges, setEdges] = useState<FlowEdge[]>([]);
-  const [canvasTheme, setCanvasTheme] = useState<'miro' | 'blueprint'>('miro');
 
 
 
