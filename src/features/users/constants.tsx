@@ -118,15 +118,3 @@ export const ACTION_DESCRIPTIONS = {
   delete: "Delete: Destructive privilege to permanently purge data or archive entities."
 };
 
-/**
- * CATATAN: saat ini tidak dirujuk di mana pun.
- *
- * Sudah begitu sejak sebelum ekstraksi ini; sengaja dipertahankan alih-alih
- * dihapus karena isinya melengkapi ACTION_DESCRIPTIONS yang aktif dipakai.
- * Hapus bila memang tidak diperlukan.
- */
-export const STATUS_DESCRIPTIONS = {
-  approved: "Approved: Account is active and clearance permissions are fully enabled.",
-  pending: "Pending: Awaiting Administrator verification review and clearance setup.",
-  rejected: "Rejected: Inactive account. Access is restricted and features are locked."
-};
