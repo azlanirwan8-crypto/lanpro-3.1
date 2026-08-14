@@ -38,36 +38,22 @@ import {
 import { ResponsiveTable } from "../../components/ResponsiveTable";
 import { toast } from 'sonner';
 import { validateFileClient } from '../../lib/fileSecurity';
-import { UserProfile, MasterData } from '../../types';
 import Markdown from 'react-markdown';
-import { apiRequest } from '../../lib/api';
 import { cn } from '../../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 import { WikiEmptyState } from './components/WikiEmptyState';
 import { hasPermission } from '../../lib/permissions';
 import { confirmDeleteAlert, showSuccessAlert } from '../../lib/sweetalert';
 
-interface DocumentModel {
-  id: string;
-  projectId: string;
-  title: string;
-  description?: string;
-  type: string;
-  link: string;
-  fileName: string;
-  fileType: string;
-  createdBy: string;
-  downloadCount?: number;
-  createdAt: any;
-  updatedAt: any;
-}
-
-interface WikiViewProps {
-  projectId: string;
-  users: UserProfile[];
-  currentUser: UserProfile | null;
-  masterData?: MasterData[];
-}
+import type { DocumentModel, WikiViewProps } from './types';
+import {
+  resolveUserId,
+  fetchDocuments as fetchDocumentsApi,
+  createDocument as createDocumentApi,
+  updateDocument as updateDocumentApi,
+  deleteDocument as deleteDocumentApi,
+  downloadDocument as downloadDocumentApi,
+} from './services/wiki.service';
 
 export const WikiView: React.FC<WikiViewProps> = ({
   projectId,
@@ -230,14 +216,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
         fileName: file.name,
         fileType: file.type || 'application/octet-stream'
       };
-      const effectiveUserId = currentUser?.id || currentUser?.uid || "guest";
-      const data = await apiRequest(`/api/projects/${projectId}/documents/${activeDocObj.id}`, {
-        method: 'PUT',
-        headers: { 
-          'x-user-id': effectiveUserId
-        },
-        body: payload
-      });
+      const effectiveUserId = resolveUserId(currentUser);
+      const data = await updateDocumentApi(projectId, effectiveUserId, activeDocObj.id, payload);
       if (data.status === 'success') {
         showSuccessAlert("Berhasil!", "Berkas spesifikasi berhasil diunggah!");
         await fetchDocuments();
@@ -302,10 +282,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
       if (activeDocObj.fileName) {
         setPreviewLoading(true);
-        const effectiveUserId = currentUser?.id || currentUser?.uid || "guest";
-        apiRequest(`/api/projects/${projectId}/documents/${activeDocId}/download`, {
-          headers: { 'x-user-id': effectiveUserId }
-        })
+        const effectiveUserId = resolveUserId(currentUser);
+        downloadDocumentApi(projectId, effectiveUserId, activeDocId)
           .then(data => {
             if (data.status === 'success' && data.data && data.data.fileData) {
               const blobUrl = base64ToBlobUrl(data.data.fileData, data.data.fileType || 'application/pdf');
@@ -368,14 +346,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
         link: activeDoc.link || "",
         createdBy: activeDoc.createdBy
       };
-      const effectiveUserId = currentUser?.id || currentUser?.uid || "guest";
-      const data = await apiRequest(`/api/projects/${projectId}/documents/${activeDoc.id}`, {
-        method: 'PUT',
-        headers: { 
-          'x-user-id': effectiveUserId
-        },
-        body: payload
-      });
+      const effectiveUserId = resolveUserId(currentUser);
+      const data = await updateDocumentApi(projectId, effectiveUserId, activeDoc.id, payload);
       if (data.status === 'success') {
         showSuccessAlert("Berhasil!", "Catatan berhasil disimpan!");
         await fetchDocuments();
@@ -392,11 +364,9 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
   // Fetch documents from database
   const fetchDocuments = async () => {
-    const effectiveUserId = currentUser?.id || currentUser?.uid || "guest";
+    const effectiveUserId = resolveUserId(currentUser);
     try {
-      const data = await apiRequest(`/api/projects/${projectId}/documents`, {
-        headers: { 'x-user-id': effectiveUserId }
-      });
+      const data = await fetchDocumentsApi(projectId, effectiveUserId);
       if (data.status === 'success') {
         setDocuments(data.data);
       }
@@ -502,12 +472,9 @@ export const WikiView: React.FC<WikiViewProps> = ({
     if (!isConfirmed) return;
 
     setLoading(true);
-    const effectiveUserId = currentUser?.id || currentUser?.uid || "guest";
+    const effectiveUserId = resolveUserId(currentUser);
     try {
-      const data = await apiRequest(`/api/projects/${projectId}/documents/${doc.id}`, {
-        method: 'DELETE',
-        headers: { 'x-user-id': effectiveUserId }
-      });
+      const data = await deleteDocumentApi(projectId, effectiveUserId, doc.id);
       if (data.status === 'success') {
         showSuccessAlert("Berhasil!", "Data dokumen berhasil dihapus.");
         if (activeDocId === doc.id) {
@@ -572,15 +539,9 @@ export const WikiView: React.FC<WikiViewProps> = ({
         payload.fileType = "";
       }
 
-      const effectiveUserId = currentUser?.id || currentUser?.uid || "guest";
+      const effectiveUserId = resolveUserId(currentUser);
       if (isNew) {
-        const data = await apiRequest(`/api/projects/${projectId}/documents`, {
-          method: 'POST',
-          headers: { 
-            'x-user-id': effectiveUserId
-          },
-          body: payload
-        });
+        const data = await createDocumentApi(projectId, effectiveUserId, payload);
         if (data.status === 'success') {
           showSuccessAlert("Berhasil!", "Dokumen baru berhasil dibuat!");
           setShowFormModal(false);
@@ -591,13 +552,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
           toast.error(data.message || "Gagal menyimpan dokumen");
         }
       } else if (editId) {
-        const data = await apiRequest(`/api/projects/${projectId}/documents/${editId}`, {
-          method: 'PUT',
-          headers: { 
-            'x-user-id': effectiveUserId
-          },
-          body: payload
-        });
+        const data = await updateDocumentApi(projectId, effectiveUserId, editId, payload);
         if (data.status === 'success') {
           showSuccessAlert("Berhasil!", "Dokumen berhasil diperbarui!");
           setShowFormModal(false);
@@ -618,11 +573,9 @@ export const WikiView: React.FC<WikiViewProps> = ({
   // Download logic for attached files
   const handleDownload = async (docId: string, fName: string) => {
     toast.info("Mendownload berkas lampiran...");
-    const effectiveUserId = currentUser?.id || currentUser?.uid || "guest";
+    const effectiveUserId = resolveUserId(currentUser);
     try {
-      const data = await apiRequest(`/api/projects/${projectId}/documents/${docId}/download`, {
-        headers: { 'x-user-id': effectiveUserId }
-      });
+      const data = await downloadDocumentApi(projectId, effectiveUserId, docId);
       if (data.status === 'success' && data.data && data.data.fileData) {
         const link = document.createElement("a");
         link.href = data.data.fileData;
