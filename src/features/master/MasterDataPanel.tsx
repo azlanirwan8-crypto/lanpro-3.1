@@ -13,7 +13,19 @@ import { Modal } from '../../components/ui/Modal';
 import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
 import { RenderIcon, AVAILABLE_ICONS } from '../../components/RenderIcon';
 import { cn } from '../../lib/utils';
-import { apiRequest } from '../../lib/api';
+import {
+  fetchProjectModules as fetchProjectModulesApi,
+  createProjectModule,
+  updateProjectModule,
+  deleteProjectModule,
+  createMasterData,
+  updateMasterData,
+  // Diberi alias: komponen sudah punya handler lokal bernama deleteMasterData
+  // yang membungkus konfirmasi dan pembaruan state. Tanpa alias, binding lokal
+  // itu membayangi import ini dan panggilan justru mengenai handler-nya sendiri.
+  deleteMasterData as deleteMasterDataApi,
+  reorderMasterData,
+} from './services/master.service';
 
 const Input = ({ value, onChange, placeholder, type = 'text', className = '', ...props }: any) => (
   <input 
@@ -115,7 +127,7 @@ export const MasterDataPanel = ({
   const fetchProjectModules = async () => {
     setLoadingModules(true);
     try {
-      const res = await apiRequest('/api/project-modules');
+      const res = await fetchProjectModulesApi();
       if (res.status === 'success') {
         setProjectModules(res.data || []);
       }
@@ -159,10 +171,7 @@ export const MasterDataPanel = ({
         namaModul: newModuleNamaModul.trim(),
         keterangan: newModuleKeterangan.trim()
       };
-      const res = await apiRequest('/api/project-modules', {
-        method: 'POST',
-        body: payload
-      });
+      const res = await createProjectModule(payload);
       if (res.status !== 'success') throw new Error(res.message);
       toast.success('Modul berhasil ditambahkan');
       setIsNewModuleModalOpen(false);
@@ -193,10 +202,7 @@ export const MasterDataPanel = ({
         namaModul: editingModuleNamaModul.trim(),
         keterangan: editingModuleKeterangan.trim()
       };
-      const res = await apiRequest(`/api/project-modules/${editingModuleId}`, {
-        method: 'PUT',
-        body: payload
-      });
+      const res = await updateProjectModule(editingModuleId, payload);
       if (res.status !== 'success') throw new Error(res.message);
       toast.success('Modul berhasil diperbarui');
       setIsEditModuleModalOpen(false);
@@ -284,10 +290,7 @@ export const MasterDataPanel = ({
         createdBy: currentUserProfile?.uid || 'system'
       };
       
-      const data = await apiRequest('/api/master-data', {
-        method: 'POST',
-        body: payload
-      });
+      const data = await createMasterData(payload);
       if (data.status !== 'success') throw new Error(data.message);
 
       toast.success('Master Data Berhasil Ditambahkan');
@@ -326,15 +329,12 @@ export const MasterDataPanel = ({
 
     setIsSaving(true);
     try {
-      const data = await apiRequest(`/api/master-data/${editingMaster.id}`, {
-        method: 'PUT',
-        body: {
-          label: editingMaster.label,
-          color: editingMaster.color,
-          icon: editingMaster.icon,
-          description: editingMaster.description,
-          role_type: editingMaster.type === 'project_role' ? (editingMaster.roleType || editingMaster.role_type || 'PROJECT') : null
-        }
+      const data = await updateMasterData(editingMaster.id, {
+        label: editingMaster.label,
+        color: editingMaster.color,
+        icon: editingMaster.icon,
+        description: editingMaster.description,
+        role_type: editingMaster.type === 'project_role' ? (editingMaster.roleType || editingMaster.role_type || 'PROJECT') : null
       });
       if (data.status !== 'success') throw new Error(data.message);
 
@@ -354,12 +354,12 @@ export const MasterDataPanel = ({
     setIsDeleting(true);
     try {
       if (deleteConfirmState?.label.includes('(Modul)')) {
-        const data = await apiRequest(`/api/project-modules/${id}`, { method: 'DELETE' });
+        const data = await deleteProjectModule(id);
         if (data.status !== 'success') throw new Error(data.message);
         toast.success('Modul berhasil dihapus');
         fetchProjectModules();
       } else {
-        const data = await apiRequest(`/api/master-data/${id}`, { method: 'DELETE' });
+        const data = await deleteMasterDataApi(id);
         if (data.status !== 'success') throw new Error(data.message);
         toast.success('Master data berhasil dihapus');
         onRefresh();
@@ -610,12 +610,7 @@ export const MasterDataPanel = ({
                             setLocalMasterData(updatedAll);
 
                             try {
-                                await Promise.all(currentList.map((item, index) => 
-                                apiRequest(`/api/master-data/${item.id}`, {
-                                    method: 'PUT',
-                                    body: { order: index, label: item.label, color: item.color, icon: item.icon, description: item.description }
-                                })
-                                ));
+                                await reorderMasterData(currentList);
                                 onRefresh();
                                 toast.success('Urutan berhasil diperbarui');
                             } catch (error) {
