@@ -1,6 +1,7 @@
 import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useFlowchartCanvas } from "../../hooks/useFlowchartCanvas";
+import { useFlowchartUI } from "../../hooks/useFlowchartUI";
 import { 
   Plus, Trash2, ArrowRight, Save, RotateCcw, 
   Sparkles, ExternalLink, Eye, Check,
@@ -1484,6 +1485,26 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     toggleCanvasTheme, toggleGridSnap, resetZoom, resetPan, resetCanvas, applyGridSnap
   } = canvasHook;
 
+  // UI Modals & Sidebars
+  const uiHook = useFlowchartUI();
+  const {
+    isModalOpen, setIsModalOpen, modalMode, setModalMode, editingFlowId, setEditingFlowId,
+    flowName, setFlowName, flowEpicId, setFlowEpicId, flowDescription, setFlowDescription,
+    flowCategory, setFlowCategory, flowCreator, setFlowCreator, flowExternalUrl, setFlowExternalUrl,
+    isUploadDocModalOpen, setIsUploadDocModalOpen, uploadDocName, setUploadDocName,
+    uploadDocFile, setUploadDocFile, uploadDocBase64, setUploadDocBase64, activeDocumentId, setActiveDocumentId,
+    rightViewMode, setRightViewMode,
+    isLeftSidebarOpen, setIsLeftSidebarOpen, isRightSidebarOpen, setIsRightSidebarOpen,
+    isShapeDropdownOpen, setIsShapeDropdownOpen, shapeSearchQuery, setShapeSearchQuery,
+    selectedAddColor, setSelectedAddColor, expandedGroups, setExpandedGroups,
+    isKeyboardHelpOpen, setIsKeyboardHelpOpen, hoverCoords, setHoverCoords,
+    isImportModalOpen, setIsImportModalOpen, importType, setImportType, parsedImportData,
+    setParsedImportData, parsedFilename, setParsedFilename, dragOverImport, setDragOverImport,
+    openCreateFlowModal, openEditFlowModal, closeFlowModal, resetFlowFormFields,
+    openUploadDocumentModal, closeUploadDocumentModal, toggleLeftSidebar, toggleRightSidebar,
+    toggleShapeDropdown, toggleGroupExpanded, toggleKeyboardHelp, openImportModal, closeImportModal
+  } = uiHook;
+
   // Saved Flowcharts list
   const [flowcharts, setFlowcharts] = useState<FlowchartData[]>([]);
   const [selectedFlowId, setSelectedFlowId] = useState<string | null>(null);
@@ -1523,28 +1544,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const [edges, setEdges] = useState<FlowEdge[]>([]);
   const [canvasTheme, setCanvasTheme] = useState<'miro' | 'blueprint'>('miro');
 
-  // Popup Modal States for Creating/Editing flowchart metadata
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
-  const [editingFlowId, setEditingFlowId] = useState<string | null>(null);
-  
-  // Modal Fields
-  const [flowName, setFlowName] = useState<string>("");
-  const [flowEpicId, setFlowEpicId] = useState<string>("");
-  const [flowDescription, setFlowDescription] = useState<string>("");
-  const [flowCategory, setFlowCategory] = useState<string>("Panduan");
-  const [flowCreator, setFlowCreator] = useState<string>("");
-  const [flowExternalUrl, setFlowExternalUrl] = useState<string>("");
-
-  // Upload Document States
-  const [isUploadDocModalOpen, setIsUploadDocModalOpen] = useState(false);
-  const [uploadDocName, setUploadDocName] = useState("");
-  const [uploadDocFile, setUploadDocFile] = useState<File | null>(null);
-  const [uploadDocBase64, setUploadDocBase64] = useState("");
-  const [activeDocumentId, setActiveDocumentId] = useState<string | null>(null);
-
-  // Right Side View mode ('embed' | 'canvas')
-  const [rightViewMode, setRightViewMode] = useState<'embed' | 'canvas'>('embed');
 
   // Editor Workspace Selection States
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
@@ -1556,10 +1555,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
   const [copiedNodes, setCopiedNodes] = useState<FlowNode[]>([]);
   const [marqueeBox, setMarqueeBox] = useState<{ startX: number, startY: number, currentX: number, currentY: number } | null>(null);
-
-  // Collapsible Responsive Sidebars
-  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(false);
-  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState<boolean>(false);
 
   // Right-click context menu state for flowchart nodes
   const [nodeContextMenu, setNodeContextMenu] = useState<{ x: number; y: number; nodeId: string } | null>(null);
@@ -1584,23 +1579,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
-  // Sidebar controls
-  const [isShapeDropdownOpen, setIsShapeDropdownOpen] = useState<boolean>(false);
-  const [shapeSearchQuery, setShapeSearchQuery] = useState<string>("");
-  const [selectedAddColor, setSelectedAddColor] = useState<string>("indigo");
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
-    "Basic Shapes": true,
-    "Flowchart": true,
-    "Callouts": false,
-    "My Shapes": false,
-    "AWS": false,
-    "UML": false,
-  });
-
-  const toggleGroupExpanded = (title: string) => {
-    setExpandedGroups(prev => ({ ...prev, [title]: !prev[title] }));
-  };
-
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Undo/Redo & Simulation States
@@ -1608,16 +1586,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const [activeSimNodeId, setActiveSimNodeId] = useState<string | null>(null);
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
-  const [isKeyboardHelpOpen, setIsKeyboardHelpOpen] = useState<boolean>(false);
-  const [hoverCoords, setHoverCoords] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const simCancelRef = useRef<boolean>(false);
-
-  // --- MULTI-FORMAT IMPORTER STATE & LOGIC (Draw.io, Miro) ---
-  const [isImportModalOpen, setIsImportModalOpen] = useState<boolean>(false);
-  const [importType, setImportType] = useState<"native" | "drawio" | "miro">("drawio");
-  const [parsedImportData, setParsedImportData] = useState<{ nodes: FlowNode[]; edges: FlowEdge[] } | null>(null);
-  const [parsedFilename, setParsedFilename] = useState<string>("");
-  const [dragOverImport, setDragOverImport] = useState<boolean>(false);
 
   const decodeHtmlEntity = (htmlText: string): string => {
     if (typeof document === "undefined") return htmlText;
