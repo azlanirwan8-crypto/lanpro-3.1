@@ -1505,7 +1505,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     isImportModalOpen, setIsImportModalOpen, importType, setImportType, parsedImportData,
     setParsedImportData, parsedFilename, setParsedFilename, dragOverImport, setDragOverImport,
     openCreateFlowModal, openEditFlowModal, closeFlowModal, resetFlowFormFields,
-    openUploadDocumentModal, closeUploadDocumentModal, toggleLeftSidebar, toggleRightSidebar,
+    toggleLeftSidebar, toggleRightSidebar,
     toggleShapeDropdown, toggleGroupExpanded, toggleKeyboardHelp, openImportModal, closeImportModal
   } = uiHook;
 

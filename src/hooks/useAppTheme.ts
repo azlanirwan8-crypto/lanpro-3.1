@@ -108,17 +108,27 @@ export function useAppTheme() {
 
   // Toggle fullscreen
   const toggleFullscreen = () => {
-    setIsFullscreen(prev => !prev);
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
   };
 
   // Enter fullscreen
   const enterFullscreen = () => {
-    setIsFullscreen(true);
+    document.documentElement.requestFullscreen().catch((err) => {
+      console.error(`Error attempting to enable fullscreen: ${err.message}`);
+    });
   };
 
   // Exit fullscreen
   const exitFullscreen = () => {
-    setIsFullscreen(false);
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    }
   };
 
   // Watch for system theme changes
