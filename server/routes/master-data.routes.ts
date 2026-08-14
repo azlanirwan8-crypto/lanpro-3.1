@@ -5,7 +5,7 @@
 
 import { Router } from 'express';
 import { verifyGlobalAdmin } from '../middleware/auth';
-import mysqlPool from '../../src/lib/db';
+import db from '../../src/lib/db';
 import crypto from 'crypto';
 
 const router = Router();
@@ -16,7 +16,7 @@ const router = Router();
  */
 router.get("/api/master-data", async (req, res) => {
   try {
-    const connection = await mysqlPool.getConnection();
+    const connection = await db.getConnection();
     const [rows] = await connection.query("SELECT * FROM MasterData ORDER BY `order` ASC");
     connection.release();
     res.json({ status: "success", data: rows });
@@ -35,7 +35,7 @@ router.post("/api/master-data", verifyGlobalAdmin, async (req, res) => {
   try {
     const { id, type, label, color, icon, order, description, fieldType, dropdownOptions, role_type, roleType } = req.body;
     const rType = role_type || roleType || null;
-    const connection = await mysqlPool.getConnection();
+    const connection = await db.getConnection();
 
     const newId = id || crypto.randomUUID();
     const itemLabel = label || type || "Item";
@@ -82,7 +82,7 @@ router.put("/api/master-data/:id", verifyGlobalAdmin, async (req, res) => {
     const { id } = req.params;
     const { label, color, icon, order, description, fieldType, dropdownOptions, role_type, roleType, type } = req.body;
     const rType = role_type || roleType || null;
-    const connection = await mysqlPool.getConnection();
+    const connection = await db.getConnection();
 
     const itemLabel = label !== undefined && label !== null ? label : "Item";
 
@@ -134,7 +134,7 @@ router.delete("/api/master-data/:id", verifyGlobalAdmin, async (req, res) => {
   let connection;
   try {
     const { id } = req.params;
-    connection = await mysqlPool.getConnection();
+    connection = await db.getConnection();
 
     const [rows]: any = await connection.query("SELECT * FROM MasterData WHERE id = ?", [id]);
     if (!rows || rows.length === 0) {

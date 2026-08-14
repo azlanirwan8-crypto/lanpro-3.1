@@ -65,8 +65,8 @@ describe('Stress Test: Optimistic Locking Concurrency (LanPro v1.3)', () => {
 
   afterAll(async () => {
     try {
-      const mysqlPool = (await import('../lib/db')).default;
-      await mysqlPool.end();
+      const db = (await import('../lib/db')).default;
+      await db.end();
     } catch {}
   });
 });

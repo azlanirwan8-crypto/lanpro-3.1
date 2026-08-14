@@ -12,7 +12,7 @@ jest.mock('../../src/lib/db', () => ({
 
 import { authenticateJWT } from './auth';
 import { createMockRequest, createMockResponse, generateTestToken } from '../test/setup';
-import mysqlPool from '../../src/lib/db';
+import db from '../../src/lib/db';
 
 describe('Auth Middleware (H1 Pattern Example)', () => {
   beforeAll(() => {

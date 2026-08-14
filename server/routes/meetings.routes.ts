@@ -6,7 +6,7 @@
 import { Router } from 'express';
 import { authenticateJWT, verifyGlobalAdmin } from '../middleware/auth';
 import { verifyProjectAccess } from '../middleware/rbac';
-import mysqlPool from '../../src/lib/db';
+import db from '../../src/lib/db';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -158,7 +158,7 @@ const upload = multer({ dest: GLOBAL_UPLOADS_DIR });
           const recordingUrl = `/uploads/${safeFileName}`;
 
           // Commit update to Relational Database
-          const connection = await mysqlPool.getConnection();
+          const connection = await db.getConnection();
           await connection.query(
             "UPDATE Meetings SET recording_url = ?, file_size = ?, upload_status = 'UPLOAD_SUCCESS' WHERE id = ?",
             [recordingUrl, originalSize, targetMeetingId]
@@ -218,7 +218,7 @@ const upload = multer({ dest: GLOBAL_UPLOADS_DIR });
         const fileSizeVal = file.size;
 
         // Commit update to Relational Database
-        const connection = await mysqlPool.getConnection();
+        const connection = await db.getConnection();
         await connection.query(
           "UPDATE Meetings SET recording_url = ?, file_size = ?, upload_status = 'UPLOAD_SUCCESS' WHERE id = ?",
           [recordingUrl, fileSizeVal, targetMeetingId]
@@ -260,7 +260,7 @@ const upload = multer({ dest: GLOBAL_UPLOADS_DIR });
     console.log(`[AI PIPELINE] Starting background processing for meeting: ${meetingId}`);
     let connection;
     try {
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       // Set status to EXTRACTING_AUDIO
       await connection.query("UPDATE Meetings SET upload_status = 'EXTRACTING_AUDIO' WHERE id = ?", [meetingId]);
@@ -642,7 +642,7 @@ ${learningSection}`;
   router.get("/api/v1/meetings/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const [rows]: any = await connection.query("SELECT * FROM Meetings WHERE id = ?", [id]);
       connection.release();
       if (!rows || rows.length === 0) {
@@ -659,7 +659,7 @@ ${learningSection}`;
   router.get("/api/v1/meetings/:meetingId/status", async (req, res) => {
     try {
       const { meetingId } = req.params;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const [rows]: any = await connection.query("SELECT id, upload_status, transcript, analysis_result, aiSummary FROM Meetings WHERE id = ?", [meetingId]);
       connection.release();
       
@@ -729,7 +729,7 @@ ${learningSection}`;
   router.post("/api/v1/meetings/:meetingId/cancel", async (req, res) => {
     try {
       const { meetingId } = req.params;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       
       // Update database back to IDLE and clear file attributes so user can upload again
       await connection.query(
@@ -758,7 +758,7 @@ ${learningSection}`;
     try {
       const { meetingId } = req.params;
 
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const [rows]: any = await connection.query("SELECT * FROM Meetings WHERE id = ?", [meetingId]);
       connection.release();
       
@@ -799,7 +799,7 @@ ${learningSection}`;
         return res.status(400).json({ status: "error", message: "ID Meeting (meetingId) diperlukan." });
       }
 
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const [rows]: any = await connection.query("SELECT * FROM Meetings WHERE id = ?", [meetingId]);
       
       if (!rows || rows.length === 0) {
@@ -1350,7 +1350,7 @@ ATURAN KETAT (ANTI-HALUSINASI):
       }
 
       // Simpan langsung ke kolom Meetings jika inginkan persistence
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       await connection.query(
         "UPDATE Meetings SET transcript = ?, aiSummary = ? WHERE id = ?",
         [transcript, jsonStr, id]
@@ -1548,7 +1548,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
   router.get("/api/project-modules", async (req, res) => {
     let connection;
     try {
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const [rows] = await connection.query("SELECT * FROM ProjectModules ORDER BY createdAt DESC");
       res.json({ status: "success", data: rows });
     } catch (error: any) {
@@ -1566,7 +1566,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       if (!projectId || !namaModul) {
         return res.status(400).json({ status: "error", message: "projectId and namaModul are required" });
       }
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       await connection.query(
         "INSERT INTO ProjectModules (id, projectId, namaModul, keterangan, createdAt) VALUES (?, ?, ?, ?, ?)",
         [id || String(Date.now()), projectId, namaModul, keterangan || null, new Date().toISOString()]
@@ -1585,7 +1585,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     try {
       const { id } = req.params;
       const { projectId, namaModul, keterangan } = req.body;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       await connection.query(
         "UPDATE ProjectModules SET projectId = ?, namaModul = ?, keterangan = ? WHERE id = ?",
         [projectId, namaModul, keterangan || null, id]
@@ -1603,7 +1603,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     let connection;
     try {
       const { id } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       await connection.beginTransaction();
       
       // Delete test cases linked to this module
@@ -1630,7 +1630,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     let connection;
     try {
       const { projectId } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const [rows] = await connection.query("SELECT id, projectId, title, description, type, link, fileName, fileType, createdBy, downloadCount, createdAt, updatedAt FROM Documents WHERE projectId = ? ORDER BY createdAt DESC", [projectId]);
       res.json({ status: "success", data: rows });
     } catch (error: any) {
@@ -1645,7 +1645,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     let connection;
     try {
       const { id } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const [rows] = await connection.query("SELECT fileData, fileName, fileType FROM Documents WHERE id = ?", [id]);
       console.log(`[DOWNLOAD DOC] id: ${id}, rows length: ${(rows as any[]).length}`);
       await connection.query("UPDATE Documents SET downloadCount = downloadCount + 1 WHERE id = ?", [id]);
@@ -1667,7 +1667,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       const { projectId } = req.params;
       const { title, description, type, link, fileData, fileName, fileType, createdBy } = req.body;
       const currentUserId = req.user?.id || req.user?.uid || createdBy || "guest";
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const newId = crypto.randomUUID();
       await connection.query(
         "INSERT INTO Documents (id, projectId, title, description, type, link, fileData, fileName, fileType, createdBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -1685,7 +1685,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     let connection;
     try {
       const { id } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
 
       const [rows]: any = await connection.query("SELECT * FROM Documents WHERE id = ?", [id]);
       if (!rows || rows.length === 0) {
@@ -1737,7 +1737,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     let connection;
     try {
       const { id } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
 
       const [rows]: any = await connection.query("SELECT * FROM Documents WHERE id = ?", [id]);
       if (!rows || rows.length === 0) {
@@ -1774,7 +1774,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     let connection;
     try {
       const { projectId } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       const [milestones]: any = await connection.query(
         "SELECT * FROM Milestones WHERE projectId = ? ORDER BY dueDate ASC",
@@ -1853,7 +1853,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       const { name, description, dueDate, sprintIds } = req.body;
       const userId = req.headers['x-user-id'] || req.query.userId || 'guest';
       
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const milestoneId = crypto.randomUUID();
 
       await connection.query(
@@ -1885,7 +1885,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       const { name, description, dueDate, status, sprintIds } = req.body;
       const userId = req.headers['x-user-id'] || 'guest';
       
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       const updates = [];
       const values = [];
@@ -1920,7 +1920,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     try {
       const { id, projectId } = req.params;
       const userId = req.headers['x-user-id'] || 'guest';
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       await createAuditLog(userId as string, projectId, 'DELETE', 'Milestones', id, null, null);
       await connection.query("DELETE FROM Milestones WHERE id = ?", [id]);
@@ -1937,7 +1937,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
   router.get("/api/projects/:projectId/meetings", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { projectId } = req.params;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const [rows] = await connection.query(
         "SELECT id, projectId, title, description, meetingLink, authorId, createdAt, updatedAt, fileName, fileType, file_size FROM Meetings WHERE projectId = ? ORDER BY createdAt DESC",
         [projectId]
@@ -1955,7 +1955,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       const { projectId } = req.params;
       const { title, description, meetingLink, authorId, fileData, fileName, fileType } = req.body;
       const effectiveAuthorId = authorId || req.headers["x-user-id"] || "guest";
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const newId = crypto.randomUUID();
       await connection.query(
         "INSERT INTO Meetings (id, projectId, title, description, meetingLink, authorId, fileData, fileName, fileType) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -1973,7 +1973,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     let connection;
     try {
       const { id } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
 
       const [rows]: any = await connection.query("SELECT * FROM Meetings WHERE id = ?", [id]);
       if (!rows || rows.length === 0) {
@@ -2028,7 +2028,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     let connection;
     try {
       const { id } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const [rows] = await connection.query("SELECT fileData, fileName, fileType FROM Meetings WHERE id = ?", [id]);
       if ((rows as any[]).length > 0) {
          res.json({ status: "success", data: (rows as any[])[0] });
@@ -2046,7 +2046,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     let connection;
     try {
       const { id } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
 
       const [rows]: any = await connection.query("SELECT * FROM Meetings WHERE id = ?", [id]);
       if (!rows || rows.length === 0) {
@@ -2083,7 +2083,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
   router.get("/api/projects/:projectId/meetings/:id/discussionPoints", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { id } = req.params;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const [rows] = await connection.query("SELECT * FROM DiscussionPoints WHERE meetingId = ? ORDER BY createdAt ASC", [id]);
       connection.release();
       res.json({ status: "success", data: rows });
@@ -2098,7 +2098,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       const { id } = req.params;
       const { parentPointId, authorId, assignTo, concern, fitur, system, surrounding, keterangan, tindakanLanjut, status, targetDate, tanggalUpdateStatus } = req.body;
       const effectiveAuthorId = authorId || req.headers["x-user-id"] || "guest";
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const newId = crypto.randomUUID();
       const contentVal = concern || keterangan || "Poin Diskusi";
       try {
@@ -2155,7 +2155,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       if (targetDate !== undefined) { updates.push('targetDate = ?'); values.push(targetDate); }
       if (tanggalUpdateStatus !== undefined) { updates.push('tanggalUpdateStatus = ?'); values.push(tanggalUpdateStatus); }
       
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       if (updates.length > 0) {
         values.push(pointId);
         await connection.query(`UPDATE DiscussionPoints SET ${updates.join(', ')} WHERE id = ?`, values);
@@ -2171,7 +2171,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
   router.delete("/api/projects/:projectId/meetings/:id/discussionPoints/:pointId", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { pointId } = req.params;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       await connection.query("DELETE FROM DiscussionPoints WHERE id = ?", [pointId]);
       connection.release();
       res.json({ status: "success", message: "Point deleted" });
@@ -2185,7 +2185,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
   const getCommentsHandler = async (req: any, res: any) => {
     try {
       const pointId = req.params.pointId || req.params.id;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const [rows] = await connection.query(
         "SELECT * FROM discussion_point_comments WHERE pointId = ? OR point_id = ? ORDER BY createdAt ASC",
         [pointId, pointId]
@@ -2207,7 +2207,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
         return res.status(400).json({ status: "error", message: "Teks komentar wajib diisi." });
       }
 
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const commentId = crypto.randomUUID();
       const effectiveUserId = userId || req.headers["x-user-id"] || "guest";
       const effectiveUserName = userName || "Member";

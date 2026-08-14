@@ -5,7 +5,7 @@
 
 import { Router } from 'express';
 import { verifyGlobalAdmin } from '../middleware/auth';
-import mysqlPool from '../../src/lib/db';
+import db from '../../src/lib/db';
 import path from 'path';
 import fs from 'fs';
 
@@ -22,7 +22,7 @@ const router = Router();
 router.get("/api/test-db", verifyGlobalAdmin, async (req, res) => {
   let connection;
   try {
-    connection = await mysqlPool.getConnection();
+    connection = await db.getConnection();
     await connection.query("SELECT 1 + 1 AS solution");
     res.json({ status: "success", message: "Koneksi ke database MySQL berhasil!" });
   } catch (error: any) {
@@ -54,7 +54,7 @@ router.post("/api/db-query", verifyGlobalAdmin, async (req, res) => {
       return res.status(400).json({ status: "error", message: "DB Explorer hanya mengizinkan satu statement SELECT/SHOW/DESCRIBE read-only." });
     }
 
-    connection = await mysqlPool.getConnection();
+    connection = await db.getConnection();
     const [rows] = await connection.query(trimmed);
 
     res.json({ status: "success", data: rows });
@@ -73,7 +73,7 @@ router.post("/api/db-query", verifyGlobalAdmin, async (req, res) => {
 router.get("/api/db-schema", verifyGlobalAdmin, async (req, res) => {
   let connection;
   try {
-    connection = await mysqlPool.getConnection();
+    connection = await db.getConnection();
     const [tablesRow] = await connection.query("SHOW TABLES");
     const tables = (tablesRow as any[]).map(row => Object.values(row)[0] as string);
 
@@ -125,7 +125,7 @@ router.post("/api/migrate-db", verifyGlobalAdmin, async (req, res) => {
       .replace(/USE .*?;/i, '');
 
     // 3. Eksekusi semua query
-    const connection = await mysqlPool.getConnection();
+    const connection = await db.getConnection();
     await connection.query(cleanSql);
     connection.release();
 

@@ -6,7 +6,7 @@ import path from "path";
 import crypto from "crypto";
 import multer from "multer";
 import { validateFileBuffer, sanitizeFilename } from "../../src/lib/fileSecurity";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 import { verifyProjectAccess } from "../middleware/rbac";
 import { generateContentWithFallback } from "../services/ai.service";
 
@@ -122,7 +122,7 @@ export function setupQARoutes(
       let connection;
       try {
         const { projectId } = req.params;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
         const [rows]: any = await connection.query(
           "SELECT * FROM QATestSuites WHERE projectId = ? ORDER BY uploadedAt DESC",
           [projectId]
@@ -151,7 +151,7 @@ export function setupQARoutes(
         });
       }
 
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const id = crypto.randomUUID();
       const timestamp = new Date().toISOString();
 
@@ -251,7 +251,7 @@ export function setupQARoutes(
           });
         }
 
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
 
         const newSuiteId = `suite-${Date.now()}`;
         const newSuiteName = `${file.originalname.replace(
@@ -347,7 +347,7 @@ export function setupQARoutes(
       try {
         const { projectId } = req.params;
         const suite = req.body;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
         await connection.query(
           `INSERT INTO QATestSuites (id, projectId, name, phase, uploadedBy, uploadedAt, fileName, assignedTo)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -387,7 +387,7 @@ export function setupQARoutes(
       try {
         const { projectId, id } = req.params;
         const suite = req.body;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
         await connection.query(
           `UPDATE QATestSuites SET name = ?, phase = ?, uploadedBy = ?, uploadedAt = ?, fileName = ?, assignedTo = ?
          WHERE id = ? AND projectId = ?`,
@@ -425,7 +425,7 @@ export function setupQARoutes(
       let connection;
       try {
         const { projectId, id } = req.params;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
         await connection.beginTransaction();
 
         await connection.query(
@@ -471,7 +471,7 @@ export function setupQARoutes(
       let connection;
       try {
         const { projectId } = req.params;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
         const [rows]: any = await connection.query(
           "SELECT * FROM QATestCases WHERE projectId = ? ORDER BY rowNum ASC, id ASC",
           [projectId]
@@ -515,7 +515,7 @@ export function setupQARoutes(
       try {
         const { projectId } = req.params;
         const tc = req.body;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
 
         await connection.query(
           `INSERT INTO QATestCases (
@@ -573,7 +573,7 @@ export function setupQARoutes(
       try {
         const { projectId, id } = req.params;
         const tc = req.body;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
 
         await connection.query(
           `UPDATE QATestCases SET
@@ -661,7 +661,7 @@ export function setupQARoutes(
         } = req.body;
         const file = req.file;
 
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
 
         const [existingRows]: any = await connection.query(
           "SELECT * FROM QATestCases WHERE id = ? AND projectId = ?",
@@ -823,7 +823,7 @@ export function setupQARoutes(
       let connection;
       try {
         const { projectId, id } = req.params;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
 
         let logs: any[] = [];
         try {
@@ -884,7 +884,7 @@ export function setupQARoutes(
             .json({ status: "error", message: "Status required" });
         }
 
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
 
         const [tcRows]: any = await connection.query(
           "SELECT * FROM QATestCases WHERE id = ? AND projectId = ?",
@@ -1035,7 +1035,7 @@ export function setupQARoutes(
       let connection;
       try {
         const { projectId, id } = req.params;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
         await connection.query(
           "DELETE FROM QATestCases WHERE id = ? AND projectId = ?",
           [id, projectId]
@@ -1070,7 +1070,7 @@ export function setupQARoutes(
             .json({ status: "error", message: "Body must be an array" });
         }
 
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
         for (const tc of testCases) {
           const [existing]: any = await connection.query(
             "SELECT id FROM QATestCases WHERE id = ?",
@@ -1313,7 +1313,7 @@ Berikan langkah-langkah pengujian (langkah-langkah nyata yang harus dilakukan te
           });
         }
 
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
 
         const [meetingsPromise, documentsPromise, tasksPromise] = await Promise.all(
           [

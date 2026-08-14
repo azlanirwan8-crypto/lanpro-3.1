@@ -1,5 +1,5 @@
 import { Router } from "express";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 import { authenticateJWT } from "../middleware/auth";
 
 const router = Router();
@@ -8,7 +8,7 @@ router.get("/api/audit-logs", authenticateJWT, async (req, res) => {
   let connection;
   try {
     const { projectId, entityName, entityId, limit } = req.query;
-    connection = await mysqlPool.getConnection();
+    connection = await db.getConnection();
     
     let sql = "SELECT a.*, u.displayName as userName FROM AuditLogs a JOIN Users u ON a.userId = u.id";
     const params: any[] = [];

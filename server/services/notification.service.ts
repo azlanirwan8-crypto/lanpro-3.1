@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 
 export const createAutomatedNotification = async (
   arg1: any,
@@ -36,7 +36,7 @@ export const createAutomatedNotification = async (
   }
   let conn;
   try {
-    conn = await mysqlPool.getConnection();
+    conn = await db.getConnection();
     
     let resolvedRecipientId = recipientId;
     const [uCheck]: any = await conn.query("SELECT id, uid FROM Users WHERE id = ? OR uid = ?", [recipientId, recipientId]);
@@ -97,7 +97,7 @@ export const broadcastProjectNotification = async (
   }
   let conn;
   try {
-    conn = await mysqlPool.getConnection();
+    conn = await db.getConnection();
     
     const [members]: any = await conn.query(
       "SELECT userId FROM ProjectMembers WHERE projectId = ?",
@@ -163,7 +163,7 @@ export const sendProjectActivityNotification = async (
   }
   let conn;
   try {
-    conn = await mysqlPool.getConnection();
+    conn = await db.getConnection();
     
     const [actorRows]: any = await conn.query(
       "SELECT displayName, username FROM Users WHERE id = ? OR uid = ?",
@@ -258,7 +258,7 @@ export const sendProjectActivityNotification = async (
 export const checkUpcomingDueDates = async (io: any = null) => {
   let connection;
   try {
-    connection = await mysqlPool.getConnection();
+    connection = await db.getConnection();
     
     const [tasks]: any = await connection.query(
       "SELECT * FROM Tasks WHERE dueDate IS NOT NULL AND status != 'Done' AND assigneeId IS NOT NULL"
@@ -312,7 +312,7 @@ export const createNotification = async (
 ) => {
   let conn;
   try {
-    conn = await mysqlPool.getConnection();
+    conn = await db.getConnection();
     
     // 1. Fetch Task and Parent Epic details
     const [taskRows]: any = await conn.query(

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import path from "path";
 import fs from "fs";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 import { verifyGlobalAdmin } from "../middleware/auth";
 
 const router = Router();
@@ -15,7 +15,7 @@ router.post("/api/db-query", verifyGlobalAdmin, async (req, res) => {
       return res.status(400).json({ status: "error", message: "Query SQL tidak boleh kosong." });
     }
     
-    connection = await mysqlPool.getConnection();
+    connection = await db.getConnection();
     const [rows] = await connection.query(sqlString);
     
     res.json({ status: "success", data: rows });
@@ -31,7 +31,7 @@ router.post("/api/db-query", verifyGlobalAdmin, async (req, res) => {
 router.get("/api/db-schema", verifyGlobalAdmin, async (req, res) => {
   let connection;
   try {
-    connection = await mysqlPool.getConnection();
+    connection = await db.getConnection();
     const [tablesRow] = await connection.query("SHOW TABLES");
     const tables = (tablesRow as any[]).map(row => Object.values(row)[0] as string);
     
@@ -75,7 +75,7 @@ router.post("/api/migrate-db", verifyGlobalAdmin, async (req, res) => {
       .replace(/CREATE DATABASE IF NOT EXISTS.*?;/i, '')
       .replace(/USE .*?;/i, '');
 
-    const connection = await mysqlPool.getConnection();
+    const connection = await db.getConnection();
     await connection.query(cleanSql);
     connection.release();
 

@@ -1,6 +1,6 @@
 import { Express } from "express";
 import crypto from "crypto";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 import { verifyProjectAccess } from "../middleware/rbac";
 
 export function setupSprintsRoutes(
@@ -23,7 +23,7 @@ export function setupSprintsRoutes(
       let connection;
       try {
         const { projectId } = req.params;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
         const [rows] = await connection.query(
           "SELECT * FROM Sprints WHERE projectId = ? ORDER BY startDate ASC",
           [projectId]
@@ -49,7 +49,7 @@ export function setupSprintsRoutes(
       try {
         const { projectId } = req.params;
         const { name, goal, startDate, endDate, status } = req.body;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
 
         const [proj]: any = await connection.query(
           "SELECT category FROM Projects WHERE id = ?",
@@ -123,7 +123,7 @@ export function setupSprintsRoutes(
       let connection;
       try {
         const { id } = req.params;
-        connection = await mysqlPool.getConnection();
+        connection = await db.getConnection();
 
         const [existingSprints]: any = await connection.query(
           "SELECT * FROM Sprints WHERE id = ?",
@@ -186,7 +186,7 @@ export function setupSprintsRoutes(
     async (req, res) => {
       try {
         const { id, projectId } = req.params;
-        const connection = await mysqlPool.getConnection();
+        const connection = await db.getConnection();
         await connection.query("DELETE FROM Sprints WHERE id = ? AND projectId = ?", [
           id,
           projectId,

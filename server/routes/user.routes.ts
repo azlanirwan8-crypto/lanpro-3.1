@@ -3,7 +3,7 @@ import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import multer from "multer";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 import { authenticateJWT, activeUserSessions, verifyGlobalAdmin } from "../middleware/auth";
 import { verifyProjectAccess } from "../middleware/rbac";
 import { hashPassword, verifyPassword } from "../helpers/hash";
@@ -27,7 +27,7 @@ const pubClient: any = null;
 const globalPresence = new Map<string, any>();
 
 const query = async (sql: string, params?: any[]) => {
-  const connection = await mysqlPool.getConnection();
+  const connection = await db.getConnection();
   try {
     const [rows] = await connection.query(sql, params);
     return rows;
@@ -48,7 +48,7 @@ const router = express.Router();
       const decoded = jwt.verify(token, getJwtSecret()) as any;
       const userId = decoded.id;
       
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       await connection.query(
         "UPDATE Users SET lastSeen = ? WHERE id = ?",
         [new Date().toISOString(), userId]
@@ -67,7 +67,7 @@ const router = express.Router();
     try {
       const userId = req.user.id || req.user.uid;
       const nowStr = new Date().toISOString();
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       // Update lastSeen in database
       await connection.query(
@@ -174,7 +174,7 @@ const router = express.Router();
 
       // If Redis has no keys or is not connected, fallback to database lastSeen within 30s
       if (onlineUsers.length === 0) {
-        const connection = await mysqlPool.getConnection();
+        const connection = await db.getConnection();
         try {
           const [rows]: any = await connection.query(
             "SELECT id, uid, username, nama_lengkap, email, displayName, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar_url, COALESCE(avatar_url, photoURL, avatarUrl) AS photoURL, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar, role, status, lastSeen, department, position, permissions, phone FROM Users"
@@ -218,7 +218,7 @@ const router = express.Router();
   router.get("/api/users/:id", async (req, res) => {
     try {
       const { id } = req.params;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const [rows] = await connection.query("SELECT id, uid, username, nama_lengkap, email, displayName, role, status, permissions, phone, department, position, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar_url, COALESCE(avatar_url, photoURL, avatarUrl) AS photoURL, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar, createdAt, lastSeen FROM Users WHERE id = ? OR uid = ?", [id, id]);
       connection.release();
       if ((rows as any[]).length > 0) {
@@ -279,7 +279,7 @@ const router = express.Router();
 
       const avatarUrl = `/uploads/${safeFilename}`;
 
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       await connection.query(
         "UPDATE Users SET avatar_url = ?, photoURL = ?, avatarUrl = ? WHERE id = ? OR uid = ?",
         [avatarUrl, avatarUrl, avatarUrl, id, id]
@@ -350,7 +350,7 @@ const router = express.Router();
         permissions = undefined;
       }
 
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       
       const updates = [];
       const values = [];
@@ -402,7 +402,7 @@ const router = express.Router();
   router.delete("/api/users/:id", authenticateJWT, verifyGlobalAdmin, async (req: any, res) => {
     try {
       const { id } = req.params;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       await connection.query("DELETE FROM Users WHERE id = ?", [id]);
       connection.release();
       res.json({ status: "success", message: "User deleted" });
@@ -417,7 +417,7 @@ const router = express.Router();
       const { id } = req.user;
       const { displayName, username, email, phone, currentPassword, newPassword, photoURL, avatar_url } = req.body;
       const effectiveAvatar = avatar_url || photoURL;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
 
       const [users]: any = await connection.query("SELECT * FROM Users WHERE id = ?", [id]);
       if (users.length === 0) {

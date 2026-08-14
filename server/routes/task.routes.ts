@@ -1,6 +1,6 @@
 import express from "express";
 import crypto from "crypto";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 import { authenticateJWT } from "../middleware/auth";
 import { verifyProjectAccess } from "../middleware/rbac";
 import { createAuditLog } from "../services/audit.service";
@@ -62,7 +62,7 @@ async function generateContentWithFallback(ai: any, options: any) {
         req.user?.displayName
       ].filter(Boolean);
 
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
 
       if (userId) {
         const [uRows]: any = await connection.query(
@@ -214,7 +214,7 @@ async function generateContentWithFallback(ai: any, options: any) {
     let connection;
     try {
       const { projectId } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
 
       const [tasksRows]: any = await connection.query(
         "SELECT * FROM Tasks WHERE projectId = ? ORDER BY orderIndex ASC, createdAt DESC LIMIT 2000",
@@ -278,7 +278,7 @@ async function generateContentWithFallback(ai: any, options: any) {
     try {
       const { projectId } = req.params;
       const { title, description, status, type, priority, assigneeId, reporterId, sprintId, parentId, acceptanceCriteria, storyPoints, projectRisk, customFields, startDate, endDate, attachments } = req.body;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       const newId = crypto.randomUUID();
 
@@ -423,7 +423,7 @@ async function generateContentWithFallback(ai: any, options: any) {
         return res.status(400).json({ status: "error", message: "orderedIds must be an array" });
       }
       
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       await connection.beginTransaction();
       
       for (let i = 0; i < orderedIds.length; i++) {
@@ -562,7 +562,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       const description = req.body.description !== undefined ? xss(req.body.description || "") : undefined;
       const userId = (req as any).user?.id || req.headers['x-user-id'] || 'guest';
       
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       // ============================================
       // 1. Fetch current state for Audit Log & Constraints
@@ -1007,7 +1007,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
     try {
       const { id, projectId } = req.params;
       const userId = (req as any).user?.id || req.headers['x-user-id'] || 'guest';
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       // Get task to check ownership
       const [taskRows]: any = await connection.query("SELECT assigneeId, reporterId FROM Tasks WHERE id = ? AND projectId = ?", [id, projectId]);
@@ -1081,7 +1081,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
         return res.status(400).json({ status: "error", message: "taskIds must be a non-empty array" });
       }
 
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
 
       // Get user role and permissions
       let userRole = 'viewer';
@@ -1156,7 +1156,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
     let connection;
     try {
       const { taskId } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const [rows] = await connection.query(
         "SELECT * FROM Comments WHERE taskId = ? ORDER BY createdAt ASC LIMIT 200",
         [taskId]
@@ -1176,7 +1176,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       const { projectId, taskId } = req.params;
       const { content, authorId } = req.body;
       const effectiveAuthorId = authorId || (req as any).user?.uid || (req as any).user?.id || req.headers["x-user-id"] || "guest";
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       const newId = crypto.randomUUID();
       
@@ -1205,7 +1205,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
     let connection;
     try {
       const { projectId } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const [rows] = await connection.query(
         "SELECT * FROM ActivityLogs WHERE projectId = ? ORDER BY createdAt DESC LIMIT 50",
         [projectId]
@@ -1224,7 +1224,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
     try {
       const { projectId } = req.params;
       const { action, details, userId } = req.body;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       const newId = crypto.randomUUID();
       
@@ -1271,7 +1271,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
         targetUserId = req.params.userId || activeUserId;
       }
       
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       // Support fetching notifications by both db standard id and firebase uid
       const [uCheck]: any = await connection.query(
@@ -1454,7 +1454,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
     try {
       const { userId } = req.params;
       const { type, title, message, relatedId, senderId, read } = req.body;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       const newId = crypto.randomUUID();
       
@@ -1482,7 +1482,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
         return res.status(403).json({ status: "error", message: "Akses ditolak: Anda hanya dapat mengubah notifikasi milik Anda sendiri." });
       }
 
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
 
       const [notifRows]: any = await connection.query("SELECT recipientId FROM Notifications WHERE id = ?", [id]);
       if (notifRows.length === 0) {
@@ -1519,7 +1519,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       if (!matchesCaller(req.user, userId)) {
         return res.status(403).json({ status: "error", message: "Akses ditolak: Anda hanya dapat melihat percakapan Anda sendiri." });
       }
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
        const [rows]: any = await connection.query(
         `SELECT m1.*, 
@@ -1584,7 +1584,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
         return res.status(403).json({ status: "error", message: "Akses ditolak: Anda bukan bagian dari percakapan ini." });
       }
 
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       let rows;
       if (receiverId === "group") {
         [rows] = await connection.query(
@@ -1617,7 +1617,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
       }
 
       const id = crypto.randomUUID();
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       await connection.query(
         "INSERT INTO Messages (id, senderId, receiverId, message, timestamp, `read`) VALUES (?, ?, ?, ?, ?, ?)",
         [id, senderId, receiverId, message, timestamp || new Date().toISOString(), false]
@@ -1643,7 +1643,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
         return res.status(403).json({ status: "error", message: "Akses ditolak: Anda hanya dapat menandai percakapan Anda sendiri sebagai dibaca." });
       }
 
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       await connection.query(
         "UPDATE Messages SET `read` = ? WHERE senderId = ? AND receiverId = ?",
         [1, senderId, receiverId]
@@ -1669,7 +1669,7 @@ function checkUserPermissionBackend(role: string, customPermissions: any, action
         return res.status(403).json({ status: "error", message: "Akses ditolak: Anda hanya dapat melihat notifikasi Anda sendiri." });
       }
 
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const [rows] = await connection.query(
         "SELECT senderId, COUNT(*) as count FROM Messages WHERE receiverId = ? AND `read` = false GROUP BY senderId",
         [userId]
@@ -1792,7 +1792,7 @@ Balasan Anda harus singkat (1-3 kalimat saja) layaknya pesan instan di Slack ata
       // 4. Save simulated reply to Database
       const id = crypto.randomUUID();
       const timestamp = new Date().toISOString();
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       await connection.query(
         "INSERT INTO Messages (id, senderId, receiverId, message, timestamp, `read`) VALUES (?, ?, ?, ?, ?, ?)",
         [id, senderId, receiverId, replyText, timestamp, false]
@@ -1847,7 +1847,7 @@ Balasan Anda harus singkat (1-3 kalimat saja) layaknya pesan instan di Slack ata
     try {
       const { taskId } = req.params;
       const { targetTaskId, relationType } = req.body;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       // Cycle Detection: If A depends on B, we must ensure B does not already depend on A
       // In Gantt, if we add A -> B (Finish-to-Start), B is the target.
@@ -1882,7 +1882,7 @@ Balasan Anda harus singkat (1-3 kalimat saja) layaknya pesan instan di Slack ata
     let connection;
     try {
       const { taskId, linkId } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       // Get targetTaskId first
       const [linkRows] = await connection.query("SELECT * FROM LinkedTasks WHERE id = ?", [linkId]);

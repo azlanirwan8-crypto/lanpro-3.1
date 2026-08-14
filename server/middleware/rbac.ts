@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 import { getJwtSecret } from "./auth";
 
 export const verifyProjectAccess = (allowedRoles: string[]) => {
@@ -33,7 +33,7 @@ export const verifyProjectAccess = (allowedRoles: string[]) => {
         return res.status(403).json({ status: "error", message: "Akses ditolak" });
       }
 
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
 
       const [uRows]: any = await connection.query("SELECT id, role FROM Users WHERE id = ? OR uid = ?", [userId, userId]);
       if (uRows.length > 0) {

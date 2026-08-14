@@ -1,6 +1,6 @@
 import express from "express";
 import crypto from "crypto";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 import { authenticateJWT, verifyGlobalAdmin } from "../middleware/auth";
 import { verifyProjectAccess } from "../middleware/rbac";
 import { createAuditLog } from "../services/audit.service";
@@ -12,7 +12,7 @@ const router = express.Router();
   router.get("/api/projects", async (req: any, res) => {
     let connection;
     try {
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
 
       // Resolve caller identity from the verified JWT — never from a client-supplied
       // ?userId= query param, which previously let any user list any other user's
@@ -89,7 +89,7 @@ const router = express.Router();
         });
       }
       const { ownerId } = req.body;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       
       const pId = crypto.randomUUID();
       const pName = "Bank BNI SDLC Management - Release v2.0";
@@ -364,7 +364,7 @@ const router = express.Router();
   router.get("/api/projects/:id", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { id } = req.params;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const [rows] = await connection.query(
         "SELECT * FROM Projects WHERE id = ?",
         [id]
@@ -408,7 +408,7 @@ const router = express.Router();
     let connection;
     try {
       const { name, description, ownerId, status, projectKey, category } = req.body;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       const newId = crypto.randomUUID();
       const pKey = projectKey || 'PRJ';
@@ -453,7 +453,7 @@ const router = express.Router();
         return res.status(400).json({ status: "error", message: "Layout harus berupa tipe data array." });
       }
 
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const jsonLayout = JSON.stringify(layout);
 
       // Simpan ke dashboard_layout dan dashboardLayout untuk kompatibilitas penuh
@@ -476,7 +476,7 @@ const router = express.Router();
     try {
       const { id } = req.params;
       const { name, description, status, currentSprintId, projectKey, ownerId, category, taskCounter, dashboardLayout } = req.body;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       const updates = [];
       const values = [];
@@ -536,7 +536,7 @@ const router = express.Router();
       // Normalisasi input string agar kompatibel dengan standard data
       const normalizedMethodology = methodology.toString().toUpperCase();
 
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       // 1. Ambil data lama untuk Audit (Gunakan kolom 'category' sesuai schema.sql LanPro)
       const [oldRows]: any = await connection.query("SELECT category FROM Projects WHERE id = ?", [projectId]);
@@ -590,7 +590,7 @@ const router = express.Router();
     let connection;
     try {
       const { projectId } = req.params;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       await connection.beginTransaction();
       
@@ -647,7 +647,7 @@ const router = express.Router();
     try {
       const { id } = req.params;
       const { memberRoles, newMemberId, newMemberRole } = req.body;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       
       // If we are passing full member roles map
       if (memberRoles) {
@@ -749,7 +749,7 @@ const router = express.Router();
   router.delete("/api/projects/:id/members/:userId", authenticateJWT, verifyGlobalAdmin, async (req, res) => {
     try {
       const { id, userId } = req.params;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       
       // Resolve user id first (if they passed firebase uid, get their UUID)
       const [users] = await connection.query(
@@ -786,7 +786,7 @@ const router = express.Router();
     try {
       const { id } = req.params;
       const { emailToInvite } = req.body;
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       
       await connection.query(
         "INSERT INTO ProjectInvites (id, projectId, email) VALUES (?, ?, ?)",

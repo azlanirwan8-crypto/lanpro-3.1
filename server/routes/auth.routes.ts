@@ -1,7 +1,7 @@
 import express from "express";
 import crypto from "crypto";
 import { UAParser } from "ua-parser-js";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 import { authenticateJWT, activeUserSessions, generateToken } from "../middleware/auth";
 import { hashPassword, verifyPassword } from "../helpers/hash";
 import { createAuditLog } from "../services/audit.service";
@@ -41,7 +41,7 @@ function formatUserForAuthResponse(user: any) {
   router.get("/api/auth/verify", authenticateJWT, async (req: any, res) => {
     let connection;
     try {
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const [rows]: any = await connection.query(
         "SELECT * FROM Users WHERE id = ? OR uid = ?",
         [req.user.id || req.user.uid, req.user.uid || req.user.id]
@@ -61,7 +61,7 @@ function formatUserForAuthResponse(user: any) {
   router.post("/api/auth/refresh", authenticateJWT, async (req: any, res) => {
     let connection;
     try {
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const [rows]: any = await connection.query(
         "SELECT * FROM Users WHERE id = ? OR uid = ?",
         [req.user.id || req.user.uid, req.user.uid || req.user.id]
@@ -124,7 +124,7 @@ function formatUserForAuthResponse(user: any) {
     let connection;
     let rows: any[] = [];
     try {
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       const [result]: any = await connection.query(
         "SELECT * FROM Users WHERE username = ? OR email = ?",
         [usernameInput, usernameInput]
@@ -169,7 +169,7 @@ function formatUserForAuthResponse(user: any) {
       const timeStr = formatRemainingTime(remainingMs);
       setImmediate(async () => {
         try {
-          const logConn = await mysqlPool.getConnection();
+          const logConn = await db.getConnection();
           await logConn.query(
             `INSERT INTO AuditLogs (id, userId, projectId, actionType, entityName, entityId, oldValues, newValues)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -205,7 +205,7 @@ function formatUserForAuthResponse(user: any) {
       // Log failed attempt to audit trail
       setImmediate(async () => {
         try {
-          const logConn = await mysqlPool.getConnection();
+          const logConn = await db.getConnection();
           await logConn.query(
             `INSERT INTO AuditLogs (id, userId, projectId, actionType, entityName, entityId, oldValues, newValues)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -275,7 +275,7 @@ function formatUserForAuthResponse(user: any) {
       }
 
       // --- SESSION COLLISION CHECK (Database-backed, no bypass) ---
-      const [dbUsers]: any = await mysqlPool.query("SELECT currentSessionToken, lastSeen FROM Users WHERE id = ?", [userId.toString()]);
+      const [dbUsers]: any = await db.query("SELECT currentSessionToken, lastSeen FROM Users WHERE id = ?", [userId.toString()]);
       const dbUser = dbUsers && dbUsers[0];
       if (dbUser && dbUser.currentSessionToken && !force) {
         // Cek jika sesi aktif belum expired (misal asumsi aktif jika lastActive < 24 jam)
@@ -311,7 +311,7 @@ function formatUserForAuthResponse(user: any) {
       }
 
       // Update database session
-      const [updateResult]: any = await mysqlPool.query(
+      const [updateResult]: any = await db.query(
         "UPDATE Users SET currentSessionToken = ?, lastSeen = ? WHERE id = ?",
         [token, String(Date.now()), userId.toString()]
       );
@@ -374,7 +374,7 @@ function formatUserForAuthResponse(user: any) {
       // Log force logout
       setImmediate(async () => {
         try {
-          const logConn = await mysqlPool.getConnection();
+          const logConn = await db.getConnection();
           await logConn.query(
             `INSERT INTO AuditLogs (id, userId, projectId, actionType, entityName, entityId, oldValues, newValues)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -394,7 +394,7 @@ function formatUserForAuthResponse(user: any) {
       const device = `${osInfo.name || 'Unknown'} ${osInfo.version || ''}`.trim();
 
       // Update database session
-      const [updateResult]: any = await mysqlPool.query(
+      const [updateResult]: any = await db.query(
         "UPDATE Users SET currentSessionToken = ?, lastSeen = ? WHERE id = ?",
         [token, String(Date.now()), userId.toString()]
       );
@@ -436,7 +436,7 @@ function formatUserForAuthResponse(user: any) {
       const userId = req.body?.userId;
       if (userId) {
         activeUserSessions.delete(userId.toString());
-        await mysqlPool.query("UPDATE Users SET currentSessionToken = NULL WHERE id = ?", [userId.toString()]);
+        await db.query("UPDATE Users SET currentSessionToken = NULL WHERE id = ?", [userId.toString()]);
       }
       return res.json({ status: "success" });
     } catch (e) {
@@ -475,7 +475,7 @@ function formatUserForAuthResponse(user: any) {
         return res.status(400).json({ status: "error", message: errorMsg, errors: validationResult.error.flatten().fieldErrors });
       }
 
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
       
       // Check if username is already in use
       const [usernameCheck]: any = await connection.query(

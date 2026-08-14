@@ -19,7 +19,7 @@ import jwt from "jsonwebtoken";
 import xss from "xss";
 
 // ... (existing imports)
-import mysqlPool, { query } from "./src/lib/db";
+import db, { query } from "./src/lib/db";
 import { generateBrdDocx } from "./server/services/docx.service";
 import { validateFileBuffer, sanitizeFilename, generatePresignedUrl, verifyPresignedToken } from "./src/lib/fileSecurity";
 import { createServer } from "http";
@@ -284,7 +284,7 @@ async function startServer() {
     let connection;
     try {
       const { projectId, entityName, entityId, limit } = req.query;
-      connection = await mysqlPool.getConnection();
+      connection = await db.getConnection();
 
       // Non-admin users may only pull audit logs scoped to a project they belong to —
       // never a system-wide dump, and never another project's log by guessing its id.
@@ -659,7 +659,7 @@ async function startServer() {
   // Full System Backup
   app.get("/api/system/backup", verifyGlobalAdmin, async (req, res) => {
     try {
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
       const [tablesRow] = await connection.query("SHOW TABLES");
       const tables = (tablesRow as any[]).map(r => Object.values(r)[0] as string);
       
@@ -707,7 +707,7 @@ async function startServer() {
         }
       }
 
-      const connection = await mysqlPool.getConnection();
+      const connection = await db.getConnection();
 
       for (const [table, rows] of Object.entries(data)) {
         if (!Array.isArray(rows) || rows.length === 0) continue;

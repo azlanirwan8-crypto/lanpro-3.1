@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 
 export interface UserSession {
   token: string;
@@ -69,7 +69,7 @@ export const authenticateJWT = (req: any, res: Response, next: NextFunction) => 
       const userId = user.id || user.uid;
       
       if (userId) {
-        mysqlPool.query("SELECT currentSessionToken FROM Users WHERE id = ?", [userId.toString()])
+        db.query("SELECT currentSessionToken FROM Users WHERE id = ?", [userId.toString()])
           .then(([rows]: any) => {
             if (rows && rows.length > 0) {
               const currentToken = rows[0].currentSessionToken;

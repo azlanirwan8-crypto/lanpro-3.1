@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import mysqlPool from "../../src/lib/db";
+import db from "../../src/lib/db";
 
 export const maskSensitiveData = (data: any): any => {
   if (!data) return data;
@@ -73,7 +73,7 @@ export const createAuditLog = async (
   setImmediate(async () => {
     let logConn: any = null;
     try {
-      logConn = await mysqlPool.getConnection();
+      logConn = await db.getConnection();
       const logId = crypto.randomUUID();
       
       let cleanOld = null;

@@ -1,4 +1,4 @@
-import mysqlPool from '../../src/lib/db';
+import db from '../../src/lib/db';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { hashPassword } from '../helpers/hash';
@@ -8,7 +8,7 @@ export async function runMigrations() {
   if (true) {
     try {
       
-      const checkConn = await mysqlPool.getConnection();
+      const checkConn = await db.getConnection();
       try {
     const addCol = async (table, col, type) => {
       try {

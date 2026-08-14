@@ -3,7 +3,7 @@
  * PostgreSQL (Neon) Adapter — NEON POSTGRESQL ONLY. Local JSON DB DISABLED.
  *
  * Exports identical API surface:
- *   - default export: poolProxy (same as mysqlPool)
+ *   - default export: poolProxy (di-import sebagai `db` di seluruh server)
  *   - query<T>(sql, values?): Promise<T>
  *   - getDbMode(): 'pg' | 'local'
  *   - setDbMode(mode)
