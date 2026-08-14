@@ -23,7 +23,7 @@ const isServerless = !!process.env.VERCEL || !!process.env.AWS_EXECUTION_ENV || 
 const GLOBAL_UPLOADS_DIR = isServerless ? '/tmp/uploads' : path.join(process.cwd(), 'uploads');
 const upload = multer({ dest: GLOBAL_UPLOADS_DIR });
 
-  app.post("/api/v1/meetings/:meetingId/upload-recording", upload.single('recording'), async (req, res) => {
+  router.post("/api/v1/meetings/:meetingId/upload-recording", upload.single('recording'), async (req, res) => {
     // Upload request received (debug log removed for production security)
     try {
       const { meetingId } = req.params;
@@ -250,7 +250,7 @@ const upload = multer({ dest: GLOBAL_UPLOADS_DIR });
     }
   });
 
-  app.post("/api/projects/:projectId/meetings/:id/upload-recording", (req, res) => {
+  router.post("/api/projects/:projectId/meetings/:id/upload-recording", (req, res) => {
     res.redirect(307, `/api/v1/meetings/${req.params.id}/upload-recording`);
   });
 
@@ -638,7 +638,7 @@ ${learningSection}`;
   }
 
   // GET: Retrieve meeting status/details (polling fallback)
-  app.get("/api/v1/meetings/:id", async (req, res) => {
+  router.get("/api/v1/meetings/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const connection = await mysqlPool.getConnection();
@@ -655,7 +655,7 @@ ${learningSection}`;
   });
 
   // GET: Dedicated short-polling endpoint for meeting AI processing status
-  app.get("/api/v1/meetings/:meetingId/status", async (req, res) => {
+  router.get("/api/v1/meetings/:meetingId/status", async (req, res) => {
     try {
       const { meetingId } = req.params;
       const connection = await mysqlPool.getConnection();
@@ -725,7 +725,7 @@ ${learningSection}`;
   });
 
   // POST: Cancel or reset AI meeting background job & upload state
-  app.post("/api/v1/meetings/:meetingId/cancel", async (req, res) => {
+  router.post("/api/v1/meetings/:meetingId/cancel", async (req, res) => {
     try {
       const { meetingId } = req.params;
       const connection = await mysqlPool.getConnection();
@@ -753,7 +753,7 @@ ${learningSection}`;
   });
 
   // POST: Trigger asynchronous background AI pipeline analysis
-  app.post("/api/v1/meetings/:meetingId/analyze", async (req, res) => {
+  router.post("/api/v1/meetings/:meetingId/analyze", async (req, res) => {
     try {
       const { meetingId } = req.params;
 
@@ -791,7 +791,7 @@ ${learningSection}`;
   });
 
   // POST: Multimodal Video/Audio analysis using Gemini API with exact JSON Schema & saves to meeting_details
-  app.post(["/analyze-video", "/api/v1/meetings/:meetingId/analyze-video"], async (req, res) => {
+  router.post(["/analyze-video", "/api/v1/meetings/:meetingId/analyze-video"], async (req, res) => {
     try {
       const meetingId = req.params.meetingId || req.body.meetingId || req.query.meetingId;
       if (!meetingId) {
@@ -1169,7 +1169,7 @@ ${learningSection}`;
     }
   });
 
-  app.post("/api/projects/:projectId/meetings/:id/analyze-transcript", async (req, res) => {
+  router.post("/api/projects/:projectId/meetings/:id/analyze-transcript", async (req, res) => {
     try {
       const { id } = req.params;
       const { transcript, meetingLink } = req.body;
@@ -1369,7 +1369,7 @@ ATURAN KETAT (ANTI-HALUSINASI):
   // ==========================================
   // NOTEBOOKLM INTEGRATION API ENDPOINTS
   // ==========================================
-  app.post("/api/notebooklm/chat", authenticateJWT, async (req: any, res: any) => {
+  router.post("/api/notebooklm/chat", authenticateJWT, async (req: any, res: any) => {
     try {
       const { sources, prompt, history, model } = req.body;
       if (!prompt || !prompt.trim()) {
@@ -1435,7 +1435,7 @@ ATURAN UTAMA:
     }
   });
 
-  app.post("/api/notebooklm/generate-overview", authenticateJWT, async (req: any, res: any) => {
+  router.post("/api/notebooklm/generate-overview", authenticateJWT, async (req: any, res: any) => {
     try {
       const { sources, type = 'summary' } = req.body;
       const apiKey = process.env.GEMINI_API_KEY;
@@ -1495,7 +1495,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.post("/api/notebooklm/generate-audio", authenticateJWT, async (req: any, res: any) => {
+  router.post("/api/notebooklm/generate-audio", authenticateJWT, async (req: any, res: any) => {
     try {
       const { text, voiceName = 'Kore' } = req.body;
       if (!text || !text.trim()) {
@@ -1544,7 +1544,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
   });
 
   // ProjectModules API (Master Data for Modul/Aplikasi)
-  app.get("/api/project-modules", async (req, res) => {
+  router.get("/api/project-modules", async (req, res) => {
     let connection;
     try {
       connection = await mysqlPool.getConnection();
@@ -1558,7 +1558,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.post("/api/project-modules", async (req, res) => {
+  router.post("/api/project-modules", async (req, res) => {
     let connection;
     try {
       const { id, projectId, namaModul, keterangan } = req.body;
@@ -1579,7 +1579,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.put("/api/project-modules/:id", async (req, res) => {
+  router.put("/api/project-modules/:id", async (req, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -1598,7 +1598,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.delete("/api/project-modules/:id", async (req, res) => {
+  router.delete("/api/project-modules/:id", async (req, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -1623,10 +1623,10 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
   });
 
   // Tasks API
-  const { default: taskRoutes } = await import('./server/routes/task.routes.ts');
-  app.use(taskRoutes);
+  const { default: taskRoutes } = await import('./task.routes.ts');
+  router.use(taskRoutes);
 
-  app.get("/api/projects/:projectId/documents", verifyProjectAccess(['*']), async (req, res) => {
+  router.get("/api/projects/:projectId/documents", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { projectId } = req.params;
@@ -1641,7 +1641,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.get("/api/projects/:projectId/documents/:id/download", verifyProjectAccess(['*']), async (req, res) => {
+  router.get("/api/projects/:projectId/documents/:id/download", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -1662,7 +1662,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.post("/api/projects/:projectId/documents", verifyProjectAccess(['*']), async (req: any, res) => {
+  router.post("/api/projects/:projectId/documents", verifyProjectAccess(['*']), async (req: any, res) => {
     try {
       const { projectId } = req.params;
       const { title, description, type, link, fileData, fileName, fileType, createdBy } = req.body;
@@ -1681,7 +1681,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.put("/api/projects/:projectId/documents/:id", verifyProjectAccess(['*']), async (req: any, res) => {
+  router.put("/api/projects/:projectId/documents/:id", verifyProjectAccess(['*']), async (req: any, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -1733,7 +1733,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.delete("/api/projects/:projectId/documents/:id", verifyProjectAccess(['*']), async (req: any, res) => {
+  router.delete("/api/projects/:projectId/documents/:id", verifyProjectAccess(['*']), async (req: any, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -1770,7 +1770,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
   // Milestones API (Hybrid Value-Added)
-  app.get("/api/projects/:projectId/milestones", verifyProjectAccess(['*']), async (req, res) => {
+  router.get("/api/projects/:projectId/milestones", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { projectId } = req.params;
@@ -1846,7 +1846,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.post("/api/projects/:projectId/milestones", verifyProjectAccess(['admin', 'manager', 'head']), async (req, res) => {
+  router.post("/api/projects/:projectId/milestones", verifyProjectAccess(['admin', 'manager', 'head']), async (req, res) => {
     let connection;
     try {
       const { projectId } = req.params;
@@ -1878,7 +1878,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.put("/api/projects/:projectId/milestones/:id", verifyProjectAccess(['admin', 'manager', 'head']), async (req, res) => {
+  router.put("/api/projects/:projectId/milestones/:id", verifyProjectAccess(['admin', 'manager', 'head']), async (req, res) => {
     let connection;
     try {
       const { id, projectId } = req.params;
@@ -1915,7 +1915,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.delete("/api/projects/:projectId/milestones/:id", verifyProjectAccess(['admin', 'head']), async (req, res) => {
+  router.delete("/api/projects/:projectId/milestones/:id", verifyProjectAccess(['admin', 'head']), async (req, res) => {
     let connection;
     try {
       const { id, projectId } = req.params;
@@ -1934,7 +1934,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
   });
 
   // Meetings API
-  app.get("/api/projects/:projectId/meetings", verifyProjectAccess(['*']), async (req, res) => {
+  router.get("/api/projects/:projectId/meetings", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { projectId } = req.params;
       const connection = await mysqlPool.getConnection();
@@ -1950,7 +1950,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.post("/api/projects/:projectId/meetings", verifyProjectAccess(['*']), async (req, res) => {
+  router.post("/api/projects/:projectId/meetings", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { projectId } = req.params;
       const { title, description, meetingLink, authorId, fileData, fileName, fileType } = req.body;
@@ -1969,7 +1969,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.put("/api/projects/:projectId/meetings/:id", verifyProjectAccess(['*']), async (req: any, res) => {
+  router.put("/api/projects/:projectId/meetings/:id", verifyProjectAccess(['*']), async (req: any, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -2024,7 +2024,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.get("/api/projects/:projectId/meetings/:id/download", verifyProjectAccess(['*']), async (req, res) => {
+  router.get("/api/projects/:projectId/meetings/:id/download", verifyProjectAccess(['*']), async (req, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -2042,7 +2042,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.delete("/api/projects/:projectId/meetings/:id", verifyProjectAccess(['*']), async (req: any, res) => {
+  router.delete("/api/projects/:projectId/meetings/:id", verifyProjectAccess(['*']), async (req: any, res) => {
     let connection;
     try {
       const { id } = req.params;
@@ -2080,7 +2080,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
   });
 
   // Discussion Points API
-  app.get("/api/projects/:projectId/meetings/:id/discussionPoints", verifyProjectAccess(['*']), async (req, res) => {
+  router.get("/api/projects/:projectId/meetings/:id/discussionPoints", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { id } = req.params;
       const connection = await mysqlPool.getConnection();
@@ -2093,7 +2093,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.post("/api/projects/:projectId/meetings/:id/discussionPoints", verifyProjectAccess(['*']), async (req, res) => {
+  router.post("/api/projects/:projectId/meetings/:id/discussionPoints", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { id } = req.params;
       const { parentPointId, authorId, assignTo, concern, fitur, system, surrounding, keterangan, tindakanLanjut, status, targetDate, tanggalUpdateStatus } = req.body;
@@ -2137,7 +2137,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.put("/api/projects/:projectId/meetings/:id/discussionPoints/:pointId", verifyProjectAccess(['*']), async (req, res) => {
+  router.put("/api/projects/:projectId/meetings/:id/discussionPoints/:pointId", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { pointId } = req.params;
       const { parentPointId, assignTo, concern, fitur, system, surrounding, keterangan, tindakanLanjut, status, targetDate, tanggalUpdateStatus } = req.body;
@@ -2168,7 +2168,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   });
 
-  app.delete("/api/projects/:projectId/meetings/:id/discussionPoints/:pointId", verifyProjectAccess(['*']), async (req, res) => {
+  router.delete("/api/projects/:projectId/meetings/:id/discussionPoints/:pointId", verifyProjectAccess(['*']), async (req, res) => {
     try {
       const { pointId } = req.params;
       const connection = await mysqlPool.getConnection();
@@ -2236,9 +2236,9 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
     }
   };
 
-  app.get("/api/discussion-points/:pointId/comments", getCommentsHandler);
-  app.get("/api/projects/:projectId/meetings/:meetingId/discussionPoints/:pointId/comments", getCommentsHandler);
-  app.post("/api/discussion-points/:pointId/comments", postCommentHandler);
-  app.post("/api/projects/:projectId/meetings/:meetingId/discussionPoints/:pointId/comments", postCommentHandler);
+  router.get("/api/discussion-points/:pointId/comments", getCommentsHandler);
+  router.get("/api/projects/:projectId/meetings/:meetingId/discussionPoints/:pointId/comments", getCommentsHandler);
+  router.post("/api/discussion-points/:pointId/comments", postCommentHandler);
+  router.post("/api/projects/:projectId/meetings/:meetingId/discussionPoints/:pointId/comments", postCommentHandler);
 
 export default router;
