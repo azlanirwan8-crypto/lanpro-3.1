@@ -879,19 +879,6 @@ function AppContainer() {
   }, []);
 
   const user: any = currentUser;
-  const effectiveRole = useMemo(() => {
-    const usernameLower = (currentUser?.username || currentUserProfile?.username || user?.username || "").toLowerCase().trim();
-    const roleLower = (userRole || currentUser?.role || currentUserProfile?.role || "").toLowerCase().trim();
-    if (usernameLower === "admin" || roleLower === "admin" || roleLower === "administrator" || roleLower === "superadmin") return "admin";
-    if (selectedProject && currentUser?.uid && selectedProject.memberRoles?.[currentUser?.uid]) {
-        const pr = selectedProject.memberRoles[currentUser?.uid];
-        if ((pr || "").toLowerCase() === "admin") return "admin";
-        if (pr === "developer" || pr === "member") return "user";
-        if (pr === "viewer") return "viewer";
-        return pr as AppRole;
-    }
-    return (userRole || "user") as AppRole;
-  }, [userRole, selectedProject, currentUser?.uid, currentUser?.role, currentUser?.username, currentUserProfile?.username]);
 
   // User fetching and profile updates now handled by useAuth hook
   // See src/hooks/useAuth.ts for fetchAllUsers and profile update listeners
