@@ -30,6 +30,7 @@ import { confirmDeleteAlert, showSuccessAlert } from "./lib/sweetalert";
 import { useAppStore } from "./store/useAppStore";
 import { CacheManager } from "./lib/cache";
 import { useMasterData } from "./hooks/useMasterData";
+import { useAuth } from "./hooks/useAuth";
 import { MeetingNotes } from "./features/meeting-notes/MeetingNotes";
 import { WikiView } from "./features/wiki";
 import { NotebookLM } from "./features/notebook-lm";
@@ -567,25 +568,51 @@ function AppContainer() {
   } = useAppStore();
   const { handleAuthApiResponse, triggerNotification } = useAuthNotification();
 
-  // Auth States
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
-  const [userRole, setUserRole] = useState<AppRole | null>(null);
-  const [currentUserProfile, setCurrentUserProfile] =
-    useState<UserProfile | null>(null);
-  const [authView, setAuthView] = useState<"login" | "register">("login");
-  const [socket, setSocket] = useState<any>(null);
-  const [showCollisionModal, setShowCollisionModal] = useState(false);
-  const [activeSessionData, setActiveSessionData] = useState<any>(null);
-  const [pendingLoginCredentials, setPendingLoginCredentials] = useState<any>(null);
+  // Auth Hook - handles all authentication logic
+  const {
+    isLoggedIn,
+    currentUser,
+    userRole,
+    currentUserProfile,
+    authView,
+    setAuthView,
+    socket,
+    setSocket,
+    showCollisionModal,
+    activeSessionData,
+    pendingLoginCredentials,
+    isAuthLoading: hookIsAuthLoading,
+    loginStatusText: hookLoginStatusText,
+    setLoginStatusText: setHookLoginStatusText,
+    effectiveRole,
+    handleLogout,
+    handleLogoutRequest,
+    handleManualLogin,
+    handleRegister,
+  } = useAuth(
+    setSelectedProject,
+    setProjects,
+    setTasks,
+    setSprints,
+    setProjectMembers,
+    setActivityLogs,
+    setCurrentView,
+    setAllUsers,
+    setNewTaskStatus,
+    setNewTaskPriority,
+    setMasterData,
+    setConfirmAction,
+  );
 
   // UI States & Controls
   const [swimlaneType, setSwimlaneType] = useState<
     "epics" | "assignees" | "none"
   >("epics");
   const [loading, setLoading] = useState(true);
-  const [loginStatusText, setLoginStatusText] = useState<string>("Authenticating...");
-  const [isAuthLoading, setIsAuthLoading] = useState(false);
+  // Auth-related state now managed by useAuth hook
+  const loginStatusText = hookLoginStatusText;
+  const setLoginStatusText = setHookLoginStatusText;
+  const isAuthLoading = hookIsAuthLoading;
   const [isInitialDataLoading, setIsInitialDataLoading] = useState(false);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [qaInitialStatusFilter, setQaInitialStatusFilter] = useState<"ALL" | "Passed" | "Failed" | "Blocked" | "Retest" | "Pending">("ALL");
