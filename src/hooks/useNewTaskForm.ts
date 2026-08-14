@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { format } from "date-fns";
 
+/**
+ * useNewTaskForm
+ * Manages task creation form state
+ * - All 16 task field states (title, assignee, type, dates, description, etc.)
+ * - resetForm() helper to clear form after task creation
+ * - Default values for start/end dates
+ */
 export const useNewTaskForm = () => {
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newTaskAssigneeId, setNewTaskAssigneeId] = useState("");

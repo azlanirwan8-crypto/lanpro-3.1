@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
 
+/**
+ * useAppSync
+ * Manages socket connection and sync state
+ * - Socket connected status
+ * - API latency monitoring with health checks
+ * - Sync operation state
+ * - Cache statistics and last sync time
+ * - Latency status categorization (excellent/warning/poor/offline)
+ */
 export const useAppSync = () => {
   const [socketConnected, setSocketConnected] = useState(false);
   const [apiLatency, setApiLatency] = useState<number | null>(null);

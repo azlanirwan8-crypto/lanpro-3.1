@@ -1,5 +1,12 @@
 import { useState } from "react";
 
+/**
+ * useTaskSelection
+ * Manages task selection state for bulk operations
+ * - Track selected task IDs in a Set
+ * - Helper functions: toggleTaskSelection, selectAllTasks, clearSelection, isTaskSelected
+ * - Used for bulk delete, move, and other batch operations
+ */
 export const useTaskSelection = () => {
   const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(
     new Set(),

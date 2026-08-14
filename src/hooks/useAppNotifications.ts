@@ -7,6 +7,14 @@ interface UseAppNotificationsProps {
   currentUserId?: string;
 }
 
+/**
+ * useAppNotifications
+ * Manages notification state and polling
+ * - Fetches notifications from /api/users/:userId/notifications
+ * - Polls every 3 minutes for updates
+ * - Handles click-outside to close dropdown
+ * - Manages QA test filter state
+ */
 export const useAppNotifications = ({ userId, currentUserId }: UseAppNotificationsProps) => {
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);

@@ -1,5 +1,12 @@
 import { useState } from "react";
 
+/**
+ * useAppPagination
+ * Manages pagination and search state (currently unused, available for future use)
+ * - Page states for list/master/backlog views
+ * - Search query states
+ * - Priority filter for backlog
+ */
 export const useAppPagination = () => {
   const [listPage, setListPage] = useState(1);
   const [masterPage, setMasterPage] = useState(1);
