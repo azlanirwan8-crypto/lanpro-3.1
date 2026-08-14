@@ -4564,6 +4564,21 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               >
                 <Download className="w-3.5 h-3.5 text-blue-500" />
               </button>
+              {/*
+                Impor diagram dari Draw.io, Miro, atau JSON.
+                Seluruh alurnya (modal, handler, dan parser Draw.io/Miro
+                sepanjang ~700 baris) sudah ada sejak lama tetapi tidak pernah
+                dapat dijangkau: openImportModal tidak pernah dipanggil dari
+                mana pun, sehingga isImportModalOpen selalu false. Tombol ini
+                yang menyambungkannya.
+              */}
+              <button
+                onClick={openImportModal}
+                className="p-2 text-slate-500 hover:bg-slate-100 hover:text-emerald-600 rounded-xl transition-all flex items-center justify-center active:scale-95"
+                title="Impor Diagram (Draw.io, Miro, atau JSON)"
+              >
+                <Upload className="w-3.5 h-3.5 text-emerald-500" />
+              </button>
 
               {/* Simpan Alur DB */}
               {isWorkspaceEditable ? (
