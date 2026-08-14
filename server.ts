@@ -103,6 +103,21 @@ async function startServer() {
     ? configuredOrigins
     : [...configuredOrigins, "http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5173"];
 
+  // Gagal saat startup, bukan diam-diam saat runtime.
+  //
+  // Bila production dijalankan tanpa ALLOWED_ORIGINS, daftar ini kosong dan
+  // SETIAP koneksi Socket.IO dari browser ditolak: chat, presence, dan update
+  // realtime mati, sementara API HTTP tetap normal — sehingga gejalanya
+  // tampak tidak berhubungan dan sulit dilacak. Lebih baik server menolak
+  // menyala dengan pesan yang jelas.
+  if (isProduction && allowedOrigins.length === 0) {
+    throw new Error(
+      '[CONFIG] ALLOWED_ORIGINS (atau APP_URL) wajib diisi di production. ' +
+      'Tanpa itu seluruh koneksi Socket.IO dari browser akan ditolak. ' +
+      'Contoh: ALLOWED_ORIGINS="https://lanpro.example.com,https://www.lanpro.example.com"'
+    );
+  }
+
   const io = new Server(httpServer, {
     cors: {
       origin: (origin, callback) => {
@@ -184,11 +199,21 @@ async function startServer() {
             defaultSrc: ["'self'"],
             // 'unsafe-inline' pada script masih diperlukan selama bundle
             // memuat inline script; hilangkan setelah beralih ke nonce.
-            scriptSrc: ["'self'", "'unsafe-inline'", "https://apis.google.com"],
+            //
+            // cdn.lordicon.com dimuat oleh <script> di index.html. Tanpa entri
+            // ini seluruh ikon animasi gagal dimuat dan konsol dipenuhi
+            // pelanggaran CSP — terverifikasi saat menjalankan build produksi.
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://apis.google.com", "https://cdn.lordicon.com"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             fontSrc: ["'self'", "data:", "https://fonts.gstatic.com"],
             imgSrc: ["'self'", "data:", "blob:", "https:"],
             connectSrc: ["'self'", "https:", "wss:"],
+            // Aplikasi menyematkan Figma, Google Docs, Zoom, dan pratinjau
+            // berkas (data:/blob:) lewat <iframe>. Tanpa frameSrc, direktif ini
+            // jatuh ke defaultSrc 'self' dan seluruh sematan diblokir.
+            frameSrc: ["'self'", "https:", "data:", "blob:"],
+            mediaSrc: ["'self'", "data:", "blob:", "https:"],
+            workerSrc: ["'self'", "blob:"],
             objectSrc: ["'none'"],
             frameAncestors: ["'none'"],
             baseUri: ["'self'"],
@@ -224,20 +249,39 @@ async function startServer() {
   // Berbeda dari globalLimiter, pembatas ini TIDAK membebaskan localhost —
   // brute force dari mesin lokal tetap brute force, dan pembebasan itu akan
   // membuat pengujian keamanan memberi rasa aman palsu.
-  const authLimiter = rateLimit({
+  const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 menit
-    max: 10,                  // 10 percobaan per IP per jendela waktu
+    max: 10,                  // 10 percobaan gagal per IP per jendela waktu
     message: {
       status: "error",
       message: "Terlalu banyak percobaan masuk. Silakan coba lagi dalam 15 menit.",
     },
     standardHeaders: true,
     legacyHeaders: false,
-    // Percobaan yang berhasil tidak ikut dihitung, sehingga pengguna sah yang
+    // Login yang berhasil tidak ikut dihitung, sehingga pengguna sah yang
     // sesekali salah ketik tidak ikut terkunci.
     skipSuccessfulRequests: true,
   });
-  app.use(["/api/auth/login", "/api/auth/register"], authLimiter);
+  app.use("/api/auth/login", loginLimiter);
+
+  // Register memakai pembatas TERPISAH tanpa skipSuccessfulRequests.
+  //
+  // Pada login, yang perlu dibatasi adalah percobaan GAGAL (tebakan password).
+  // Pada register justru sebaliknya: yang berbahaya adalah percobaan BERHASIL,
+  // karena tiap keberhasilan menambah satu akun. Dengan skipSuccessfulRequests
+  // aktif, registrasi sukses (HTTP 201) tidak pernah dihitung sehingga satu IP
+  // bisa membuat akun tanpa batas.
+  const registerLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 jam
+    max: 5,                   // 5 pendaftaran per IP per jam
+    message: {
+      status: "error",
+      message: "Terlalu banyak pendaftaran dari alamat ini. Silakan coba lagi dalam 1 jam.",
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  app.use("/api/auth/register", registerLimiter);
 
   app.use(express.json({ limit: '100mb' }));
   app.use(express.urlencoded({ extended: true, limit: '100mb' }));
