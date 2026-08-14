@@ -1,5 +1,6 @@
 import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useFlowchartCanvas } from "../../hooks/useFlowchartCanvas";
 import { 
   Plus, Trash2, ArrowRight, Save, RotateCcw, 
   Sparkles, ExternalLink, Eye, Check,
@@ -1473,6 +1474,16 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     );
   };
   const canModifyFlowchart = (fw: FlowchartData) => isAuthor(fw) || isAdmin;
+
+  // Canvas Viewport & Theme Management
+  const canvasHook = useFlowchartCanvas();
+  const {
+    panOffset, setPanOffset, zoomLevel, setZoomLevel, isPanning, setIsPanning,
+    canvasTheme, setCanvasTheme, isSnapToGrid, setIsSnapToGrid,
+    canvasContainerRef, isPanningRef, startCanvasPanning, updatePanOffset, stopCanvasPanning,
+    toggleCanvasTheme, toggleGridSnap, resetZoom, resetPan, resetCanvas, applyGridSnap
+  } = canvasHook;
+
   // Saved Flowcharts list
   const [flowcharts, setFlowcharts] = useState<FlowchartData[]>([]);
   const [selectedFlowId, setSelectedFlowId] = useState<string | null>(null);
@@ -1549,14 +1560,11 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   // Collapsible Responsive Sidebars
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(false);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState<boolean>(false);
-  
-  // Grid Snapping for flexibility and order
-  const [isSnapToGrid, setIsSnapToGrid] = useState<boolean>(true);
 
   // Right-click context menu state for flowchart nodes
   const [nodeContextMenu, setNodeContextMenu] = useState<{ x: number; y: number; nodeId: string } | null>(null);
   const [canvasContextMenu, setCanvasContextMenu] = useState<{ x: number; y: number } | null>(null);
-  
+
   // Custom connection line routing types: bezier (curved), straight (direct), orthogonal (clean right-angles)
   const [connectorType, setConnectorType] = useState<'bezier' | 'straight' | 'orthogonal'>('bezier');
 
@@ -1571,12 +1579,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     initialY: number;
     direction: "se" | "e" | "s";
   } | null>(null);
-
-  // Canvas Viewport Pan & Zoom
-  const [panOffset, setPanOffset] = useState<{ x: number; y: number }>({ x: 50, y: 50 });
-  const [zoomLevel, setZoomLevel] = useState<number>(0.9);
-  const [isPanning, setIsPanning] = useState<boolean>(false);
-  const [panStart, setPanStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   // Drag and Drop (Node moving)
   const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
@@ -1599,9 +1601,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     setExpandedGroups(prev => ({ ...prev, [title]: !prev[title] }));
   };
 
-  const canvasContainerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const isPanningRef = useRef(false);
 
   // Undo/Redo & Simulation States
   const [historyStack, setHistoryStack] = useState<{ nodes: FlowNode[]; edges: FlowEdge[] }[]>([]);
@@ -2384,28 +2384,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const availableEpics = tasks.filter(t => t.type === 'epic');
 
   // Canvas Native Event Listeners for smooth Wheel Zoom/Pan prevention of page scroll
-  useEffect(() => {
-    const container = canvasContainerRef.current;
-    if (!container) return;
-    const handleWheel = (e: WheelEvent) => {
-      // Prevent browser from scrolling the window or scaling the entire page natively
-      e.preventDefault();
-      if (e.ctrlKey || e.metaKey) {
-        const zoomDelta = e.deltaY < 0 ? 0.05 : -0.05;
-        // Native Zoom without constraints to max standard scales
-        setZoomLevel(prev => Math.min(3.0, Math.max(0.2, prev + zoomDelta)));
-      } else {
-        setPanOffset(prev => ({
-          x: prev.x - e.deltaX * 0.8,
-          y: prev.y - e.deltaY * 0.8,
-        }));
-      }
-    };
-    // Non-passive so e.preventDefault works and stops default body wheel scroll completely
-    container.addEventListener("wheel", handleWheel, { passive: false });
-    return () => container.removeEventListener("wheel", handleWheel);
-  }, []);
-
   // Keyboard Shortcuts for extreme flexibility & high-speed diagramming
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -3654,7 +3632,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     }
 
     if (activeTool === 'hand') {
-      startCanvasPanning(e);
+      startCanvasPanning(e.clientX, e.clientY);
       return;
     }
 
@@ -3680,14 +3658,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     });
   };
 
-  const startCanvasPanning = (e: React.MouseEvent) => {
-    setIsPanning(true);
-    isPanningRef.current = true;
-    setPanStart({
-      x: e.clientX - panOffset.x,
-      y: e.clientY - panOffset.y
-    });
-  };
 
   const handleCanvasMouseDown = (e: React.MouseEvent) => {
     setSelectedNodeId(null);
@@ -3695,7 +3665,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     setCopiedNodes([]);
     
     if (activeTool === 'hand' || isSpacePressed || e.button === 1 || e.shiftKey) {
-      startCanvasPanning(e);
+      startCanvasPanning(e.clientX, e.clientY);
     } else if (activeTool === 'select') {
       const rect = canvasContainerRef.current?.getBoundingClientRect();
       if (rect) {
@@ -3903,10 +3873,9 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       }
       setMarqueeBox(null);
     }
-    
+
     if (isPanning) {
-      setIsPanning(false);
-      isPanningRef.current = false;
+      stopCanvasPanning();
     }
     if (draggingNodeId) {
       setDraggingNodeId(null);
