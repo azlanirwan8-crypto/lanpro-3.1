@@ -41,7 +41,8 @@ import type {
 } from "./types";
 import { findSmartRoute } from "./lib/routing";
 import { parseDrawIoXML, parseMiroContent } from "./lib/importers";
-import { colorPaletteHex } from "./constants";
+import { getShapeThemeClasses, getInitials } from "./lib/nodeTheme";
+import { colorPaletteHex, colorPalettes } from "./constants";
 // Diberi akhiran Api karena useFlowchartList() juga mengekspos updateFlowchart
 // dan deleteFlowchart untuk state daftar lokal. Nama berbeda mencegah salah
 // panggil, sekaligus memperjelas mana yang menembak backend.
@@ -2218,86 +2219,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
   const linkedEpic = currentFlowMetadata?.epicTaskId ? tasks.find(t => t.id === currentFlowMetadata.epicTaskId) : null;
 
-  // Styling helper palettes
-  const colorPalettes: Record<string, { bg: string; text: string; border: string; preview: string }> = {
-    yellow: { bg: "bg-amber-50/85 border-amber-300", text: "text-amber-900", border: "border-amber-300", preview: "bg-amber-200" },
-    orange: { bg: "bg-orange-50/80 border-orange-300", text: "text-orange-900", border: "border-orange-300", preview: "bg-orange-200" },
-    pink: { bg: "bg-pink-50/80 border-pink-300", text: "text-pink-900", border: "border-pink-300", preview: "bg-pink-200" },
-    blue: { bg: "bg-blue-50/80 border-blue-300", text: "text-blue-900", border: "border-blue-300", preview: "bg-blue-200" },
-    green: { bg: "bg-emerald-50/80 border-emerald-300", text: "text-emerald-900", border: "border-emerald-300", preview: "bg-emerald-200" },
-    purple: { bg: "bg-purple-50/80 border-purple-300", text: "text-purple-900", border: "border-purple-300", preview: "bg-purple-200" },
-    indigo: { bg: "bg-indigo-50/80 border-indigo-300", text: "text-indigo-900", border: "border-indigo-300", preview: "bg-indigo-200" },
-    sky: { bg: "bg-sky-50/80 border-sky-300", text: "text-sky-900", border: "border-sky-300", preview: "bg-sky-200" },
-    amber: { bg: "bg-amber-50/80 border-amber-400", text: "text-amber-900", border: "border-amber-400", preview: "bg-amber-300" },
-    rose: { bg: "bg-rose-50/80 border-rose-300", text: "text-rose-900", border: "border-rose-300", preview: "bg-rose-200" },
-    violet: { bg: "bg-violet-50/80 border-violet-300", text: "text-violet-900", border: "border-violet-300", preview: "bg-violet-250" },
-    slate: { bg: "bg-slate-50/80 border-slate-300", text: "text-slate-800", border: "border-slate-300", preview: "bg-slate-300" }
-  };
-
-  // Color HEX helper for precision SVG shapes
-  const colorPaletteHexGlobal = colorPaletteHex; // Use the global one
-
-  const getShapeThemeClasses = (node: FlowNode, isSelected: boolean) => {
-    const palette = colorPalettes[node.color] || colorPalettes.indigo;
-    const ringClass = isSelected ? "ring-4 ring-offset-2 ring-violet-500 z-30" : "";
-    
-    let base = "transition-all duration-300 flex flex-col justify-center items-center text-center p-3 select-none";
-    let borderStyleClass = "border-2";
-    if (node.borderStyle === "dashed") borderStyleClass = "border-2 border-dashed";
-    if (node.borderStyle === "none") borderStyleClass = "border-0 shadow-none";
-
-    if (customSvgTypes.includes(node.type as any) || node.type === "parallelogram" || node.type === "diamond" || node.type === "decision") {
-      const customIsSelectedRing = isSelected ? "z-30" : "";
-      return `transition-all duration-300 flex flex-col justify-center items-center text-center p-3 select-none ${palette.text} ${customIsSelectedRing} relative bg-transparent border-0`;
-    }
-
-    if (node.type === "sticky") {
-      return `${base} justify-start text-left p-4 bg-yellow-150 ${palette.bg} ${palette.text} border-b-[3px] border-black/15 rounded-md ${ringClass}`;
-    }
-
-    if (node.type === "rect") {
-      return `${base} ${borderStyleClass} rounded-xl ${palette.bg} ${palette.text} ${ringClass}`;
-    }
-
-    if (node.type === "oval") {
-      return `${base} ${borderStyleClass} rounded-full px-6 ${palette.bg} ${palette.text} ${ringClass}`;
-    }
-
-    if (node.type === "circle") {
-      return `${base} ${borderStyleClass} rounded-full aspect-square ${palette.bg} ${palette.text} ${ringClass}`;
-    }
-
-    if (node.type === "cylinder" || node.type === "database") {
-      return `${base} ${borderStyleClass} rounded-t-[20px] rounded-b-[20px] ${palette.bg} ${palette.text} ${ringClass}`;
-    }
-
-    if (node.type === "cloud") {
-      return `${base} ${borderStyleClass} rounded-[28px] ${palette.bg} ${palette.text} ${ringClass}`;
-    }
-
-    if (node.type === "card") {
-      return `${base} border border-slate-200/80 rounded-xl text-left items-start p-4 bg-white/95 backdrop-blur-sm shadow-sm ${palette.text} ${ringClass}`;
-    }
-
-    if (node.type === "document") {
-      return `${base} ${borderStyleClass} rounded-tl-lg rounded-tr-2xl rounded-b-lg ${palette.bg} ${palette.text} ${ringClass}`;
-    }
-
-    if (node.type === "subprocess" || node.type === "predefined") {
-      return `${base} ${borderStyleClass} rounded-lg ${palette.bg} ${palette.text} ${ringClass}`;
-    }
-
-    if (node.type === "actor") {
-      return `${base} ${borderStyleClass} rounded-full aspect-square ${palette.bg} ${palette.text} ${ringClass}`;
-    }
-
-    if (node.type === "folder") {
-      return `${base} ${borderStyleClass} rounded-b-lg rounded-tr-lg ${palette.bg} ${palette.text} ${ringClass}`;
-    }
-
-    return `${base} ${palette.text} border-0 bg-transparent text-left items-start ${ringClass}`;
-  };
-
   // --- DASHBOARD SEARCH, SORT & PAGINATION LOGIC ---
   const filteredFlowcharts = flowcharts.filter(fw => {
     const nameMatch = fw.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -2323,15 +2244,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = sortedFlowcharts.slice(indexOfFirstItem, indexOfLastItem);
-
-  const getInitials = (name?: string) => {
-    if (!name) return "LP";
-    const parts = name.trim().split(/\s+/);
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-    return name.slice(0, 2).toUpperCase();
-  };
 
   const handlePageChange = (pageNumber: number) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
