@@ -240,7 +240,11 @@ router.post("/api/system/db-config/save", verifyGlobalAdmin, async (req, res) =>
   try {
     const { connectionString } = req.body;
     const { updatePoolConfig } = await import('../../src/lib/db');
-    updatePoolConfig({ connectionString });
+    // force: permintaan admin yang eksplisit harus selalu membangun ulang pool,
+    // termasuk saat connection string-nya sama. Itulah cara mendaur ulang pool
+    // yang macet; tanpa force permintaan ini dilewati diam-diam tapi tetap
+    // dilaporkan berhasil.
+    updatePoolConfig({ connectionString, force: true });
     res.json({ status: "success", message: "Konfigurasi PostgreSQL berhasil diperbarui!" });
   } catch (e: any) {
     console.error(e);

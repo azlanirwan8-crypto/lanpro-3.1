@@ -332,11 +332,16 @@ export function setDbMode(_mode: 'mysql' | 'pg' | 'local') {
  * Rebuild dilewati jika string-nya tidak berubah: versi sebelumnya selalu
  * memanggil pgPool.end() lebih dulu, yang membunuh query startup `SELECT 1`
  * yang masih berjalan dan memunculkan peringatan "Cannot connect" palsu.
+ *
+ * Gunakan `force: true` untuk mendaur ulang pool walau string-nya sama —
+ * dipakai admin saat pool macet (koneksi habis, socket putus semua). Tanpa
+ * opsi ini, permintaan reset akan dilewati diam-diam padahal pemanggil
+ * mengira pool sudah dibangun ulang.
  */
-export function updatePoolConfig(config: { connectionString?: string } = {}) {
+export function updatePoolConfig(config: { connectionString?: string; force?: boolean } = {}) {
   const newConnStr = config.connectionString || connectionString;
 
-  if (newConnStr === activeConnectionString) return;
+  if (newConnStr === activeConnectionString && !config.force) return;
 
   const oldPool = pgPool;
   activeConnectionString = newConnStr;

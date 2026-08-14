@@ -217,11 +217,27 @@ try {
     ok('Socket.IO memakai daftar origin terbatas');
   }
 
-  if (/\/api\/auth\/login["'\s,\]]/.test(srv) && /authLimiter/.test(srv)) {
+  // Memeriksa invariannya, bukan nama variabelnya: setiap endpoint auth harus
+  // dipasangi middleware pembatas laju lewat app.use.
+  //
+  // Versi pertama cek ini mencari nama harfiah "authLimiter" dan langsung salah
+  // lapor begitu variabelnya dipecah menjadi loginLimiter dan registerLimiter,
+  // padahal proteksinya justru bertambah kuat.
+  const endpointAuth = [
+    ['/api/auth/login', 'login'],
+    ['/api/auth/register', 'register'],
+  ];
+  const tanpaPembatas = endpointAuth.filter(([path]) => {
+    const re = new RegExp(
+      'app\\.use\\(\\s*(?:\\[[^\\]]*)?["\']' + path.replace(/\//g, '\\/') + '["\'][^)]*?[A-Za-z_$][\\w$]*[Ll]imiter',
+    );
+    return !re.test(srv);
+  });
+  if (tanpaPembatas.length === 0) {
     ok('Endpoint autentikasi punya pembatas laju sendiri');
   } else {
-    fail('Endpoint login tidak punya pembatas laju khusus',
-         'Tambahkan rateLimit ketat pada /api/auth/login dan /register');
+    fail(`Endpoint tanpa pembatas laju: ${tanpaPembatas.map(([, n]) => n).join(', ')}`,
+         'Pasang middleware rateLimit lewat app.use pada endpoint tersebut');
   }
 } catch {
   warn('server.ts tidak terbaca, pemeriksaan konfigurasi dilewati');
