@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, MessageSquare, RotateCcw, CheckCircle2, AlertCircle, Clock, Loader2, Eye, X } from 'lucide-react';
 import { toast } from 'sonner';
-import { apiRequest } from '../../../lib/api';
+import { fetchUsers } from '../services/settings.service';
 
 interface BroadcastItem {
   id: string;
@@ -26,7 +26,7 @@ export const BroadcastMonitor: React.FC<BroadcastMonitorProps> = ({ emailTemplat
   useEffect(() => {
     const fetchUsersForBroadcast = async () => {
       try {
-        const data = await apiRequest('/api/users');
+        const data = await fetchUsers();
         if (data.status === 'success') {
           const users = data.data;
           if (users && users.length > 0) {

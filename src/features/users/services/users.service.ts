@@ -18,6 +18,12 @@ export interface UserApiResponse {
   status: string;
   data?: any;
   message?: string;
+  /**
+   * Dikembalikan endpoint unggah avatar. Sebagian pemanggil memeriksa field
+   * ini alih-alih `status`, karena respons lama tidak selalu menyertakan
+   * `status`.
+   */
+  avatar_url?: string;
 }
 
 /**
@@ -97,5 +103,39 @@ export async function updateUser(
 export async function deleteUser(userId: string): Promise<UserApiResponse> {
   return apiRequest(`/api/users/${userId}`, {
     method: 'DELETE',
+  });
+}
+
+/** Mengambil seluruh pengguna. */
+export async function fetchUsers(): Promise<UserApiResponse> {
+  return apiRequest('/api/users');
+}
+
+/**
+ * Mengunggah foto profil pengguna.
+ *
+ * Memakai FormData, sehingga Content-Type sengaja TIDAK diset — browser perlu
+ * menentukannya sendiri agar boundary multipart-nya benar.
+ */
+export async function uploadAvatar(
+  userId: string,
+  formData: FormData,
+): Promise<UserApiResponse> {
+  return apiRequest(`/api/users/${userId}/avatar`, {
+    method: 'POST',
+    body: formData,
+  });
+}
+
+/**
+ * Memperbarui profil pengguna yang sedang masuk.
+ *
+ * Berbeda dari updateUser: endpoint ini bekerja pada pemilik sesi, bukan pada
+ * pengguna sembarang, sehingga tidak memerlukan hak admin.
+ */
+export async function updateProfile(payload: unknown): Promise<UserApiResponse> {
+  return apiRequest('/api/profile/update', {
+    method: 'PUT',
+    body: payload,
   });
 }

@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import { cn, ensureDate } from '../../lib/utils';
-import { apiRequest } from '../../lib/api';
+import { reorderTasks } from './services/issues.service';
 import { toast } from 'sonner';
 import { format, formatDistanceToNow } from 'date-fns';
 import { id } from 'date-fns/locale';
@@ -67,10 +67,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
     try {
       const orderedIds = reorderedRoots.map(r => r.id);
       
-      const response = await apiRequest(`/api/projects/${selectedProject.id}/tasks/reorder`, {
-        method: "PUT",
-        body: { orderedIds }
-      });
+      const response = await reorderTasks(selectedProject.id, orderedIds);
 
       if (response.status === "success") {
         toast.success("Backlog tasks prioritized successfully!", { id: toastId });

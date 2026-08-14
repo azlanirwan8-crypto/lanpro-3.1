@@ -10,7 +10,13 @@ import {
 import { ResponsiveTable } from "../../components/ResponsiveTable";
 import { cn } from '../../lib/utils';
 import { toast } from 'sonner';
-import { apiRequest } from '../../lib/api';
+import {
+  updateUser,
+  uploadAvatar,
+  fetchUsers,
+  assignUserToProject,
+  removeUserFromProject,
+} from './services/users.service';
 import { DEFAULT_PERMISSIONS as ROLE_DEFAULT_PERMISSIONS, getUserPermissions } from '../../lib/permissions';
 
 interface UserDetailViewProps {
@@ -142,7 +148,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
 
   // Fetch users for Sub-Team / PIC subordinate selection
   useEffect(() => {
-    apiRequest('/api/users')
+    fetchUsers()
       .then(data => {
         if (data) {
           setAvailableUsers(Array.isArray(data) ? data : (data.data || []));
@@ -269,10 +275,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
         formData.append('file', selectedAvatar);
 
         const userId = user.id || user.uid;
-        const uploadData = await apiRequest(`/api/users/${userId}/avatar`, {
-          method: 'POST',
-          body: formData
-        });
+        const uploadData = await uploadAvatar(userId, formData);
 
         if (uploadData && (uploadData.status === 'success' || uploadData.avatar_url)) {
           finalPhotoURL = uploadData.avatar_url || uploadData.data?.avatar_url || uploadData.data?.photoURL || finalPhotoURL;
@@ -312,10 +315,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
         payload.password = editPassword.trim();
       }
 
-      const res = await apiRequest(`/api/users/${user.id || user.uid}`, {
-        method: 'PUT',
-        body: payload
-      });
+      const res = await updateUser(user.id || user.uid, payload);
 
       if (res.status === 'success' || res.data) {
         toast.success(`Data & Hak Akses Pengguna ${editFullName} Berhasil Diperbarui!`);
@@ -343,10 +343,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
 
       const userId = user.id || user.uid;
 
-      const res = await apiRequest(`/api/projects/${p.id}/members`, {
-        method: 'PUT',
-        body: { newMemberId: userId, newMemberRole: selectedAssignProjectRole }
-      });
+      const res = await assignUserToProject(p.id, null, { newMemberId: userId, newMemberRole: selectedAssignProjectRole });
 
       if (res && res.status === 'error') {
         throw new Error(res.message);
@@ -373,9 +370,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
 
       const userId = user.id || user.uid;
 
-      const res = await apiRequest(`/api/projects/${p.id}/members/${userId}`, {
-        method: 'DELETE'
-      });
+      const res = await removeUserFromProject(p.id, null, userId);
 
       if (res && res.status === 'error') {
         throw new Error(res.message);

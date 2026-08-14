@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { User, Mail, Phone, Lock, Eye, EyeOff, Loader2, Save } from "lucide-react";
 import { Button, Input } from "../../components/ui/CoreUI";
-import { apiRequest } from "../../lib/api";
+import { uploadAvatar, updateProfile } from "./services/users.service";
 import { Modal } from "../../components/ui/Modal";
 import { UserAvatar } from "./styles";
 import { UserProfile } from "../../types/user";
@@ -98,10 +98,7 @@ export const ProfileEditModal = ({
         const formData = new FormData();
         formData.append('file', selectedAvatar);
 
-        const uploadData = await apiRequest(`/api/users/${docId}/avatar`, {
-          method: 'POST',
-          body: formData
-        });
+        const uploadData = await uploadAvatar(docId, formData);
 
         if (uploadData && (uploadData.status === 'success' || uploadData.avatar_url)) {
           finalPhotoURL = uploadData.avatar_url || uploadData.data?.avatar_url || uploadData.data?.photoURL || finalPhotoURL;
@@ -120,18 +117,15 @@ export const ProfileEditModal = ({
         setIsUploading(false);
       }
 
-      await apiRequest(`/api/profile/update`, {
-        method: "PUT",
-        body: { 
-          displayName, 
-          username, 
-          email, 
-          phone, 
-          currentPassword: currentPassword || undefined, 
-          newPassword: newPassword || undefined,
-          photoURL: finalPhotoURL,
-          avatar_url: finalPhotoURL
-        },
+      await updateProfile({
+        displayName,
+        username,
+        email,
+        phone,
+        currentPassword: currentPassword || undefined,
+        newPassword: newPassword || undefined,
+        photoURL: finalPhotoURL,
+        avatar_url: finalPhotoURL,
       });
 
       if (onProfileUpdated) {
