@@ -20,6 +20,28 @@ export const colorPaletteHex: Record<string, { bg: string; bgGrad: string; strok
   slate: { bg: "#f8fafc", bgGrad: "#f1f5f9", stroke: "#64748b" }   // slate-50 / slate-100 / slate-500
 };
 
+/**
+ * Palet kelas Tailwind untuk bentuk non-SVG dan untuk petak pemilih warna.
+ *
+ * Pendamping `colorPaletteHex` di atas: yang itu dipakai bentuk SVG presisi
+ * yang butuh nilai HEX, yang ini dipakai bentuk berbasis div yang butuh nama
+ * kelas. Keduanya harus memuat kunci warna yang sama.
+ */
+export const colorPalettes: Record<string, { bg: string; text: string; border: string; preview: string }> = {
+  yellow: { bg: "bg-amber-50/85 border-amber-300", text: "text-amber-900", border: "border-amber-300", preview: "bg-amber-200" },
+  orange: { bg: "bg-orange-50/80 border-orange-300", text: "text-orange-900", border: "border-orange-300", preview: "bg-orange-200" },
+  pink: { bg: "bg-pink-50/80 border-pink-300", text: "text-pink-900", border: "border-pink-300", preview: "bg-pink-200" },
+  blue: { bg: "bg-blue-50/80 border-blue-300", text: "text-blue-900", border: "border-blue-300", preview: "bg-blue-200" },
+  green: { bg: "bg-emerald-50/80 border-emerald-300", text: "text-emerald-900", border: "border-emerald-300", preview: "bg-emerald-200" },
+  purple: { bg: "bg-purple-50/80 border-purple-300", text: "text-purple-900", border: "border-purple-300", preview: "bg-purple-200" },
+  indigo: { bg: "bg-indigo-50/80 border-indigo-300", text: "text-indigo-900", border: "border-indigo-300", preview: "bg-indigo-200" },
+  sky: { bg: "bg-sky-50/80 border-sky-300", text: "text-sky-900", border: "border-sky-300", preview: "bg-sky-200" },
+  amber: { bg: "bg-amber-50/80 border-amber-400", text: "text-amber-900", border: "border-amber-400", preview: "bg-amber-300" },
+  rose: { bg: "bg-rose-50/80 border-rose-300", text: "text-rose-900", border: "border-rose-300", preview: "bg-rose-200" },
+  violet: { bg: "bg-violet-50/80 border-violet-300", text: "text-violet-900", border: "border-violet-300", preview: "bg-violet-250" },
+  slate: { bg: "bg-slate-50/80 border-slate-300", text: "text-slate-800", border: "border-slate-300", preview: "bg-slate-300" }
+};
+
 /** Kelompok bentuk yang tampil di panel pemilih diagram. Data murni. */
 export const DIAGRAM_SHAPE_GROUPS = [
   {
