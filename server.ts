@@ -402,6 +402,31 @@ async function startServer() {
   const { default: meetingsRoutes } = await import('./server/routes/meetings.routes.ts');
   app.use(meetingsRoutes);
 
+  // Kelima berkas di bawah sebelumnya menumpang di dalam meetings.routes.ts.
+  // Urutan mount-nya dipertahankan sama seperti urutan pendaftarannya dulu di
+  // dalam berkas itu — Express memakai rute PERTAMA yang cocok, dan pernah ada
+  // insiden handler yang tidak pernah tereksekusi karena urutan mount berubah
+  // (lihat blok peringatan di db-admin.routes.ts). Tidak ada jalur yang
+  // beririsan antar berkas ini, tetapi urutannya tetap dijaga agar perubahan
+  // ini murni pemindahan.
+  const { default: taskRoutes } = await import('./server/routes/task.routes.ts');
+  app.use(taskRoutes);
+
+  const { default: notebooklmRoutes } = await import('./server/routes/notebooklm.routes.ts');
+  app.use(notebooklmRoutes);
+
+  const { default: projectModulesRoutes } = await import('./server/routes/project-modules.routes.ts');
+  app.use(projectModulesRoutes);
+
+  const { default: documentsRoutes } = await import('./server/routes/documents.routes.ts');
+  app.use(documentsRoutes);
+
+  const { default: milestonesRoutes } = await import('./server/routes/milestones.routes.ts');
+  app.use(milestonesRoutes);
+
+  const { default: discussionPointsRoutes } = await import('./server/routes/discussion-points.routes.ts');
+  app.use(discussionPointsRoutes);
+
   // ==========================================
 // WILAYAH III: Core API Engine (Seluruh rute API dengan prefix /api/ disatukan di sini)
 // ==========================================
