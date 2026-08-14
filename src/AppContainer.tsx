@@ -30,10 +30,11 @@ import { confirmDeleteAlert, showSuccessAlert } from "./lib/sweetalert";
 import { useAppStore } from "./store/useAppStore";
 import { CacheManager } from "./lib/cache";
 import { useMasterData } from "./hooks/useMasterData";
-import { useAuth } from "./hooks/useAuth";
+import { useAuth as useAuthHook } from "./hooks/useAuth";
 import { useAppModals } from "./hooks/useAppModals";
 import { useAppTheme } from "./hooks/useAppTheme";
 import { useAppNotifications } from "./hooks/useAppNotifications";
+import { useAuth as useAuthStore, useUI as useUIStore, useProject as useProjectStore, useNotification as useNotificationStore } from "./store";
 import { useAppUI } from "./hooks/useAppUI";
 import { useAppPagination } from "./hooks/useAppPagination";
 import { useNewTaskForm } from "./hooks/useNewTaskForm";
@@ -1073,9 +1074,13 @@ function AppContainer() {
   const [isAddingExternalLink, setIsAddingExternalLink] = useState(false);
   const [newLinkUrl, setNewLinkUrl] = useState("");
   const [isAddingLink, setIsAddingLink] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<Record<string, number>>(
-    {},
-  );
+
+  // Use store for upload progress
+  const { uploadProgress, setUploadProgress, updateUploadProgress } = useNotificationStore((state) => ({
+    uploadProgress: state.uploadProgress,
+    setUploadProgress: state.setUploadProgress,
+    updateUploadProgress: state.updateUploadProgress,
+  }));
 
   // Linked Tasks states
   const [isAddingTaskLink, setIsAddingTaskLink] = useState(false);
@@ -1086,9 +1091,18 @@ function AppContainer() {
 
   const { selectedTaskIds, setSelectedTaskIds } = useTaskSelection();
 
-  const [projectMembers, setProjectMembers] = useState<UserProfile[]>([]);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [newCommentText, setNewCommentText] = useState("");
+  // Use store for project members and comments
+  const { projectMembers, setProjectMembers } = useProjectStore((state) => ({
+    projectMembers: state.projectMembers,
+    setProjectMembers: state.setProjectMembers,
+  }));
+
+  const { comments, newCommentText, setComments, setNewCommentText } = useNotificationStore((state) => ({
+    comments: state.comments,
+    newCommentText: state.newCommentText,
+    setComments: state.setComments,
+    setNewCommentText: state.setNewCommentText,
+  }));
   const [mentionState, setMentionState] = useState<{
     active: boolean;
     query: string;
