@@ -869,69 +869,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     setRightViewMode("embed");
   };
 
-  // Helper to transform Google Drive / Doc / Sheet / Slides / Figma / URL to interactive preview/embed mode
-  const getEmbedUrl = (url?: string): string => {
-    if (!url) return "";
-    let trimmed = url.trim();
-    
-    // Google Drive File view link (e.g. drive.google.com/file/d/XYZ/view or /edit)
-    if (trimmed.includes("drive.google.com/file/d/")) {
-      if (trimmed.includes("/view")) {
-        return trimmed.replace(/\/view.*$/, "/preview");
-      }
-      if (trimmed.includes("/edit")) {
-        return trimmed.replace(/\/edit.*$/, "/preview");
-      }
-      if (!trimmed.endsWith("/preview")) {
-        return trimmed + "/preview";
-      }
-      return trimmed;
-    }
-
-    // Google Drive Folder link (e.g. drive.google.com/drive/folders/XYZ)
-    if (trimmed.includes("drive.google.com/drive/folders/")) {
-      const folderId = trimmed.split("folders/")[1]?.split("?")[0];
-      if (folderId) {
-        return `https://drive.google.com/embeddedfolderview?id=${folderId}#grid`;
-      }
-    }
-
-    // Check if it's a Google Doc
-    if (trimmed.includes("docs.google.com/document")) {
-      if (trimmed.includes("/edit")) {
-        return trimmed.split("/edit")[0] + "/preview";
-      }
-      if (!trimmed.includes("/preview")) {
-        return trimmed + "/preview";
-      }
-      return trimmed;
-    }
-    
-    // Check if it's a Google Spreadsheet
-    if (trimmed.includes("docs.google.com/spreadsheets")) {
-      if (trimmed.includes("/edit")) {
-        return trimmed.split("/edit")[0] + "/preview?widget=true&headers=false";
-      }
-      return trimmed;
-    }
-
-    // Check if it's a Google Presentation/Slide
-    if (trimmed.includes("docs.google.com/presentation")) {
-      if (trimmed.includes("/edit")) {
-        return trimmed.split("/edit")[0] + "/embed?start=false&loop=false&delayms=3000";
-      }
-      return trimmed;
-    }
-
-    // Figma URL converter
-    if (trimmed.includes("figma.com/file/") || trimmed.includes("figma.com/design/")) {
-      return `https://www.figma.com/embed?embed_host=lanpro&url=${encodeURIComponent(trimmed)}`;
-    }
-
-    // Return direct URL otherwise
-    return trimmed;
-  };
-
   // Select flowchart handler
   const handleSelectFlowchart = (id: string, listToUse?: FlowchartData[]) => {
     const list = listToUse || flowcharts;
@@ -2244,34 +2181,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = sortedFlowcharts.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handlePageChange = (pageNumber: number) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
-  };
-
-  const getPageNumbers = () => {
-    const pages = [];
-    const maxVisible = 5;
-    if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      let start = Math.max(1, currentPage - 2);
-      let end = Math.min(totalPages, currentPage + 2);
-      
-      if (currentPage <= 3) {
-        end = maxVisible;
-      } else if (currentPage >= totalPages - 2) {
-        start = totalPages - maxVisible + 1;
-      }
-      
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-    }
-    return pages;
-  };
 
   const renderDashboard = () => {
     return (
