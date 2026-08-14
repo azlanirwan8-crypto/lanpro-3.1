@@ -1,1 +1,0 @@
-sed -i -e "s/onSave={(value) => updateTaskField(task.id, 'description', value)}/onSave={(value) => { updateTaskField(task.id, 'description', value); setIsEditingDescription(false); }}/g" src/features/issues/TaskDetailModal.tsx
