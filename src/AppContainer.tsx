@@ -1743,16 +1743,14 @@ function AppContainer() {
   };
 
   useEffect(() => {
+    // Initialize modal states when modals open
     if (isSyncModalOpen) {
       setCacheStats(CacheManager.getStats());
     }
-  }, [isSyncModalOpen]);
-
-  useEffect(() => {
     if (isNewSprintModalOpen && !newSprintName) {
       setNewSprintName(`Fase ${sprints.length + 1}`);
     }
-  }, [isNewSprintModalOpen, sprints.length]);
+  }, [isSyncModalOpen, isNewSprintModalOpen, newSprintName, sprints.length]);
 
   const handleCreateSprint = async () => {
     if (!selectedProject) return;
