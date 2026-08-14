@@ -6,7 +6,9 @@ import {
 import { UserProfile, Project, Task, AppRole, MasterData } from '../../types';
 import { UserAvatar } from '../../components/ui/UserAvatar';
 import { toast } from 'sonner';
-import { apiRequest } from '../../lib/api';
+// Diberi alias: komponen sudah punya fungsi lokal bernama fetchTeamTasks yang
+// membungkus state loading dan penanganan unmount.
+import { fetchTeamTasks as fetchTeamTasksApi } from './services/team.service';
 
 export const TeamManagementPanel = ({ 
   projectMembers: propMembers,
@@ -50,7 +52,7 @@ export const TeamManagementPanel = ({
     const fetchTeamTasks = async () => {
       setIsLoadingTasks(true);
       try {
-        const res = await apiRequest(`/api/projects/${selectedProject.id}/team-tasks`);
+        const res = await fetchTeamTasksApi(selectedProject.id);
         if (res.status === "success" && isMounted) {
           setTeamTasks(res.data || []);
         }

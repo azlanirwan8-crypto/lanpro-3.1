@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Task } from '../../types';
 import { IssueListViewProps } from './types';
 import { toast } from 'sonner';
-import { apiRequest } from '../../lib/api';
+import { createTask, resolveUserId } from './services/issues.service';
 
 export const useIssueList = (props: IssueListViewProps) => {
   const { tasks, roots, selectedProject, user, masterData, userRole } = props;
@@ -226,12 +226,7 @@ export const useIssueList = (props: IssueListViewProps) => {
     setIsCreating(true);
     const effectiveUserId = user?.uid || "guest";
     try {
-      await apiRequest(`/api/projects/${selectedProject.id}/tasks`, {
-        method: "POST",
-        headers: { 
-          "x-user-id": effectiveUserId
-        },
-        body: {
+      await createTask(selectedProject.id, effectiveUserId, {
           title: titleToUse,
           status: inlineAddStatus || 'To Do',
           type: inlineAddType.toLowerCase(),
@@ -240,9 +235,8 @@ export const useIssueList = (props: IssueListViewProps) => {
           release: inlineAddRelease || '',
           assigneeId: inlineAddAssigneeId || null,
           reporterId: inlineAddReporterId || activeUid,
-          category: inlineAddCategory || null,
-          dueDate: inlineAddDueDate || null
-        }
+        category: inlineAddCategory || null,
+        dueDate: inlineAddDueDate || null
       });
       
       if (customTitle === undefined) {

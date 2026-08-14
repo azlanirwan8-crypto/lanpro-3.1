@@ -3,7 +3,7 @@ import { HardDrive, Download, Upload, AlertTriangle, Loader2, CheckCircle2, Cloc
 import { Project, Task, Sprint, UserProfile, MasterData, ActivityLog } from '../../types';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { apiRequest } from '../../lib/api';
+import { createBackup, restoreBackup } from './services/backup.service';
 import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
 
 interface ExportItem {
@@ -80,7 +80,7 @@ export const BackupPanel = ({
     toast.info('Memulai proses export database...');
 
     try {
-      const result = await apiRequest('/api/system/backup');
+      const result = await createBackup();
       if (result.status !== 'success') throw new Error(result.message);
       
       const jsonString = JSON.stringify(result.data, null, 2);
@@ -145,10 +145,7 @@ export const BackupPanel = ({
       const text = await selectedFileToRestore.text();
       const data = JSON.parse(text);
       
-      const result = await apiRequest('/api/system/restore', {
-        method: 'POST',
-        body: { data }
-      });
+      const result = await restoreBackup(data);
       
       if (result.status !== 'success') throw new Error(result.message);
       

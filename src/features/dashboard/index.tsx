@@ -65,7 +65,7 @@ import { useDashboard, COLORS } from "./hooks";
 import { styles } from "./styles";
 import { ensureDate } from "../../lib/utils";
 import { cn } from "../../lib/utils";
-import { apiRequest } from "../../lib/api";
+import { fetchMeetings, fetchDocuments, resolveUserId } from "./services/dashboard.service";
 import { motion } from "motion/react";
 
 
@@ -442,9 +442,7 @@ export function DashboardView(props: DashboardViewProps) {
     if (!selectedProject) return;
     const effectiveUserId = currentUser?.uid || "guest";
 
-    apiRequest(`/api/projects/${selectedProject.id}/meetings`, {
-      headers: { "x-user-id": effectiveUserId }
-    })
+    fetchMeetings(selectedProject.id, effectiveUserId)
       .then((data) => {
         if (data.status === "success") {
           setMeetings(data.data.slice(0, 3));
@@ -452,9 +450,7 @@ export function DashboardView(props: DashboardViewProps) {
       })
       .catch(console.error);
 
-    apiRequest(`/api/projects/${selectedProject.id}/documents`, {
-      headers: { "x-user-id": effectiveUserId }
-    })
+    fetchDocuments(selectedProject.id, effectiveUserId)
       .then((data) => {
         if (data.status === "success") {
           setDocuments(data.data.slice(0, 3));

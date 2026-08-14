@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { UserProfile, AppRole, UserPermissions } from '../../types';
 import { DEFAULT_PERMISSIONS } from './types';
-import { apiRequest, isNetworkOrAuthError } from '../../lib/api';
+import { isNetworkOrAuthError } from '../../lib/api';
+import {
+  fetchUsers as fetchUsersApi,
+  updateUser,
+  deleteUser as deleteUserApi,
+} from './services/users.service';
 import { cleanUserPermissions } from '../../lib/permissions';
 
 export const useAdminUsers = () => {
@@ -37,7 +42,7 @@ export const useAdminUsers = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const data = await apiRequest('/api/users');
+      const data = await fetchUsersApi();
       if (data.status === 'success') {
         // Parse permissions if they are string (MySQL JSON type might return as JSON or string)
         const parsedUsers = data.data.map((u: any) => ({
@@ -81,10 +86,7 @@ export const useAdminUsers = () => {
         payload.passwordHash = editPassword.trim();
       }
 
-      const data = await apiRequest(`/api/users/${selectedUser.id}`, {
-        method: 'PUT',
-        body: payload
-      });
+      const data = await updateUser(selectedUser.id, payload);
       if (data.status !== 'success') throw new Error(data.message);
       
       toast.success('User updated successfully');
@@ -115,7 +117,7 @@ export const useAdminUsers = () => {
     }
     setSaving(true);
     try {
-      const data = await apiRequest(`/api/users/${user.id}`, { method: 'DELETE' });
+      const data = await deleteUserApi(user.id);
       if (data.status !== 'success') throw new Error(data.message);
       
       toast.success('User deleted successfully');

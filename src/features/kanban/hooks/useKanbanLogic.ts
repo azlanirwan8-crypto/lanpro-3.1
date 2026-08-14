@@ -2,6 +2,7 @@ import { toast } from 'sonner';
 import { useMemo, useState } from 'react';
 import { KanbanBoardProps } from '../types';
 import { TERMINAL_STATUSES } from '../../../lib/constants';
+import { updateTask, resolveUserId } from '../services/kanban.service';
 
 const checkTaskBlockers = (tasks: any[], taskId: string, targetStatus: string) => {
   const isTerminalStatus = targetStatus.toLowerCase().includes('done') || targetStatus.toLowerCase().includes('completed');
@@ -177,15 +178,7 @@ export const useBoard = (props: KanbanBoardProps, groupBy: "epic" | "assignee" =
       }
 
 
-      const { apiRequest } = await import('../../../lib/api');
-      const effectiveUserId = user?.uid || user?.id || "guest";
-      await apiRequest(`/api/projects/${selectedProject.id}/tasks/${draggableId}`, {
-        method: "PUT",
-        headers: {
-          "x-user-id": effectiveUserId
-        },
-        body: updates
-      });
+      await updateTask(selectedProject.id, draggableId, resolveUserId(user), updates);
 
       if (props.refreshTasks) {
         props.refreshTasks();

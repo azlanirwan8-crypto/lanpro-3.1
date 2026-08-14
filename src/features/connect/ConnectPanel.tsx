@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Server, CheckCircle2, Wifi, Loader2, Database, Save, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
-import { apiRequest } from '../../lib/api';
+import { fetchDbConfig, testDbConfig, saveDbConfig } from './services/connect.service';
 
 export const ConnectPanel = () => {
   const [config, setConfig] = useState({
@@ -18,7 +18,7 @@ export const ConnectPanel = () => {
   useEffect(() => {
     const fetchActiveConfig = async () => {
       try {
-        const json = await apiRequest('/api/system/db-config');
+        const json = await fetchDbConfig();
         if (json.status === 'success' && json.data) {
           setConfig({
             host: json.data.host || 'localhost',
@@ -45,10 +45,7 @@ export const ConnectPanel = () => {
     setTestResult({ status: 'idle', message: '' });
     
     try {
-      const data = await apiRequest('/api/system/db-config', {
-        method: 'POST',
-        body: config
-      });
+      const data = await testDbConfig(config);
       
       if (data.status === 'success') {
         setTestResult({ status: 'success', message: 'Koneksi Berhasil tersambung ke MySQL!' });
@@ -69,10 +66,7 @@ export const ConnectPanel = () => {
     setTestResult({ status: 'idle', message: '' });
     
     try {
-      const data = await apiRequest('/api/system/db-config/save', {
-        method: 'POST',
-        body: config
-      });
+      const data = await saveDbConfig(config);
       
       if (data.status === 'success') {
         setTestResult({ status: 'success', message: 'Konfigurasi database berhasil disimpan & diubah secara Live!' });

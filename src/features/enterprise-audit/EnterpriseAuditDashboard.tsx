@@ -26,7 +26,7 @@ import { toast } from 'sonner';
 import { cn } from '../../lib/utils';
 import { io } from 'socket.io-client';
 
-import { apiRequest } from '../../lib/api';
+import { fetchAuditLogs } from './services/audit.service';
 
 interface EnterpriseAuditDashboardProps {
   selectedProject?: Project | null;
@@ -58,12 +58,11 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
   const fetchLogs = useCallback(async (isSilent = false) => {
     if (!isSilent) setLoading(true);
     try {
-      let url = `/api/audit-logs?limit=${limit}`;
-      if (selectedProject) url += `&projectId=${selectedProject.id}`;
-      // Backend supports filtering by entityName
-      if (entityFilter !== 'All') url += `&entityName=${entityFilter}`;
-      
-      const data = await apiRequest(url);
+      const data = await fetchAuditLogs({
+        limit,
+        projectId: selectedProject?.id,
+        entityName: entityFilter,
+      });
       
       if (data.status === 'success') {
         setLogs(data.data);
