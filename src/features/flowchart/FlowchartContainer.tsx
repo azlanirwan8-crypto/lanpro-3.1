@@ -42,6 +42,15 @@ import type {
 } from "./types";
 import { findSmartRoute } from "./lib/routing";
 import { colorPaletteHex } from "./constants";
+// Diberi akhiran Api karena useFlowchartList() juga mengekspos updateFlowchart
+// dan deleteFlowchart untuk state daftar lokal. Nama berbeda mencegah salah
+// panggil, sekaligus memperjelas mana yang menembak backend.
+import {
+  fetchFlowcharts,
+  createFlowchart as createFlowchartApi,
+  updateFlowchart as updateFlowchartApi,
+  deleteFlowchart as deleteFlowchartApi,
+} from "./services/flowchart.service";
 
 const customSvgTypes = [
   "circle", "oval",
@@ -2261,39 +2270,11 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
     // Sync from backend API documents
     if (selectedProject?.id) {
-      apiRequest(`/api/projects/${selectedProject.id}/documents`)
-        .then((res: any) => {
-          if (res?.data && Array.isArray(res.data)) {
-            const apiFlowcharts = res.data
-              .filter((doc: any) => doc.type === 'flowchart')
-              .map((doc: any) => {
-                let parsedNodes = [];
-                let parsedEdges = [];
-                try {
-                  const payload = JSON.parse(doc.description || '{}');
-                  parsedNodes = payload.nodes || [];
-                  parsedEdges = payload.edges || [];
-                } catch (e) {}
-
-                return {
-                  id: doc.id,
-                  name: doc.title,
-                  category: 'Panduan',
-                  description: doc.description,
-                  nodes: parsedNodes,
-                  edges: parsedEdges,
-                  theme: 'miro',
-                  createdAt: doc.createdAt ? new Date(doc.createdAt).toLocaleDateString('id-ID') : new Date().toLocaleDateString('id-ID'),
-                  createdBy: doc.createdBy || 'Administrator',
-                  lastEditedAt: doc.updatedAt ? new Date(doc.updatedAt).toLocaleString('id-ID') : new Date().toLocaleString('id-ID'),
-                  externalUrl: doc.link || ''
-                };
-              });
-
-            if (apiFlowcharts.length > 0) {
-              setFlowcharts(apiFlowcharts);
-              safeLocalStorage.setItem(listKey, JSON.stringify(apiFlowcharts));
-            }
+      fetchFlowcharts(selectedProject.id)
+        .then((apiFlowcharts) => {
+          if (apiFlowcharts.length > 0) {
+            setFlowcharts(apiFlowcharts);
+            safeLocalStorage.setItem(listKey, JSON.stringify(apiFlowcharts));
           }
         })
         .catch(err => {
@@ -2600,9 +2581,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
     if (selectedProject?.id && !id.startsWith("flow_")) {
       try {
-        await apiRequest(`/api/projects/${selectedProject.id}/documents/${id}`, {
-          method: "DELETE"
-        });
+        await deleteFlowchartApi(selectedProject.id, id);
       } catch (err) {
         console.warn("Could not delete flowchart from API:", err);
       }
@@ -2657,17 +2636,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       // Async sync with backend API
       if (selectedProject?.id) {
         try {
-          const payload = JSON.stringify({ nodes: newFlow.nodes, edges: newFlow.edges });
-          await apiRequest(`/api/projects/${selectedProject.id}/documents`, {
-            method: "POST",
-            body: {
-              title: newFlow.name,
-              description: payload,
-              type: "flowchart",
-              link: newFlow.externalUrl || null,
-              createdBy: newFlow.createdBy
-            }
-          });
+          await createFlowchartApi(selectedProject.id, newFlow);
         } catch (apiErr) {
           console.warn("API sync error (saved locally):", apiErr);
         }
@@ -2698,14 +2667,11 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       if (selectedProject?.id && editingFlowId && !editingFlowId.startsWith("flow_")) {
         try {
           const foundFlow = updated.find(f => f.id === editingFlowId);
-          const payload = JSON.stringify({ nodes: foundFlow?.nodes || [], edges: foundFlow?.edges || [] });
-          await apiRequest(`/api/projects/${selectedProject.id}/documents/${editingFlowId}`, {
-            method: "PUT",
-            body: {
-              title: flowName.trim(),
-              description: payload,
-              link: flowExternalUrl || null
-            }
+          await updateFlowchartApi(selectedProject.id, editingFlowId, {
+            name: flowName.trim(),
+            nodes: foundFlow?.nodes || [],
+            edges: foundFlow?.edges || [],
+            externalUrl: flowExternalUrl,
           });
         } catch (apiErr) {
           console.warn("API sync error:", apiErr);
