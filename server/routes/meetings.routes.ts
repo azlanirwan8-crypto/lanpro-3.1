@@ -5,7 +5,7 @@
 
 import { Router } from 'express';
 import { authenticateJWT, verifyGlobalAdmin } from '../middleware/auth';
-import { verifyProjectAccess } from '../../src/lib/permissions';
+import { verifyProjectAccess } from '../middleware/rbac';
 import mysqlPool from '../../src/lib/db';
 import multer from 'multer';
 import path from 'path';
@@ -15,6 +15,7 @@ import { exec } from 'child_process';
 import { TERMINAL_STATUSES } from '../../src/lib/constants';
 import { generateBrdDocx } from '../services/docx.service';
 import { validateFileBuffer, sanitizeFilename, generatePresignedUrl, verifyPresignedToken } from '../../src/lib/fileSecurity';
+import taskRoutes from './task.routes';
 
 const router = Router();
 
@@ -1623,7 +1624,6 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
   });
 
   // Tasks API
-  const { default: taskRoutes } = await import('./task.routes.ts');
   router.use(taskRoutes);
 
   router.get("/api/projects/:projectId/documents", verifyProjectAccess(['*']), async (req, res) => {
