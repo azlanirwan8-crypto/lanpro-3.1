@@ -34,6 +34,7 @@ import { useAuth } from "./hooks/useAuth";
 import { useAppModals } from "./hooks/useAppModals";
 import { useAppTheme } from "./hooks/useAppTheme";
 import { useAppNotifications } from "./hooks/useAppNotifications";
+import { useAppUI } from "./hooks/useAppUI";
 import { MeetingNotes } from "./features/meeting-notes/MeetingNotes";
 import { WikiView } from "./features/wiki";
 import { NotebookLM } from "./features/notebook-lm";
@@ -666,6 +667,15 @@ function AppContainer() {
     currentUserId: currentUser?.uid,
   });
 
+  const {
+    isSidebarCollapsed,
+    setIsSidebarCollapsed,
+    isMobileMenuOpen,
+    setIsMobileMenuOpen,
+    isQuickCreateOpen,
+    setIsQuickCreateOpen,
+  } = useAppUI();
+
   const themeDropdownRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -915,17 +925,14 @@ function AppContainer() {
   const [newTaskFigmaUrl, setNewTaskFigmaUrl] = useState<string>("");
   const [newTaskEnvironment, setNewTaskEnvironment] = useState<string>("");
 
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [allProjectTasksForStats, setAllProjectTasksForStats] = useState<
     Task[]
   >([]);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [auditLogSearch, setAuditLogSearch] = useState("");
   const [backlogSearch, setBacklogSearch] = useState("");
   const [backlogPriorityFilter, setBacklogPriorityFilter] =
     useState<string>("all");
-  const [isQuickCreateOpen, setIsQuickCreateOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState<Record<string, boolean>>({});
 
   const wrapAppSubmit = (key: string, fn: () => Promise<void> | void) => async () => {
