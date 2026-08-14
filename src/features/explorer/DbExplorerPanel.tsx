@@ -4,7 +4,16 @@ import { BackupPanel } from '../backup/BackupPanel';
 import { ConnectPanel } from '../connect/ConnectPanel';
 import { cn } from '../../lib/utils';
 import { toast } from 'sonner';
-import { apiRequest } from '../../lib/api';
+import {
+  runQuery,
+  // Diberi alias: komponen sudah punya handler lokal deleteRow dan
+  // fetchDbStatus/fetchSchema yang membungkus state loading dan toast.
+  deleteRow as deleteRowApi,
+  updateRow as updateRowApi,
+  fetchDbStatus as fetchDbStatusApi,
+  fetchSchema as fetchSchemaApi,
+  toggleDbMode,
+} from './services/explorer.service';
 
 export const DbExplorerPanel: React.FC<any> = ({
   selectedProject,
@@ -22,7 +31,12 @@ export const DbExplorerPanel: React.FC<any> = ({
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [activeTable, setActiveTable] = useState<string | null>(null);
-  const [dbMode, setDbMode] = useState<'mysql' | 'local'>('mysql');
+  // Tipe disesuaikan dengan kontrak backend yang sebenarnya: getDbMode() di
+  // src/lib/db.ts mengembalikan 'pg' | 'local' dan pada praktiknya selalu 'pg'.
+  // Sebelumnya dideklarasikan sebagai 'mysql' | 'local', sisa era MySQL —
+  // akibatnya perbandingan dbMode === 'mysql' di handleToggleDbMode tidak
+  // pernah benar. Lihat catatan kode mati di bawah.
+  const [dbMode, setDbMode] = useState<'pg' | 'local'>('pg');
   const [dbHost, setDbHost] = useState('');
   const [switching, setSwitching] = useState(false);
   const [editingRow, setEditingRow] = useState<number | null>(null);
@@ -36,11 +50,7 @@ export const DbExplorerPanel: React.FC<any> = ({
     
     setLoading(true);
     try {
-       const sql = `DELETE FROM ${activeTable} WHERE \`${pkField}\` = '${String(pkValue).replace(/'/g, "''")}'`;
-       const data = await apiRequest('/api/db-query', {
-         method: 'POST',
-         body: { query: sql }
-       });
+       const data = await deleteRowApi(activeTable, pkField, pkValue);
        if (data.status === 'success') {
           toast.success("Baris berhasil dihapus");
           loadTable(activeTable); // refresh
@@ -67,11 +77,7 @@ export const DbExplorerPanel: React.FC<any> = ({
         })
         .join(', ');
         
-      const sql = `UPDATE ${activeTable} SET ${updates} WHERE \`${pkField}\` = '${String(pkValue).replace(/'/g, "''")}'`;
-      const data = await apiRequest('/api/db-query', {
-         method: 'POST',
-         body: { query: sql }
-      });
+      const data = await updateRowApi(activeTable, updates, pkField, pkValue);
       if (data.status === 'success') {
          toast.success("Baris berhasil diupdate");
          setEditingRow(null);
@@ -93,7 +99,7 @@ export const DbExplorerPanel: React.FC<any> = ({
 
   const fetchDbStatus = async () => {
     try {
-      const data = await apiRequest('/api/system/db-status');
+      const data = await fetchDbStatusApi();
       if (data.status === 'success') {
         setDbMode(data.mode);
         setDbHost(data.host);
@@ -103,14 +109,25 @@ export const DbExplorerPanel: React.FC<any> = ({
     }
   };
 
+  /**
+   * KODE MATI — tidak ada tombol yang memanggil fungsi ini.
+   *
+   * Peninggalan era MySQL, ketika aplikasi masih bisa berpindah antara MySQL
+   * dan penyimpanan lokal. src/lib/db.ts kini Neon PostgreSQL saja dan
+   * getDbMode() selalu mengembalikan 'pg', sehingga mode target di bawah tidak
+   * lagi bermakna.
+   *
+   * Sengaja dipertahankan agar penghapusan fitur menjadi keputusan sadar
+   * pemilik repo, bukan efek samping refactor. Bila dihapus, ikut hapus juga:
+   * state dbMode, dbHost, switching, fungsi fetchDbStatus beserta
+   * pemanggilannya di useEffect (yang saat ini menembak API tiap mount tanpa
+   * hasilnya pernah ditampilkan), dan toggleDbMode di explorer.service.ts.
+   */
   const handleToggleDbMode = async () => {
     setSwitching(true);
-    const targetMode = dbMode === 'mysql' ? 'local' : 'mysql';
+    const targetMode = dbMode === 'pg' ? 'local' : 'pg';
     try {
-      const data = await apiRequest('/api/system/db-status', {
-        method: 'POST',
-        body: { mode: targetMode }
-      });
+      const data = await toggleDbMode(targetMode);
       if (data.status === 'success') {
         toast.success(data.message);
         setTimeout(() => {
@@ -128,7 +145,7 @@ export const DbExplorerPanel: React.FC<any> = ({
 
   const fetchSchema = async () => {
     try {
-      const data = await apiRequest('/api/db-schema');
+      const data = await fetchSchemaApi();
       if (data.status === 'success') {
         setSchema(data.tables);
         if (data.stats) {
@@ -153,11 +170,8 @@ export const DbExplorerPanel: React.FC<any> = ({
     setError(null);
     setResult(null);
     try {
-      const data = await apiRequest('/api/db-query', {
-        method: 'POST',
-        body: { query: sqlToRun }
-      });
-      
+      const data = await runQuery(sqlToRun);
+
       if (data.status === 'error') {
         setError(data.message);
       } else {
