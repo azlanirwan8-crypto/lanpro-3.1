@@ -46,8 +46,10 @@ lanpro-3.1/
 `src/` adalah frontend, `server/` adalah backend. Pemisahan itu **sudah ada**.
 Rencana memindahkannya ke `client/` dan `server/` (monorepo formal) sengaja
 **ditunda**: manfaatnya kosmetik, sementara biayanya menulis ulang import di
-219 file di atas codebase yang masih punya 145 error TypeScript — mustahil
-membedakan mana import yang baru rusak dan mana error lama.
+219 file. Ketika keputusan itu diambil codebase masih memuat 145 error
+TypeScript, sehingga mustahil membedakan import yang baru rusak dari error
+lama. `tsc` kini bersih, jadi kalau suatu saat langkah ini diambil, ia bisa
+menjadi jaring pengaman yang bermakna.
 
 ---
 
@@ -164,12 +166,24 @@ namanya `db`.
 ### 3.5 Keamanan lapisan aplikasi
 
 - **CSP** aktif di production, dimatikan di dev agar HMR Vite berfungsi.
+  `frame-src` mengizinkan `https:`, `data:`, dan `blob:` karena aplikasi
+  menyematkan Figma, Google Docs, dan pratinjau berkas lewat iframe;
+  `script-src` mengizinkan `cdn.lordicon.com` yang dimuat `index.html`.
+  Menambah sumber eksternal baru berarti memperbarui direktif ini — dan
+  **wajib diuji dengan menjalankan build produksi**, bukan sekadar memastikan
+  header terkirim.
 - **CORS** Socket.IO memakai daftar origin. Di production hanya
-  `ALLOWED_ORIGINS`/`APP_URL`; bila kosong, lintas-origin ditolak seluruhnya.
-- **Rate limit** berlapis: global 1000/5 menit, dan `authLimiter` khusus
-  `/api/auth/login` dan `/register` sebesar 10 percobaan/15 menit.
-  `authLimiter` **tidak** membebaskan localhost — brute force dari mesin lokal
-  tetap brute force.
+  `ALLOWED_ORIGINS`/`APP_URL`. Bila keduanya kosong, server **menolak menyala**
+  dengan pesan yang jelas — sebelumnya ia menyala normal lalu menolak seluruh
+  koneksi realtime secara senyap.
+- **Rate limit** berlapis dan dipisah sesuai sifat ancamannya:
+  - global 1000/5 menit
+  - `loginLimiter` 10/15 menit, `skipSuccessfulRequests` **aktif** — pada login
+    yang berbahaya adalah percobaan GAGAL
+  - `registerLimiter` 5/jam, `skipSuccessfulRequests` **mati** — pada register
+    justru keberhasilan yang berbahaya, karena tiap sukses menambah satu akun
+  - Keduanya **tidak** membebaskan localhost; brute force dari mesin lokal
+    tetap brute force.
 - **XSS**: React meng-escape secara bawaan dan `react-markdown` tidak
   mengaktifkan `rehype-raw`, sehingga HTML mentah tidak pernah dirender.
   Jangan menambahkan `rehype-raw` tanpa sanitasi.
@@ -232,43 +246,34 @@ Seluruh logika ditulis inline di dalam definisi rute — itulah sebabnya
 `meetings.routes.ts` mencapai 2.244 baris. Struktur direktorinya sudah benar,
 tetapi isinya menumpuk di tempat yang salah.
 
-### 5.2 128 error TypeScript — CI merah, dan 11 endpoint rusak
+### 5.2 ~~128 error TypeScript — CI merah~~ SELESAI 14 Agu 2026
 
-```
-119  server/routes/meetings.routes.ts
-  3  src/features/flowchart/FlowchartContainer.tsx
-  3  server/routes/project.routes.ts
-  2  src/test/setup.tsx
-  1  server/routes/user.routes.ts
-```
+`tsc --noEmit` bersih (0 error) dan `npm run lint` keluar dengan kode 0.
+Pipeline CI tidak lagi berhenti di tahap pertama.
 
-Penyebab utama: ekstraksi rute dari `server.ts` meninggalkan referensi ke
-simbol yang hanya hidup di scope `server.ts` — `Type` (93x), `io` (10x),
-`GoogleGenAI` (6x), `generateContentWithFallback` (6x), `createAuditLog` (3x).
+Dua penyebabnya:
 
-**Ini bukan sekadar CI merah.** Error-nya berjenis "Cannot find name", kelas
-yang sama dengan bug yang membuat `AppContainer` gagal render — nama yang tidak
-terdefinisi menjadi `ReferenceError` saat kode dijalankan. Endpoint berikut
-melempar error begitu dipanggil:
+1. Ekstraksi rute dari `server.ts` meninggalkan referensi ke simbol yang hanya
+   hidup di scope `server.ts` — `Type` (93x), `io` (10x), `GoogleGenAI` (6x),
+   `generateContentWithFallback` (6x), `createAuditLog` (3x).
+2. `FlowNode` terduplikasi di **empat** tempat dengan dua bentuk berbeda: dua
+   memakai `type: string` yang longgar, dua memakai union 68 bentuk. Kini
+   seluruhnya bersumber dari `src/features/flowchart/types.ts`.
 
-| Endpoint | Fitur |
-|---|---|
-| `POST/PUT/DELETE /api/projects/:id/milestones` | Roadmap & Timeline |
-| `GET /api/projects/:id/documents/:id/download` | Unduh dokumen |
-| `POST /api/projects/:id/meetings/:id/upload-recording` | Rekaman rapat |
-| `POST /api/projects/:id/meetings/:id/analyze-transcript` | Analisis transkrip |
-| `POST /api/v1/meetings/:id/analyze-video` | Analisis video |
-| `POST /api/v1/meetings/:id/cancel` | Batalkan proses |
-| `POST /api/notebooklm/chat` | NotebookLM |
-| `POST /api/notebooklm/generate-audio` | NotebookLM |
-| `POST /api/notebooklm/generate-overview` | NotebookLM |
+Sebelas endpoint sempat melempar `ReferenceError` begitu dipanggil — milestone
+CRUD (Roadmap & Timeline), unduh dokumen, rekaman dan analisis rapat, serta
+seluruh backend NotebookLM. Semuanya sudah diverifikasi berfungsi lewat
+pemanggilan langsung.
 
-**Dampak pada CI:** `.github/workflows/deploy.yml` menjalankan `npm run lint`,
-sehingga pipeline berhenti di tahap pertama — build, deploy, dan hook Vercel
-tidak pernah berjalan.
+Untuk `io`, lihat `server/config/socket.ts`: sebagian pemancaran event terjadi
+di `runAIPipeline()`, fungsi level-modul yang berjalan setelah response
+terkirim sehingga tidak punya akses ke `req.io`. Registry kecil itu memutus
+lingkaran dependensi antara `server.ts` dan modul rute.
 
-Build tetap sukses karena Vite dan esbuild hanya melakukan transpile, tanpa
-type-check. Inilah alasan kerusakan ini bisa bertahan tanpa terdeteksi.
+**Pelajaran yang tetap berlaku:** build sukses BUKAN bukti kode benar. Vite dan
+esbuild hanya melakukan transpile tanpa type-check, sehingga 128 error dan
+sebelas endpoint rusak dapat bertahan lama tanpa terdeteksi. Jaga
+`npm run lint` tetap hijau agar sinyalnya tidak kembali tenggelam.
 
 ### 5.2b NotebookLM rusak di dua sisi
 
