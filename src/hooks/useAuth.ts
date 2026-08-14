@@ -49,18 +49,18 @@ interface UseAuthReturn {
 }
 
 export function useAuth(
-  setSelectedProject: (project: any) => void,
-  setProjects: (projects: any[]) => void,
-  setTasks: (tasks: any[]) => void,
-  setSprints: (sprints: any[]) => void,
-  setProjectMembers: (members: any[]) => void,
-  setActivityLogs: (logs: any[]) => void,
-  setCurrentView: (view: string) => void,
-  setAllUsers: (users: UserProfile[]) => void,
-  setNewTaskStatus: (status: string) => void,
-  setNewTaskPriority: (priority: string) => void,
-  setMasterData: (data: any[]) => void,
-  setConfirmAction: (action: any) => void,
+  setSelectedProject?: (project: any) => void,
+  setProjects?: (projects: any[]) => void,
+  setTasks?: (tasks: any[]) => void,
+  setSprints?: (sprints: any[]) => void,
+  setProjectMembers?: (members: any[]) => void,
+  setActivityLogs?: (logs: any[]) => void,
+  setCurrentView?: (view: string) => void,
+  setAllUsers?: (users: UserProfile[]) => void,
+  setNewTaskStatus?: (status: string) => void,
+  setNewTaskPriority?: (priority: string) => void,
+  setMasterData?: (data: any[]) => void,
+  setConfirmAction?: (action: any) => void,
 ): UseAuthReturn {
   const { handleAuthApiResponse } = useAuthNotification();
 
@@ -147,13 +147,13 @@ export function useAuth(
     setCurrentUserProfile(null);
     setCurrentUser(null);
     setIsLoggedIn(false);
-    setSelectedProject(null);
-    setProjects([]);
-    setTasks([]);
-    setSprints([]);
-    setProjectMembers([]);
-    setActivityLogs([]);
-    setCurrentView('dashboard');
+    setSelectedProject?.(null);
+    setProjects?.([]);
+    setTasks?.([]);
+    setSprints?.([]);
+    setProjectMembers?.([]);
+    setActivityLogs?.([]);
+    setCurrentView?.('dashboard');
     setAuthView('login');
 
     if (wasLoggedIn && !silent) {
@@ -170,7 +170,7 @@ export function useAuth(
 
   // Logout request with confirmation
   const handleLogoutRequest = () => {
-    setConfirmAction({
+    setConfirmAction?.({
       isOpen: true,
       title: 'Logout Akun',
       message: 'Apakah Anda yakin ingin keluar dari LanPro? Sesi Anda akan diakhiri.',
@@ -266,8 +266,8 @@ export function useAuth(
 
         if (projectsRes?.status === 'success') {
           const projs = projectsRes.data as any[];
-          setProjects(projs);
-          setSelectedProject(projs.length > 0 ? projs[0] : null);
+          setProjects?.(projs);
+          setSelectedProject?.(projs.length > 0 ? projs[0] : null);
         }
 
         if (masterRes?.status === 'success') {
@@ -275,12 +275,12 @@ export function useAuth(
           const uniqueData = Array.from(
             new Map(result.map((m) => [`${m.type}-${m.label}`, m])).values()
           );
-          setMasterData(uniqueData);
+          setMasterData?.(uniqueData);
           if (uniqueData.length > 0) {
             const statuses = uniqueData.filter((d) => d.type === 'status');
             const priorities = uniqueData.filter((d) => d.type === 'priority');
-            if (statuses.length > 0) setNewTaskStatus(statuses[0].label);
-            if (priorities.length > 0) setNewTaskPriority(priorities[0].label);
+            if (statuses.length > 0) setNewTaskStatus?.(statuses[0].label);
+            if (priorities.length > 0) setNewTaskPriority?.(priorities[0].label);
           }
         }
       } catch (e) {
