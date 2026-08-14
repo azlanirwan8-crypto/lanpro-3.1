@@ -24,6 +24,19 @@ jobs:
       - name: Instal Dependensi
         run: npm install
 
+      # Dijalankan SEBELUM lint. Pemeriksaan ini murah, cepat, dan menangkap
+      # kelas kesalahan yang paling mahal bila lolos: rahasia ter-hardcode,
+      # allowlist gitleaks yang membungkam dirinya sendiri, CORS terbuka lebar,
+      # dan hilangnya pembatas laju pada endpoint autentikasi.
+      #
+      # Ditempatkan di depan agar tetap memberi sinyal meski tahap lint di
+      # bawahnya masih merah (lihat ARCHITECTURE.md bagian 5.2).
+      - name: Audit Konfigurasi & Keamanan (Doctor)
+        run: npm run doctor
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
       - name: Validasi Kode (Lint & Type Check)
         run: npm run lint
 
