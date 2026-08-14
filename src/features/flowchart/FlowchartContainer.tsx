@@ -4,6 +4,7 @@ import { useFlowchartCanvas } from "../../hooks/useFlowchartCanvas";
 import { useFlowchartUI } from "../../hooks/useFlowchartUI";
 import { useFlowchartHistory } from "../../hooks/useFlowchartHistory";
 import { useFlowchartSelection } from "../../hooks/useFlowchartSelection";
+import { useFlowchartList } from "../../hooks/useFlowchartList";
 import { 
   Plus, Trash2, ArrowRight, Save, RotateCcw, 
   Sparkles, ExternalLink, Eye, Check,
@@ -1530,12 +1531,22 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     getMarqueeSelectionCount
   } = selectionHook;
 
-  // Saved Flowcharts list
-  const [flowcharts, setFlowcharts] = useState<FlowchartData[]>([]);
-  const [selectedFlowId, setSelectedFlowId] = useState<string | null>(null);
+  // Saved Flowcharts List & Pagination
+  const listHook = useFlowchartList();
+  const {
+    flowcharts, setFlowcharts, selectedFlowId, setSelectedFlowId,
+    isEditorActive, setIsEditorActive, searchQuery, setSearchQuery,
+    currentPage, setCurrentPage, itemsPerPage, setItemsPerPage,
+    sortBy, setSortBy, confirmModal, setConfirmModal,
+    addFlowchart, updateFlowchart, deleteFlowchart, closeConfirmModal,
+    getCurrentFlowchart, getFilteredFlowcharts, getPaginatedFlowcharts,
+    getTotalPages, getTotalCount, resetPagination, resetFilters,
+    selectFlowchart, exitEditor, toggleEditor, addDocumentToFlowchart,
+    removeDocumentFromFlowchart
+  } = listHook;
 
   const currentFlowMetadata = useMemo(() => {
-    return flowcharts.find(f => f.id === selectedFlowId) || null;
+    return getCurrentFlowchart();
   }, [flowcharts, selectedFlowId]);
 
   const isWorkspaceEditable = useMemo(() => {
@@ -1544,25 +1555,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     return canModifyFlowchart(currentFlowMetadata);
   }, [selectedFlowId, currentFlowMetadata, canModifyFlowchart]);
 
-  // Custom confirmation modal state to avoid native window.confirm block
-  const [confirmModal, setConfirmModal] = useState<{
-    isOpen: boolean;
-    title: string;
-    message: string;
-    onConfirm: () => void;
-  }>({
-    isOpen: false,
-    title: "",
-    message: "",
-    onConfirm: () => {}
-  });
-
-  // Dashboard & Navigation states
-  const [isEditorActive, setIsEditorActive] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(5);
-  const [sortBy, setSortBy] = useState<'name' | 'createdAt' | 'lastEditedAt'>('lastEditedAt');
 
   // Drawing States (for currently editing flowchart)
   const [nodes, setNodes] = useState<FlowNode[]>([]);
