@@ -35,6 +35,7 @@ import { useAppModals } from "./hooks/useAppModals";
 import { useAppTheme } from "./hooks/useAppTheme";
 import { useAppNotifications } from "./hooks/useAppNotifications";
 import { useAppUI } from "./hooks/useAppUI";
+import { useAppPagination } from "./hooks/useAppPagination";
 import { MeetingNotes } from "./features/meeting-notes/MeetingNotes";
 import { WikiView } from "./features/wiki";
 import { NotebookLM } from "./features/notebook-lm";
@@ -676,6 +677,21 @@ function AppContainer() {
     setIsQuickCreateOpen,
   } = useAppUI();
 
+  const {
+    listPage,
+    setListPage,
+    masterPage,
+    setMasterPage,
+    backlogPage,
+    setBacklogPage,
+    auditLogSearch,
+    setAuditLogSearch,
+    backlogSearch,
+    setBacklogSearch,
+    backlogPriorityFilter,
+    setBacklogPriorityFilter,
+  } = useAppPagination();
+
   const themeDropdownRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -875,10 +891,6 @@ function AppContainer() {
   // User fetching and profile updates now handled by useAuth hook
   // See src/hooks/useAuth.ts for fetchAllUsers and profile update listeners
 
-  const [listPage, setListPage] = useState(1);
-  const [masterPage, setMasterPage] = useState(1);
-  const [backlogPage, setBacklogPage] = useState(1);
-
   const [expandedSprintId, setExpandedSprintId] = useState<string | null>(null);
   const [isUpdatingTask, setIsUpdatingTask] = useState<Record<string, boolean>>({});
   const [newSprintName, setNewSprintName] = useState("");
@@ -929,10 +941,6 @@ function AppContainer() {
     Task[]
   >([]);
 
-  const [auditLogSearch, setAuditLogSearch] = useState("");
-  const [backlogSearch, setBacklogSearch] = useState("");
-  const [backlogPriorityFilter, setBacklogPriorityFilter] =
-    useState<string>("all");
   const [isSubmitting, setIsSubmitting] = useState<Record<string, boolean>>({});
 
   const wrapAppSubmit = (key: string, fn: () => Promise<void> | void) => async () => {
