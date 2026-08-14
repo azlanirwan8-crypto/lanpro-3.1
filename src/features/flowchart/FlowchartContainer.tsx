@@ -8,14 +8,14 @@ import { useFlowchartList } from "../../hooks/useFlowchartList";
 import { useFlowchartNodes } from "../../hooks/useFlowchartNodes";
 import { 
   Plus, Trash2, ArrowRight, Save, RotateCcw, 
-  Sparkles, ExternalLink, Eye, Check,
-  Workflow, Database as DbIcon, Square, Circle as CircleIcon, 
+  Sparkles, Eye, Check,
+  Workflow, Database as DbIcon, Circle as CircleIcon,
   Layers, MousePointer, Hand,
-  StickyNote, Type, Moon, Sun, Copy, AlignLeft, 
-  AlignCenter, AlignRight, ZoomIn, ZoomOut,
-  Cloud, ChevronDown, Search, BookOpen, Edit3, X, FileText, HelpCircle, Info,
+  StickyNote, Type, Copy,
+  ZoomIn, ZoomOut,
+  Cloud, BookOpen, Edit3, X, FileText, HelpCircle, Info,
   Folder, User, Undo, Redo, Play, Download, RefreshCw, Upload, Image as ImageIcon,
-  LayoutGrid, Undo2, Redo2, Database, Activity, Minus, LayoutTemplate,
+  Undo2, Redo2, Database, Activity, Minus, LayoutTemplate,
   Users,
   Clock,
   CheckCircle,
@@ -24,11 +24,15 @@ import {
 import { toJpeg } from "html-to-image";
 import { Task, Project } from "../../types";
 import { cn } from "../../lib/utils";
-import { ResponsiveTable } from "../../components/ResponsiveTable";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import { ConfirmationModal } from "../../components/ui/ConfirmationModal";
 import { confirmDeleteAlert, showSuccessAlert } from "../../lib/sweetalert";
+import { FlowchartDashboard } from "./components/FlowchartDashboard";
+import { ShapePalette } from "./components/ShapePalette";
+import { ImportDiagramModal } from "./components/ImportDiagramModal";
+import { CanvasToolbar } from "./components/CanvasToolbar";
+import { FlowchartNode } from "./components/FlowchartNode";
+import { FlowchartEdges } from "./components/FlowchartEdges";
 import { FlowchartMinimap } from "./components/FlowchartMinimap";
 import { NodeContextMenu } from "./components/NodeContextMenu";
 import { CanvasContextMenu } from "./components/CanvasContextMenu";
@@ -39,10 +43,8 @@ import type {
   FlowchartData,
   Point,
 } from "./types";
-import { findSmartRoute } from "./lib/routing";
 import { parseDrawIoXML, parseMiroContent } from "./lib/importers";
-import { getShapeThemeClasses, getInitials } from "./lib/nodeTheme";
-import { colorPaletteHex, colorPalettes } from "./constants";
+import { colorPalettes } from "./constants";
 // Diberi akhiran Api karena useFlowchartList() juga mengekspos updateFlowchart
 // dan deleteFlowchart untuk state daftar lokal. Nama berbeda mencegah salah
 // panggil, sekaligus memperjelas mana yang menembak backend.
@@ -52,12 +54,6 @@ import {
   updateFlowchart as updateFlowchartApi,
   deleteFlowchart as deleteFlowchartApi,
 } from "./services/flowchart.service";
-import {
-  customSvgTypes,
-  renderCustomSvgShape,
-  renderMiniPreviewIcon,
-} from "./lib/shapes";
-import { DIAGRAM_SHAPE_GROUPS } from "./constants";
 
 interface FlowchartViewProps {
   selectedProject: Project;
@@ -2182,223 +2178,26 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = sortedFlowcharts.slice(indexOfFirstItem, indexOfLastItem);
 
-  const renderDashboard = () => {
-    return (
-      <div className="flex-1 flex flex-col p-3 md:p-6 font-sans overflow-y-auto w-full bg-[#f4f7f9] animate-in fade-in duration-700">
-        <div className="flex-1 flex flex-col bg-white border border-slate-200/80 rounded-lg shadow-sm overflow-hidden">
-          {/* Dashboard Header matching Meeting Notes */}
-          <div className="p-6 md:p-7 border-b border-slate-200/80 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
-            <div className="flex items-center gap-3.5">
-              <div className="p-3 bg-[#405189]/10 border border-[#405189]/20 rounded-md text-[#405189] shadow-2xs">
-                <Workflow className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-base font-medium text-slate-900 tracking-tight">Flowchart Editor</h3>
-                <p className="text-xs font-medium text-slate-500 mt-0.5">
-                  Manage interactive diagrams, process flows, and visual architecture.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 w-full sm:w-auto">
-              <div className="relative flex-1 sm:w-72">
-                <input
-                  type="text"
-                  placeholder="Search flowcharts by title..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full pl-9 pr-4 py-2 bg-slate-50/60 border border-slate-200/80 rounded-md text-xs placeholder:text-slate-400 outline-none focus:bg-white focus:ring-1 focus:ring-[#405189]/20 focus:border-[#405189] transition-all text-slate-700 font-medium shadow-2xs"
-                />
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              </div>
-
-              <button
-                onClick={openCreateModal}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white rounded-md text-xs font-medium transition-all shadow-xs shadow-[#405189]/20 cursor-pointer shrink-0"
-              >
-                <Plus className="w-4 h-4" /> Add Flowchart
-              </button>
-            </div>
-          </div>
-
-          <div className="flex-1 flex flex-col min-h-0 bg-white">
-            {/* Data Table */}
-            <div className="flex-1 overflow-x-auto overflow-y-auto m-6 bg-white rounded-md border border-slate-200/60 shadow-xs">
-              <ResponsiveTable className="w-full text-left border-collapse min-w-[880px]">
-                <thead>
-                  <tr className="bg-[#405189]/5 border-b border-[#405189]/15 text-[11px] font-semibold text-[#405189] uppercase tracking-wider whitespace-nowrap">
-                    <th className="py-3.5 px-4 w-14 text-center">No</th>
-                    <th className="py-3.5 px-4 min-w-[180px] max-w-[280px]">Flowchart Title</th>
-                    <th className="py-3.5 px-4 w-36">Category</th>
-                    <th className="py-3.5 px-4 min-w-[180px] max-w-[280px]">Description</th>
-                    <th className="py-3.5 px-4 w-44">Linked Epic</th>
-                    <th className="py-3.5 px-4 w-40">Author</th>
-                    <th className="py-3.5 px-4 w-36">Last Updated</th>
-                    <th className="py-3.5 px-4 w-28 text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
-                  {currentItems.length === 0 ? (
-                    <tr>
-                      <td colSpan={8} className="text-center py-20 text-slate-400">
-                        <div className="w-14 h-14 rounded-md bg-[#405189]/10 border border-[#405189]/20 flex items-center justify-center mx-auto mb-3 shadow-2xs">
-                          <Workflow className="w-6 h-6 text-[#405189]" />
-                        </div>
-                        <p className="font-medium text-slate-800 text-sm">No flowcharts found</p>
-                        <p className="text-xs text-slate-400 mt-1 mb-4">Create a new flowchart or adjust your search keyword.</p>
-                        <button
-                          onClick={openCreateModal}
-                          className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white rounded-md text-xs font-medium transition-all shadow-xs shadow-[#405189]/20 cursor-pointer"
-                        >
-                          <Plus className="w-4 h-4" /> Add Flowchart
-                        </button>
-                      </td>
-                    </tr>
-                  ) : (
-                    currentItems.map((fw, index) => {
-                      const srNo = (currentPage - 1) * itemsPerPage + index + 1;
-                      const activeAuthor = getResolvedAuthor();
-                      const rawAuthor = fw.createdBy;
-                      const createdBy = (!rawAuthor || rawAuthor === "Azlan Irwan") ? activeAuthor : rawAuthor;
-                      const formatDateSafe = (dateVal?: string) => {
-                        if (!dateVal) return "-";
-                        if (dateVal.includes(",") || dateVal.includes("/")) return dateVal;
-                        const d = new Date(dateVal);
-                        if (isNaN(d.getTime())) return dateVal;
-                        return d.toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric' });
-                      };
-                      const lastEditedAt = formatDateSafe(fw.lastEditedAt || fw.createdAt);
-                      const initials = getInitials(createdBy);
-                      const linkedEpic = tasks.find(t => t.id === fw.epicTaskId);
-
-                      return (
-                        <tr 
-                          key={fw.id} 
-                          onClick={() => {
-                            handleSelectFlowchart(fw.id);
-                            setIsEditorActive(true);
-                          }}
-                          className="hover:bg-slate-50/70 transition-colors duration-200 group cursor-pointer h-14 whitespace-nowrap"
-                        >
-                          <td className="py-3 px-4 text-center text-slate-400 font-medium whitespace-nowrap">
-                            {String(srNo).padStart(2, "0")}
-                          </td>
-                          <td className="py-3 px-4 font-medium text-slate-900 group-hover:text-[#405189] transition-colors max-w-[220px] truncate whitespace-nowrap">
-                            {fw.name}
-                          </td>
-                          <td className="py-3 px-4 whitespace-nowrap">
-                            <span className="inline-block px-2.5 py-1 bg-indigo-50 text-[#405189] border border-indigo-200/80 text-[10px] font-medium rounded-md uppercase">
-                              {fw.category || "Panduan"}
-                            </span>
-                          </td>
-                          <td className="py-3 px-4 text-slate-500 font-medium max-w-[260px] truncate whitespace-nowrap">
-                            {fw.description ? fw.description : <span className="text-slate-300 italic">No description</span>}
-                          </td>
-                          <td className="py-3 px-4 whitespace-nowrap">
-                            {linkedEpic ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-violet-50 text-violet-700 border border-violet-200 text-[10px] font-medium rounded-md max-w-[180px] truncate" title={linkedEpic.title}>
-                                🎯 {linkedEpic.title}
-                              </span>
-                            ) : (
-                              <span className="text-slate-300 font-normal text-xs">-</span>
-                            )}
-                          </td>
-                          <td className="py-3 px-4 text-slate-700 font-medium whitespace-nowrap">
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-[#405189]/10 text-[#405189] flex items-center justify-center text-[10px] font-medium shrink-0">
-                                {initials}
-                              </div>
-                              <span className="truncate max-w-[120px]">{createdBy}</span>
-                            </div>
-                          </td>
-                          <td className="py-3 px-4 text-slate-500 font-medium whitespace-nowrap">
-                            {lastEditedAt}
-                          </td>
-                          <td className="py-3 px-4 text-center whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-                            <div className="inline-flex items-center justify-center gap-1.5">
-                              <button
-                                onClick={() => {
-                                  handleSelectFlowchart(fw.id);
-                                  setIsEditorActive(true);
-                                }}
-                                className="p-1.5 text-slate-500 hover:text-[#405189] hover:bg-[#405189]/10 rounded-md transition-all cursor-pointer"
-                                title="View flowchart canvas"
-                              >
-                                <Eye className="w-4 h-4" />
-                              </button>
-
-                              {canModifyFlowchart(fw) && (
-                                <>
-                                  <button
-                                    onClick={() => {
-                                      handleSelectFlowchart(fw.id);
-                                      setIsEditorActive(true);
-                                    }}
-                                    className="p-1.5 text-slate-500 hover:text-[#405189] hover:bg-[#405189]/10 rounded-md transition-all cursor-pointer"
-                                    title="Edit flowchart"
-                                  >
-                                    <Edit3 className="w-4 h-4" />
-                                  </button>
-                                  <button
-                                    onClick={(e) => handleDeleteFlowchart(fw.id, e)}
-                                    className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer"
-                                    title="Delete flowchart"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </ResponsiveTable>
-            </div>
-
-            {/* Pagination Footer */}
-            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
-              <div className="text-xs text-slate-500 font-medium">
-                Showing {totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} entries
-              </div>
-
-              {totalPages > 1 && (
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                    className="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
-                  >
-                    Previous
-                  </button>
-                  <span className="px-3.5 py-1.5 bg-[#405189] text-white rounded-md text-xs font-medium shadow-xs">
-                    {currentPage}
-                  </span>
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages}
-                    className="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="flex-1 flex flex-col h-full min-h-0 w-full overflow-hidden relative">
       {!isEditorActive ? (
-        renderDashboard()
+        <FlowchartDashboard
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          itemsPerPage={itemsPerPage}
+          totalItems={totalItems}
+          totalPages={totalPages}
+          currentItems={currentItems}
+          tasks={tasks}
+          openCreateModal={openCreateModal}
+          getResolvedAuthor={getResolvedAuthor}
+          handleSelectFlowchart={handleSelectFlowchart}
+          setIsEditorActive={setIsEditorActive}
+          canModifyFlowchart={canModifyFlowchart}
+          handleDeleteFlowchart={handleDeleteFlowchart}
+        />
       ) : (
         <div className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-50 p-4 md:p-6 space-y-4 animate-in fade-in duration-500 font-sans">
       
@@ -2618,105 +2417,17 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 <div className="flex-1 relative overflow-hidden bg-white flex flex-col h-full min-h-0">
                   
                   {/* FLOATING QUICK CANVAS CONTROL BAR ON TOP OF THE BOARD */}
-                  <div className="absolute top-4 left-4 right-4 z-30 flex items-center justify-between pointer-events-none">
-                    <div className="flex items-center gap-3 pointer-events-auto">
-                      {/* Active Diagram Name Indicator */}
-                      <div className="flex items-center gap-2 bg-white/70 hover:bg-white/85 backdrop-blur-md border border-slate-200/40 px-4 py-1.5 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] pointer-events-auto transition-all duration-300">
-                        <div className="p-1.5 bg-violet-50 rounded-lg text-violet-700">
-                          <Workflow className="w-3.5 h-3.5 text-violet-600" />
-                        </div>
-                        <div className="text-left font-sans">
-                          <p className="text-[8px] font-medium text-slate-400 uppercase tracking-widest leading-none mb-0.5">Diagram Alur</p>
-                          <span className="text-[11px] font-medium text-slate-800 truncate max-w-[150px] block leading-tight">
-                            {currentFlowMetadata?.name || "Untitled Workspace"}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* INTEGRATIVE CANVAS SETTINGS CONTROLS (THEME & SNAPPING) */}
-                      <div className="flex items-center gap-2 bg-white/70 hover:bg-white/85 backdrop-blur-md border border-slate-200/40 p-1.5 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-300">
-                        {/* Canvas Theme Toggle */}
-                        <button 
-                          onClick={() => {
-                            const nextTheme = canvasTheme === "miro" ? "blueprint" : "miro";
-                            setCanvasTheme(nextTheme);
-                            toast.success(`Tema Kanvas diubah ke: ${nextTheme === "miro" ? "Miro (Terang)" : "Blueprint (Gelap)"}`);
-                          }}
-                          className={cn(
-                            "p-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer",
-                            canvasTheme === "miro" 
-                              ? "bg-slate-100 hover:bg-slate-200 text-slate-700" 
-                              : "bg-blue-950/40 hover:bg-blue-900/40 text-blue-400"
-                          )}
-                          title={`Ubah Tema Kanvas (Saat ini: ${canvasTheme === "miro" ? "Miro Terang" : "Blueprint Gelap"})`}
-                        >
-                          {canvasTheme === "miro" ? (
-                            <>
-                              <Sun className="w-3.5 h-3.5 text-amber-500 fill-amber-200 animate-spin-slow" />
-                              <span className="text-[9px] font-medium uppercase tracking-wider hidden sm:inline px-0.5">Miro Theme</span>
-                            </>
-                          ) : (
-                            <>
-                              <Moon className="w-3.5 h-3.5 text-blue-400 fill-blue-950" />
-                              <span className="text-[9px] font-medium uppercase tracking-wider hidden sm:inline px-0.5">Blueprint Theme</span>
-                            </>
-                          )}
-                        </button>
-
-                        <div className="w-px h-4 bg-slate-200/60" />
-
-                        {/* Snap To Grid Toggle */}
-                        <button 
-                          onClick={() => {
-                            const nextSnap = !isSnapToGrid;
-                            setIsSnapToGrid(nextSnap);
-                            toast.success(`Snap to Grid: ${nextSnap ? "AKTIF" : "NON-AKTIF"}`);
-                          }}
-                          className={cn(
-                            "p-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer",
-                            isSnapToGrid 
-                              ? "bg-violet-50 text-violet-700 hover:bg-violet-100 border border-violet-100" 
-                              : "text-slate-400 hover:bg-slate-100"
-                          )}
-                          title={`Snap to Grid (Saat ini: ${isSnapToGrid ? "Aktif" : "Mati"})`}
-                        >
-                          <LayoutGrid className={cn("w-3.5 h-3.5", isSnapToGrid ? "text-violet-600" : "text-slate-400")} />
-                          <span className="text-[9px] font-medium uppercase tracking-wider hidden sm:inline px-0.5">
-                            {isSnapToGrid ? "Snap Grid" : "Free Move"}
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* RIGHT SIDE EXPORT & SIDEBAR TOGGLE BUTTONS */}
-                    <div className="flex items-center gap-2 pointer-events-auto">
-                      <div className="bg-white/70 hover:bg-white/85 backdrop-blur-md border border-slate-200/40 p-1 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] flex items-center gap-1.5 transition-all duration-300">
-                        <button 
-                          onClick={handleExportJPG}
-                          className="flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-[10px] font-medium transition-all cursor-pointer"
-                        >
-                          <Download className="w-3 h-3" /> Ekspor
-                        </button>
-                        <button 
-                          onClick={handleExportJSON}
-                          className="flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 rounded-lg text-[10px] font-medium transition-all cursor-pointer"
-                        >
-                          <Database className="w-3 h-3" /> Backup
-                        </button>
-                      </div>
-                      
-                      <button 
-                        onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
-                        className={cn(
-                          "p-2 bg-white/70 hover:bg-white/85 backdrop-blur-md border border-slate-200/40 shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-xl transition-all duration-300 cursor-pointer",
-                          isRightSidebarOpen ? "bg-violet-600 text-white border-violet-600" : "text-slate-600 hover:text-violet-600"
-                        )}
-                        title="Toggle Panel Konfigurasi"
-                      >
-                        <Activity className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
+                  <CanvasToolbar
+                    currentFlowMetadata={currentFlowMetadata}
+                    canvasTheme={canvasTheme}
+                    setCanvasTheme={setCanvasTheme}
+                    isSnapToGrid={isSnapToGrid}
+                    setIsSnapToGrid={setIsSnapToGrid}
+                    handleExportJPG={handleExportJPG}
+                    handleExportJSON={handleExportJSON}
+                    isRightSidebarOpen={isRightSidebarOpen}
+                    setIsRightSidebarOpen={setIsRightSidebarOpen}
+                  />
 
                   {/* FLOATING MIRO TOOLBAR (SISI KIRI CANVAS) */}
         <div className={cn(
@@ -2759,176 +2470,17 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             </button>
 
             {/* Shapes COLLECTION TRIGGER */}
-            <div className="relative font-sans">
-              <button 
-                onClick={() => setIsShapeDropdownOpen(!isShapeDropdownOpen)}
-                className={cn(
-                  "p-2 rounded-lg transition-all flex flex-col items-center w-10 border border-slate-100",
-                  isShapeDropdownOpen ? "bg-indigo-50 border-indigo-200 text-indigo-700" : "text-slate-650 hover:bg-slate-100"
-                )}
-                title="Buka Koleksi Simbol"
-              >
-                <Layers className="w-4 h-4" />
-                <span className="text-[7.5px] font-medium uppercase tracking-tight text-indigo-600 mt-0.5 flex items-center">Shapes <ChevronDown className="w-2 h-2 ml-0.5" /></span>
-              </button>
-
-              {isShapeDropdownOpen && (
-                <div className="absolute left-14 top-0 w-80 bg-white/85 backdrop-blur-lg border border-slate-200/40 shadow-[0_12px_40px_rgba(0,0,0,0.12)] rounded-xl z-40 flex flex-col h-[calc(100vh-160px)] max-h-[640px] overflow-hidden select-none">
-                  {/* Panel Header */}
-                  <div className="p-3.5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/50">
-                    <div className="flex items-center gap-2">
-                      <div className="p-1 px-1.5 bg-indigo-100 rounded text-indigo-700">
-                        <Layers className="w-3.5 h-3.5" />
-                      </div>
-                      <span className="text-xs font-medium text-slate-800 uppercase tracking-tight">Diagramming shapes</span>
-                    </div>
-                    <button 
-                      onClick={() => setIsShapeDropdownOpen(false)}
-                      className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  {/* Preset Colors Bar */}
-                  <div className="px-3.5 py-2 border-b border-slate-100 bg-slate-50/20 flex items-center justify-between shrink-0">
-                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wide">Warna Default:</span>
-                    <div className="flex items-center gap-1">
-                      {["yellow", "blue", "green", "purple", "rose", "sky", "slate"].map(colName => {
-                        const colorClassMap: Record<string, string> = {
-                          yellow: "bg-amber-300 border-amber-400",
-                          blue: "bg-blue-300 border-blue-400",
-                          green: "bg-emerald-350 border-emerald-400",
-                          purple: "bg-purple-300 border-purple-400",
-                          rose: "bg-rose-300 border-rose-400",
-                          sky: "bg-sky-300 border-sky-400",
-                          slate: "bg-slate-300 border-slate-400"
-                        };
-                        return (
-                          <button
-                            key={colName}
-                            onClick={() => {
-                              setSelectedAddColor(colName);
-                              toast.info(`Warna default bentuk baru diset ke ${colName.toUpperCase()}`);
-                            }}
-                            className={cn(
-                              "w-3.5 h-3.5 rounded-full border transition-all active:scale-75",
-                              colorClassMap[colName] || "bg-indigo-300",
-                              selectedAddColor === colName ? "ring-2 ring-indigo-500 ring-offset-1 scale-110 border-indigo-650" : "border-black/5"
-                            )}
-                            title={`Mulai dengan warna ${colName}`}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Search Bar */}
-                  <div className="p-3 border-b border-slate-100 shrink-0">
-                    <div className="relative font-sans">
-                      <Search className="w-3 h-3 text-slate-400 absolute left-2.5 top-2.5" />
-                      <input 
-                        type="text"
-                        placeholder="Cari bentuk (e.g. DBA, flow...)"
-                        value={shapeSearchQuery}
-                        onChange={(e) => setShapeSearchQuery(e.target.value)}
-                        className="w-full text-[11px] bg-slate-50 border border-slate-200 rounded-lg p-1.5 pl-7 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-violet-500 focus:bg-white transition-all"
-                      />
-                      {shapeSearchQuery && (
-                        <button 
-                          onClick={() => setShapeSearchQuery("")}
-                          className="absolute right-2.5 top-2.5 text-[10px] text-slate-400 hover:text-slate-650"
-                        >
-                          Clear
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Categorized Scrollable Shapes */}
-                  <div className="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
-                    {DIAGRAM_SHAPE_GROUPS.map((group, groupIdx) => {
-                      const filteredItems = group.items.filter(item => 
-                        item.name.toLowerCase().includes(shapeSearchQuery.toLowerCase()) ||
-                        (item.desc && item.desc.toLowerCase().includes(shapeSearchQuery.toLowerCase()))
-                      );
-
-                      if (filteredItems.length === 0) return null;
-
-                      const isExpanded = shapeSearchQuery.trim() !== "" ? true : !!expandedGroups[group.title];
-
-                      return (
-                        <div key={groupIdx} className="border-b border-slate-100/65 pb-2.5 last:border-b-0 space-y-1 fallback-accordion">
-                          {/* Collapsible Accordion Header */}
-                          <button
-                            onClick={() => toggleGroupExpanded(group.title)}
-                            disabled={shapeSearchQuery.trim() !== ""}
-                            className="w-full flex items-center justify-between text-left py-1.5 hover:bg-slate-50/70 p-1 rounded-lg transition-colors group"
-                          >
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-[10px] font-medium text-slate-800 uppercase tracking-widest font-mono">
-                                {group.title}
-                              </span>
-                              {(group.title === "AWS" || group.title === "UML" || group.title === "My Shapes") && (
-                                <span className="text-[7.5px] bg-indigo-50 text-indigo-600 font-medium px-1 py-[1px] rounded border border-indigo-100 flex items-center gap-0.5 leading-none">
-                                  FREE
-                                </span>
-                              )}
-                            </div>
-                            
-                            {/* Collapse/Expand indicator */}
-                            {shapeSearchQuery.trim() === "" && (
-                              <div className="p-0.5 rounded text-slate-400 group-hover:text-slate-600 group-hover:bg-slate-100 transition-colors">
-                                {isExpanded ? (
-                                  <ChevronDown className="w-3.5 h-3.5" />
-                                ) : (
-                                  <svg className="w-3.5 h-3.5 transform -rotate-90 transition-transform duration-150" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                                    <path d="M19 9l-7 7-7-7" />
-                                  </svg>
-                                )}
-                              </div>
-                            )}
-                          </button>
-
-                          {/* Expanded Content Grid */}
-                          {isExpanded && (
-                            <div className="grid grid-cols-2 gap-1.5 mt-1.5 px-0.5 transition-all">
-                              {filteredItems.map((item) => (
-                                <button
-                                  key={item.type}
-                                  onClick={() => handleAddNewNode(item.type as FlowNode["type"], selectedAddColor)}
-                                  className="flex items-center gap-2 p-1.5 bg-white hover:bg-indigo-50/5 border border-slate-100 hover:border-indigo-200 hover:shadow-[0_2px_8px_rgba(99,102,241,0.06)] text-left rounded-xl transition-all group pointer-events-auto w-full"
-                                  title={`Tambahkan ${item.name} ke canvas`}
-                                >
-                                  <div className="w-8 h-8 flex items-center justify-center shrink-0 border border-slate-100 rounded-lg bg-slate-50/30 group-hover:bg-indigo-50/30 group-hover:border-indigo-300/40 transition-all duration-150">
-                                    {renderMiniPreviewIcon(item.type)}
-                                  </div>
-                                  <div className="min-w-0 flex-1">
-                                    <p className="text-[10px] font-medium text-slate-700 leading-tight truncate group-hover:text-indigo-600 transition-colors">{item.name}</p>
-                                    <p className="text-[8.5px] text-slate-450 leading-none truncate mt-0.5">{item.desc}</p>
-                                  </div>
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-
-                    {DIAGRAM_SHAPE_GROUPS.every(group => 
-                      group.items.filter(item => 
-                        item.name.toLowerCase().includes(shapeSearchQuery.toLowerCase()) ||
-                        (item.desc && item.desc.toLowerCase().includes(shapeSearchQuery.toLowerCase()))
-                      ).length === 0
-                    ) && (
-                      <div className="text-center py-8 text-slate-400 text-[11px]">
-                        Tidak menemukan bentuk dengan kata kunci tersebut.
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
+            <ShapePalette
+              isShapeDropdownOpen={isShapeDropdownOpen}
+              setIsShapeDropdownOpen={setIsShapeDropdownOpen}
+              selectedAddColor={selectedAddColor}
+              setSelectedAddColor={setSelectedAddColor}
+              shapeSearchQuery={shapeSearchQuery}
+              setShapeSearchQuery={setShapeSearchQuery}
+              expandedGroups={expandedGroups}
+              toggleGroupExpanded={toggleGroupExpanded}
+              handleAddNewNode={handleAddNewNode}
+            />
 
             {/* Quick Link connection helper */}
             <button 
@@ -3059,839 +2611,56 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               )}
               
               {/* CANVAS OVERLAY BEZIER ROUTERS */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
-                <defs>
-                  <marker
-                    id="canvas-arrow-head"
-                    markerWidth="13"
-                    markerHeight="13"
-                    refX="14"
-                    refY="4"
-                    orient="auto"
-                    markerUnits="strokeWidth"
-                  >
-                    <path d="M0,1 L0,7 L6,4 z" fill={canvasTheme === 'miro' ? "#475569" : "#60a5fa"} />
-                  </marker>
-                  <marker
-                    id="canvas-arrow-head-selected"
-                    markerWidth="13"
-                    markerHeight="13"
-                    refX="14"
-                    refY="4"
-                    orient="auto"
-                    markerUnits="strokeWidth"
-                  >
-                    <path d="M0,1 L0,7 L6,4 z" fill="#8b5cf6" />
-                  </marker>
-
-                  {/* Dynamic gradients for beautiful, smooth custom shapes */}
-                  {Object.entries(colorPaletteHex).map(([colorName, colors]) => (
-                    <linearGradient key={colorName} id={`grad-${colorName}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor={colors.bg} />
-                      <stop offset="100%" stopColor={colors.bgGrad || colors.bg} />
-                    </linearGradient>
-                  ))}
-                </defs>
-
-                {/* Draw connecting Edge arrows */}
-                {edges.map((edge) => {
-                  const source = nodes.find(n => n.id === edge.fromNodeId);
-                  const target = nodes.find(n => n.id === edge.toNodeId);
-                  
-                  const startCenter = getNodeCenter(edge.fromNodeId);
-                  const endCenter = getNodeCenter(edge.toNodeId);
-                  const isSelected = selectedEdgeId === edge.id;
-                  const isHovered = hoveredEdgeId === edge.id;
-
-                  const isSourceSelected = selectedNodeId === edge.fromNodeId;
-                  const isTargetSelected = selectedNodeId === edge.toNodeId;
-                  const isSourceHovered = hoveredNodeId === edge.fromNodeId;
-                  const isTargetHovered = hoveredNodeId === edge.toNodeId;
-                  const isNodeConnectedActive = isSourceSelected || isTargetSelected || isSourceHovered || isTargetHovered;
-
-                  if (startCenter.x === 0 || endCenter.x === 0) return null;
-
-                  // Magnetic Snapping and Dynamic Port Connection Locator
-                  const getClosestPortsPoint = (srcNode: FlowNode, tgtNode: FlowNode) => {
-                    const sW = srcNode.width || 130;
-                    const sH = srcNode.height || 70;
-                    const tW = tgtNode.width || 130;
-                    const tH = tgtNode.height || 70;
-
-                    const sourcePorts = [
-                      { name: 'top', x: srcNode.x + sW / 2, y: srcNode.y, dir: { x: 0, y: -1 } },
-                      { name: 'right', x: srcNode.x + sW, y: srcNode.y + sH / 2, dir: { x: 1, y: 0 } },
-                      { name: 'bottom', x: srcNode.x + sW / 2, y: srcNode.y + sH, dir: { x: 0, y: 1 } },
-                      { name: 'left', x: srcNode.x, y: srcNode.y + sH / 2, dir: { x: -1, y: 0 } }
-                    ];
-
-                    const targetPorts = [
-                      { name: 'top', x: tgtNode.x + tW / 2, y: tgtNode.y, dir: { x: 0, y: -1 } },
-                      { name: 'right', x: tgtNode.x + tW, y: tgtNode.y + tH / 2, dir: { x: 1, y: 0 } },
-                      { name: 'bottom', x: tgtNode.x + tW / 2, y: tgtNode.y + tH, dir: { x: 0, y: 1 } },
-                      { name: 'left', x: tgtNode.x, y: tgtNode.y + tH / 2, dir: { x: -1, y: 0 } }
-                    ];
-
-                    let minDistance = Infinity;
-                    let bestSource = sourcePorts[2]; // bottom fallback
-                    let bestTarget = targetPorts[0]; // top fallback
-
-                    for (const sP of sourcePorts) {
-                      for (const tP of targetPorts) {
-                        const dx = tP.x - sP.x;
-                        const dy = tP.y - sP.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < minDistance) {
-                          minDistance = dist;
-                          bestSource = sP;
-                          bestTarget = tP;
-                        }
-                      }
-                    }
-
-                    return { source: bestSource, target: bestTarget };
-                  };
-
-                  const { source: startPort, target: endPort } = source && target 
-                    ? getClosestPortsPoint(source, target)
-                    : { 
-                        source: { x: startCenter.x, y: startCenter.y, dir: { x: 0, y: 1 } }, 
-                        target: { x: endCenter.x, y: endCenter.y, dir: { x: 0, y: -1 } } 
-                      };
-
-                  const start = startPort;
-                  const end = endPort;
-
-                  // Find smart route path avoiding intermediate node obstacles
-                  const pathPoints = findSmartRoute(start, end, edge.fromNodeId, edge.toNodeId, nodes);
-
-                  // Compute custom router path based on active routing types (bezier, straight, orthogonal right-angles)
-                  let pathD = "";
-                  if (connectorType === "straight") {
-                    pathD = "M " + pathPoints.map(p => `${p.x} ${p.y}`).join(" L ");
-                  } else if (connectorType === "orthogonal") {
-                    // Connect each consecutive point and align orthogonally beautiful
-                    let current = pathPoints[0];
-                    let parts = [`M ${current.x} ${current.y}`];
-                    for (let i = 1; i < pathPoints.length; i++) {
-                      const next = pathPoints[i];
-                      if (current.x !== next.x && current.y !== next.y) {
-                        if (i === 1) {
-                          const dir = start.dir || { x: 0, y: 1 };
-                          if (dir.x !== 0) {
-                            parts.push(`L ${next.x} ${current.y}`);
-                          } else {
-                            parts.push(`L ${current.x} ${next.y}`);
-                          }
-                        } else {
-                          parts.push(`L ${next.x} ${current.y}`);
-                        }
-                      }
-                      parts.push(`L ${next.x} ${next.y}`);
-                      current = next;
-                    }
-                    pathD = parts.join(" ");
-                  } else {
-                    // Curved / Bezier
-                    if (pathPoints.length <= 2) {
-                      const dist = Math.sqrt((end.x - start.x) ** 2 + (end.y - start.y) ** 2);
-                      const k = Math.min(100, Math.max(30, dist * 0.45));
-                      const cp1 = { x: start.x + (start.dir?.x || 0) * k, y: start.y + (start.dir?.y || 0) * k };
-                      const cp2 = { x: end.x + (end.dir?.x || 0) * k, y: end.y + (end.dir?.y || 0) * k };
-                      pathD = `M ${start.x} ${start.y} C ${cp1.x} ${cp1.y}, ${cp2.x} ${cp2.y}, ${end.x} ${end.y}`;
-                    } else {
-                      let d = `M ${pathPoints[0].x} ${pathPoints[0].y}`;
-                      for (let i = 1; i < pathPoints.length; i++) {
-                        const p = pathPoints[i];
-                        if (i === 1) {
-                          const dist = Math.sqrt((p.x - start.x) ** 2 + (p.y - start.y) ** 2);
-                          const k = Math.min(50, dist * 0.3);
-                          const cp = { x: start.x + (start.dir?.x || 0) * k, y: start.y + (start.dir?.y || 0) * k };
-                          d += ` Q ${cp.x} ${cp.y}, ${p.x} ${p.y}`;
-                        } else if (i === pathPoints.length - 1) {
-                          const prev = pathPoints[i - 1];
-                          const dist = Math.sqrt((end.x - prev.x) ** 2 + (end.y - prev.y) ** 2);
-                          const k = Math.min(50, dist * 0.3);
-                          const cp = { x: end.x + (end.dir?.x || 0) * k, y: end.y + (end.dir?.y || 0) * k };
-                          d += ` Q ${cp.x} ${cp.y}, ${end.x} ${end.y}`;
-                        } else {
-                          const prev = pathPoints[i - 1];
-                          const midX = (prev.x + p.x) / 2;
-                          const midY = (prev.y + p.y) / 2;
-                          d += ` S ${midX} ${midY}, ${p.x} ${p.y}`;
-                        }
-                      }
-                      pathD = d;
-                    }
-                  }
-
-                  return (
-                    <g 
-                      key={edge.id} 
-                      className="pointer-events-auto cursor-pointer"
-                      onMouseEnter={() => setHoveredEdgeId(edge.id)}
-                      onMouseLeave={() => setHoveredEdgeId(null)}
-                    >
-                      
-                      {/* Interaction trigger line (Invisible & wide) */}
-                      <path
-                        d={pathD}
-                        fill="none"
-                        stroke={isSelected ? "#c084fc" : "transparent"}
-                        strokeWidth="16"
-                        className="opacity-45 transition-all"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedEdgeId(edge.id);
-                          setSelectedNodeId(null);
-                          setConnectSourceId(null);
-                        }}
-                      />
-                      
-                      {/* Suble hover or selected pulse under-glow path */}
-                      {(isHovered || isSelected) && (
-                        <motion.path
-                          d={pathD}
-                          fill="none"
-                          stroke={isSelected ? "#c084fc" : "#93c5fd"}
-                          strokeWidth={isSelected ? "8" : "6"}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: [0.2, 0.5, 0.2] }}
-                          transition={{
-                            repeat: Infinity,
-                            duration: 1.4,
-                            ease: "easeInOut"
-                          }}
-                        />
-                      )}
-
-                      {/* Flow Tracer Animation (When connected node is hovered or selected) */}
-                      {isNodeConnectedActive && (
-                        <motion.path
-                          d={pathD}
-                          fill="none"
-                          stroke={isSourceSelected || isSourceHovered ? "#10b981" : "#3b82f6"} // Green/Emerald for outflow, Blue/Indigo for inflow
-                          strokeWidth={isSelected ? "4" : "3"}
-                          strokeLinecap="round"
-                          strokeDasharray="12, 60"
-                          animate={{ strokeDashoffset: [0, -72] }}
-                          transition={{
-                            repeat: Infinity,
-                            duration: 1.2,
-                            ease: "linear"
-                          }}
-                          className="pointer-events-none opacity-90 drop-shadow-[0_0_2px_rgba(59,130,246,0.5)]"
-                        />
-                      )}
-
-                      {/* Actual visual indicator path */}
-                      <motion.path
-                        d={pathD}
-                        fill="none"
-                        stroke={isSelected ? "#8b5cf6" : isHovered ? "#3b82f6" : canvasTheme === 'miro' ? "#475569" : "#60a5fa"}
-                        strokeWidth={isSelected ? "3" : isHovered ? "2.5" : "2"}
-                        markerEnd={isSelected ? "url(#canvas-arrow-head-selected)" : "url(#canvas-arrow-head)"}
-                        className="transition-all"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedEdgeId(edge.id);
-                          setSelectedNodeId(null);
-                          setConnectSourceId(null);
-                        }}
-                        initial={{ pathLength: 0 }}
-                        strokeDasharray={isSelected ? "6, 4" : isHovered ? "4, 4" : undefined}
-                        animate={{ 
-                          pathLength: 1,
-                          strokeDashoffset: isSelected ? [0, -20] : isHovered ? [0, -15] : 0 
-                        }}
-                        transition={{ 
-                          pathLength: { duration: 0.35, ease: "easeOut" },
-                          strokeDashoffset: { repeat: Infinity, duration: isSelected ? 0.8 : 1.2, ease: "linear" }
-                        }}
-                      />
-
-                      {/* Optional inline description on arrows */}
-                      {edge.label && (
-                        <foreignObject
-                          x={(start.x + end.x) / 2 - 45}
-                          y={(start.y + end.y) / 2 - 12}
-                          width="90"
-                          height="26"
-                        >
-                          <div className="bg-white border border-slate-200 text-[9px] text-slate-800 font-medium px-1.5 py-0.5 rounded shadow-sm text-center truncate">
-                            {edge.label}
-                          </div>
-                        </foreignObject>
-                      )}
-
-                    </g>
-                  );
-                })}
-
-                {/* Real-time interactive dotted helper path while creating connection lines */}
-                {connectSourceId && (() => {
-                  const srcNode = nodes.find(n => n.id === connectSourceId);
-                  if (!srcNode) return null;
-                  const sW = srcNode.width || 130;
-                  const sH = srcNode.height || 70;
-                  const startX = srcNode.x + sW / 2;
-                  const startY = srcNode.y + sH / 2;
-                  const endX = hoverCoords.x;
-                  const endY = hoverCoords.y;
-                  
-                  const dx = endX - startX;
-                  const dy = endY - startY;
-                  const dist = Math.sqrt(dx * dx + dy * dy);
-                  const k = Math.min(100, Math.max(30, dist * 0.45));
-                  const pathD = `M ${startX} ${startY} C ${startX + k} ${startY}, ${endX - k} ${endY}, ${endX} ${endY}`;
-                  
-                  return (
-                    <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }}>
-                      <motion.path
-                        d={pathD}
-                        fill="none"
-                        stroke="#a78bfa"
-                        strokeWidth="3"
-                        strokeDasharray="6,4"
-                        animate={{
-                          strokeDashoffset: [-20, 0]
-                        }}
-                        transition={{
-                          repeat: Infinity,
-                          duration: 0.8,
-                          ease: "linear"
-                        }}
-                      />
-                      <circle cx={endX} cy={endY} r="5" fill="#8b5cf6" className="animate-ping" />
-                      <circle cx={endX} cy={endY} r="4" fill="#8b5cf6" />
-                    </motion.g>
-                  );
-                })()}
-              </svg>
+              <FlowchartEdges
+                edges={edges}
+                nodes={nodes}
+                canvasTheme={canvasTheme}
+                selectedEdgeId={selectedEdgeId}
+                setSelectedEdgeId={setSelectedEdgeId}
+                hoveredEdgeId={hoveredEdgeId}
+                setHoveredEdgeId={setHoveredEdgeId}
+                selectedNodeId={selectedNodeId}
+                setSelectedNodeId={setSelectedNodeId}
+                hoveredNodeId={hoveredNodeId}
+                connectSourceId={connectSourceId}
+                setConnectSourceId={setConnectSourceId}
+                hoverCoords={hoverCoords}
+                connectorType={connectorType}
+                getNodeCenter={getNodeCenter}
+              />
 
               {/* RENDER DYNAMIC SHAPES */}
-              {nodes.map((node) => {
-                const isSelected = selectedNodeId === node.id || copiedNodes.some(copy => copy.id === node.id);
-                const isSourceOfConnect = connectSourceId === node.id;
-                const linkedTask = getLinkedTaskDetails(node.taskId);
-                
-                const nodeWidth = node.width || 130;
-                const nodeHeight = node.height || 70;
-
-                const isSticky = node.type === "sticky";
-                const isDiamond = node.type === "diamond" || node.type === "decision";
-                const isBlueprint = canvasTheme === "blueprint";
-                const isSvgShape = customSvgTypes.includes(node.type as any) || node.type === "parallelogram" || node.type === "diamond" || node.type === "decision";
-
-                return (
-                  <motion.div
-                    key={node.id}
-                    style={{
-                      left: `${node.x}px`,
-                      top: `${node.y}px`,
-                      width: `${nodeWidth}px`,
-                      height: `${nodeHeight}px`,
-                      willChange: "transform",
-                    }}
-                    onMouseDown={(e) => handleNodeMouseDown(e, node)}
-                    onContextMenu={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setSelectedNodeId(node.id);
-                      setSelectedEdgeId(null);
-                      if (isWorkspaceEditable) {
-                        setNodeContextMenu({
-                          x: e.clientX,
-                          y: e.clientY,
-                          nodeId: node.id
-                        });
-                      }
-                    }}
-                    onMouseEnter={() => setHoveredNodeId(node.id)}
-                    onMouseLeave={() => setHoveredNodeId(null)}
-                    className={cn(
-                      "absolute z-20 cursor-pointer rounded-[inherit]",
-                      node.id === activeSimNodeId && "ring-4 ring-emerald-500 shadow-2xl shadow-emerald-450/40"
-                    )}
-                    animate={{
-                      scale: draggingNodeId === node.id 
-                        ? 1.07 
-                        : isSourceOfConnect
-                        ? 1.05
-                        : isSelected
-                        ? 1.03
-                        : (hoveredNodeId === node.id)
-                        ? (connectSourceId !== null ? 1.05 : 1.02)
-                        : 1,
-                      rotate: draggingNodeId === node.id 
-                        ? 1.2
-                        : isSourceOfConnect 
-                        ? [0, -1.2, 1.2, -1.2, 0]
-                        : 0,
-                      boxShadow: !isSvgShape
-                        ? (draggingNodeId === node.id
-                            ? "0 25px 40px -10px rgba(0, 0, 0, 0.25), 0 12px 20px -8px rgba(0, 0, 0, 0.18)"
-                            : isSourceOfConnect
-                            ? "0 0 0 3px rgba(244, 63, 94, 0.45), 0 8px 20px -6px rgba(244, 63, 94, 0.3)"
-                            : isSelected
-                            ? "0 0 0 3px rgba(139, 92, 246, 0.4), 0 8px 20px -6px rgba(139, 92, 246, 0.3)"
-                            : hoveredNodeId === node.id
-                            ? (connectSourceId !== null ? "0 0 0 3px rgba(167, 139, 250, 0.45), 0 10px 15px -3px rgba(0, 0, 0, 0.08)" : "0 10px 20px -5px rgba(0, 0, 0, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.06)")
-                            : "0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.04)")
-                        : "none"
-                    }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 450,
-                      damping: 22,
-                      mass: 0.5,
-                      rotate: isSourceOfConnect ? {
-                        type: "keyframes",
-                        duration: 1.0,
-                        ease: "easeInOut",
-                        repeat: Infinity
-                      } : {
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 15
-                      }
-                    }}
-                    id={`val-node-${node.id}`}
-                  >
-                    
-                    {/* Floating connection ports on hover/select */}
-                    {(hoveredNodeId === node.id || isSelected) && (
-                      <div className="absolute inset-0 pointer-events-none z-30">
-                        {/* TOP PORT */}
-                        <div 
-                          className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
-                          onMouseDown={(e) => {
-                            e.stopPropagation();
-                            handleConnectPortClick(node.id, "top");
-                          }}
-                          title="Tarik panah dari Sisi Atas"
-                        >
-                          <Plus className="w-2 md:w-2.5 h-2 md:h-2.5 text-violet-600 font-medium" />
-                        </div>
-
-                        {/* RIGHT PORT */}
-                        <div 
-                          className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
-                          onMouseDown={(e) => {
-                            e.stopPropagation();
-                            handleConnectPortClick(node.id, "right");
-                          }}
-                          title="Tarik panah dari Sisi Kanan"
-                        >
-                          <Plus className="w-2 md:w-2.5 h-2 md:h-2.5 text-violet-600 font-medium" />
-                        </div>
-
-                        {/* BOTTOM PORT */}
-                        <div 
-                          className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
-                          onMouseDown={(e) => {
-                            e.stopPropagation();
-                            handleConnectPortClick(node.id, "bottom");
-                          }}
-                          title="Tarik panah dari Sisi Bawah"
-                        >
-                          <Plus className="w-2 md:w-2.5 h-2 md:h-2.5 text-violet-600 font-medium" />
-                        </div>
-
-                        {/* LEFT PORT */}
-                        <div 
-                          className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
-                          onMouseDown={(e) => {
-                            e.stopPropagation();
-                            handleConnectPortClick(node.id, "left");
-                          }}
-                          title="Tarik panah dari Sisi Kiri"
-                        >
-                          <Plus className="w-2 md:w-2.5 h-2 md:h-2.5 text-violet-600 font-medium" />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Floating mini shapes attributes modification overlay */}
-                    {isSelected && (
-                      <div 
-                        className="absolute -top-16 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md text-slate-850 p-2 px-3 rounded-xl border border-slate-200/90 shadow-[0_10px_35px_rgba(0,0,0,0.12)] flex items-center gap-2 z-40 select-none pointer-events-auto transition-all"
-                        onMouseDown={(e) => e.stopPropagation()}
-                      >
-                        {/* Shape Converter Selector */}
-                        <select 
-                          value={node.type}
-                          onChange={(e) => {
-                            handleUpdateActiveNode({ type: e.target.value as FlowNode["type"] });
-                            toast.success(`Bentuk bentuk diubah ke ${e.target.value.toUpperCase()}!`);
-                          }}
-                          className="bg-slate-50 border border-slate-200 text-[10px] font-medium text-slate-700 outline-none p-1 rounded-lg cursor-pointer hover:bg-slate-100 max-w-[120px]"
-                          title="Ubah jenis bentuk"
-                        >
-                          <option value="rect">Rectangle</option>
-                          <option value="oval">Oval (Start/End)</option>
-                          <option value="diamond">Decision (Diamond)</option>
-                          <option value="triangle">Triangle</option>
-                          <option value="pentagon">Pentagon</option>
-                          <option value="hexagon">Hexagon</option>
-                          <option value="octagon">Octagon</option>
-                          <option value="star">Star</option>
-                          <option value="arrowRight">Arrow Right</option>
-                          <option value="arrowLeft">Arrow Left</option>
-                          <option value="arrowLeftRight">Arrow Left Right</option>
-                          <option value="trapezoid">Trapezoid</option>
-                          <option value="cross">Cross / Plus</option>
-                          <option value="chevron">Chevron</option>
-                          <option value="delay">Delay (Bullet)</option>
-                          <option value="callout">Callout / Bubble</option>
-                          <option value="cylinder">Database Server</option>
-                          <option value="sticky">Sticky Note</option>
-                          <option value="cloud">Cloud API</option>
-                          <option value="circle">Circle</option>
-                          <option value="card">Card Item</option>
-                          <option value="document">Doc Page</option>
-                          <option value="subprocess">Subprocess</option>
-                          <option value="actor">Actor Icon</option>
-                          <option value="folder">Folder Block</option>
-                          <option value="curlyLeft">{`Curly Left {`}</option>
-                          <option value="curlyRight">{`Curly Right }`}</option>
-                        </select>
-
-                        <div className="h-4 w-px bg-slate-200" />
-
-                        {/* Quick Pastel Selection circle dots */}
-                        <div className="flex items-center gap-1">
-                          {["yellow", "blue", "green", "purple", "rose", "slate"].map(colName => {
-                            const colorClassMap: Record<string, string> = {
-                              yellow: "bg-amber-100 hover:bg-amber-200",
-                              blue: "bg-blue-150 hover:bg-blue-200",
-                              green: "bg-emerald-100 hover:bg-emerald-200",
-                              purple: "bg-purple-100 hover:bg-purple-200",
-                              rose: "bg-rose-100 hover:bg-rose-200",
-                              slate: "bg-slate-100 hover:bg-slate-200"
-                            };
-                            return (
-                              <button
-                                key={colName}
-                                onClick={() => {
-                                  handleUpdateActiveNode({ color: colName });
-                                }}
-                                className={cn(
-                                  "w-3.5 h-3.5 rounded-full border border-black/10 transition-transform hover:scale-125 focus:outline-none",
-                                  colorClassMap[colName],
-                                  node.color === colName && "ring-2 ring-violet-500 scale-110"
-                                )}
-                                title={`Ubah warna ke: ${colName}`}
-                              />
-                            );
-                          })}
-                        </div>
-
-                        <div className="h-4 w-px bg-slate-200" />
-
-                        {/* Font Family switch */}
-                        <button 
-                          onClick={() => {
-                            const nextStyle: FlowNode["fontStyle"] = node.fontStyle === "sans" ? "serif" : node.fontStyle === "serif" ? "mono" : "sans";
-                            handleUpdateActiveNode({ fontStyle: nextStyle });
-                          }}
-                          className="p-1 px-1.5 hover:bg-slate-100 text-[10px] rounded font-medium uppercase"
-                          title="Format Huruf (Sans / Serif / Mono)"
-                        >
-                          {node.fontStyle || "sans"}
-                        </button>
-
-                        {/* Toggle Align text */}
-                        <button 
-                          onClick={() => {
-                            const nextAlign: FlowNode["align"] = node.align === "left" ? "center" : node.align === "center" ? "right" : "left";
-                            handleUpdateActiveNode({ align: nextAlign });
-                          }}
-                          className="p-1 hover:bg-slate-100 rounded text-slate-600 pointer-events-auto"
-                          title="Rata Kiri/Tengah/Kanan"
-                        >
-                          {node.align === "left" ? <AlignLeft className="w-3.5 h-3.5" /> : node.align === "right" ? <AlignRight className="w-3.5 h-3.5" /> : <AlignCenter className="w-3.5 h-3.5" />}
-                        </button>
-
-                        <div className="h-4 w-px bg-slate-200" />
-
-                        {/* Font sizing buttons */}
-                        <div className="flex items-center gap-0.5">
-                          <button onClick={() => handleUpdateActiveNode({ fontSize: Math.max(9, (node.fontSize || 12) - 1) })} className="p-1 hover:bg-slate-100 text-xs rounded font-medium" title="Perkecil Font">-</button>
-                          <span className="text-[10px] font-mono font-medium px-0.5 whitespace-nowrap">{node.fontSize || 12}px</span>
-                          <button onClick={() => handleUpdateActiveNode({ fontSize: Math.min(22, (node.fontSize || 12) + 1) })} className="p-1 hover:bg-slate-100 text-xs rounded font-medium" title="Perbesar Font">+</button>
-                        </div>
-
-                        <div className="h-4 w-px bg-slate-200" />
-
-                        {/* Border style loop selector */}
-                        <button
-                          onClick={() => {
-                            const nextStyle = node.borderStyle === "dashed" ? "none" : node.borderStyle === "none" ? "solid" : "dashed";
-                            handleUpdateActiveNode({ borderStyle: nextStyle as FlowNode["borderStyle"] });
-                            toast.success(`Jenis garis diubah ke: ${(nextStyle || "solid").toUpperCase()}`);
-                          }}
-                          className="p-1 hover:bg-slate-100 rounded text-slate-600"
-                          title="Ubah garis tepian (Solid/Dashed/None)"
-                        >
-                          <Square className={cn("w-3.5 h-3.5", node.borderStyle === "dashed" && "border-dashed border-2", node.borderStyle === "none" && "opacity-30")} />
-                        </button>
-
-                        {/* Duplicate */}
-                        <button 
-                          onClick={() => handleDuplicateNode(node)} 
-                          className="p-1 text-slate-500 hover:text-indigo-600 rounded hover:bg-indigo-50"
-                          title="Duplikat Bentuk (Ctrl+D)"
-                        >
-                          <Copy className="w-3.5 h-3.5" />
-                        </button>
-
-                        {/* Connection Drawer mode toggle */}
-                        <button 
-                          onClick={() => {
-                            setActiveTool('connect');
-                            setConnectSourceId(node.id);
-                            toast.info(`Sambungkan alur dari "${node.label}" ke shape berikutnya.`);
-                          }} 
-                          className="p-1 text-slate-500 hover:text-amber-500 rounded hover:bg-amber-50"
-                          title="Mulai tarik panah hubungan"
-                        >
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </button>
-
-                        <div className="h-4 w-px bg-slate-200" />
-
-                        {/* Delete shape */}
-                        <button 
-                          onClick={handleDeleteSelected} 
-                          className="p-1 text-slate-450 hover:text-rose-600 rounded hover:bg-rose-50"
-                          title="Hapus shape"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    )}
-
-                    {/* Shape Component Frame Body */}
-                    <div 
-                      className={cn(getShapeThemeClasses(node, isSelected), "w-full h-full relative")}
-                      style={
-                        isBlueprint 
-                          ? undefined 
-                          : isSticky 
-                          ? { background: `linear-gradient(135deg, ${colorPaletteHex[node.color]?.bg || '#fef08a'} 0%, ${colorPaletteHex[node.color]?.bgGrad || '#fef3c7'} 100%)` }
-                          : customSvgTypes.includes(node.type as any) || node.type === "parallelogram" || node.type === "diamond" || node.type === "decision"
-                          ? undefined // SVGs handle their own fill
-                          : { background: `linear-gradient(135deg, ${colorPaletteHex[node.color]?.bg || '#eff6ff'} 0%, ${colorPaletteHex[node.color]?.bgGrad || '#dbeafe'} 100%)` }
-                      }
-                    >
-                      
-                      {renderCustomSvgShape(node, canvasTheme, isSelected, hoveredNodeId === node.id, draggingNodeId === node.id, isSourceOfConnect)}
-
-                      {/* Glowing high-fidelity active border overlays (only for non-SVG standard box shapes) */}
-                      {!isSvgShape && isSelected && (
-                        <motion.div
-                          className="absolute -inset-1 rounded-[inherit] border-2 border-violet-500/50 pointer-events-none z-10"
-                          initial={{ opacity: 0, scale: 0.98 }}
-                          animate={{ opacity: [0.4, 0.8, 0.4] }}
-                          transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-                        />
-                      )}
-
-                      {!isSvgShape && isSourceOfConnect && (
-                        <motion.div
-                          className="absolute -inset-1.5 rounded-[inherit] border-2 border-dashed border-rose-500/80 pointer-events-none z-10"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: [0.6, 1, 0.6] }}
-                          transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
-                        />
-                      )}
-
-                      {node.type === "card" && (
-                        <div className="absolute top-0 inset-x-0 h-1 rounded-t-lg bg-indigo-500" />
-                      )}
-
-                      {isDiamond && node.type !== 'decision' && node.type !== 'diamond' && (
-                        <div className="absolute inset-1.5 border border-black/10 rotate-45 pointer-events-none rounded bg-inherit" />
-                      )}
-
-                      {node.type === "parallelogram" && (
-                        <div className={cn("absolute inset-0 transform -skew-x-12 border border-black/10 rounded-md bg-inherit pointer-events-none", node.borderStyle === "dashed" ? "border-dashed border-2" : node.borderStyle === "none" ? "border-0 shadow-none" : "border-2")} />
-                      )}
-
-                      {node.type === "document" && (
-                        <div className="absolute top-0 right-0 w-3 h-3 bg-black/15 rounded-bl border-b border-l border-black/10 pointer-events-none" />
-                      )}
-
-                      {(node.type === "subprocess" || node.type === "predefined") && (
-                        <>
-                          <div className="absolute left-1.5 inset-y-0 w-0.5 bg-black/15 pointer-events-none border-l border-current/20" />
-                          <div className="absolute right-1.5 inset-y-0 w-0.5 bg-black/15 pointer-events-none border-r border-current/20" />
-                        </>
-                      )}
-
-                      {(node.type === "cylinder" || node.type === "database") && (
-                        <>
-                          {/* Cylinder Top Lip overlay */}
-                          <div className="absolute top-0 inset-x-0 h-3 rounded-t-[18px] border-b border-black/15 bg-inherit pointer-events-none opacity-80" />
-                          {/* Cylinder Bottom curved base overlay */}
-                          <div className="absolute bottom-0 inset-x-0 h-3 rounded-b-[18px] border-t border-black/15 pointer-events-none opacity-40 bg-black/5" />
-                        </>
-                      )}
-
-                      {node.type === "actor" && (
-                        <User className="w-3.5 h-3.5 text-current/50 absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none" />
-                      )}
-
-                      {node.type === "folder" && (
-                        <div className="absolute -top-1.5 left-2 w-7 h-1.5 rounded-t bg-inherit border-t border-x border-black/15 pointer-events-none" />
-                      )}
-
-                      {/* Display Text content box */}
-                      <div 
-                        className={cn("flex-1 w-full flex flex-col justify-center min-w-0 h-full relative z-10", node.type === "actor" && "pt-3.5")}
-                        style={{ padding: isDiamond ? '15%' : undefined }}
-                      >
-                        <textarea
-                          disabled={!isWorkspaceEditable}
-                          value={node.label}
-                          onChange={(e) => handleUpdateActiveNode({ label: e.target.value })}
-                          className={cn(
-                            "w-full bg-transparent border-0 resize-none font-medium text-current focus:outline-none focus:ring-1 focus:ring-violet-300 rounded leading-tight text-center font-sans tracking-tight custom-scrollbar",
-                            canvasTheme === "blueprint" && !isSticky && "text-white select-text",
-                            node.fontStyle === "serif" && "sticky-handwriting font-medium",
-                            node.fontStyle === "mono" && "font-mono text-[10px]",
-                            node.align === "left" && "text-left",
-                            node.align === "right" && "text-right"
-                          )}
-                          style={{ 
-                            fontSize: `${
-                              node.type === "sticky" 
-                                ? ((node.label || "").length > 100 ? 9 : (node.label || "").length > 60 ? 10 : (node.label || "").length > 30 ? 11 : 13)
-                                : (node.fontSize || 12)
-                            }px` 
-                          }}
-                          placeholder="..."
-                        />
-
-                        {/* Show Linked Jira / Backlog Scrum tasks indicators */}
-                        {linkedTask && (
-                          <div className="mt-1 flex flex-col items-center gap-0.5 w-full">
-                            <div 
-                              className={cn(
-                                "flex items-center gap-1 text-[8.5px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded border shadow-sm cursor-pointer whitespace-nowrap",
-                                linkedTask.status === "Done" || linkedTask.status === "Selesai"
-                                  ? "bg-emerald-100 text-emerald-800 border-emerald-300"
-                                  : linkedTask.status === "In Progress" || linkedTask.status === "Dikerjakan"
-                                  ? "bg-indigo-150 text-indigo-800 border-indigo-300"
-                                  : "bg-slate-100 text-slate-800 border-slate-350"
-                              )}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedTaskForDetail(linkedTask);
-                                setIsTaskDetailModalOpen(true);
-                              }}
-                              title="Klik untuk detail Backlog"
-                            >
-                              <span>{linkedTask.key}</span>
-                              <span className="w-1 h-3 bg-current/40 mx-0.5" />
-                              <span className="truncate max-w-[65px]">{linkedTask.status}</span>
-                              <ExternalLink className="w-2 h-2 opacity-55" />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                    </div>
-
-                    {/* Interactive Sizing Handles & Quick Auto-Connect Widget */}
-                    {isSelected && isWorkspaceEditable && (
-                      <>
-                        {/* Right East sizing circle handle */}
-                        <div 
-                          onMouseDown={(e) => handleResizeMouseDown(e, node.id, "e")}
-                          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-2.5 h-2.5 bg-violet-600 rounded-full border border-white cursor-ew-resize z-30 hover:scale-125 transition-transform shadow-md"
-                          title="Tarik untuk melebarkan"
-                        />
-                        {/* Bottom South sizing circle handle */}
-                        <div 
-                          onMouseDown={(e) => handleResizeMouseDown(e, node.id, "s")}
-                          className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2.5 h-2.5 bg-violet-600 rounded-full border border-white cursor-ns-resize z-30 hover:scale-125 transition-transform shadow-md"
-                          title="Tarik untuk mempertinggi"
-                        />
-                        {/* Corners SE sizing square handle */}
-                        <div 
-                          onMouseDown={(e) => handleResizeMouseDown(e, node.id, "se")}
-                          className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-3.5 h-3.5 bg-violet-600 rounded border border-white cursor-nwse-resize z-30 hover:scale-125 transition-transform shadow-md"
-                          title="Sizing Bebas"
-                        />
-                        
-                        {/* Auto-Connector plus direction link helper */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const nextNodeId = "node_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-                            const nextX = node.x + nodeWidth + 120;
-                            const nextY = node.y;
-                            const newNode: FlowNode = {
-                              ...node,
-                              id: nextNodeId,
-                              x: nextX,
-                              y: nextY,
-                              label: "Langkah Alur Baru"
-                            };
-                            const newRelation: FlowEdge = {
-                              id: "edge_" + Date.now(),
-                              fromNodeId: node.id,
-                              toNodeId: nextNodeId
-                            };
-                            setNodes(prev => [...prev, newNode]);
-                            setEdges(prev => [...prev, newRelation]);
-                            setSelectedNodeId(nextNodeId);
-                            toast.success("Otomatis menambahkan & menghubungkan alur langkah baru!");
-                          }}
-                          className="absolute -right-11 top-1/2 -translate-y-1/2 w-7 h-7 bg-white hover:bg-violet-600 border border-slate-250 shadow-lg text-violet-600 hover:text-white rounded-full flex items-center justify-center font-medium text-base transition-all scale-90 hover:scale-110 z-30"
-                          title="Buat Alur Hubung Baru secara Instan"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
-
-                        {/* Downward Auto-Connector plus direction link helper */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const nextNodeId = "node_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-                            const nextX = node.x;
-                            const nextY = node.y + nodeHeight + 100;
-                            const newNode: FlowNode = {
-                              ...node,
-                              id: nextNodeId,
-                              x: nextX,
-                              y: nextY,
-                              label: "Langkah Alur Baru"
-                            };
-                            const newRelation: FlowEdge = {
-                              id: "edge_" + Date.now(),
-                              fromNodeId: node.id,
-                              toNodeId: nextNodeId
-                            };
-                            setNodes(prev => [...prev, newNode]);
-                            setEdges(prev => [...prev, newRelation]);
-                            setSelectedNodeId(nextNodeId);
-                            toast.success("Otomatis menambahkan & menghubungkan alur ke bawah!");
-                          }}
-                          className="absolute -bottom-11 left-1/2 -translate-x-1/2 w-7 h-7 bg-white hover:bg-indigo-600 border border-slate-250 shadow-lg text-indigo-600 hover:text-white rounded-full flex items-center justify-center font-medium text-base transition-all scale-90 hover:scale-110 z-30"
-                          title="Hubungkan Alir ke Bawah Baru secara Instan"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
-                      </>
-                    )}
-
-                  </motion.div>
-                );
-              })}
+              {nodes.map((node) => (
+                <FlowchartNode
+                  key={node.id}
+                  node={node}
+                  selectedNodeId={selectedNodeId}
+                  setSelectedNodeId={setSelectedNodeId}
+                  setSelectedEdgeId={setSelectedEdgeId}
+                  copiedNodes={copiedNodes}
+                  connectSourceId={connectSourceId}
+                  setConnectSourceId={setConnectSourceId}
+                  hoveredNodeId={hoveredNodeId}
+                  setHoveredNodeId={setHoveredNodeId}
+                  draggingNodeId={draggingNodeId}
+                  activeSimNodeId={activeSimNodeId}
+                  canvasTheme={canvasTheme}
+                  isWorkspaceEditable={isWorkspaceEditable}
+                  setActiveTool={setActiveTool}
+                  setNodes={setNodes}
+                  setEdges={setEdges}
+                  setNodeContextMenu={setNodeContextMenu}
+                  handleNodeMouseDown={handleNodeMouseDown}
+                  handleResizeMouseDown={handleResizeMouseDown}
+                  handleConnectPortClick={handleConnectPortClick}
+                  handleUpdateActiveNode={handleUpdateActiveNode}
+                  handleDuplicateNode={handleDuplicateNode}
+                  handleDeleteSelected={handleDeleteSelected}
+                  getLinkedTaskDetails={getLinkedTaskDetails}
+                  setSelectedTaskForDetail={setSelectedTaskForDetail}
+                  setIsTaskDetailModalOpen={setIsTaskDetailModalOpen}
+                />
+              ))}
 
             </div>
 
@@ -4378,245 +3147,21 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 )}
 
       {/* DETAILED POPUP DIALOG: MULTI-FORMAT DIAGRAM IMPORT (Draw.io, Miro, JSON) */}
-      {isImportModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 select-none">
-          <div className="bg-white border border-slate-200 w-full max-w-xl rounded-xl shadow-xl overflow-hidden flex flex-col text-slate-800 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh]">
-            
-            {/* Modal Head */}
-            <div className="px-5 py-4 bg-white border-b border-slate-200 flex justify-between items-center shrink-0">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-[#405189]/10 text-[#405189] flex items-center justify-center">
-                  <Upload className="w-4 h-4" />
-                </div>
-                <h3 className="font-medium text-sm text-slate-900">
-                  Integrasi & Impor File Alur Kerja
-                </h3>
-              </div>
-              <button 
-                onClick={() => {
-                  setIsImportModalOpen(false);
-                  setParsedImportData(null);
-                }}
-                className="p-1 hover:bg-slate-200 rounded-lg text-slate-400 hover:text-slate-600 transition-all active:scale-95"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="p-5 overflow-y-auto space-y-4 text-xs flex-1">
-              {/* Platforms Option Slider */}
-              <div className="grid grid-cols-3 gap-2 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setImportType("drawio");
-                    setParsedImportData(null);
-                    setParsedFilename("");
-                  }}
-                  className={cn(
-                    "p-3 rounded-xl border text-center transition-all flex flex-col items-center gap-1.5",
-                    importType === "drawio"
-                      ? "bg-orange-50/70 border-orange-200 text-orange-800 ring-2 ring-orange-500/20 font-medium"
-                      : "border-slate-200 hover:bg-slate-50 text-slate-605 hover:border-slate-300 font-medium"
-                  )}
-                >
-                  <span className="text-xl">📊</span>
-                  <div className="text-[10px] font-medium uppercase tracking-wider">Draw.io / XML</div>
-                  <div className="text-[9px] text-slate-500 font-medium">File .xml / .drawio</div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setImportType("miro");
-                    setParsedImportData(null);
-                    setParsedFilename("");
-                  }}
-                  className={cn(
-                    "p-3 rounded-xl border text-center transition-all flex flex-col items-center gap-1.5",
-                    importType === "miro"
-                      ? "bg-amber-50/70 border-amber-200 text-amber-800 ring-2 ring-amber-500/20 font-medium"
-                      : "border-slate-200 hover:bg-slate-50 text-slate-605 hover:border-slate-300 font-medium"
-                  )}
-                >
-                  <span className="text-xl">🟡</span>
-                  <div className="text-[10px] font-medium uppercase tracking-wider">Miro Board</div>
-                  <div className="text-[9px] text-slate-500 font-medium">Miro .json / .csv</div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setImportType("native");
-                    setParsedImportData(null);
-                    setParsedFilename("");
-                  }}
-                  className={cn(
-                    "p-3 rounded-xl border text-center transition-all flex flex-col items-center gap-1.5",
-                    importType === "native"
-                      ? "bg-indigo-50/70 border-indigo-200 text-indigo-800 ring-2 ring-indigo-500/20 font-medium"
-                      : "border-slate-200 hover:bg-slate-50 text-slate-605 hover:border-slate-300 font-medium"
-                  )}
-                >
-                  <span className="text-xl">🔮</span>
-                  <div className="text-[10px] font-medium uppercase tracking-wider">Format Cadangan</div>
-                  <div className="text-[9px] text-slate-500 font-medium">Bawaan File .json</div>
-                </button>
-              </div>
-
-              {/* Guidelines helper text */}
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] leading-relaxed text-slate-550">
-                {importType === "drawio" && (
-                  <p>
-                    💡 <strong>Petunjuk Draw.io</strong>: Anda dapat mengekspor diagram dari Draw.io sebagai berkas <strong>XML Terkompresi maupun Mentah (.xml / .drawio)</strong>. Sistem kami secara otomatis mengonversi bentuk dasar, warna, label, serta garis penghubung agar kompatibel di whiteboard.
-                  </p>
-                )}
-                {importType === "miro" && (
-                  <p>
-                    💡 <strong>Petunjuk Miro</strong>: Ekspor papan Miro Anda dalam format <strong>JSON</strong> atau <strong>Metadata CSV</strong>. Bentuk geometri, koordinat posisi, teks konten, serta panah logic (connectors) akan dipetakan secara cerdas ke bentuk alur whiteboard.
-                  </p>
-                )}
-                {importType === "native" && (
-                  <p>
-                    💡 <strong>Petunjuk Format Cadangan</strong>: Unggah file backup ruang kerja berformat <strong>JSON</strong> yang diunduh dari aplikasi ini untuk memulihkan keseluruhan kondisi kanvas (bentuk, relasi, tema, dan status).
-                  </p>
-                )}
-              </div>
-
-              {/* Drag and Drop Box */}
-              <div
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setDragOverImport(true);
-                }}
-                onDragLeave={() => setDragOverImport(false)}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  setDragOverImport(false);
-                  const file = e.dataTransfer.files?.[0];
-                  if (file) handleProcessImportFile(file);
-                }}
-                onClick={() => {
-                  const input = document.createElement("input");
-                  input.type = "file";
-                  if (importType === "drawio") {
-                    input.accept = ".xml, .drawio";
-                  } else if (importType === "miro") {
-                    input.accept = ".json, .csv";
-                  } else {
-                    input.accept = ".json";
-                  }
-                  input.onchange = (ev) => {
-                    const file = (ev.target as HTMLInputElement).files?.[0];
-                    if (file) handleProcessImportFile(file);
-                  };
-                  input.click();
-                }}
-                className={cn(
-                  "border-2 border-dashed rounded-xl p-6 transition-all cursor-pointer flex flex-col items-center justify-center gap-3 min-h-[140px]",
-                  dragOverImport
-                    ? "border-violet-500 bg-violet-50 text-violet-700"
-                    : parsedImportData
-                    ? "border-emerald-300 bg-emerald-50/10 text-emerald-800 animate-pulse"
-                    : "border-slate-300 hover:border-indigo-400 hover:bg-slate-50 text-slate-500 font-medium"
-                )}
-              >
-                {parsedImportData ? (
-                  <span className="text-3xl animate-bounce">📦</span>
-                ) : (
-                  <Upload className="w-8 h-8 text-slate-300" />
-                )}
-                
-                <div className="text-center font-medium font-sans">
-                  {parsedImportData ? (
-                    <span className="text-emerald-700 text-[11px] uppercase tracking-wider font-medium block mb-1">Struktur File Berhasil Dimuat!</span>
-                  ) : (
-                    <span>Tarik & lepas file di sini atau klik untuk memilih file</span>
-                  )}
-                  {parsedFilename && (
-                    <span className="text-[10px] text-slate-600 font-mono block mt-2 bg-slate-100 p-1 px-2.5 rounded-lg border border-slate-200 inline-block">
-                      📎 {parsedFilename}
-                    </span>
-                  )}
-                </div>
-                
-                {!parsedImportData && (
-                  <p className="text-[9px] text-slate-400 font-medium">
-                    Mendukung ekstensi {importType === "drawio" ? ".xml, .drawio" : importType === "miro" ? ".json, .csv" : ".json"}
-                  </p>
-                )}
-              </div>
-
-              {/* Analytical preview result of parser */}
-              {parsedImportData && (
-                <div className="bg-emerald-50/60 border border-emerald-200 rounded-xl p-4 space-y-2 text-[11px] animate-fade-in text-emerald-900 leading-relaxed font-sans font-medium">
-                  <span className="font-medium uppercase tracking-widest text-[9.5px] text-emerald-800 flex items-center gap-1.5 shadow-sm bg-white p-1 px-2.5 w-fit rounded-full border border-emerald-100">
-                    🔍 Ulasan Kesiapan Diagram
-                  </span>
-                  
-                  <div className="grid grid-cols-2 gap-3 pt-1">
-                    <div className="bg-white p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2 shadow-inner">
-                      <span className="text-xl">🛠️</span>
-                      <div>
-                        <div className="font-medium text-slate-900 text-xs">{parsedImportData.nodes.length}</div>
-                        <div className="text-[9px] text-slate-500 font-medium uppercase tracking-wider">Bentuk & Ornamen (Nodes)</div>
-                      </div>
-                    </div>
-
-                    <div className="bg-white p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2 shadow-inner">
-                      <span className="text-xl">🖧</span>
-                      <div>
-                        <div className="font-medium text-slate-900 text-xs">{parsedImportData.edges.length}</div>
-                        <div className="text-[9px] text-slate-500 font-medium uppercase tracking-wider">Anak Panah Penghubung (Edges)</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="text-[10px] text-emerald-700 italic pt-1 font-medium leading-relaxed">
-                    Kesiapan 105%: Semua komponen berhasil dipetakan ke logic element whiteboard. Silakan klik salah satu tombol di bawah untuk mengaplikasikan.
-                  </p>
-                </div>
-              )}
-
-            </div>
-
-            {/* Modal Actions */}
-            <div className="p-4 px-5 bg-slate-50 border-t border-slate-200 flex justify-between items-center shrink-0">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsImportModalOpen(false);
-                  setParsedImportData(null);
-                }}
-                className="p-2 px-4 rounded-xl bg-slate-200/80 hover:bg-slate-300 font-medium border border-slate-300 text-slate-600 hover:text-slate-800 transition-all text-[11px] active:scale-95"
-              >
-                Tutup
-              </button>
-
-              {parsedImportData ? (
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleApplyImportMerge}
-                    className="p-2 px-3 bg-white hover:bg-indigo-50 border border-indigo-200 hover:border-indigo-300 text-indigo-700 hover:text-indigo-900 font-medium rounded-xl transition-all text-[11px] shadow-sm flex items-center gap-1 active:scale-95"
-                  >
-                    <span>➕ Gabungkan ke Kanvas</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleApplyImportReplace}
-                    className="p-2 px-4 bg-gradient-to-tr from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-medium rounded-xl transition-all text-[11px] shadow-sm flex items-center gap-1 active:scale-95"
-                  >
-                    <span>🔥 Ganti Kanvas Aktif</span>
-                  </button>
-                </div>
-              ) : (
-                <div className="text-[10px] text-slate-400 italic font-medium">Silakan tarik / pilih diagram di atas</div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      <ImportDiagramModal
+        isImportModalOpen={isImportModalOpen}
+        setIsImportModalOpen={setIsImportModalOpen}
+        importType={importType}
+        setImportType={setImportType}
+        parsedImportData={parsedImportData}
+        setParsedImportData={setParsedImportData}
+        parsedFilename={parsedFilename}
+        setParsedFilename={setParsedFilename}
+        dragOverImport={dragOverImport}
+        setDragOverImport={setDragOverImport}
+        handleProcessImportFile={handleProcessImportFile}
+        handleApplyImportMerge={handleApplyImportMerge}
+        handleApplyImportReplace={handleApplyImportReplace}
+      />
 
       {/* DETAILED POPUP DIALOG: TAMBAH DATA / ADD DATA / EDIT INFO DESCRIPTION */}
       {isModalOpen && (
