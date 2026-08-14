@@ -12,120 +12,18 @@ import { DEFAULT_PERMISSIONS as ROLE_DEFAULT_PERMISSIONS } from '../../lib/permi
 import { useAdminUsers } from './hooks';
 import { Button, Modal, UserAvatar } from './styles';
 import { toast } from 'sonner';
-import { apiRequest } from '../../lib/api';
-
-const MODULE_DESCRIPTIONS: Record<string, { label: string; desc: string }> = {
-  dashboard: {
-    label: "Dashboard",
-    desc: "Provides a birds-eye summary of active work streams, sprint tasks, progress metrics, and general workspace health."
-  },
-  meetingNotes: {
-    label: "Meeting Notes",
-    desc: "Collaborative hub for meeting notes, registering structural discussion points, allocating actions, and tracking choices."
-  },
-  wiki: {
-    label: "Dokumentasi",
-    desc: "Collaborative hub for project documentation and knowledge sharing."
-  },
-  notebooklm: {
-    label: "NotebookLM",
-    desc: "Grounded AI research assistant, document synthesis, and audio overview powered by Gemini."
-  },
-  flowchart: {
-    label: "Flowchart Editor",
-    desc: "Interactive tool for creating, editing, and mapping project workflows and process diagrams."
-  },
-  list: {
-    label: "Issue List",
-    desc: "The primary registry for filing bugs, writing user stories, planning tasks, and filtering the complete target workspace."
-  },
-  sprints: {
-    label: "Planning",
-    desc: "Used by managers to manage sprint backlogs, schedule targets, adjust milestones, and run planning ceremonies."
-  },
-  board: {
-    label: "Kanban Board",
-    desc: "Visual, interactive columns for the active sprint where members pull tasks across In-Progress, Review, and Done stages."
-  },
-  qa: {
-    label: "QA Testing",
-    desc: "Manages test scenarios, test cases, and quality assurance workflows for project modules."
-  },
-  timeline: {
-    label: "Roadmap",
-    desc: "Interactive Gantt-style planning showing epic schedules, dependencies, and chronological product launches."
-  },
-  access: {
-    label: "Team",
-    desc: "Gives managers clear insights into engineer workload factors, role matrices, skill charts, and team member capacity."
-  },
-  userManagement: {
-    label: "User Management",
-    desc: "Manages user access, roles, and permissions."
-  },
-  masterData: {
-    label: "Master Data",
-    desc: "Manages core system data."
-  },
-  auditLog: {
-    label: "Enterprise Audit",
-    desc: "Highly-granular security recording tracking all structural modifications, deletions, updates, and database actions."
-  },
-  dbExplorer: {
-    label: "DB Explorer",
-    desc: "Direct database access and exploration tool."
-  },
-  settings: {
-    label: "Integration Settings",
-    desc: "Manages Email and WhatsApp integration configurations."
-  }
-};
-
-const ROLE_DESCRIPTIONS: Record<AppRole, { label: string; badgeColor: string; icon: React.ReactNode; desc: string }> = {
-  admin: {
-    label: "Administrator",
-    badgeColor: "bg-rose-50 border-rose-200 text-rose-700",
-    icon: <ShieldCheck className="w-4 h-4 text-rose-600 shrink-0" />,
-    desc: "Bypasses all control gates. Granted complete read, create, update, and delete access in all modules, settings, and team workspaces."
-  },
-  head: {
-    label: "Department Head",
-    badgeColor: "bg-purple-50 border-purple-200 text-purple-700",
-    icon: <Award className="w-4 h-4 text-purple-600 shrink-0" />,
-    desc: "Supervises whole business units. Can browse metrics, collaborate on documentation, review audit screens, and inspect operations."
-  },
-  manager: {
-    label: "Project Manager",
-    badgeColor: "bg-blue-50 border-blue-200 text-blue-700",
-    icon: <UserCog className="w-4 h-4 text-blue-600 shrink-0" />,
-    desc: "Orchestrated to run specific project fields, draft task specs, spin up sprints, review PR checklists, and direct developer assignments."
-  },
-  user: {
-    label: "Standard User",
-    badgeColor: "bg-indigo-50 border-indigo-200 text-indigo-700",
-    icon: <Users className="w-4 h-4 text-indigo-600 shrink-0" />,
-    desc: "The core collaborator. Empowered to write issues, move card lanes, collaborate on discussion points, and assign items to their plate."
-  },
-  viewer: {
-    label: "Observer",
-    badgeColor: "bg-slate-100 border-slate-300 text-slate-700",
-    icon: <Eye className="w-4 h-4 text-slate-600 shrink-0" />,
-    desc: "Read-only workspace access. Best suited for clients, corporate stakeholders, or general auditors who need high visibility into work items."
-  }
-};
-
-const ACTION_DESCRIPTIONS = {
-  read: "Read: View permission to browse, search, and load module entries.",
-  create: "Create: Modification privilege to write and add new records.",
-  update: "Update: Modification privilege to edit and refine existing entries.",
-  delete: "Delete: Destructive privilege to permanently purge data or archive entities."
-};
-
-const STATUS_DESCRIPTIONS = {
-  approved: "Approved: Account is active and clearance permissions are fully enabled.",
-  pending: "Pending: Awaiting Administrator verification review and clearance setup.",
-  rejected: "Rejected: Inactive account. Access is restricted and features are locked."
-};
+import {
+  MODULE_DESCRIPTIONS,
+  ROLE_DESCRIPTIONS,
+  ACTION_DESCRIPTIONS,
+} from './constants';
+import {
+  assignUserToProject,
+  removeUserFromProject,
+  registerUser,
+  updateUser,
+  deleteUser,
+} from './services/users.service';
 
 const Input = ({ value, onChange, placeholder, type = 'text', className = '', ...props }: any) => (
   <input
@@ -229,13 +127,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
         payload.teamMemberIds = selectedTeamMemberIds;
       }
 
-      const data = await apiRequest(`/api/projects/${selectedAssignProjectId}/members`, {
-        method: 'PUT',
-        headers: {
-          'x-user-id': props.currentUserId || 'guest'
-        },
-        body: payload
-      });
+      const data = await assignUserToProject(selectedAssignProjectId, props.currentUserId, payload);
       if (data.status === 'success') {
         toast.success('User berhasil ditambahkan ke Project!');
         setSelectedAssignProjectId('');
@@ -268,10 +160,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
         setConfirmModal(prev => ({ ...prev, isOpen: false }));
 
         try {
-          const data = await apiRequest(`/api/projects/${projectId}/members/${userId}`, {
-            method: 'DELETE',
-            headers: { 'x-user-id': props.currentUserId || 'guest' }
-          });
+          const data = await removeUserFromProject(projectId, props.currentUserId, userId);
           if (data.status === 'success') {
             toast.success('User berhasil dihapus dari Project');
             if (props.onRefreshProjects) {
@@ -313,20 +202,17 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
       const normalizedUsername = addPeopleUsername.trim().toLowerCase().replace(/\s+/g, '_');
       const selectedRolePermissions = ROLE_DEFAULT_PERMISSIONS[addPeopleRole] || ROLE_DEFAULT_PERMISSIONS.viewer;
 
-      const data = await apiRequest('/api/auth/register', {
-        method: 'POST',
-        body: {
-          username: normalizedUsername,
-          password: addPeoplePassword,
-          displayName: addPeopleFullName,
-          email: addPeopleEmail,
-          department: addPeopleDepartment,
-          position: addPeopleJabatan,
-          status: addPeopleStatus,
-          role: addPeopleRole,
-          permissions: selectedRolePermissions,
-          phone: addPeoplePhone
-        }
+      const data = await registerUser({
+        username: normalizedUsername,
+        password: addPeoplePassword,
+        displayName: addPeopleFullName,
+        email: addPeopleEmail,
+        department: addPeopleDepartment,
+        position: addPeopleJabatan,
+        status: addPeopleStatus,
+        role: addPeopleRole,
+        permissions: selectedRolePermissions,
+        phone: addPeoplePhone
       });
 
       if (data.status !== 'success') {
@@ -559,21 +445,15 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
       await Promise.all(selectedUserIds.map(async (userId) => {
         try {
           if (action === 'delete') {
-            const data = await apiRequest(`/api/users/${userId}`, { method: 'DELETE' });
+            const data = await deleteUser(userId);
             if (data.status === 'success') successCount++;
             else failCount++;
           } else if (action === 'approve' || action === 'reject') {
-            const data = await apiRequest(`/api/users/${userId}`, {
-              method: 'PUT',
-              body: { status: action === 'approve' ? 'approved' : 'rejected' }
-            });
+            const data = await updateUser(userId, { status: action === 'approve' ? 'approved' : 'rejected' });
             if (data.status === 'success') successCount++;
             else failCount++;
           } else {
-            const data = await apiRequest(`/api/users/${userId}`, {
-              method: 'PUT',
-              body: { role: action }
-            });
+            const data = await updateUser(userId, { role: action });
             if (data.status === 'success') successCount++;
             else failCount++;
           }
@@ -993,7 +873,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                               onConfirm: async () => {
                                 setConfirmModal(prev => ({ ...prev, isOpen: false }));
                                 try {
-                                  const data = await apiRequest(`/api/users/${user.id}`, { method: 'DELETE' });
+                                  const data = await deleteUser(user.id);
                                   if (data.status !== 'success') throw new Error(data.message);
                                   toast.success('User deleted successfully');
                                   fetchUsers(); // Refresh
