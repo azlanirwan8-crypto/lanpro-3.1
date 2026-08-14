@@ -1,22 +1,15 @@
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 
-export interface FlowNode {
-  id: string;
-  type: string;
-  x: number;
-  y: number;
-  label: string;
-  color: string;
-  taskId?: string;
-  width?: number;
-  height?: number;
-  fontSize?: number;
-  fontStyle?: "sans" | "serif" | "mono";
-  align?: "left" | "center" | "right";
-  borderStyle?: "solid" | "dashed" | "none";
-  strokeWidth?: number;
-}
+// FlowNode sebelumnya didefinisikan ulang di sini dengan `type: string` yang
+// longgar, sementara useFlowchartNodes memakai union bentuk yang ketat. Akibatnya
+// snapshot hasil handleUndo() tidak dapat diserahkan ke setNodes — string tidak
+// assignable ke union. Kini keduanya memakai satu definisi yang sama.
+//
+// Re-export dipertahankan agar konsumen lama yang meng-import dari modul ini
+// tetap berfungsi.
+import type { FlowNode } from "../features/flowchart/types";
+export type { FlowNode };
 
 export interface FlowEdge {
   id: string;

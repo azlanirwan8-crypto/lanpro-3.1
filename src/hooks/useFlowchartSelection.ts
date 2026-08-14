@@ -1,21 +1,10 @@
 import { useState } from "react";
 
-export interface FlowNode {
-  id: string;
-  type: string;
-  x: number;
-  y: number;
-  label: string;
-  color: string;
-  taskId?: string;
-  width?: number;
-  height?: number;
-  fontSize?: number;
-  fontStyle?: "sans" | "serif" | "mono";
-  align?: "left" | "center" | "right";
-  borderStyle?: "solid" | "dashed" | "none";
-  strokeWidth?: number;
-}
+// FlowNode dulu didefinisikan ulang di sini dengan `type: string` yang longgar.
+// Kini memakai satu sumber di features/flowchart/types.ts, sehingga node hasil
+// salin-tempel tetap bertipe ketat saat diserahkan ke setNodes.
+import type { FlowNode } from "../features/flowchart/types";
+export type { FlowNode };
 
 export interface FlowEdge {
   id: string;

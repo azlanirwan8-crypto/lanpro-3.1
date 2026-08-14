@@ -1,22 +1,11 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
-export interface FlowNode {
-  id: string;
-  type: "oval" | "rect" | "diamond" | "cylinder" | "text" | "sticky" | "cloud" | "circle" | "card" | "parallelogram" | "document" | "subprocess" | "actor" | "folder" | "decision" | "predefined" | "database" | "triangle" | "pentagon" | "hexagon" | "octagon" | "star" | "arrowRight" | "arrowLeft" | "arrowLeftRight" | "trapezoid" | "cross" | "curlyLeft" | "curlyRight" | "chevron" | "delay" | "callout" | "awsLambda" | "awsEc2" | "awsS3" | "awsVpc" | "awsRds" | "awsCloudwatch" | "awsDynamo" | "umlClass" | "umlInterface" | "umlUseCase" | "umlBoundary" | "umlControl" | "umlEntity" | "umlNote" | "multiDocument" | "manualInput" | "manualOperation" | "preparation" | "display" | "summingJunction" | "collate" | "connectorOr" | "sort" | "merge" | "azureUser" | "azureSql" | "azureFunctions" | "azureKeyVault" | "azureCosmos" | "azurePowerBi" | "azureVm" | "azureStorage" | "bpmnActivity" | "bpmnEvent" | "bpmnGateway" | "bpmnDataStore" | "bpmnDataObject" | "bpmnEventEnd";
-  x: number;
-  y: number;
-  label: string;
-  color: string;
-  taskId?: string;
-  width?: number;
-  height?: number;
-  fontSize?: number;
-  fontStyle?: "sans" | "serif" | "mono";
-  align?: "left" | "center" | "right";
-  borderStyle?: "solid" | "dashed" | "none";
-  strokeWidth?: number;
-}
+// FlowNode dulu didefinisikan ulang di sini. Kini memakai satu sumber di
+// features/flowchart/types.ts agar tidak ada dua tipe bernama sama yang
+// strukturnya berbeda. Re-export dipertahankan untuk konsumen lama.
+import type { FlowNode } from "../features/flowchart/types";
+export type { FlowNode };
 
 export interface FlowEdge {
   id: string;

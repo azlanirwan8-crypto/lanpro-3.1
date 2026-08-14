@@ -427,7 +427,11 @@ const router = express.Router();
       const user = users[0];
 
       if (currentPassword && newPassword) {
-        const isValid = await verifyPassword(currentPassword, user.passwordHash, user.username);
+        // verifyPassword hanya menerima (password, storedHash). Argumen ketiga
+        // user.username sebelumnya dikirim tetapi diabaikan diam-diam: salt
+        // sudah tertanam di dalam string hash pbkdf2, dan bcrypt tidak
+        // memerlukannya. Menghapusnya tidak mengubah perilaku.
+        const isValid = await verifyPassword(currentPassword, user.passwordHash);
         if (!isValid) {
           connection.release();
           return res.status(400).json({ status: "error", message: "Password lama yang Anda masukkan salah!" });
