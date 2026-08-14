@@ -107,10 +107,13 @@ jobs:
 
       - name: Trigger Vercel Production Deployment
         run: |
-          echo "[VERCEL-DEPLOY] Memicu Vercel Auto-Deploy Hook..."
+          # Deploy hook adalah kredensial: siapa pun yang memilikinya bisa memicu
+          # deploy produksi. Tidak boleh ada nilai fallback yang di-hardcode di sini.
           HOOK_URL="${{ secrets.VERCEL_DEPLOY_HOOK }}"
           if [ -z "$HOOK_URL" ]; then
-            HOOK_URL="https://api.vercel.com/v1/integrations/deploy/prj_gFghqJkbTCDIgK82x1sdV3AsAwLN/pQFMLbAykv"
+            echo "[VERCEL-DEPLOY] Dilewati: secret VERCEL_DEPLOY_HOOK belum diset."
+            exit 0
           fi
-          curl -s -X POST "$HOOK_URL"
-          echo "[VERCEL-DEPLOY] Hook Vercel berhasil dikirim dan diproses."
+          echo "[VERCEL-DEPLOY] Memicu Vercel Auto-Deploy Hook..."
+          curl -s -X POST "$HOOK_URL" > /dev/null
+          echo "[VERCEL-DEPLOY] Hook Vercel berhasil dikirim."
