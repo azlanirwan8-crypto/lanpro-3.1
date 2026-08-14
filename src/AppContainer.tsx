@@ -31,6 +31,7 @@ import { useAppStore } from "./store/useAppStore";
 import { CacheManager } from "./lib/cache";
 import { useMasterData } from "./hooks/useMasterData";
 import { useAuth } from "./hooks/useAuth";
+import { useAppModals } from "./hooks/useAppModals";
 import { MeetingNotes } from "./features/meeting-notes/MeetingNotes";
 import { WikiView } from "./features/wiki";
 import { NotebookLM } from "./features/notebook-lm";
@@ -604,6 +605,32 @@ function AppContainer() {
     setConfirmAction,
   );
 
+  // Modal & Detail Panel Management
+  const {
+    isNewProjectModalOpen, setIsNewProjectModalOpen,
+    isNewTaskModalOpen, setIsNewTaskModalOpen,
+    isNewSprintModalOpen, setIsNewSprintModalOpen,
+    isInviteModalOpen, setIsInviteModalOpen,
+    isInviteSuccessModalOpen, setIsInviteSuccessModalOpen,
+    isEditSprintModalOpen, setIsEditSprintModalOpen,
+    isEditTaskModalOpen, setIsEditTaskModalOpen,
+    isEditProjectModalOpen, setIsEditProjectModalOpen,
+    isProfileModalOpen, setIsProfileModalOpen,
+    isShortcutsModalOpen, setIsShortcutsModalOpen,
+    isSyncModalOpen, setIsSyncModalOpen,
+    editingTask, setEditingTask, editingSprint, setEditingSprint,
+    editingProject, setEditingProject, selectedTaskForDetail, setSelectedTaskForDetail,
+    selectedUserForDetail, setSelectedUserForDetail, lastInvitedEmail, setLastInvitedEmail,
+    previousView, setPreviousView, openNewProjectModal, closeNewProjectModal,
+    openNewTaskModal, closeNewTaskModal, openNewSprintModal, closeNewSprintModal,
+    openInviteModal, closeInviteModal, openInviteSuccessModal, closeInviteSuccessModal,
+    openEditTaskModal, closeEditTaskModal, openEditSprintModal, closeEditSprintModal,
+    openEditProjectModal, closeEditProjectModal, openTaskDetail, closeTaskDetail,
+    openUserDetail, closeUserDetail, toggleProfileModal, openProfileModal, closeProfileModal,
+    toggleShortcutsModal, openShortcutsModal, closeShortcutsModal,
+    openSyncModal, closeSyncModal, closeAllModals
+  } = useAppModals();
+
   // UI States & Controls
   const [swimlaneType, setSwimlaneType] = useState<
     "epics" | "assignees" | "none"
@@ -848,11 +875,8 @@ function AppContainer() {
   const [masterPage, setMasterPage] = useState(1);
   const [backlogPage, setBacklogPage] = useState(1);
 
-  const [isNewProjectModalOpen, setIsNewProjectModalOpen] = useState(false);
-  const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
   const [expandedSprintId, setExpandedSprintId] = useState<string | null>(null);
   const [isUpdatingTask, setIsUpdatingTask] = useState<Record<string, boolean>>({});
-  const [isNewSprintModalOpen, setIsNewSprintModalOpen] = useState(false);
   const [newSprintName, setNewSprintName] = useState("");
   const [newSprintGoal, setNewSprintGoal] = useState("");
   const [newSprintStartDate, setNewSprintStartDate] = useState(
@@ -864,10 +888,6 @@ function AppContainer() {
   const [selectedSprintBacklog, setSelectedSprintBacklog] = useState<
     Set<string>
   >(new Set());
-  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-  const [isInviteSuccessModalOpen, setIsInviteSuccessModalOpen] =
-    useState(false);
-  const [lastInvitedEmail, setLastInvitedEmail] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectKey, setNewProjectKey] = useState("");
@@ -922,17 +942,7 @@ function AppContainer() {
       setIsSubmitting(prev => ({ ...prev, [key]: false }));
     }
   };
-  const [editingSprint, setEditingSprint] = useState<Sprint | null>(null);
-  const [isEditSprintModalOpen, setIsEditSprintModalOpen] = useState(false);
-  const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [isEditProjectModalOpen, setIsEditProjectModalOpen] = useState(false);
-  const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [selectedTaskForDetail, setSelectedTaskForDetail] = useState<Task | null>(null);
-  const [selectedUserForDetail, setSelectedUserForDetail] = useState<UserProfile | null>(null);
-
   // We keep a history of the last view before opening issue detail so we can go back
-  const [previousView, setPreviousView] = useState<string>('list');
 
   const setIsTaskDetailModalOpen = (open: boolean) => {
     if (open) {
@@ -947,7 +957,6 @@ function AppContainer() {
 
   const handleSetIsTaskDetailModalOpen = setIsTaskDetailModalOpen;
 
-  const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
 
   // Latency & Ping Monitor States
   const [apiLatency, setApiLatency] = useState<number | null>(null);
@@ -987,7 +996,6 @@ function AppContainer() {
     setLatencyStatus('excellent');
   }, []);
 
-  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [cacheStats, setCacheStats] = useState<any>(null);
   const [lastSyncedTime, setLastSyncedTime] = useState<string>("Baru saja");
@@ -1098,7 +1106,6 @@ function AppContainer() {
     closeOnBackdropClick?: boolean;
   } | null>(null);
 
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const exportTasksToCSV = () => {
     if (!selectedProject || tasks.length === 0) {
