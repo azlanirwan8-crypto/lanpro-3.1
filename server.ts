@@ -51,6 +51,7 @@ import { generateContentWithFallback } from './server/services/ai.service';
 
 // --- PROMETHEUS METRICS REGISTRY (imported from server/config/metrics.ts) ---
 import { register, httpRequestsTotal, socketActiveConnections, optimisticLockingConflicts } from "./server/config/metrics";
+import { setSocketServer } from "./server/config/socket";
 
 import { getSecret } from "./server/config/secrets";
 import { initWhatsAppScheduler, sendDailyTaskDigest } from "./server/services/whatsapp.service";
@@ -132,6 +133,11 @@ async function startServer() {
       methods: ["GET", "POST", "PUT", "DELETE"]
     }
   });
+
+  // Daftarkan instance ke registry agar modul route dapat memancarkan event
+  // tanpa meng-import server.ts (yang akan membentuk lingkaran dependensi).
+  // Wajib dilakukan sebelum route di-mount.
+  setSocketServer(io);
 
   // --- SOCKET.IO REDIS ADAPTER (v1.4 Horizontal Scaling) ---
   let isRedisConnected = false;

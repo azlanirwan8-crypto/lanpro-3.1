@@ -17,6 +17,26 @@ import { generateBrdDocx } from '../services/docx.service';
 import { validateFileBuffer, sanitizeFilename, generatePresignedUrl, verifyPresignedToken } from '../../src/lib/fileSecurity';
 import taskRoutes from './task.routes';
 
+// Import di bawah ini hilang saat rute diekstrak dari server.ts. Simbolnya
+// dulu hidup di scope server.ts, sehingga setelah dipindah menjadi nama yang
+// tidak terdefinisi — 119 error TypeScript, dan ReferenceError saat endpoint
+// terkait benar-benar dipanggil.
+import { GoogleGenAI, Type } from '@google/genai';
+import { generateContentWithFallback } from '../services/ai.service';
+import { createAuditLog } from '../services/audit.service';
+import { getSocketServer } from '../config/socket';
+
+/**
+ * Instance Socket.IO untuk memancarkan progres AI.
+ *
+ * Sebagian pemancaran terjadi di dalam runAIPipeline(), fungsi level-modul yang
+ * berjalan sebagai proses latar setelah response terkirim, sehingga tidak punya
+ * akses ke `req.io`. Registry dipakai agar seluruh titik pemancaran memakai satu
+ * cara yang sama. Optional chaining di pemanggilnya membuat event terlewat
+ * dengan aman bila registry belum terisi.
+ */
+const io = { emit: (event: string, ...args: any[]) => getSocketServer()?.emit(event, ...args) };
+
 const router = Router();
 
 // Upload configuration
@@ -1652,7 +1672,7 @@ Buat dialog yang alami, informatif, dan menarik sebanyak 6-10 giliran bicara.`;
       if ((rows as any[]).length > 0) {
          res.json({ status: "success", data: (rows as any[])[0] });
       } else {
-         const { getDbMode } = await import("./src/lib/db"); res.status(404).json({ status: "error", message: "Document not found. id: " + id + ", mode: " + getDbMode() });
+         const { getDbMode } = await import("../../src/lib/db"); res.status(404).json({ status: "error", message: "Document not found. id: " + id + ", mode: " + getDbMode() });
       }
     } catch (error: any) {
       console.error(error);

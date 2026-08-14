@@ -81,6 +81,11 @@ const router = express.Router();
   });
 
   router.post("/api/projects/generate-bni-demo", authenticateJWT, async (req: any, res: any) => {
+    // Dideklarasikan di luar try karena blok finally di bawah merujuknya.
+    // Sebelumnya ini `const` di dalam try, sehingga finally mengakses nama yang
+    // tidak ada di scope-nya dan selalu melempar ReferenceError — termasuk pada
+    // jalur sukses, setelah response terkirim.
+    let connection: any = null;
     try {
       if (req.user?.role !== "admin") {
         return res.status(403).json({
@@ -89,7 +94,7 @@ const router = express.Router();
         });
       }
       const { ownerId } = req.body;
-      const connection = await db.getConnection();
+      connection = await db.getConnection();
       
       const pId = crypto.randomUUID();
       const pName = "Bank BNI SDLC Management - Release v2.0";
@@ -348,15 +353,24 @@ const router = express.Router();
         [crypto.randomUUID(), meet2Id, "2", "4", "Parameter tampering ditemukan", "Payment Endpoint", "Middleware", "Security Layer", "Ada kelemahan saat merubah amount secara manual", "Tambahkan HMAC validation", "pending"]
       );
 
-      connection.release();
       res.json({ status: "success", projectId: pId });
     } catch (e: any) {
       console.error("LOG ANOMALI CRITICAL: POST /api/projects/generate-bni-demo error:", e);
       res.status(500).json({ status: "error", message: e.message });
     } finally {
-      // Ensure connection is released even if error occurs
+      // Satu-satunya tempat pelepasan koneksi. Sebelumnya release() juga
+      // dipanggil di akhir blok try, sehingga koneksi dilepas dua kali.
+      //
+      // release() pada adapter db mengembalikan void, bukan Promise — versi
+      // lama memanggil .catch() di atasnya dan akan melempar TypeError. Bug itu
+      // selama ini tertutup oleh ReferenceError yang lebih dulu terjadi karena
+      // `connection` berada di luar scope.
       if (connection && typeof connection.release === 'function') {
-        connection.release().catch((err: any) => console.error("Failed to release connection:", err));
+        try {
+          connection.release();
+        } catch (err) {
+          console.error("Failed to release connection:", err);
+        }
       }
     }
   });
