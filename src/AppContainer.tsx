@@ -37,6 +37,7 @@ import { useAppNotifications } from "./hooks/useAppNotifications";
 import { useAppUI } from "./hooks/useAppUI";
 import { useAppPagination } from "./hooks/useAppPagination";
 import { useNewTaskForm } from "./hooks/useNewTaskForm";
+import { useNewSprintForm } from "./hooks/useNewSprintForm";
 import { MeetingNotes } from "./features/meeting-notes/MeetingNotes";
 import { WikiView } from "./features/wiki";
 import { NotebookLM } from "./features/notebook-lm";
@@ -894,14 +895,19 @@ function AppContainer() {
 
   const [expandedSprintId, setExpandedSprintId] = useState<string | null>(null);
   const [isUpdatingTask, setIsUpdatingTask] = useState<Record<string, boolean>>({});
-  const [newSprintName, setNewSprintName] = useState("");
-  const [newSprintGoal, setNewSprintGoal] = useState("");
-  const [newSprintStartDate, setNewSprintStartDate] = useState(
-    format(new Date(), "yyyy-MM-dd"),
-  );
-  const [newSprintEndDate, setNewSprintEndDate] = useState(
-    format(addDays(new Date(), 14), "yyyy-MM-dd"),
-  );
+
+  const {
+    newSprintName,
+    setNewSprintName,
+    newSprintGoal,
+    setNewSprintGoal,
+    newSprintStartDate,
+    setNewSprintStartDate,
+    newSprintEndDate,
+    setNewSprintEndDate,
+    resetForm: resetNewSprintForm,
+  } = useNewSprintForm();
+
   const [selectedSprintBacklog, setSelectedSprintBacklog] = useState<
     Set<string>
   >(new Set());
@@ -1834,8 +1840,7 @@ function AppContainer() {
         );
       }
 
-      setNewSprintName("");
-      setNewSprintGoal("");
+      resetNewSprintForm();
       setSelectedSprintBacklog(new Set());
       setIsNewSprintModalOpen(false);
       fetchSprints();
