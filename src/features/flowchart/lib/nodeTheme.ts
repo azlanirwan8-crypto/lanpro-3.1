@@ -42,13 +42,11 @@ export const getShapeThemeClasses = (node: FlowNode, isSelected: boolean): strin
     return `${base} ${borderStyleClass} rounded-xl ${palette.bg} ${palette.text} ${ringClass}`;
   }
 
-  if (node.type === "oval") {
-    return `${base} ${borderStyleClass} rounded-full px-6 ${palette.bg} ${palette.text} ${ringClass}`;
-  }
-
-  if (node.type === "circle") {
-    return `${base} ${borderStyleClass} rounded-full aspect-square ${palette.bg} ${palette.text} ${ringClass}`;
-  }
+  // Tidak ada cabang untuk "oval" dan "circle": keduanya terdaftar di
+  // `customSvgTypes`, sehingga pemeriksaan di atas sudah menanganinya lebih
+  // dulu. Cabang khusus untuk keduanya pernah ada di sini dan tidak pernah
+  // sekali pun tercapai. Menambahkannya kembali tidak akan berpengaruh —
+  // yang perlu diubah adalah daftar di lib/shapes.tsx.
 
   if (node.type === "cylinder" || node.type === "database") {
     return `${base} ${borderStyleClass} rounded-t-[20px] rounded-b-[20px] ${palette.bg} ${palette.text} ${ringClass}`;
