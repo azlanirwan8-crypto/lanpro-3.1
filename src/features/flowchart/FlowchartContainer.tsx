@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useFlowchartCanvas } from "../../hooks/useFlowchartCanvas";
 import { useFlowchartUI } from "../../hooks/useFlowchartUI";
 import { useFlowchartHistory } from "../../hooks/useFlowchartHistory";
+import { useFlowchartSelection } from "../../hooks/useFlowchartSelection";
 import { 
   Plus, Trash2, ArrowRight, Save, RotateCcw, 
   Sparkles, ExternalLink, Eye, Check,
@@ -1514,6 +1515,21 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     getHistoryDepth, getHistoryPosition, startSimulation, stopSimulation, cancelSimulation
   } = historyHook;
 
+  // Node/Edge Selection & Tool Management
+  const selectionHook = useFlowchartSelection();
+  const {
+    selectedNodeId, setSelectedNodeId, selectedEdgeId, setSelectedEdgeId,
+    activeTool, setActiveTool, connectSourceId, setConnectSourceId,
+    isSpacePressed, setIsSpacePressed, hoveredNodeId, setHoveredNodeId,
+    hoveredEdgeId, setHoveredEdgeId, copiedNodes, setCopiedNodes,
+    marqueeBox, setMarqueeBox, clearSelection, selectNode, selectEdge,
+    switchTool, startConnection, completeConnection, copyNodesToClipboard,
+    getClipboardNodes, clearClipboard, setMarqueeSelection, updateMarqueeBox,
+    isNodeSelected, isEdgeSelected, isNodeHovered, isEdgeHovered,
+    isInConnectMode, isInPanMode, hasSelection, hasClipboardContent,
+    getMarqueeSelectionCount
+  } = selectionHook;
+
   // Saved Flowcharts list
   const [flowcharts, setFlowcharts] = useState<FlowchartData[]>([]);
   const [selectedFlowId, setSelectedFlowId] = useState<string | null>(null);
@@ -1554,16 +1570,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const [canvasTheme, setCanvasTheme] = useState<'miro' | 'blueprint'>('miro');
 
 
-  // Editor Workspace Selection States
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
-  const [activeTool, setActiveTool] = useState<'select' | 'hand' | 'connect'>('select');
-  const [connectSourceId, setConnectSourceId] = useState<string | null>(null);
-  const [isSpacePressed, setIsSpacePressed] = useState<boolean>(false);
-  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
-  const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
-  const [copiedNodes, setCopiedNodes] = useState<FlowNode[]>([]);
-  const [marqueeBox, setMarqueeBox] = useState<{ startX: number, startY: number, currentX: number, currentY: number } | null>(null);
 
   // Right-click context menu state for flowchart nodes
   const [nodeContextMenu, setNodeContextMenu] = useState<{ x: number; y: number; nodeId: string } | null>(null);
