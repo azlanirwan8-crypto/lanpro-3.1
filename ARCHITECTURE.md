@@ -13,7 +13,7 @@ dan utang teknis yang masih terbuka.
 > untuk kode baru** dari **utang yang masih ada di kode lama**, lengkap dengan
 > angkanya. Bila Anda memperbaiki salah satu utang itu, perbarui angkanya.
 
-Terakhir diverifikasi: **14 Agustus 2026** — 219 file, 66.279 baris.
+Terakhir diverifikasi: **14 Agustus 2026** — 219 file, 66.302 baris.
 
 ---
 
@@ -207,26 +207,82 @@ Bagian ini sengaja jujur. Perbarui angkanya bila Anda memperbaikinya.
 `FlowchartContainer` sudah turun dari 6.795 baris; sisanya adalah komponen itu
 sendiri, yang butuh pembelahan JSX dan state.
 
-### 5.2 145 error TypeScript — CI merah
+### 5.1b `index.tsx` dipakai sebagai God Object, bukan barrel
+
+```
+2.104  users/index.tsx        1.539  issues/index.tsx
+1.591  timeline/index.tsx     1.165  notebook-lm/index.tsx
+1.545  wiki/index.tsx         1.159  dashboard/index.tsx
+```
+
+Barrel file semestinya hanya melakukan re-export. Enam fitur menaruh seluruh
+implementasinya di sana, sehingga `import { X } from './features/users'`
+menarik 2.104 baris.
+
+### 5.1c Aturan lapisan services dilanggar 14 dari 21 fitur
+
+Hanya `flowchart` yang memiliki pemisahan lengkap (`types` + `lib` +
+`services` + `components`). Empat belas fitur lain memanggil `apiRequest`
+atau `fetch` langsung dari komponen, melanggar aturan di bagian 2.
+
+### 5.1d Lapisan `controllers/` praktis mati
+
+**Nol dari 14 file di `server/routes/` yang meng-import dari `controllers/`.**
+Seluruh logika ditulis inline di dalam definisi rute — itulah sebabnya
+`meetings.routes.ts` mencapai 2.244 baris. Struktur direktorinya sudah benar,
+tetapi isinya menumpuk di tempat yang salah.
+
+### 5.2 128 error TypeScript — CI merah, dan 11 endpoint rusak
 
 ```
 119  server/routes/meetings.routes.ts
- 20  src/features/flowchart/FlowchartContainer.tsx
+  3  src/features/flowchart/FlowchartContainer.tsx
   3  server/routes/project.routes.ts
   2  src/test/setup.tsx
   1  server/routes/user.routes.ts
 ```
 
 Penyebab utama: ekstraksi rute dari `server.ts` meninggalkan referensi ke
-simbol yang hanya hidup di scope `server.ts` (`io`, `GoogleGenAI`, `Type`,
-`generateContentWithFallback`).
+simbol yang hanya hidup di scope `server.ts` — `Type` (93x), `io` (10x),
+`GoogleGenAI` (6x), `generateContentWithFallback` (6x), `createAuditLog` (3x).
 
-**Dampaknya nyata:** `.github/workflows/deploy.yml` menjalankan `npm run lint`,
+**Ini bukan sekadar CI merah.** Error-nya berjenis "Cannot find name", kelas
+yang sama dengan bug yang membuat `AppContainer` gagal render — nama yang tidak
+terdefinisi menjadi `ReferenceError` saat kode dijalankan. Endpoint berikut
+melempar error begitu dipanggil:
+
+| Endpoint | Fitur |
+|---|---|
+| `POST/PUT/DELETE /api/projects/:id/milestones` | Roadmap & Timeline |
+| `GET /api/projects/:id/documents/:id/download` | Unduh dokumen |
+| `POST /api/projects/:id/meetings/:id/upload-recording` | Rekaman rapat |
+| `POST /api/projects/:id/meetings/:id/analyze-transcript` | Analisis transkrip |
+| `POST /api/v1/meetings/:id/analyze-video` | Analisis video |
+| `POST /api/v1/meetings/:id/cancel` | Batalkan proses |
+| `POST /api/notebooklm/chat` | NotebookLM |
+| `POST /api/notebooklm/generate-audio` | NotebookLM |
+| `POST /api/notebooklm/generate-overview` | NotebookLM |
+
+**Dampak pada CI:** `.github/workflows/deploy.yml` menjalankan `npm run lint`,
 sehingga pipeline berhenti di tahap pertama — build, deploy, dan hook Vercel
 tidak pernah berjalan.
 
 Build tetap sukses karena Vite dan esbuild hanya melakukan transpile, tanpa
-type-check.
+type-check. Inilah alasan kerusakan ini bisa bertahan tanpa terdeteksi.
+
+### 5.2b NotebookLM rusak di dua sisi
+
+Selain backend di atas, frontend-nya membaca kunci token yang salah:
+`safeLocalStorage.getItem('token')` padahal kunci sebenarnya
+`'lanpro_jwt_token'` (lihat `src/lib/api.ts`). Akibatnya setiap request
+mengirim header `Authorization: Bearer ` yang kosong dan dibalas 401.
+Terjadi di 4 tempat: `src/features/notebook-lm/index.tsx` baris 155, 261,
+308, dan 352.
+
+Memperbaiki salah satu sisi saja tidak akan memulihkan fitur ini.
+
+Catatan tambahan: fitur ini memanggil `GET /api/projects/:id/wiki`, endpoint
+yang tidak pernah ada di backend (404 bahkan dengan token yang benar).
 
 ### 5.3 Tidak ada test yang me-render komponen
 
