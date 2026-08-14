@@ -2,6 +2,7 @@ import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useFlowchartCanvas } from "../../hooks/useFlowchartCanvas";
 import { useFlowchartUI } from "../../hooks/useFlowchartUI";
+import { useFlowchartHistory } from "../../hooks/useFlowchartHistory";
 import { 
   Plus, Trash2, ArrowRight, Save, RotateCcw, 
   Sparkles, ExternalLink, Eye, Check,
@@ -1505,6 +1506,14 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     toggleShapeDropdown, toggleGroupExpanded, toggleKeyboardHelp, openImportModal, closeImportModal
   } = uiHook;
 
+  // History & Undo/Redo Management
+  const historyHook = useFlowchartHistory();
+  const {
+    historyStack, historyIndex, activeSimNodeId, isSimulating, simCancelRef,
+    recordHistory, handleUndo, handleRedo, canUndo, canRedo, clearHistory, initializeHistory,
+    getHistoryDepth, getHistoryPosition, startSimulation, stopSimulation, cancelSimulation
+  } = historyHook;
+
   // Saved Flowcharts list
   const [flowcharts, setFlowcharts] = useState<FlowchartData[]>([]);
   const [selectedFlowId, setSelectedFlowId] = useState<string | null>(null);
@@ -1581,12 +1590,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Undo/Redo & Simulation States
-  const [historyStack, setHistoryStack] = useState<{ nodes: FlowNode[]; edges: FlowEdge[] }[]>([]);
-  const [historyIndex, setHistoryIndex] = useState<number>(-1);
-  const [activeSimNodeId, setActiveSimNodeId] = useState<string | null>(null);
-  const [isSimulating, setIsSimulating] = useState<boolean>(false);
-  const simCancelRef = useRef<boolean>(false);
 
   const decodeHtmlEntity = (htmlText: string): string => {
     if (typeof document === "undefined") return htmlText;
@@ -2071,46 +2074,20 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     toast.success("Berhasil menggabungkan diagram yang diimpor ke dalam kanvas Anda! 🚀");
   };
 
-  // Helper to record state snapshot into history stack
-  const recordHistory = (currentNodes: FlowNode[], currentEdges: FlowEdge[]) => {
-    setHistoryStack(prevStack => {
-      const cleanStack = prevStack.slice(0, historyIndex + 1);
-      const updatedStack = [...cleanStack, { 
-        nodes: JSON.parse(JSON.stringify(currentNodes)), 
-        edges: JSON.parse(JSON.stringify(currentEdges)) 
-      }];
-      if (updatedStack.length > 50) {
-        updatedStack.shift();
-      }
-      setHistoryIndex(updatedStack.length - 1);
-      return updatedStack;
-    });
-  };
-
-  // Explicit handlers for Undo and Redo
-  const handleUndo = () => {
-    if (historyIndex > 0) {
-      const prevIdx = historyIndex - 1;
-      setHistoryIndex(prevIdx);
-      const snapshot = historyStack[prevIdx];
-      setNodes(JSON.parse(JSON.stringify(snapshot.nodes)));
-      setEdges(JSON.parse(JSON.stringify(snapshot.edges)));
-      toast.info("Aksi dibatalkan (Undo) ◀");
-    } else {
-      toast.warning("Tidak ada riwayat untuk di-Undo!");
+  // Wrapper handlers for undo/redo that apply to state
+  const handleUndoClick = () => {
+    const snapshot = handleUndo();
+    if (snapshot) {
+      setNodes(snapshot.nodes);
+      setEdges(snapshot.edges);
     }
   };
 
-  const handleRedo = () => {
-    if (historyIndex < historyStack.length - 1) {
-      const nextIdx = historyIndex + 1;
-      setHistoryIndex(nextIdx);
-      const snapshot = historyStack[nextIdx];
-      setNodes(JSON.parse(JSON.stringify(snapshot.nodes)));
-      setEdges(JSON.parse(JSON.stringify(snapshot.edges)));
-      toast.info("Aksi diulang (Redo) ▶");
-    } else {
-      toast.warning("Tidak ada riwayat untuk di-Redo!");
+  const handleRedoClick = () => {
+    const snapshot = handleRedo();
+    if (snapshot) {
+      setNodes(snapshot.nodes);
+      setEdges(snapshot.edges);
     }
   };
 
@@ -2474,16 +2451,16 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
         e.preventDefault();
         if (e.shiftKey) {
-          handleRedo();
+          handleRedoClick();
         } else {
-          handleUndo();
+          handleUndoClick();
         }
       }
 
       // 6. Ctrl+Y or Cmd+Y for redo
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") {
         e.preventDefault();
-        handleRedo();
+        handleRedoClick();
       }
 
       // Add: Ctrl +/- for zooming canvas precisely instead of zooming native browser window
@@ -5895,12 +5872,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               
               {/* Undo Button */}
               <button
-                onClick={handleUndo}
+                onClick={handleUndoClick}
                 disabled={historyIndex <= 0}
                 className={cn(
                   "p-2 rounded-xl transition-all flex items-center justify-center",
-                  historyIndex <= 0 
-                    ? "text-slate-300 cursor-not-allowed" 
+                  historyIndex <= 0
+                    ? "text-slate-300 cursor-not-allowed"
                     : "text-slate-750 hover:bg-slate-100 hover:text-violet-600 active:scale-95"
                 )}
                 title="Undo Gagal Langkah (Ctrl+Z)"
@@ -5910,12 +5887,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
               {/* Redo Button */}
               <button
-                onClick={handleRedo}
+                onClick={handleRedoClick}
                 disabled={historyIndex >= historyStack.length - 1}
                 className={cn(
                   "p-2 rounded-xl transition-all flex items-center justify-center",
-                  historyIndex >= historyStack.length - 1 
-                    ? "text-slate-300 cursor-not-allowed" 
+                  historyIndex >= historyStack.length - 1
+                    ? "text-slate-300 cursor-not-allowed"
                     : "text-slate-750 hover:bg-slate-100 hover:text-violet-600 active:scale-95"
                 )}
                 title="Redo Langkah Batal (Ctrl+Shift+Z)"
@@ -6707,8 +6684,8 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             setZoomLevel(0.9);
             setPanOffset({ x: 50, y: 50 });
           }}
-          onUndo={handleUndo}
-          onRedo={handleRedo}
+          onUndo={handleUndoClick}
+          onRedo={handleRedoClick}
           onClear={handleClearWhiteboard}
           canUndo={historyIndex > 0}
           canRedo={historyIndex < historyStack.length - 1}
