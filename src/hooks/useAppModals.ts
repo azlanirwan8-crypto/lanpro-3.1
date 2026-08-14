@@ -16,16 +16,13 @@ export function useAppModals() {
 
   // Edit Entity Modals
   const [isEditSprintModalOpen, setIsEditSprintModalOpen] = useState(false);
-  const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
   const [isEditProjectModalOpen, setIsEditProjectModalOpen] = useState(false);
 
   // Detail/View Panels
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
-  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
 
   // Entity Being Edited
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [editingSprint, setEditingSprint] = useState<Sprint | null>(null);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
 
@@ -84,16 +81,6 @@ export function useAppModals() {
   };
 
   // --- EDIT MODAL HELPERS ---
-
-  const openEditTaskModal = (task: Task) => {
-    setEditingTask(task);
-    setIsEditTaskModalOpen(true);
-  };
-
-  const closeEditTaskModal = () => {
-    setEditingTask(null);
-    setIsEditTaskModalOpen(false);
-  };
 
   const openEditSprintModal = (sprint: Sprint) => {
     setEditingSprint(sprint);
@@ -157,14 +144,6 @@ export function useAppModals() {
     setIsShortcutsModalOpen(false);
   };
 
-  const openSyncModal = () => {
-    setIsSyncModalOpen(true);
-  };
-
-  const closeSyncModal = () => {
-    setIsSyncModalOpen(false);
-  };
-
   // --- CLOSE ALL MODALS ---
 
   const closeAllModals = () => {
@@ -174,12 +153,9 @@ export function useAppModals() {
     setIsInviteModalOpen(false);
     setIsInviteSuccessModalOpen(false);
     setIsEditSprintModalOpen(false);
-    setIsEditTaskModalOpen(false);
     setIsEditProjectModalOpen(false);
     setIsProfileModalOpen(false);
     setIsShortcutsModalOpen(false);
-    setIsSyncModalOpen(false);
-    setEditingTask(null);
     setEditingSprint(null);
     setEditingProject(null);
     setSelectedTaskForDetail(null);
@@ -202,8 +178,6 @@ export function useAppModals() {
     // Edit Modal States
     isEditSprintModalOpen,
     setIsEditSprintModalOpen,
-    isEditTaskModalOpen,
-    setIsEditTaskModalOpen,
     isEditProjectModalOpen,
     setIsEditProjectModalOpen,
 
@@ -212,12 +186,8 @@ export function useAppModals() {
     setIsProfileModalOpen,
     isShortcutsModalOpen,
     setIsShortcutsModalOpen,
-    isSyncModalOpen,
-    setIsSyncModalOpen,
 
     // Editing Entity States
-    editingTask,
-    setEditingTask,
     editingSprint,
     setEditingSprint,
     editingProject,
@@ -248,8 +218,6 @@ export function useAppModals() {
     closeInviteSuccessModal,
 
     // Edit Modal Helpers
-    openEditTaskModal,
-    closeEditTaskModal,
     openEditSprintModal,
     closeEditSprintModal,
     openEditProjectModal,
@@ -272,8 +240,6 @@ export function useAppModals() {
     closeShortcutsModal,
 
     // Sync Modal Helpers
-    openSyncModal,
-    closeSyncModal,
 
     // Batch Operation
     closeAllModals

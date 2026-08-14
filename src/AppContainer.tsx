@@ -662,22 +662,20 @@ function AppContainer() {
     isInviteModalOpen, setIsInviteModalOpen,
     isInviteSuccessModalOpen, setIsInviteSuccessModalOpen,
     isEditSprintModalOpen, setIsEditSprintModalOpen,
-    isEditTaskModalOpen, setIsEditTaskModalOpen,
     isEditProjectModalOpen, setIsEditProjectModalOpen,
     isProfileModalOpen, setIsProfileModalOpen,
     isShortcutsModalOpen, setIsShortcutsModalOpen,
-    isSyncModalOpen, setIsSyncModalOpen,
-    editingTask, setEditingTask, editingSprint, setEditingSprint,
+    editingSprint, setEditingSprint,
     editingProject, setEditingProject, selectedTaskForDetail, setSelectedTaskForDetail,
     selectedUserForDetail, setSelectedUserForDetail, lastInvitedEmail, setLastInvitedEmail,
     previousView, setPreviousView, openNewProjectModal, closeNewProjectModal,
     openNewTaskModal, closeNewTaskModal, openNewSprintModal, closeNewSprintModal,
     openInviteModal, closeInviteModal, openInviteSuccessModal, closeInviteSuccessModal,
-    openEditTaskModal, closeEditTaskModal, openEditSprintModal, closeEditSprintModal,
+    openEditSprintModal, closeEditSprintModal,
     openEditProjectModal, closeEditProjectModal, openTaskDetail, closeTaskDetail,
     openUserDetail, closeUserDetail, toggleProfileModal, openProfileModal, closeProfileModal,
     toggleShortcutsModal, openShortcutsModal, closeShortcutsModal,
-    openSyncModal, closeSyncModal, closeAllModals
+    closeAllModals
   } = useAppModals();
 
   // Theme & Appearance Management
@@ -1770,13 +1768,10 @@ function AppContainer() {
 
   useEffect(() => {
     // Initialize modal states when modals open
-    if (isSyncModalOpen) {
-      setCacheStats(CacheManager.getStats());
-    }
     if (isNewSprintModalOpen && !newSprintName) {
       setNewSprintName(`Fase ${sprints.length + 1}`);
     }
-  }, [isSyncModalOpen, isNewSprintModalOpen, sprints.length]);
+  }, [isNewSprintModalOpen, sprints.length]);
 
   const handleCreateSprint = async () => {
     if (!selectedProject) return;
@@ -2454,17 +2449,18 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
           { duration: 5000 },
         );
 
-        // Update task if in edit mode
+        // Simpan hasil estimasi AI ke task.
+        //
+        // Sebelumnya ada cabang khusus "bila sedang dalam mode edit" yang
+        // memperbarui state editingTask alih-alih memanggil API. Cabang itu
+        // tidak pernah menyala karena modal edit task tak terjangkau, dan ikut
+        // dihapus bersama modalnya.
         const effectiveUserId = currentUser?.uid || user?.uid || "guest";
-        if (editingTask && editingTask.id === task.id) {
-          setEditingTask({ ...editingTask, storyPoints: result.points });
-        } else {
-          await apiRequest(`/api/projects/${selectedProject!.id}/tasks/${task.id}`, {
-            method: "PUT",
-            body: { storyPoints: result.points }
-          });
-          await fetchTasks();
-        }
+        await apiRequest(`/api/projects/${selectedProject!.id}/tasks/${task.id}`, {
+          method: "PUT",
+          body: { storyPoints: result.points }
+        });
+        await fetchTasks();
       } else {
         throw new Error("Invalid response from AI");
       }
@@ -2514,52 +2510,6 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
     await updateTaskField(taskId, "isBlocked", !task.isBlocked);
   };
 
-  const handleUpdateTask = async () => {
-    if (!selectedProject || !editingTask) return;
-
-    if (editingTask.startDate && editingTask.endDate) {
-      if (new Date(editingTask.startDate) > new Date(editingTask.endDate)) {
-        setConfirmAction({
-          isOpen: true,
-          title: "Validasi Tanggal",
-          message:
-            "Tanggal selesai tugas tidak boleh sebelum tanggal mulai tugas (tidak bisa backdate).",
-          onConfirm: () => {},
-          isAlert: true,
-        });
-        return;
-      }
-    }
-
-    // Check blockers if status is changed to Done
-    if (!checkTaskBlockers(editingTask.id, editingTask.status)) return;
-
-    try {
-      const assigneeIsEmail = editingTask.assigneeId?.includes("@");
-
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/tasks/${editingTask.id}`, {
-        method: "PUT",
-        body: {
-          title: editingTask.title,
-          status: editingTask.status,
-          type: editingTask.type,
-          priority: editingTask.priority,
-          assigneeId: assigneeIsEmail ? null : editingTask.assigneeId || null,
-          dueDate: editingTask.dueDate || null,
-        }
-      });
-      if (data.status === "success") {
-        await await fetchTasks(); // Refresh list
-
-        setIsEditTaskModalOpen(false);
-        setEditingTask(null);
-        toast.success("Task updated successfully");
-      }
-    } catch (e: any) {
-      console.error(e);
-      toast.error(e.message || "Failed to update task");
-    }
-  };
 
   const updateProjectRole = async (userId: string, role: string) => {
     if (!selectedProject) return;
@@ -4665,115 +4615,6 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
           </div>
         </Modal>
 
-        {/* Caching & Sinkronisasi State (Client-Side Caching) Modal */}
-        <Modal
-          isOpen={isSyncModalOpen}
-          onClose={() => setIsSyncModalOpen(false)}
-          title="Sinkronisasi & Diagnostik Cache Lokal"
-          maxWidth="max-w-xl"
-        >
-          <div className="space-y-6">
-            <p className="text-xs text-slate-500 font-medium leading-relaxed">
-              LanPro menggunakan teknologi <strong>SWR (Stale-While-Revalidate)</strong> yang menyimpan data proyek Anda secara lokal di browser. Aplikasi dapat dimuat secara instan tanpa visual flickering, dan tersinkronisasi di latar belakang.
-            </p>
-
-            {/* Connection & General Stats Card */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-slate-50 border border-slate-200/50 rounded-xl p-4 flex flex-col justify-between">
-                <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider block mb-1">Status Koneksi</span>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className={`w-2.5 h-2.5 rounded-full ${navigator.onLine ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-                  <span className="text-xs font-medium text-slate-700">
-                    {navigator.onLine ? 'Online (Terhubung)' : 'Offline (Mode Cache)'}
-                  </span>
-                </div>
-              </div>
-
-              <div className="bg-slate-50 border border-slate-200/50 rounded-xl p-4 flex flex-col justify-between">
-                <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider block mb-1">Kapasitas Cache Terpakai</span>
-                <div className="flex items-end justify-between mt-1">
-                  <span className="text-sm font-medium text-slate-800">
-                    {cacheStats?.totalSizeKB || '0.00 KB'}
-                  </span>
-                  <span className="text-[10px] text-slate-500 font-medium">
-                    {cacheStats?.itemsCount || 0} entitas disimpan
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Cache Entities Details List */}
-            <div className="bg-white border border-slate-200/60 rounded-xl overflow-hidden shadow-sm">
-              <div className="bg-slate-50/50 px-4 py-2 border-b border-slate-100 flex items-center justify-between text-[10px] text-slate-500 font-medium uppercase tracking-wider">
-                <span>Entitas Data</span>
-                <span>Detail Kapasitas</span>
-              </div>
-
-              <div className="divide-y divide-slate-100 max-h-[220px] overflow-y-auto">
-                {(!cacheStats || !cacheStats.details || cacheStats.details.length === 0) ? (
-                  <div className="text-center py-8 text-xs text-slate-400 font-medium">
-                    Belum ada data yang tercache secara lokal.
-                  </div>
-                ) : (
-                  cacheStats.details.map((item: any, idx: number) => (
-                    <div key={idx} className="px-4 py-3 flex items-center justify-between hover:bg-slate-50/30 transition-all">
-                      <div>
-                        <span className="text-xs font-medium text-slate-800 capitalize tracking-tight block">
-                          {item.key.replace(/_(\d+)/g, ' (Proyek #$1)')}
-                        </span>
-                        <span className="text-[9px] text-slate-400 font-medium block mt-0.5">
-                          Sinkron terakhir: {item.lastUpdated || 'Tidak diketahui'}
-                        </span>
-                      </div>
-                      <div className="text-right">
-                        <span className="px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-medium rounded-lg">
-                          {item.size}
-                        </span>
-                        <span className="text-[9px] text-slate-400 font-medium block mt-1">
-                          {item.count > 0 ? `${item.count} items` : '1 item'}
-                        </span>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            {/* Action Buttons Container */}
-            <div className="pt-2 flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => {
-                  CacheManager.clearAll();
-                  toast.success("Cache lokal berhasil dibersihkan! Aplikasi akan dimuat ulang.");
-                  setTimeout(() => {
-                    window.location.reload();
-                  }, 1200);
-                }}
-                className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-xl transition-all uppercase tracking-wider text-center cursor-pointer"
-              >
-                Clear Cache
-              </button>
-
-              <Button
-                onClick={handleSyncAll}
-                disabled={isSyncing}
-                className="flex-1 justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium"
-              >
-                {isSyncing ? (
-                  <div className="flex items-center gap-2">
-                    <RefreshCcw className="w-4 h-4 animate-spin" />
-                    Syncing...
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <RefreshCcw className="w-4 h-4" />
-                    Sync All State
-                  </div>
-                )}
-              </Button>
-            </div>
-          </div>
-        </Modal>
 
         <Modal
           isOpen={isNewTaskModalOpen}
@@ -5133,295 +4974,6 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
               Create Issue
             </Button>
           </div>
-        </Modal>
-        <Modal
-          isOpen={isEditTaskModalOpen}
-          onClose={() => setIsEditTaskModalOpen(false)}
-          title={`Edit Issue: ${editingTask?.key}`}
-          maxWidth="max-w-3xl"
-        >
-          {editingTask && (
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Issue Title
-                </label>
-                <Input
-                  value={editingTask.title ?? ""}
-                  onChange={(e: any) =>
-                    setEditingTask({ ...editingTask, title: e.target.value })
-                  }
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Assignee
-                  </label>
-                  <select
-                    value={
-                      editingTask.assigneeId || editingTask.assigneeEmail || ""
-                    }
-                    onChange={(e: any) =>
-                      setEditingTask({
-                        ...editingTask,
-                        assigneeId: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg"
-                  >
-                    <option value="">Unassigned</option>
-                    {projectMembers.map((m, idx) => (
-                      <option key={m?.uid ? `pm-edit-${m.uid}-${idx}` : `pm-edit-${idx}`} value={m?.uid}>
-                        {m?.displayName || m?.email || "Anggota Tim"}
-                      </option>
-                    ))}
-                    {selectedProject?.pendingInvites?.map((email, idx) => (
-                      <option key={email ? `pi-edit-${email}-${idx}` : `pi-edit-${idx}`} value={email}>
-                        {email} (Pending)
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Status
-                  </label>
-                  <select
-                    value={editingTask.status ?? ""}
-                    onChange={(e: any) =>
-                      setEditingTask({ ...editingTask, status: e.target.value })
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg"
-                  >
-                    {masterData
-                      .filter((d) => d.type === "status")
-                      .sort((a, b) => (a.order || 0) - (b.order || 0))
-                      .map((s, idx) => (
-                        <option key={s.id ? `e-st-${s.id}-${idx}` : `e-st-${idx}`} value={s.label}>
-                          {s.label}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Priority
-                  </label>
-                  <select
-                    value={editingTask.priority ?? ""}
-                    onChange={(e: any) =>
-                      setEditingTask({
-                        ...editingTask,
-                        priority: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg"
-                  >
-                    {masterData
-                      .filter((d) => d.type === "priority")
-                      .sort((a, b) => (a.order || 0) - (b.order || 0))
-                      .map((p, idx) => (
-                        <option key={p.id ? `e-pr-${p.id}-${idx}` : `e-pr-${idx}`} value={p.label}>
-                          {p.label}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Category
-                  </label>
-                  <select
-                    value={editingTask.category || ""}
-                    onChange={(e: any) =>
-                      setEditingTask({
-                        ...editingTask,
-                        category: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg"
-                  >
-                    <option value="">None</option>
-                    {masterData
-                      .filter((d) => d.type === "category")
-                      .sort((a, b) => (a.order || 0) - (b.order || 0))
-                      .map((c, idx) => (
-                        <option key={c.id ? `e-cat-${c.id}-${idx}` : `e-cat-${idx}`} value={c.label}>
-                          {c.label}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Release
-                  </label>
-                  <select
-                    value={editingTask.release || ""}
-                    onChange={(e: any) =>
-                      setEditingTask({
-                        ...editingTask,
-                        release: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg"
-                  >
-                    <option value="">None</option>
-                    {masterData
-                      .filter((d) => d.type === "release")
-                      .sort((a, b) => (a.order || 0) - (b.order || 0))
-                      .map((r, idx) => (
-                        <option key={r.id ? `e-rel-${r.id}-${idx}` : `e-rel-${idx}`} value={r.label}>
-                          {r.label}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Business Value
-                  </label>
-                  <select
-                    value={editingTask.businessValue || ""}
-                    onChange={(e: any) =>
-                      setEditingTask({
-                        ...editingTask,
-                        businessValue: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm"
-                  >
-                    <option value="">Not Set</option>
-                    <option value="critical">Critical</option>
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    System Risk
-                  </label>
-                  <select
-                    value={editingTask.projectRisk || ""}
-                    onChange={(e: any) =>
-                      setEditingTask({
-                        ...editingTask,
-                        projectRisk: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm"
-                  >
-                    <option value="">Not Set</option>
-                    <option value="high">High Risk</option>
-                    <option value="medium">Medium Risk</option>
-                    <option value="low">Low Risk</option>
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Story Points
-                  </label>
-                  <Input
-                    type="number"
-                    value={editingTask.storyPoints || ""}
-                    onChange={(e: any) =>
-                      setEditingTask({
-                        ...editingTask,
-                        storyPoints: parseInt(e.target.value) || 0,
-                      })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Environment
-                  </label>
-                  <select
-                    value={editingTask.environment || ""}
-                    onChange={(e: any) =>
-                      setEditingTask({
-                        ...editingTask,
-                        environment: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm"
-                  >
-                    <option value="">None</option>
-                    {masterData
-                      .filter((d) => d.type === "environment")
-                      .map((e, idx) => (
-                        <option key={e.id ? `e-env-${e.id}-${idx}` : `e-env-${idx}`} value={e.label}>
-                          {e.label}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Acceptance Criteria
-                </label>
-                <textarea
-                  value={editingTask.acceptanceCriteria || ""}
-                  onChange={(e: any) =>
-                    setEditingTask({
-                      ...editingTask,
-                      acceptanceCriteria: e.target.value,
-                    })
-                  }
-                  placeholder="Completion criteria..."
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
-                  rows={3}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Start Date
-                  </label>
-                  <Input
-                    type="date"
-                    value={editingTask.startDate || ""}
-                    onChange={(e: any) =>
-                      setEditingTask({
-                        ...editingTask,
-                        startDate: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    End Date
-                  </label>
-                  <Input
-                    type="date"
-                    value={editingTask.endDate || ""}
-                    onChange={(e: any) =>
-                      setEditingTask({
-                        ...editingTask,
-                        endDate: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-              <Button
-                onClick={wrapAppSubmit("updateTask", handleUpdateTask)} disabled={isSubmitting["updateTask"]}
-                className="w-full justify-center"
-              >
-                Save Changes
-              </Button>
-            </div>
-          )}
         </Modal>
 
 
