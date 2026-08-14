@@ -3,7 +3,18 @@
   "compilerOptions": {
     "module": "CommonJS",
     "moduleResolution": "node",
-    "isolatedModules": false,
-    "noEmit": false
+    /* `isolatedModules: true` membuat ts-jest memakai transpileModule: tiap
+     * berkas dikompilasi sendiri-sendiri tanpa membangun program TypeScript.
+     *
+     * Ini bukan sekadar optimasi kecepatan, melainkan syarat agar test bisa
+     * jalan sama sekali. Dengan program penuh, TypeScript harus meresolusi
+     * `export { DashboardView } from './index.tsx'` (dipakai dua barrel:
+     * features/dashboard dan features/issues). Resolusi itu gagal, sehingga
+     * ekspornya dianggap type-only lalu dibuang, dan ts-jest menerima output
+     * kosong — muncul sebagai "Unable to process ... outDir".
+     *
+     * Type-check tidak hilang: `npm run lint` menjalankan `tsc --noEmit` atas
+     * seluruh proyek. Jest menguji perilaku, tsc menjaga tipe. */
+    "isolatedModules": true
   }
 }
