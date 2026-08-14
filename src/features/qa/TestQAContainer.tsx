@@ -2,7 +2,20 @@ import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect, useRef } from "react";
 import { ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
-import { apiRequest } from "../../lib/api";
+import {
+  fetchSuites,
+  createSuite,
+  updateSuite,
+  deleteSuite,
+  fetchCases,
+  updateCase,
+  deleteCase,
+  fetchCaseHistory,
+  bulkUploadCases,
+  updateCaseStatus,
+  createCase,
+  createTaskFromQA,
+} from "./services/qa.service";
 import { hasPermission } from "../../lib/permissions";
 import { QAComment, QATestCase, QATestSuite, TestQAPanelProps } from "./types";
 import { QATopBar } from "./components/QATopBar";
@@ -11,14 +24,8 @@ import { QATestCaseTable } from "./components/QATestCaseTable";
 import { QADetailDrawer } from "./components/QADetailDrawer";
 import { QAModals } from "./components/QAModals";
 
-const apiFetch = async (url: string, options: any = {}) => {
-  const token = safeLocalStorage.getItem("lanpro_jwt_token");
-  const headers = new Headers(options.headers || {});
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-  return fetch(url, { ...options, headers });
-};
+// Wrapper apiFetch yang dulu berada di sini kini menjadi qaFetch di
+// services/qa.service.ts, bersama seluruh penyusunan URL dan header.
 
 export function TestQAPanel({
   tasks,
@@ -131,8 +138,8 @@ export function TestQAPanel({
   // Load Data
   const loadSuitesFromBackend = async () => {
     try {
-      const suitesRes = await apiFetch(`/api/projects/${selectedProject.id}/qa-test-suites`);
-      const casesRes = await apiFetch(`/api/projects/${selectedProject.id}/qa-test-cases`);
+      const suitesRes = await fetchSuites(selectedProject.id);
+      const casesRes = await fetchCases(selectedProject.id);
 
       if (suitesRes.ok && casesRes.ok) {
         const suitesData = await suitesRes.json();
@@ -214,10 +221,7 @@ export function TestQAPanel({
     saveSuitesToStorage(updatedSuites);
 
     try {
-      await apiRequest(`/api/projects/${selectedProject.id}/qa-test-cases/${caseId}/status`, {
-        method: "PATCH",
-        body: { status: newStatus },
-      });
+      await updateCaseStatus(selectedProject.id, caseId, { status: newStatus });
       toast.success(`Status berhasil diubah menjadi ${newStatus}`);
     } catch (e: any) {
       console.warn("Status update fallback:", e.message);
@@ -233,11 +237,7 @@ export function TestQAPanel({
     if (targetSuite) {
       toast.success("PIC Modul berhasil diperbarui.");
       try {
-        await apiFetch(`/api/projects/${selectedProject.id}/qa-test-suites/${suiteId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(targetSuite),
-        });
+        await updateSuite(selectedProject.id, suiteId, targetSuite);
       } catch (err) {
         console.warn("Failed to update suite PIC:", err);
       }
@@ -259,11 +259,7 @@ export function TestQAPanel({
     if (targetCase) {
       toast.success("PIC Task berhasil diperbarui.");
       try {
-        await apiFetch(`/api/projects/${selectedProject.id}/qa-test-cases/${caseId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(targetCase),
-        });
+        await updateCase(selectedProject.id, caseId, targetCase);
       } catch (err) {
         console.warn("Failed to update test case PIC:", err);
       }
@@ -343,11 +339,7 @@ export function TestQAPanel({
     setNewSuiteNameOnly("");
 
     try {
-      await apiFetch(`/api/projects/${selectedProject.id}/qa-test-suites`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newSuite),
-      });
+      await createSuite(selectedProject.id, newSuite);
       toast.success("Dokumen skrip berhasil ditambahkan.");
     } catch (err) {
       console.warn("Failed to add suite:", err);
@@ -382,10 +374,7 @@ export function TestQAPanel({
     saveSuitesToStorage(updatedSuites);
 
     try {
-      await apiRequest(`/api/projects/${selectedProject.id}/qa-test-cases`, {
-        method: "POST",
-        body: newTestCase,
-      });
+      await createCase(selectedProject.id, newTestCase);
     } catch (err) {
       console.warn("Failed to post case:", err);
     }
@@ -410,10 +399,7 @@ export function TestQAPanel({
     formData.append("phase", phaseFilter === "ALL" ? "SIT" : phaseFilter);
 
     try {
-      const response = await apiFetch(`/api/v1/qa/test-case/bulk-upload`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await bulkUploadCases(formData);
       if (response.ok) {
         toast.success("Bulk upload berhasil.");
         setIsAddCaseOpen(false);
@@ -436,11 +422,7 @@ export function TestQAPanel({
     saveSuitesToStorage(updatedSuites);
 
     try {
-      await apiFetch(`/api/projects/${selectedProject.id}/qa-test-suites/${suiteToEdit.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedSuite),
-      });
+      await updateSuite(selectedProject.id, suiteToEdit.id, updatedSuite);
       toast.success("Suite berhasil diperbarui.");
     } catch (err) {
       console.warn("Failed to update suite:", err);
@@ -467,11 +449,7 @@ export function TestQAPanel({
     saveSuitesToStorage(updatedSuites);
 
     try {
-      await apiFetch(`/api/projects/${selectedProject.id}/qa-test-cases/${caseToEditInfo.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedTc),
-      });
+      await updateCase(selectedProject.id, caseToEditInfo.id, updatedTc);
       toast.success("Test case berhasil diperbarui.");
     } catch (err) {
       console.warn("Failed to update case:", err);
@@ -486,7 +464,7 @@ export function TestQAPanel({
     if (selectedSuiteId === id) setSelectedSuiteId(updated[0]?.id || "");
 
     try {
-      await apiFetch(`/api/projects/${selectedProject.id}/qa-test-suites/${id}`, { method: "DELETE" });
+      await deleteSuite(selectedProject.id, id);
     } catch (e) {}
     toast.success("Test suite dihapus.");
     setSuiteToDelete(null);
@@ -500,7 +478,7 @@ export function TestQAPanel({
     saveSuitesToStorage(updatedSuites);
 
     try {
-      await apiFetch(`/api/projects/${selectedProject.id}/qa-test-cases/${id}`, { method: "DELETE" });
+      await deleteCase(selectedProject.id, id);
     } catch (e) {}
     toast.success("Test case dihapus.");
     setCaseToDelete(null);
@@ -523,17 +501,14 @@ export function TestQAPanel({
 
     setIsSubmittingBug(true);
     try {
-      const response = await apiRequest(`/api/projects/${selectedProject.id}/tasks`, {
-        method: "POST",
-        body: {
-          title: bugTitleInput.trim(),
-          description: bugDescriptionInput,
-          status: "todo",
-          type: "bug",
-          priority: bugPriorityInput.toLowerCase(),
-          parentId: bugSelectedParentId,
-          assigneeId: bugAssigneeInput || null,
-        },
+      const response = await createTaskFromQA(selectedProject.id, {
+        title: bugTitleInput.trim(),
+        description: bugDescriptionInput,
+        status: "todo",
+        type: "bug",
+        priority: bugPriorityInput.toLowerCase(),
+        parentId: bugSelectedParentId,
+        assigneeId: bugAssigneeInput || null,
       });
 
       if (response && response.status === "success") {
@@ -618,7 +593,7 @@ export function TestQAPanel({
   const fetchExecutionHistory = async (caseId: string) => {
     setLoadingHistory(true);
     try {
-      const res = await apiFetch(`/api/projects/${selectedProject.id}/qa-test-cases/${caseId}/history`);
+      const res = await fetchCaseHistory(selectedProject.id, caseId);
       if (res.ok) {
         const data = await res.json();
         setExecutionLogs(data.data || []);
