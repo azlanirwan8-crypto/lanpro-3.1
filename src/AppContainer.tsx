@@ -33,6 +33,7 @@ import { useMasterData } from "./hooks/useMasterData";
 import { useAuth } from "./hooks/useAuth";
 import { useAppModals } from "./hooks/useAppModals";
 import { useAppTheme } from "./hooks/useAppTheme";
+import { useAppNotifications } from "./hooks/useAppNotifications";
 import { MeetingNotes } from "./features/meeting-notes/MeetingNotes";
 import { WikiView } from "./features/wiki";
 import { NotebookLM } from "./features/notebook-lm";
@@ -650,10 +651,21 @@ function AppContainer() {
   const setLoginStatusText = setHookLoginStatusText;
   const isAuthLoading = hookIsAuthLoading;
   const [isInitialDataLoading, setIsInitialDataLoading] = useState(false);
-  const [notifications, setNotifications] = useState<AppNotification[]>([]);
-  const [qaInitialStatusFilter, setQaInitialStatusFilter] = useState<"ALL" | "Passed" | "Failed" | "Blocked" | "Retest" | "Pending">("ALL");
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const notificationsRef = useRef<HTMLDivElement>(null);
+
+  const {
+    notifications,
+    setNotifications,
+    isNotificationsOpen,
+    setIsNotificationsOpen,
+    qaInitialStatusFilter,
+    setQaInitialStatusFilter,
+    notificationsRef,
+    fetchNotifications,
+  } = useAppNotifications({
+    userId: user?.uid,
+    currentUserId: currentUser?.uid,
+  });
+
   const themeDropdownRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -731,23 +743,6 @@ function AppContainer() {
       document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
     };
   }, []);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        notificationsRef.current &&
-        !notificationsRef.current.contains(event.target as Node)
-      ) {
-        setIsNotificationsOpen(false);
-      }
-    }
-    if (isNotificationsOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isNotificationsOpen]);
 
   useEffect(() => {
 
@@ -1715,44 +1710,6 @@ function AppContainer() {
     return () => clearTimeout(timer);
   }, [selectedProject?.id]);
 
-  const fetchNotifications = async () => {
-    if (!getAuthToken()) return;
-    if (!user && !currentUser) return;
-    const effectiveUserId = currentUser?.uid || user?.uid;
-    if (!effectiveUserId) return;
-
-    try {
-      const data = await apiRequest(`/api/users/${effectiveUserId}/notifications`);
-      if (data.status === "success") {
-        // Map isRead if needed, DB uses isRead
-        setNotifications(data.data.map((d: any) => ({ ...d, read: d.isRead === 1 || d.read })));
-      }
-    } catch (error: any) {
-      const msg = error?.message || String(error);
-      if (isNetworkOrAuthError(error)) {
-        console.warn("fetchNotifications: Sesi pengguna atau jaringan tidak tersedia.");
-      } else {
-        console.error("fetchNotifications error:", error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    // Initial fetch
-    const timer = setTimeout(() => {
-      fetchNotifications();
-    }, 500);
-
-    // Periodic polling every 3 minutes to avoid proxy rate limiting
-    const interval = setInterval(() => {
-      fetchNotifications();
-    }, 180000);
-
-    return () => {
-      clearTimeout(timer);
-      clearInterval(interval);
-    };
-  }, [currentUser?.uid]);
 
   const handleSyncAll = async () => {
     setIsSyncing(true);
