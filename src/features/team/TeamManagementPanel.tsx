@@ -24,14 +24,7 @@ export const TeamManagementPanel = ({
   projectMembers: propMembers,
   selectedProject,
   tasks: propTasks,
-  currentUserProfile,
-  userRole,
-  hasPermission,
-  StyledDropdown,
-  updateProjectRole,
-  removeProjectMember,
   masterData: propMaster,
-  onRefreshProjects,
 }: {
   projectMembers: UserProfile[];
   selectedProject: Project | null;

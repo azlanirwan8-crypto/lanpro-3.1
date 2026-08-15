@@ -26,14 +26,10 @@ interface ExportItem {
   data?: any;
 }
 
-export const BackupPanel = ({
-  selectedProject,
-  tasks,
-  sprints,
-  projectMembers,
-  activityLogs,
-  masterData,
-}: {
+// Seluruh props di-destructure tetapi tak satu pun dipakai di komponen ini.
+// Tipe props tetap dipertahankan sebagai kontrak bagi pemanggil; parameternya
+// diberi nama _props agar niatnya jelas dan tidak dikira kelalaian.
+export const BackupPanel = (_props: {
   selectedProject: Project | null;
   tasks: Task[];
   sprints: Sprint[];

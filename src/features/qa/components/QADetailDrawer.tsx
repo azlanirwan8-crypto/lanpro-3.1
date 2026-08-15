@@ -1,7 +1,13 @@
 import React from "react";
 import {
-  XCircle, FileSpreadsheet, History, RefreshCw, Paperclip,
-  Trash2, Send, Bug
+  XCircle,
+  FileSpreadsheet,
+  History,
+  RefreshCw,
+  Paperclip,
+  Trash2,
+  Send,
+  Bug,
 } from "lucide-react";
 import { QATestCase } from "../types";
 
@@ -19,7 +25,10 @@ interface QADetailDrawerProps {
   handleEvidenceUploadFromDrawer: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleRemoveSpecificEvidenceFromDrawer: (evidenceId: string) => void;
   handleOpenCreateBugModal: (tc: QATestCase) => void;
-  handleStatusChange: (caseId: string, newStatus: "Passed" | "Failed" | "Blocked" | "Retest" | "Pending") => void;
+  handleStatusChange: (
+    caseId: string,
+    newStatus: "Passed" | "Failed" | "Blocked" | "Retest" | "Pending"
+  ) => void;
   projectMembers: any[];
 }
 
@@ -38,7 +47,6 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
   handleRemoveSpecificEvidenceFromDrawer,
   handleOpenCreateBugModal,
   handleStatusChange,
-  projectMembers,
 }) => {
   if (!selectedTestCase) return null;
 
@@ -84,12 +92,12 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
                   selectedTestCase.status === "Passed"
                     ? "bg-emerald-50 text-success border-emerald-200"
                     : selectedTestCase.status === "Failed"
-                    ? "bg-rose-50 text-danger border-rose-200"
-                    : selectedTestCase.status === "Blocked"
-                    ? "bg-amber-50 text-warning border-amber-200"
-                    : selectedTestCase.status === "Retest"
-                    ? "bg-indigo-50 text-indigo-700 border-indigo-200"
-                    : "bg-surface-muted text-content-secondary border-border-subtle"
+                      ? "bg-rose-50 text-danger border-rose-200"
+                      : selectedTestCase.status === "Blocked"
+                        ? "bg-amber-50 text-warning border-amber-200"
+                        : selectedTestCase.status === "Retest"
+                          ? "bg-indigo-50 text-indigo-700 border-indigo-200"
+                          : "bg-surface-muted text-content-secondary border-border-subtle"
                 }`}
               >
                 <option value="Passed">Passed</option>
@@ -160,7 +168,9 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
                     <History className="w-3.5 h-3.5 text-primary" />
                     Execution History Timeline
                   </h4>
-                  <p className="text-xs sm:text-[10px] text-content-subtle">Audit Trail historis eksekusi pengujian</p>
+                  <p className="text-xs sm:text-[10px] text-content-subtle">
+                    Audit Trail historis eksekusi pengujian
+                  </p>
                 </div>
                 <button
                   onClick={() => fetchExecutionHistory(selectedTestCase.id)}
@@ -178,21 +188,26 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
               ) : executionLogs.length === 0 ? (
                 <div className="py-8 text-center bg-surface-sunken border border-border-faint rounded-md p-3">
                   <History className="w-6 h-6 text-slate-300 mx-auto mb-1.5" />
-                  <p className="text-xs font-medium text-content-secondary">Belum Ada Catatan Run Eksekusi</p>
+                  <p className="text-xs font-medium text-content-secondary">
+                    Belum Ada Catatan Run Eksekusi
+                  </p>
                 </div>
               ) : (
                 <div className="relative pl-3.5 border-l-2 border-primary/20 space-y-3 my-2">
                   {executionLogs.map((log: any, idx: number) => {
                     const st = (log.executionStatus || log.status || "PENDING").toUpperCase();
                     return (
-                      <div key={log.id ? `run-log-${log.id}-${idx}` : `run-log-${idx}`} className="relative group">
+                      <div
+                        key={log.id ? `run-log-${log.id}-${idx}` : `run-log-${idx}`}
+                        className="relative group"
+                      >
                         <div
                           className={`absolute -left-[19px] top-1.5 w-2.5 h-2.5 rounded-full border-2 ${
                             st === "PASSED"
                               ? "border-success bg-success"
                               : st === "FAILED"
-                              ? "border-danger bg-danger"
-                              : "border-slate-400 bg-slate-400"
+                                ? "border-danger bg-danger"
+                                : "border-slate-400 bg-slate-400"
                           }`}
                         />
                         <div className="bg-surface-sunken p-2.5 rounded-md border border-border-faint space-y-1">
@@ -201,7 +216,9 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
                               {log.executedByName || "Tester"}
                             </span>
                             <span className="text-xs sm:text-[10px] text-content-subtle">
-                              {new Date(log.executedAt || log.timestamp || Date.now()).toLocaleString("id-ID")}
+                              {new Date(
+                                log.executedAt || log.timestamp || Date.now()
+                              ).toLocaleString("id-ID")}
                             </span>
                           </div>
                           <span
@@ -209,8 +226,8 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
                               st === "PASSED"
                                 ? "bg-emerald-100 text-success"
                                 : st === "FAILED"
-                                ? "bg-rose-100 text-danger"
-                                : "bg-slate-200 text-content-body"
+                                  ? "bg-rose-100 text-danger"
+                                  : "bg-slate-200 text-content-body"
                             }`}
                           >
                             {st}
@@ -271,7 +288,10 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
                 {selectedTestCase.evidences && selectedTestCase.evidences.length > 0 ? (
                   <div className="grid grid-cols-2 gap-2">
                     {selectedTestCase.evidences.map((ev) => (
-                      <div key={ev.id} className="relative group border border-border-subtle rounded-md overflow-hidden">
+                      <div
+                        key={ev.id}
+                        className="relative group border border-border-subtle rounded-md overflow-hidden"
+                      >
                         {ev.type === "video" ? (
                           <video src={ev.url} controls className="w-full h-24 object-cover" />
                         ) : (
@@ -299,11 +319,19 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
                 </h4>
                 <div className="space-y-2 mb-2.5">
                   {(selectedTestCase.commentsList || []).map((cm, cIdx) => (
-                    <div key={cm.id || cIdx} className="bg-surface-sunken p-2.5 rounded-md border border-border-subtle/60 space-y-1">
+                    <div
+                      key={cm.id || cIdx}
+                      className="bg-surface-sunken p-2.5 rounded-md border border-border-subtle/60 space-y-1"
+                    >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-content-strong">{cm.userName}</span>
+                        <span className="text-xs font-medium text-content-strong">
+                          {cm.userName}
+                        </span>
                         <span className="text-xs sm:text-[10px] text-content-subtle">
-                          {new Date(cm.timestamp).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
+                          {new Date(cm.timestamp).toLocaleTimeString("id-ID", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </span>
                       </div>
                       <p className="text-xs text-content-secondary">{cm.text}</p>

@@ -1,8 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "motion/react";
-import {
-  Plus, XCircle, Upload, Download
-} from "lucide-react";
+import { Plus, XCircle, Upload, Download } from "lucide-react";
 import { QATestSuite } from "../../features/qa/types";
 
 interface AddCaseModalProps {
@@ -42,8 +40,6 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
   onTitleChange,
   casePriority,
   onPriorityChange,
-  caseAssignedTo,
-  onAssignedToChange,
   caseSteps,
   onStepsChange,
   caseExpected,
@@ -71,8 +67,12 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
                 <Plus className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-content-strong uppercase tracking-wider">Tambah Test Case Baru</h3>
-                <p className="text-xs sm:text-[11px] text-content-subtle font-medium">Input manual atau bulk upload Excel</p>
+                <h3 className="text-sm font-medium text-content-strong uppercase tracking-wider">
+                  Tambah Test Case Baru
+                </h3>
+                <p className="text-xs sm:text-[11px] text-content-subtle font-medium">
+                  Input manual atau bulk upload Excel
+                </p>
               </div>
             </div>
             <button
@@ -113,7 +113,8 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
           {/* Target Suite Banner */}
           <div className="bg-primary/5 border border-primary/10 px-4 py-2.5 rounded-md flex items-center justify-between text-xs">
             <span className="font-medium text-primary">
-              Modul Target: <strong>{activeSuite ? activeSuite.name : "Belum ada modul terpilih"}</strong>
+              Modul Target:{" "}
+              <strong>{activeSuite ? activeSuite.name : "Belum ada modul terpilih"}</strong>
             </span>
             <span className="px-2.5 py-0.5 bg-primary text-white font-medium rounded-full text-xs sm:text-[10px]">
               {activeSuite ? activeSuite.phase : "SIT"}
@@ -210,7 +211,9 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
               <div className="flex items-center justify-between bg-indigo-50/60 border border-indigo-100 p-3 rounded-md">
                 <div>
                   <h4 className="text-xs font-medium text-primary">Butuh Berkas Template Excel?</h4>
-                  <p className="text-xs sm:text-[10px] text-content-muted font-medium">Unduh contoh struktur kolom resmi</p>
+                  <p className="text-xs sm:text-[10px] text-content-muted font-medium">
+                    Unduh contoh struktur kolom resmi
+                  </p>
                 </div>
                 <button
                   type="button"
@@ -225,7 +228,9 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
               <div className="border-2 border-dashed border-border-subtle hover:border-primary rounded-md p-8 text-center space-y-3 transition-colors bg-surface-sunken/50">
                 <Upload className="w-10 h-10 text-primary mx-auto" />
                 <div>
-                  <p className="text-xs font-medium text-content-body">Unggah berkas Excel (.xlsx / .csv)</p>
+                  <p className="text-xs font-medium text-content-body">
+                    Unggah berkas Excel (.xlsx / .csv)
+                  </p>
                   <p className="text-xs sm:text-[10px] text-content-subtle mt-1">
                     Format kolom: Judul, Deskripsi_Langkah, Hasil_Ekspektasi, Prioritas
                   </p>

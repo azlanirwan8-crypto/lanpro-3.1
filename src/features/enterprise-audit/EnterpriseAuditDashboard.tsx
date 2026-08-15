@@ -37,7 +37,6 @@ interface EnterpriseAuditDashboardProps {
  */
 export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> = ({
   selectedProject,
-  currentUser,
 }) => {
   // --- STATE MANAGEMENT ---
   const [logs, setLogs] = useState<AuditLog[]>([]);
