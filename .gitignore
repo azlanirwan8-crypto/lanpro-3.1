@@ -10,3 +10,6 @@ database/backups/
 tmp/
 uploads/
 *.docx
+
+# Berkas izin Claude Code, khusus mesin lokal
+.claude/settings.local.json
