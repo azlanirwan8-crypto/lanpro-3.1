@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { RenderIcon } from '../RenderIcon';
-import { Portal } from './Portal';
+import React, { useState, useRef, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
+import { cn } from "../../lib/utils";
+import { RenderIcon } from "../RenderIcon";
+import { Portal } from "./Portal";
 
 interface StatusSelectProps {
   value: string;
@@ -12,7 +12,13 @@ interface StatusSelectProps {
   className?: string;
 }
 
-export const StatusSelect = ({ value, onChange, statuses, disabled, className }: StatusSelectProps) => {
+export const StatusSelect = ({
+  value,
+  onChange,
+  statuses,
+  disabled,
+  className,
+}: StatusSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
@@ -23,44 +29,64 @@ export const StatusSelect = ({ value, onChange, statuses, disabled, className }:
       setDropdownPosition({
         top: rect.bottom + window.scrollY,
         left: rect.left + window.scrollX,
-        width: rect.width
+        width: rect.width,
       });
     }
   }, [isOpen]);
 
-  const current = statuses.find(s => s.label === value);
+  const current = statuses.find((s) => s.label === value);
 
   return (
     <div className={cn("relative", className)}>
-      <button 
+      <button
         ref={buttonRef}
-        onClick={(e) => { e.stopPropagation(); !disabled && setIsOpen(!isOpen); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          !disabled && setIsOpen(!isOpen);
+        }}
         disabled={disabled}
         className={cn(
-          "flex items-center gap-2 px-3 py-2 bg-surface border border-gray-200 rounded-lg transition-all w-full justify-between text-left",
-          disabled ? "bg-gray-50 border-gray-100 cursor-not-allowed opacity-75" : "hover:border-blue-400 cursor-pointer shadow-soft hover:shadow-md"
+          "flex items-center gap-2 px-3 py-2 bg-surface border border-border-subtle rounded-lg transition-all w-full justify-between text-left",
+          disabled
+            ? "bg-surface-sunken border-border-faint cursor-not-allowed opacity-75"
+            : "hover:border-blue-400 cursor-pointer shadow-soft hover:shadow-md"
         )}
       >
         <div className="flex items-center gap-2 truncate">
           {current?.icon ? (
-            <RenderIcon iconName={current.icon} className="w-4 h-4 saturate-150 shrink-0" style={{ color: current.color || '#CBD5E1' }} />
+            <RenderIcon
+              iconName={current.icon}
+              className="w-4 h-4 saturate-150 shrink-0"
+              style={{ color: current.color || "#CBD5E1" }}
+            />
           ) : (
-            <div className="w-2.5 h-2.5 rounded-full shadow-inner border border-black/10 shrink-0" style={{ backgroundColor: current?.color || '#CBD5E1' }} />
+            <div
+              className="w-2.5 h-2.5 rounded-full shadow-inner border border-black/10 shrink-0"
+              style={{ backgroundColor: current?.color || "#CBD5E1" }}
+            />
           )}
-          <span className="text-sm font-medium uppercase text-gray-700 tracking-tight truncate">{value || 'Select Status'}</span>
+          <span className="text-sm font-medium uppercase text-content-body tracking-tight truncate">
+            {value || "Select Status"}
+          </span>
         </div>
-        <ChevronDown className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+        <ChevronDown className="w-3.5 h-3.5 text-content-subtle shrink-0" />
       </button>
-      
+
       {isOpen && (
         <Portal>
-          <div className="fixed inset-0 z-[60]" onClick={(e) => { e.stopPropagation(); setIsOpen(false); }} />
-          <div 
-            className="fixed z-[70] bg-surface rounded-lg shadow-xl border border-gray-100 p-1 min-w-[160px]"
-            style={{ 
-              top: `${dropdownPosition.top + 4}px`, 
+          <div
+            className="fixed inset-0 z-[60]"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsOpen(false);
+            }}
+          />
+          <div
+            className="fixed z-[70] bg-surface rounded-lg shadow-xl border border-border-faint p-1 min-w-[160px]"
+            style={{
+              top: `${dropdownPosition.top + 4}px`,
               left: `${dropdownPosition.left}px`,
-              width: `${dropdownPosition.width}px` 
+              width: `${dropdownPosition.width}px`,
             }}
           >
             {statuses.map((s, index) => (
@@ -71,12 +97,19 @@ export const StatusSelect = ({ value, onChange, statuses, disabled, className }:
                   onChange(s.label);
                   setIsOpen(false);
                 }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 rounded-md transition-colors text-sm font-medium text-gray-700 uppercase"
+                className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-surface-sunken rounded-md transition-colors text-sm font-medium text-content-body uppercase"
               >
                 {s.icon ? (
-                    <RenderIcon iconName={s.icon} className="w-4 h-4 saturate-150 shrink-0" style={{ color: s.color }} />
+                  <RenderIcon
+                    iconName={s.icon}
+                    className="w-4 h-4 saturate-150 shrink-0"
+                    style={{ color: s.color }}
+                  />
                 ) : (
-                    <div className="w-2.5 h-2.5 rounded-full shadow-inner border border-black/10 shrink-0" style={{ backgroundColor: s.color }} />
+                  <div
+                    className="w-2.5 h-2.5 rounded-full shadow-inner border border-black/10 shrink-0"
+                    style={{ backgroundColor: s.color }}
+                  />
                 )}
                 {s.label}
               </button>
@@ -88,7 +121,27 @@ export const StatusSelect = ({ value, onChange, statuses, disabled, className }:
   );
 };
 
-export const PrioritySelect = ({ value, onChange, masterData, disabled, className }: { value: string; onChange: (val: string) => void; masterData: any[]; disabled?: boolean; className?: string }) => {
-  const priorities = masterData.filter(d => d.type === 'priority');
-  return <StatusSelect value={value} onChange={onChange} statuses={priorities} disabled={disabled} className={className} />;
+export const PrioritySelect = ({
+  value,
+  onChange,
+  masterData,
+  disabled,
+  className,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  masterData: any[];
+  disabled?: boolean;
+  className?: string;
+}) => {
+  const priorities = masterData.filter((d) => d.type === "priority");
+  return (
+    <StatusSelect
+      value={value}
+      onChange={onChange}
+      statuses={priorities}
+      disabled={disabled}
+      className={className}
+    />
+  );
 };

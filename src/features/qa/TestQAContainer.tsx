@@ -36,13 +36,16 @@ export function TestQAPanel({
 }: TestQAPanelProps) {
   if (!selectedProject) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-6 bg-white dark:bg-slate-900 rounded-md border border-slate-200 dark:border-slate-800 shadow-soft max-w-lg mx-auto mt-12">
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-6 bg-surface dark:bg-slate-900 rounded-md border border-border-subtle dark:border-slate-800 shadow-soft max-w-lg mx-auto mt-12">
         <div className="p-4 bg-indigo-50 text-indigo-600 rounded-full mb-4 animate-bounce">
           <ShieldAlert className="w-8 h-8" />
         </div>
-        <h3 className="text-xl font-medium text-slate-800">Silakan Pilih Proyek Terlebih Dahulu</h3>
-        <p className="text-sm text-slate-500 mt-2 leading-relaxed">
-          Modul QA Testing membutuhkan konteks proyek aktif untuk mengunggah skrip pengujian, mengelola status eksekusi, serta menghubungkannya dengan Bug Ticket.
+        <h3 className="text-xl font-medium text-content-strong">
+          Silakan Pilih Proyek Terlebih Dahulu
+        </h3>
+        <p className="text-sm text-content-muted mt-2 leading-relaxed">
+          Modul QA Testing membutuhkan konteks proyek aktif untuk mengunggah skrip pengujian,
+          mengelola status eksekusi, serta menghubungkannya dengan Bug Ticket.
         </p>
       </div>
     );
@@ -52,9 +55,9 @@ export function TestQAPanel({
   const [suites, setSuites] = useState<QATestSuite[]>([]);
   const [selectedSuiteId, setSelectedSuiteId] = useState<string>("");
   const [phaseFilter, setPhaseFilter] = useState<"ALL" | "SIT" | "UAT" | "PTR">("ALL");
-  const [statusFilter, setStatusFilter] = useState<"ALL" | "Passed" | "Failed" | "Blocked" | "Retest" | "Pending">(
-    initialStatusFilter || "ALL"
-  );
+  const [statusFilter, setStatusFilter] = useState<
+    "ALL" | "Passed" | "Failed" | "Blocked" | "Retest" | "Pending"
+  >(initialStatusFilter || "ALL");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedCaseIds, setSelectedCaseIds] = useState<string[]>([]);
 
@@ -78,7 +81,9 @@ export function TestQAPanel({
   const [isAddCaseOpen, setIsAddCaseOpen] = useState(false);
   const [activeAddTab, setActiveAddTab] = useState<"single" | "bulk">("single");
   const [newCaseTitle, setNewCaseTitle] = useState("");
-  const [newCasePriority, setNewCasePriority] = useState<"High" | "Medium" | "Low" | "Critical">("Medium");
+  const [newCasePriority, setNewCasePriority] = useState<"High" | "Medium" | "Low" | "Critical">(
+    "Medium"
+  );
   const [newCaseAssignedTo, setNewCaseAssignedTo] = useState("");
   const [newCaseSteps, setNewCaseSteps] = useState("");
   const [newCaseExpected, setNewCaseExpected] = useState("");
@@ -92,7 +97,9 @@ export function TestQAPanel({
   const [caseEditTitle, setCaseEditTitle] = useState("");
   const [caseEditSteps, setCaseEditSteps] = useState("");
   const [caseEditExpected, setCaseEditExpected] = useState("");
-  const [caseEditPriority, setCaseEditPriority] = useState<"High" | "Medium" | "Low" | "Critical">("Medium");
+  const [caseEditPriority, setCaseEditPriority] = useState<"High" | "Medium" | "Low" | "Critical">(
+    "Medium"
+  );
   const [caseEditAssignedTo, setCaseEditAssignedTo] = useState("");
 
   const [suiteToDelete, setSuiteToDelete] = useState<QATestSuite | null>(null);
@@ -131,9 +138,12 @@ export function TestQAPanel({
     currentUserRole === "project_admin" ||
     currentUserRole === "lead";
 
-  const canCreate = isAdminRole || hasPermission(currentUserRole, "qaTesting", "create", false, user?.permissions);
-  const canUpdate = isAdminRole || hasPermission(currentUserRole, "qaTesting", "update", false, user?.permissions);
-  const canDelete = isAdminRole || hasPermission(currentUserRole, "qaTesting", "delete", false, user?.permissions);
+  const canCreate =
+    isAdminRole || hasPermission(currentUserRole, "qaTesting", "create", false, user?.permissions);
+  const canUpdate =
+    isAdminRole || hasPermission(currentUserRole, "qaTesting", "update", false, user?.permissions);
+  const canDelete =
+    isAdminRole || hasPermission(currentUserRole, "qaTesting", "delete", false, user?.permissions);
 
   // Load Data
   const loadSuitesFromBackend = async () => {
@@ -148,7 +158,9 @@ export function TestQAPanel({
         if (suitesData.status === "success" && casesData.status === "success") {
           const dbCases = casesData.data || [];
           const mergedSuites: QATestSuite[] = (suitesData.data || []).map((suite: any) => {
-            const suiteCases = dbCases.filter((tc: any) => tc.suiteId === suite.id || tc.modulId === suite.id);
+            const suiteCases = dbCases.filter(
+              (tc: any) => tc.suiteId === suite.id || tc.modulId === suite.id
+            );
             return {
               ...suite,
               cases: suiteCases.map((tc: any) => ({
@@ -159,8 +171,12 @@ export function TestQAPanel({
                 steps: typeof tc.steps === "string" ? JSON.parse(tc.steps) : tc.steps || [],
                 priority: tc.prioritas || tc.priority || "Medium",
                 assignedTo: tc.assignedTo || undefined,
-                commentsList: typeof tc.commentsList === "string" ? JSON.parse(tc.commentsList) : tc.commentsList || [],
-                evidences: typeof tc.evidences === "string" ? JSON.parse(tc.evidences) : tc.evidences || [],
+                commentsList:
+                  typeof tc.commentsList === "string"
+                    ? JSON.parse(tc.commentsList)
+                    : tc.commentsList || [],
+                evidences:
+                  typeof tc.evidences === "string" ? JSON.parse(tc.evidences) : tc.evidences || [],
               })),
             };
           });
@@ -185,7 +201,10 @@ export function TestQAPanel({
   // Save state helper
   const saveSuitesToStorage = (updatedSuites: QATestSuite[]) => {
     setSuites(updatedSuites);
-    safeLocalStorage.setItem(`lanpro_qa_suites_${selectedProject.id}`, JSON.stringify(updatedSuites));
+    safeLocalStorage.setItem(
+      `lanpro_qa_suites_${selectedProject.id}`,
+      JSON.stringify(updatedSuites)
+    );
   };
 
   // Lock helper
@@ -231,7 +250,9 @@ export function TestQAPanel({
   // Update Suite / Case PIC Handlers
   const handleUpdateSuitePic = async (suiteId: string, assignedTo: string) => {
     setActiveSuitePicDropdownId(null);
-    const updatedSuites = suites.map((s) => (s.id === suiteId ? { ...s, assignedTo: assignedTo || undefined } : s));
+    const updatedSuites = suites.map((s) =>
+      s.id === suiteId ? { ...s, assignedTo: assignedTo || undefined } : s
+    );
     saveSuitesToStorage(updatedSuites);
     const targetSuite = updatedSuites.find((s) => s.id === suiteId);
     if (targetSuite) {
@@ -250,7 +271,9 @@ export function TestQAPanel({
       if (s.id !== suiteId) return s;
       return {
         ...s,
-        cases: s.cases.map((c) => (c.id === caseId ? { ...c, assignedTo: assignedTo || undefined } : c)),
+        cases: s.cases.map((c) =>
+          c.id === caseId ? { ...c, assignedTo: assignedTo || undefined } : c
+        ),
       };
     });
     saveSuitesToStorage(updatedSuites);
@@ -287,18 +310,24 @@ export function TestQAPanel({
     if (selectedCaseIds.length === 0) return;
     const updatedSuites = suites.map((suite) => ({
       ...suite,
-      cases: suite.cases.map((c) => (selectedCaseIds.includes(c.id) ? { ...c, assignedTo: assignedTo || undefined } : c)),
+      cases: suite.cases.map((c) =>
+        selectedCaseIds.includes(c.id) ? { ...c, assignedTo: assignedTo || undefined } : c
+      ),
     }));
     saveSuitesToStorage(updatedSuites);
     toast.success(`Berhasil menetapkan PIC ke ${selectedCaseIds.length} task sekaligus.`);
     setSelectedCaseIds([]);
   };
 
-  const handleBulkChangeStatus = async (newStatus: "Passed" | "Failed" | "Blocked" | "Retest" | "Pending") => {
+  const handleBulkChangeStatus = async (
+    newStatus: "Passed" | "Failed" | "Blocked" | "Retest" | "Pending"
+  ) => {
     if (selectedCaseIds.length === 0) return;
     const updatedSuites = suites.map((suite) => ({
       ...suite,
-      cases: suite.cases.map((c) => (selectedCaseIds.includes(c.id) ? { ...c, status: newStatus } : c)),
+      cases: suite.cases.map((c) =>
+        selectedCaseIds.includes(c.id) ? { ...c, status: newStatus } : c
+      ),
     }));
     saveSuitesToStorage(updatedSuites);
     toast.success(`Berhasil mengubah status ${selectedCaseIds.length} task ke ${newStatus}.`);
@@ -515,7 +544,9 @@ export function TestQAPanel({
         const createdKey = response.data.key || `BUG-${Date.now()}`;
         const updatedSuites = suites.map((s) => ({
           ...s,
-          cases: s.cases.map((c) => (c.id === bugModalTestCase.id ? { ...c, linkedBugKey: createdKey } : c)),
+          cases: s.cases.map((c) =>
+            c.id === bugModalTestCase.id ? { ...c, linkedBugKey: createdKey } : c
+          ),
         }));
         saveSuitesToStorage(updatedSuites);
         toast.success(`Tiket bug ${createdKey} berhasil dibuat.`);
@@ -654,8 +685,6 @@ export function TestQAPanel({
         handleForceUnlock={handleForceUnlock}
         releaseLockManually={releaseLockManually}
       />
-
-
 
       {/* OPTIMIZED RESPONSIVE GRID (3 : 9 RATIO) - 75% WIDTH FOR TABLE */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-start">

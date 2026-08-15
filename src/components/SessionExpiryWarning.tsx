@@ -1,12 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Clock, ShieldAlert, LogOut, RefreshCw, ChevronUp, ChevronDown, CheckCircle2, Play } from 'lucide-react';
-import { toast } from 'sonner';
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  Clock,
+  ShieldAlert,
+  LogOut,
+  RefreshCw,
+  ChevronUp,
+  ChevronDown,
+  CheckCircle2,
+  Play,
+} from "lucide-react";
+import { toast } from "sonner";
 // UTANG LAPISAN: komponen ini memanggil backend langsung (1 panggilan refresh token).
 // Dijadwalkan pindah ke services/ pada fase L4. Ditandai eksplisit agar
 // terlihat sebagai utang yang diketahui, bukan lolos diam-diam.
 // eslint-disable-next-line no-restricted-imports
-import { apiRequest, setAuthToken, getAuthToken } from '../lib/api';
+import { apiRequest, setAuthToken, getAuthToken } from "../lib/api";
 
 interface SessionExpiryWarningProps {
   isLoggedIn: boolean;
@@ -18,13 +27,14 @@ interface SessionExpiryWarningProps {
 // Client-side JWT Decoder
 const parseJwt = (token: string) => {
   try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const jsonPayload = decodeURIComponent(
-      window.atob(base64)
-        .split('')
-        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
+      window
+        .atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
     );
     return JSON.parse(jsonPayload);
   } catch (e) {
@@ -49,16 +59,16 @@ export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
   const simulatedTimeLeftRef = useRef<number | null>(null);
 
   // Constants - warning triggers exactly 60 seconds before expiry
-  const WARNING_THRESHOLD = 60; 
+  const WARNING_THRESHOLD = 60;
 
   // Format seconds to HH:MM:SS or MM:SS
   const formatTime = (totalSeconds: number) => {
-    if (totalSeconds <= 0) return '00:00';
+    if (totalSeconds <= 0) return "00:00";
     const h = Math.floor(totalSeconds / 3600);
     const m = Math.floor((totalSeconds % 3600) / 60);
     const s = totalSeconds % 60;
 
-    const pad = (num: number) => String(num).padStart(2, '0');
+    const pad = (num: number) => String(num).padStart(2, "0");
 
     if (h > 0) {
       return `${pad(h)}:${pad(m)}:${pad(s)}`;
@@ -70,18 +80,18 @@ export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
   const handleExtendSession = async () => {
     if (isExtending) return;
     setIsExtending(true);
-    const toastId = toast.loading('Memperpanjang sesi aktif Anda...');
+    const toastId = toast.loading("Memperpanjang sesi aktif Anda...");
 
     try {
-      const data = await apiRequest('/api/auth/refresh', { method: 'POST' });
-      if (data && data.status === 'success' && data.token) {
+      const data = await apiRequest("/api/auth/refresh", { method: "POST" });
+      if (data && data.status === "success" && data.token) {
         setAuthToken(data.token);
-        
+
         // Reset simulation states
         isSimulatingRef.current = false;
         setSimulatedTimeLeft(null);
         simulatedTimeLeftRef.current = null;
-        
+
         // Re-read JWT to update the realTimeLeft state
         const decoded = parseJwt(data.token);
         if (decoded && decoded.exp) {
@@ -95,13 +105,13 @@ export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
 
         setShowWarningModal(false);
         setIsPopoverOpen(false);
-        toast.success('Sesi Anda berhasil diperpanjang!', { id: toastId });
+        toast.success("Sesi Anda berhasil diperpanjang!", { id: toastId });
       } else {
-        throw new Error(data?.message || 'Gagal memperbarui token');
+        throw new Error(data?.message || "Gagal memperbarui token");
       }
     } catch (err: any) {
-      console.error('Session extension error:', err);
-      toast.error(err.message || 'Gagal memperpanjang sesi. Silakan coba lagi.', { id: toastId });
+      console.error("Session extension error:", err);
+      toast.error(err.message || "Gagal memperpanjang sesi. Silakan coba lagi.", { id: toastId });
     } finally {
       setIsExtending(false);
     }
@@ -114,7 +124,7 @@ export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
     isSimulatingRef.current = false;
     setSimulatedTimeLeft(null);
     simulatedTimeLeftRef.current = null;
-    toast.error('Sesi Anda telah berakhir untuk keamanan data. Silakan login kembali.', {
+    toast.error("Sesi Anda telah berakhir untuk keamanan data. Silakan login kembali.", {
       duration: 5000,
     });
     await onLogout(true);
@@ -126,8 +136,8 @@ export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
     simulatedTimeLeftRef.current = 60; // Start with 60 seconds countdown
     setSimulatedTimeLeft(60);
     setIsPopoverOpen(false);
-    toast.success('Peringatan sesi berakhir disimulasikan (60 Detik)!', {
-      description: 'Sesi akan berakhir otomatis jika Anda tidak merespons dalam 60 detik.',
+    toast.success("Peringatan sesi berakhir disimulasikan (60 Detik)!", {
+      description: "Sesi akan berakhir otomatis jika Anda tidak merespons dalam 60 detik.",
     });
   };
 
@@ -212,7 +222,7 @@ export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
               initial={{ scale: 0.95, opacity: 0, y: 15 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 15 }}
-              className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden p-5 text-center"
+              className="relative w-full max-w-md bg-surface dark:bg-slate-900 rounded-lg border border-border-subtle dark:border-slate-800 shadow-xl overflow-hidden p-5 text-center"
             >
               {/* Alert Icon & Ring */}
               <div className="mx-auto w-16 h-16 bg-rose-50 border border-rose-100 rounded-full flex items-center justify-center mb-4 text-rose-500 relative">
@@ -221,16 +231,19 @@ export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
               </div>
 
               {/* Header Text */}
-              <h3 className="text-xl font-medium text-slate-900 tracking-tight mb-2">
+              <h3 className="text-xl font-medium text-content tracking-tight mb-2">
                 Sesi Anda Hampir Berakhir!
               </h3>
-              <p className="text-sm text-slate-500 px-2 mb-6">
-                Sesi Anda akan otomatis ditutup demi keamanan akun. Simpan pekerjaan Anda atau perpanjang sesi untuk melanjutkan.
+              <p className="text-sm text-content-muted px-2 mb-6">
+                Sesi Anda akan otomatis ditutup demi keamanan akun. Simpan pekerjaan Anda atau
+                perpanjang sesi untuk melanjutkan.
               </p>
 
               {/* Countdown Progress Card */}
-              <div className="bg-slate-50 rounded-xl border border-slate-100 p-5 mb-6 relative">
-                <div className="text-xs text-slate-400 font-medium mb-1">OTOMATIS KELUAR DALAM</div>
+              <div className="bg-surface-sunken rounded-xl border border-border-faint p-5 mb-6 relative">
+                <div className="text-xs text-content-subtle font-medium mb-1">
+                  OTOMATIS KELUAR DALAM
+                </div>
                 <div className="text-4xl font-medium font-mono text-rose-500 tracking-wider">
                   {formatTime(activeTimeLeft)}
                 </div>
@@ -238,19 +251,21 @@ export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
                 {/* Progress bar with dynamic color transitions */}
                 <div className="w-full h-2.5 bg-slate-200 rounded-full mt-4 overflow-hidden relative">
                   <motion.div
-                    initial={{ width: '100%' }}
+                    initial={{ width: "100%" }}
                     animate={{ width: `${(activeTimeLeft / WARNING_THRESHOLD) * 100}%` }}
-                    transition={{ ease: 'linear', duration: 1 }}
+                    transition={{ ease: "linear", duration: 1 }}
                     className={`h-full rounded-full transition-colors duration-500 ${
-                      activeTimeLeft > 30 ? 'bg-amber-500' : 'bg-rose-500 animate-pulse'
+                      activeTimeLeft > 30 ? "bg-amber-500" : "bg-rose-500 animate-pulse"
                     }`}
                   />
                 </div>
-                
+
                 {/* Progress helper indicators */}
-                <div className="flex justify-between items-center mt-2 text-xs sm:text-[10px] text-slate-400 font-medium">
+                <div className="flex justify-between items-center mt-2 text-xs sm:text-[10px] text-content-subtle font-medium">
                   <span>60 DETIK</span>
-                  <span className={`${activeTimeLeft > 30 ? 'text-amber-500' : 'text-rose-500 animate-pulse'}`}>
+                  <span
+                    className={`${activeTimeLeft > 30 ? "text-amber-500" : "text-rose-500 animate-pulse"}`}
+                  >
                     {Math.round((activeTimeLeft / WARNING_THRESHOLD) * 100)}% SISA WAKTU
                   </span>
                   <span>0 DETIK</span>
@@ -264,13 +279,13 @@ export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
                   disabled={isExtending}
                   className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-sm font-medium tracking-wide shadow-soft-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  <RefreshCw className={`w-4 h-4 ${isExtending ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`w-4 h-4 ${isExtending ? "animate-spin" : ""}`} />
                   Perpanjang Sesi Aktif
                 </button>
 
                 <button
                   onClick={() => onLogout(false)}
-                  className="w-full py-3.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-sm font-medium active:scale-[0.99] transition-all"
+                  className="w-full py-3.5 bg-surface-sunken hover:bg-surface-muted border border-border-subtle text-content-body rounded-xl text-sm font-medium active:scale-[0.99] transition-all"
                 >
                   Keluar Sekarang
                 </button>

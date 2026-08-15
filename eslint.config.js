@@ -57,6 +57,26 @@ export default tseslint.config(
       'no-undef': 'off',
       'no-useless-escape': 'warn',
       '@typescript-eslint/no-require-imports': 'off',
+
+      /* UTANG GAYA WARISAN — diturunkan ke warn secara sadar.
+       *
+       * Kedelapan aturan di bawah menyisakan 32 pelanggaran dari kode yang
+       * ditulis sebelum ESLint ada. Sebagai error, keduanya menahan pre-commit
+       * pada berkas mana pun yang kebetulan disentuh — termasuk perbaikan yang
+       * sama sekali tidak berhubungan. Efeknya orang akan memakai --no-verify,
+       * dan penegakan yang di-bypass sama saja dengan tidak ada.
+       *
+       * Aturan LAPISAN tetap error (lihat blok di bawah), karena itulah yang
+       * benar-benar menjaga arsitektur. Kedelapan ini soal gaya, dan dilunasi
+       * bertahap pada fase L3. */
+      'no-case-declarations': 'warn',
+      'prefer-const': 'warn',
+      'no-prototype-builtins': 'warn',
+      '@typescript-eslint/no-unused-expressions': 'warn',
+      'no-shadow-restricted-names': 'warn',
+      '@typescript-eslint/no-namespace': 'warn',
+      'no-constant-condition': 'warn',
+      '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
     },
   },
   {

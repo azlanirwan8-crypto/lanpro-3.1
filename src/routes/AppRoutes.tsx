@@ -33,7 +33,13 @@ export interface AppRoutesProps {
   activityLogs: any[];
   selectedTaskForDetail: any;
   expandedSprintId: string | null;
-  hasPermission: (role: string, feature: string, action: string, isOwner?: boolean, permissions?: any) => boolean;
+  hasPermission: (
+    role: string,
+    feature: string,
+    action: string,
+    isOwner?: boolean,
+    permissions?: any
+  ) => boolean;
   updateTaskField: (id: string, field: string, value: any) => any;
   updateTaskStatus?: (id: string, status: string) => void;
   handleQuickCreate: (title: string, parentId?: string) => void;
@@ -105,18 +111,24 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
     fetchProjects,
     StyledDropdown,
     updateProjectRole,
-    removeProjectMember
+    removeProjectMember,
   } = props;
 
-  if (!selectedProject && !["master", "users", "activity", "connect", "enterprise-audit"].includes(currentView)) {
+  if (
+    !selectedProject &&
+    !["master", "users", "activity", "connect", "enterprise-audit"].includes(currentView)
+  ) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center bg-slate-50/50 p-8 text-center">
+      <div className="flex-1 flex flex-col items-center justify-center bg-surface-sunken/50 p-8 text-center">
         <div className="w-16 h-16 rounded-xl bg-indigo-100/80 border border-indigo-200 flex items-center justify-center text-indigo-600 mb-4 shadow-soft">
           <FolderKanban className="w-8 h-8" />
         </div>
-        <h3 className="text-xl font-medium text-slate-800 mb-2">Pilih atau Buat Proyek Baru</h3>
-        <p className="text-slate-500 text-sm max-w-sm">
-          Silakan pilih proyek dari dropdown di bagian atas atau buat proyek baru untuk mulai mengelola tugas.
+        <h3 className="text-xl font-medium text-content-strong mb-2">
+          Pilih atau Buat Proyek Baru
+        </h3>
+        <p className="text-content-muted text-sm max-w-sm">
+          Silakan pilih proyek dari dropdown di bagian atas atau buat proyek baru untuk mulai
+          mengelola tugas.
         </p>
       </div>
     );
@@ -125,7 +137,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
   switch (currentView) {
     case "dashboard":
       return (
-        <div className="flex-1 flex flex-col overflow-auto bg-slate-50 dark:bg-slate-950 min-h-screen pb-16 transition-colors duration-200">
+        <div className="flex-1 flex flex-col overflow-auto bg-surface-sunken dark:bg-slate-950 min-h-screen pb-16 transition-colors duration-200">
           <DashboardView
             tasks={tasks || []}
             sprints={sprints || []}
@@ -145,7 +157,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
 
     case "meetingNotes":
       return (
-        <div className="flex-1 flex flex-col min-h-0 bg-slate-50">
+        <div className="flex-1 flex flex-col min-h-0 bg-surface-sunken">
           <MeetingNotes
             projectId={selectedProject?.id}
             userRole={effectiveRole}
@@ -159,7 +171,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
 
     case "wiki":
       return (
-        <div className="flex-1 flex flex-col min-h-0 bg-slate-50">
+        <div className="flex-1 flex flex-col min-h-0 bg-surface-sunken">
           <WikiView
             projectId={selectedProject?.id}
             users={allUsers}
@@ -171,20 +183,28 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
 
     case "notebooklm":
       return (
-        <div className="flex-1 flex flex-col min-h-0 p-4 bg-slate-50 dark:bg-slate-950">
-          {hasPermission(effectiveRole, "notebooklm", "read", false, currentUserProfile?.permissions) ? (
+        <div className="flex-1 flex flex-col min-h-0 p-4 bg-surface-sunken dark:bg-slate-950">
+          {hasPermission(
+            effectiveRole,
+            "notebooklm",
+            "read",
+            false,
+            currentUserProfile?.permissions
+          ) ? (
             <NotebookLM
               project={selectedProject}
               userRole={effectiveRole}
               currentUser={currentUserProfile}
             />
           ) : (
-            <div className="flex flex-col items-center justify-center w-full h-full p-8 text-center bg-slate-50 dark:bg-slate-900 rounded-xl min-h-[500px]">
+            <div className="flex flex-col items-center justify-center w-full h-full p-8 text-center bg-surface-sunken dark:bg-slate-900 rounded-xl min-h-[500px]">
               <ShieldAlert className="w-16 h-16 text-rose-500 mb-4 animate-bounce" />
-              <h2 className="text-2xl font-medium text-slate-800 dark:text-slate-100 mb-2">403 Forbidden</h2>
-              <p className="text-slate-500 dark:text-slate-400 max-w-md text-sm">
-                Anda tidak memiliki izin untuk mengakses modul NotebookLM.
-                Silakan hubungi Administrator untuk memperbarui hak akses Anda.
+              <h2 className="text-2xl font-medium text-content-strong dark:text-slate-100 mb-2">
+                403 Forbidden
+              </h2>
+              <p className="text-content-muted dark:text-slate-400 max-w-md text-sm">
+                Anda tidak memiliki izin untuk mengakses modul NotebookLM. Silakan hubungi
+                Administrator untuk memperbarui hak akses Anda.
               </p>
             </div>
           )}
@@ -200,7 +220,9 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
               : undefined
           }
           tasks={tasks || []}
-          roots={(tasks || []).filter((t) => !t.parentId || !(tasks || []).some((p) => p.id === t.parentId))}
+          roots={(tasks || []).filter(
+            (t) => !t.parentId || !(tasks || []).some((p) => p.id === t.parentId)
+          )}
           sprints={sprints || []}
           projectMembers={projectMembers || []}
           allUsers={allUsers || []}
@@ -246,7 +268,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
 
     case "board":
       return (
-        <div className="flex-1 flex flex-col min-h-0 p-6 bg-slate-50 dark:bg-slate-950">
+        <div className="flex-1 flex flex-col min-h-0 p-6 bg-surface-sunken dark:bg-slate-950">
           <BoardView
             tasks={tasks || []}
             masterData={masterData || []}
@@ -264,7 +286,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
 
     case "qa":
       return (
-        <div className="flex-1 overflow-auto bg-slate-50 relative custom-scrollbar p-6">
+        <div className="flex-1 overflow-auto bg-surface-sunken relative custom-scrollbar p-6">
           <TestQAPanel
             tasks={tasks || []}
             projectMembers={projectMembers || []}
@@ -311,7 +333,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
 
     case "flowchart":
       return (
-        <div className="flex-1 flex flex-col min-h-0 bg-slate-50">
+        <div className="flex-1 flex flex-col min-h-0 bg-surface-sunken">
           <FlowchartView
             selectedProject={selectedProject}
             tasks={tasks || []}
@@ -343,10 +365,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
     case "auditLog":
       return (
         <div className="flex-1 flex flex-col min-h-0">
-          <EnterpriseAuditDashboard
-            selectedProject={selectedProject}
-            currentUser={currentUser}
-          />
+          <EnterpriseAuditDashboard selectedProject={selectedProject} currentUser={currentUser} />
         </div>
       );
 
@@ -373,29 +392,34 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
       );
 
     case "settingsIntegration":
-      return (
-        (() => {
-          const explicitRead = currentUserProfile?.permissions?.settings?.read;
-          const hasAccess = explicitRead !== undefined 
+      return (() => {
+        const explicitRead = currentUserProfile?.permissions?.settings?.read;
+        const hasAccess =
+          explicitRead !== undefined
             ? explicitRead === true
-            : hasPermission(effectiveRole, "settings", "read", false, currentUserProfile?.permissions);
-            
-          if (!hasAccess) {
-            return (
-              <div className="flex flex-col items-center justify-center w-full h-full p-8 text-center bg-slate-50 min-h-[calc(100vh-theme(spacing.16))]">
-                 <ShieldAlert className="w-16 h-16 text-rose-500 mb-4" />
-                 <h2 className="text-2xl font-medium text-slate-800 mb-2">403 Forbidden</h2>
-                 <p className="text-slate-500 max-w-md">
-                   You do not have permission to view Integration Settings. 
-                   Please contact your administrator if you need access.
-                 </p>
-              </div>
-            );
-          }
-          
-          return <SettingsPage />;
-        })()
-      );
+            : hasPermission(
+                effectiveRole,
+                "settings",
+                "read",
+                false,
+                currentUserProfile?.permissions
+              );
+
+        if (!hasAccess) {
+          return (
+            <div className="flex flex-col items-center justify-center w-full h-full p-8 text-center bg-surface-sunken min-h-[calc(100vh-theme(spacing.16))]">
+              <ShieldAlert className="w-16 h-16 text-rose-500 mb-4" />
+              <h2 className="text-2xl font-medium text-content-strong mb-2">403 Forbidden</h2>
+              <p className="text-content-muted max-w-md">
+                You do not have permission to view Integration Settings. Please contact your
+                administrator if you need access.
+              </p>
+            </div>
+          );
+        }
+
+        return <SettingsPage />;
+      })();
 
     default:
       return null;

@@ -1,12 +1,35 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Task, Project } from '../../types';
-import { format, startOfMonth, startOfWeek, endOfMonth, endOfWeek, addDays, differenceInDays, startOfYear, endOfYear } from 'date-fns';
-import { ensureDate, cn } from '../../lib/utils';
-import { toast } from 'sonner';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
-import { Download, ChevronDown, ChevronRight, FileText, Image as ImageIcon, Plus, Minus, Zap, CornerDownRight, ListTodo, Target, Calendar } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useRef } from "react";
+import { Task, Project } from "../../types";
+import {
+  format,
+  startOfMonth,
+  startOfWeek,
+  endOfMonth,
+  endOfWeek,
+  addDays,
+  differenceInDays,
+  startOfYear,
+  endOfYear,
+} from "date-fns";
+import { ensureDate, cn } from "../../lib/utils";
+import { toast } from "sonner";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
+import {
+  Download,
+  ChevronDown,
+  ChevronRight,
+  FileText,
+  Image as ImageIcon,
+  Plus,
+  Minus,
+  Zap,
+  CornerDownRight,
+  ListTodo,
+  Target,
+  Calendar,
+} from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 
 interface TimelineProps {
   tasks: Task[];
@@ -17,7 +40,7 @@ interface TimelineProps {
 }
 
 // Provide default helpers for mapping status and priorities to Tailwind colors
-const getStatusColors = (status: string = '', isEpic: boolean) => {
+const getStatusColors = (status: string = "", isEpic: boolean) => {
   if (isEpic) {
     return {
       bg: "bg-gradient-to-r from-purple-100 to-purple-50/50",
@@ -29,12 +52,12 @@ const getStatusColors = (status: string = '', isEpic: boolean) => {
       handleR: "hover:bg-purple-600/15 active:bg-purple-600/25 group/r-handle",
       handleBarR: "bg-purple-400/80 border-purple-400/20 group-hover/r-handle:bg-purple-600",
       tooltipText: "text-purple-300",
-      tooltipBadge: "bg-purple-500/30 text-purple-200"
+      tooltipBadge: "bg-purple-500/30 text-purple-200",
     };
   }
 
   const s = status.toLowerCase();
-  if (s.includes('done') || s.includes('complete')) {
+  if (s.includes("done") || s.includes("complete")) {
     return {
       bg: "bg-gradient-to-r from-emerald-50 to-white",
       border: "border-emerald-200/80 hover:border-emerald-300",
@@ -45,10 +68,10 @@ const getStatusColors = (status: string = '', isEpic: boolean) => {
       handleR: "hover:bg-emerald-600/15 active:bg-emerald-600/25 group/r-handle",
       handleBarR: "bg-emerald-400/80 border-emerald-400/20 group-hover/r-handle:bg-emerald-600",
       tooltipText: "text-emerald-300",
-      tooltipBadge: "bg-emerald-500/30 text-emerald-200"
+      tooltipBadge: "bg-emerald-500/30 text-emerald-200",
     };
   }
-  if (s.includes('progress') || s.includes('active') || s.includes('review') || s.includes('uat')) {
+  if (s.includes("progress") || s.includes("active") || s.includes("review") || s.includes("uat")) {
     return {
       bg: "bg-gradient-to-r from-indigo-50 to-white",
       border: "border-indigo-200/80 hover:border-indigo-300",
@@ -59,10 +82,10 @@ const getStatusColors = (status: string = '', isEpic: boolean) => {
       handleR: "hover:bg-indigo-600/15 active:bg-indigo-600/25 group/r-handle",
       handleBarR: "bg-indigo-400/80 border-indigo-400/20 group-hover/r-handle:bg-indigo-600",
       tooltipText: "text-indigo-300",
-      tooltipBadge: "bg-indigo-500/30 text-indigo-200"
+      tooltipBadge: "bg-indigo-500/30 text-indigo-200",
     };
   }
-  
+
   // Default (To Do / Backlog)
   return {
     bg: "bg-gradient-to-r from-slate-50 to-white",
@@ -74,19 +97,20 @@ const getStatusColors = (status: string = '', isEpic: boolean) => {
     handleR: "hover:bg-slate-600/15 active:bg-slate-600/25 group/r-handle",
     handleBarR: "bg-slate-400/80 border-slate-400/20 group-hover/r-handle:bg-slate-600",
     tooltipText: "text-slate-300",
-    tooltipBadge: "bg-slate-500/30 text-slate-200"
+    tooltipBadge: "bg-slate-500/30 text-slate-200",
   };
 };
 
-const getPriorityColor = (priority: string = '') => {
+const getPriorityColor = (priority: string = "") => {
   const p = priority.toLowerCase();
-  if (p.includes('p0') || p.includes('urgent') || p.includes('blocker') || p.includes('highest')) return "border-l-rose-500 shadow-rose-900/5";
-  if (p.includes('p1') || p.includes('high')) return "border-l-orange-500 shadow-orange-900/5";
-  if (p.includes('p2') || p.includes('medium')) return "border-l-amber-400 shadow-amber-900/5";
-  if (p.includes('p3') || p.includes('low')) return "border-l-blue-400 shadow-blue-900/5";
+  if (p.includes("p0") || p.includes("urgent") || p.includes("blocker") || p.includes("highest"))
+    return "border-l-rose-500 shadow-rose-900/5";
+  if (p.includes("p1") || p.includes("high")) return "border-l-orange-500 shadow-orange-900/5";
+  if (p.includes("p2") || p.includes("medium")) return "border-l-amber-400 shadow-amber-900/5";
+  if (p.includes("p3") || p.includes("low")) return "border-l-blue-400 shadow-blue-900/5";
   // Default
   return "border-l-slate-400 shadow-slate-900/5";
-}
+};
 
 export const TimelinePanel: React.FC<TimelineProps> = ({
   tasks,
@@ -99,20 +123,22 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
   const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
   const [timelineInteraction, setTimelineInteraction] = useState<{
     taskId: string;
-    type: 'move' | 'resize-start' | 'resize-end';
+    type: "move" | "resize-start" | "resize-end";
     startX: number;
     initialStart: Date;
     initialEnd: Date;
   } | null>(null);
-  const [tempDates, setTempDates] = useState<Record<string, { startDate: string; endDate: string }>>({});
-  
+  const [tempDates, setTempDates] = useState<
+    Record<string, { startDate: string; endDate: string }>
+  >({});
+
   // Backlog and epic hierarchy expansion state: default to expanded (true)
   const [expandedEpics, setExpandedEpics] = useState<Record<string, boolean>>({});
 
   const toggleEpic = (epicId: string) => {
-    setExpandedEpics(prev => ({
+    setExpandedEpics((prev) => ({
       ...prev,
-      [epicId]: prev[epicId] === false ? true : false
+      [epicId]: prev[epicId] === false ? true : false,
     }));
   };
 
@@ -127,44 +153,44 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
     }> = [];
 
     // Find top-level parents (tasks of type Epic, or tasks with no parent, or tasks whose parent is not loaded)
-    const topLevels = tasks.filter(t => !t.parentId || !tasks.some(p => p.id === t.parentId));
+    const topLevels = tasks.filter((t) => !t.parentId || !tasks.some((p) => p.id === t.parentId));
 
     // Put Epics first, then others, sorting to keep structure nice
     const sortedTopLevels = [...topLevels].sort((a, b) => {
-      const aIsEpic = (a.type || '').toLowerCase() === 'epic';
-      const bIsEpic = (b.type || '').toLowerCase() === 'epic';
+      const aIsEpic = (a.type || "").toLowerCase() === "epic";
+      const bIsEpic = (b.type || "").toLowerCase() === "epic";
       if (aIsEpic && !bIsEpic) return -1;
       if (!aIsEpic && bIsEpic) return 1;
       return 0;
     });
 
-    sortedTopLevels.forEach(task => {
+    sortedTopLevels.forEach((task) => {
       list.push({ task, isChild: false, depth: 0, isLastChild: false });
-      
-      const children = tasks.filter(t => t.parentId === task.id);
+
+      const children = tasks.filter((t) => t.parentId === task.id);
       if (children.length > 0) {
         // Epics are expanded by default unless explicitly clicked to collapse
         const isCollapsed = expandedEpics[task.id] === false;
         if (!isCollapsed) {
           const addChildren = (currentChildren: Task[], currentDepth: number) => {
-             currentChildren.forEach((child, idx) => {
-                const isLastChild = idx === currentChildren.length - 1;
-                list.push({
-                   task: child,
-                   isChild: true,
-                   depth: currentDepth,
-                   parentId: child.parentId,
-                   isLastChild
-                });
-                
-                // Add grand-children if any, keeping them visually grouped under this child
-                // Note: we can use the same expandedEpics state to let users collapse ANY parent if we want,
-                // but for now we follow the same collapse state as before
-                const grandChildren = tasks.filter(t => t.parentId === child.id);
-                if (grandChildren.length > 0 && expandedEpics[child.id] !== false) {
-                   addChildren(grandChildren, currentDepth + 1);
-                }
-             });
+            currentChildren.forEach((child, idx) => {
+              const isLastChild = idx === currentChildren.length - 1;
+              list.push({
+                task: child,
+                isChild: true,
+                depth: currentDepth,
+                parentId: child.parentId,
+                isLastChild,
+              });
+
+              // Add grand-children if any, keeping them visually grouped under this child
+              // Note: we can use the same expandedEpics state to let users collapse ANY parent if we want,
+              // but for now we follow the same collapse state as before
+              const grandChildren = tasks.filter((t) => t.parentId === child.id);
+              if (grandChildren.length > 0 && expandedEpics[child.id] !== false) {
+                addChildren(grandChildren, currentDepth + 1);
+              }
+            });
           };
           addChildren(children, 1);
         }
@@ -173,7 +199,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
 
     return list;
   }, [tasks, expandedEpics]);
-  
+
   const [isDraggingToPan, setIsDraggingToPan] = useState(false);
   const dragPanStartRef = useRef({ x: 0, scrollLeft: 0 });
   const touchStartRef = useRef<{
@@ -190,21 +216,21 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
   const timelineMainRef = useRef<HTMLDivElement>(null);
   const timelineContainerRef = useRef<HTMLDivElement>(null);
 
-  const timelineZoom = pixelsPerDay >= 45 ? 'days' : pixelsPerDay >= 15 ? 'weeks' : 'months';
+  const timelineZoom = pixelsPerDay >= 45 ? "days" : pixelsPerDay >= 15 ? "weeks" : "months";
 
   // --- MOUSE HOVER/DRAG PANNING ---
   const handleDragPanMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     // Only drag with left mouse button (0)
     if (e.button !== 0) return;
-    
+
     // Do not initiate drag pan if clicking on a task bar or resize handle or other interactive elements
     const target = e.target as HTMLElement;
     if (
-      target.closest('.cursor-grab') || 
-      target.closest('.cursor-ew-resize') || 
-      target.closest('button') || 
-      target.closest('a') ||
-      target.closest('input')
+      target.closest(".cursor-grab") ||
+      target.closest(".cursor-ew-resize") ||
+      target.closest("button") ||
+      target.closest("a") ||
+      target.closest("input")
     ) {
       return;
     }
@@ -212,7 +238,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
     setIsDraggingToPan(true);
     dragPanStartRef.current = {
       x: e.clientX,
-      scrollLeft: timelineMainRef.current ? timelineMainRef.current.scrollLeft : 0
+      scrollLeft: timelineMainRef.current ? timelineMainRef.current.scrollLeft : 0,
     };
   };
 
@@ -230,11 +256,11 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       setIsDraggingToPan(false);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isDraggingToPan]);
 
@@ -248,7 +274,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       // Zoom on wheel ONLY when Ctrl key is pressed (standard trackpad pinch or Ctrl + mouse wheel)
       if (e.ctrlKey) {
         e.preventDefault();
-        
+
         const rect = mainEl.getBoundingClientRect();
         const mouseX = e.clientX - rect.left + mainEl.scrollLeft;
         const dayOffset = mouseX / pixelsPerDay;
@@ -258,7 +284,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
         newPixelsPerDay = Math.max(4, Math.min(150, newPixelsPerDay));
 
         setPixelsPerDay(newPixelsPerDay);
-        
+
         const newScrollLeft = dayOffset * newPixelsPerDay - (e.clientX - rect.left);
         mainEl.scrollLeft = newScrollLeft;
       }
@@ -303,7 +329,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
         // Horizontal pan with single finger
         const dx = e.touches[0].clientX - start.x1;
         const dy = e.touches[0].clientY - start.y1;
-        
+
         // Block page vertically-dominant scroll if horizontal dragging is clear
         if (Math.abs(dx) > Math.abs(dy)) {
           e.preventDefault();
@@ -329,7 +355,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
         const dayOffset = midXInContent / start.initialPixelsPerDay;
 
         setPixelsPerDay(newPixelsPerDay);
-        
+
         const newScrollLeft = dayOffset * newPixelsPerDay - midX;
         mainEl.scrollLeft = newScrollLeft;
       }
@@ -339,16 +365,16 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       touchStartRef.current = null;
     };
 
-    mainEl.addEventListener('wheel', handleWheel, { passive: false });
-    mainEl.addEventListener('touchstart', handleTouchStart, { passive: true });
-    mainEl.addEventListener('touchmove', handleTouchMove, { passive: false });
-    mainEl.addEventListener('touchend', handleTouchEnd);
+    mainEl.addEventListener("wheel", handleWheel, { passive: false });
+    mainEl.addEventListener("touchstart", handleTouchStart, { passive: true });
+    mainEl.addEventListener("touchmove", handleTouchMove, { passive: false });
+    mainEl.addEventListener("touchend", handleTouchEnd);
 
     return () => {
-      mainEl.removeEventListener('wheel', handleWheel);
-      mainEl.removeEventListener('touchstart', handleTouchStart);
-      mainEl.removeEventListener('touchmove', handleTouchMove);
-      mainEl.removeEventListener('touchend', handleTouchEnd);
+      mainEl.removeEventListener("wheel", handleWheel);
+      mainEl.removeEventListener("touchstart", handleTouchStart);
+      mainEl.removeEventListener("touchmove", handleTouchMove);
+      mainEl.removeEventListener("touchend", handleTouchEnd);
     };
   }, [pixelsPerDay]);
 
@@ -363,27 +389,27 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
 
   const exportTimelineToPng = async () => {
     if (!timelineContainerRef.current) return;
-    const toastId = toast.loading('Memproses export PNG...');
+    const toastId = toast.loading("Memproses export PNG...");
     try {
       const canvas = await html2canvas(timelineContainerRef.current, { scale: 2 });
-      const link = document.createElement('a');
-      link.download = `Roadmap_${selectedProject?.key || 'Export'}.png`;
-      link.href = canvas.toDataURL('image/png');
+      const link = document.createElement("a");
+      link.download = `Roadmap_${selectedProject?.key || "Export"}.png`;
+      link.href = canvas.toDataURL("image/png");
       link.click();
-      toast.success('Successfully exported to PNG', { id: toastId });
-    } catch(err) {
+      toast.success("Successfully exported to PNG", { id: toastId });
+    } catch (err) {
       console.error(err);
-      toast.error('Failed to export PNG', { id: toastId });
+      toast.error("Failed to export PNG", { id: toastId });
     }
   };
 
   const exportTimelineToPdf = async () => {
     if (!timelineContainerRef.current) {
-      toast.error('Elemen bagan Gantt tidak ditemukan.');
+      toast.error("Elemen bagan Gantt tidak ditemukan.");
       return;
     }
 
-    const toastId = toast.loading('Sedang menghasilkan laporan PDF eksekutif...');
+    const toastId = toast.loading("Sedang menghasilkan laporan PDF eksekutif...");
 
     try {
       // First, render the Gantt chart to canvas so we have it ready
@@ -391,44 +417,44 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
         scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: '#ffffff'
+        backgroundColor: "#ffffff",
       });
-      const imgData = canvas.toDataURL('image/png');
+      const imgData = canvas.toDataURL("image/png");
 
       // Create PDF in Portrait by default
-      const doc = new jsPDF('p', 'mm', 'a4');
+      const doc = new jsPDF("p", "mm", "a4");
 
       const colors = {
-        primary: [15, 23, 42],      // Slate-900 (Elegant Charcoal-slate)
-        accent: [79, 70, 229],      // Indigo-600
-        secondary: [99, 102, 241],   // Indigo-500
-        done: [16, 185, 129],       // Emerald-500
-        progress: [59, 130, 246],   // Blue-500
-        todo: [100, 116, 139],      // Slate-500
-        priorityHigh: [239, 68, 68],// Rose-500
+        primary: [15, 23, 42], // Slate-900 (Elegant Charcoal-slate)
+        accent: [79, 70, 229], // Indigo-600
+        secondary: [99, 102, 241], // Indigo-500
+        done: [16, 185, 129], // Emerald-500
+        progress: [59, 130, 246], // Blue-500
+        todo: [100, 116, 139], // Slate-500
+        priorityHigh: [239, 68, 68], // Rose-500
         neutralBg: [248, 250, 252], // Slate-50
-        border: [226, 232, 240],    // Slate-200
-        text: [51, 65, 85],         // Slate-700
-        textDark: [15, 23, 42],     // Slate-900
-        white: [255, 255, 255]
+        border: [226, 232, 240], // Slate-200
+        text: [51, 65, 85], // Slate-700
+        textDark: [15, 23, 42], // Slate-900
+        white: [255, 255, 255],
       };
 
       const drawHeaderBanner = (titleText: string, subtitleText: string) => {
         // Slate shadow or primary cover
         doc.setFillColor(colors.primary[0], colors.primary[1], colors.primary[2]);
-        doc.rect(0, 0, 210, 32, 'F');
-        
+        doc.rect(0, 0, 210, 32, "F");
+
         // Accent color strip at bottom
         doc.setFillColor(colors.accent[0], colors.accent[1], colors.accent[2]);
-        doc.rect(0, 32, 210, 1.5, 'F');
+        doc.rect(0, 32, 210, 1.5, "F");
 
         // White elegant metadata text over banner
         doc.setTextColor(255, 255, 255);
-        doc.setFont('Helvetica', 'bold');
+        doc.setFont("Helvetica", "bold");
         doc.setFontSize(16);
         doc.text(titleText, 12, 16);
 
-        doc.setFont('Helvetica', 'normal');
+        doc.setFont("Helvetica", "normal");
         doc.setFontSize(9);
         doc.setTextColor(200, 210, 230);
         doc.text(subtitleText, 12, 24);
@@ -438,19 +464,27 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       // PAGE 1: PORTRAIT - EXECUTIVE DASHBOARD
       // ==========================================
       drawHeaderBanner(
-        'LAPORAN PROYEK EKSEKUTIF & ROADMAP',
-        `PROYEK: ${selectedProject?.name ? selectedProject.name.toUpperCase() : 'SEMUA PROYEK'}  |  LEVEL: LAPORAN EKSEKUTIF`
+        "LAPORAN PROYEK EKSEKUTIF & ROADMAP",
+        `PROYEK: ${selectedProject?.name ? selectedProject.name.toUpperCase() : "SEMUA PROYEK"}  |  LEVEL: LAPORAN EKSEKUTIF`
       );
 
       // Report Header info
       doc.setTextColor(colors.text[0], colors.text[1], colors.text[2]);
-      doc.setFont('Helvetica', 'normal');
+      doc.setFont("Helvetica", "normal");
       doc.setFontSize(8.5);
-      doc.text(`Dibuat pada: ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`, 12, 43);
-      doc.text(`Kode Proyek: ${selectedProject?.key || 'N/A'}`, 12, 48);
-      
-      const scheduledTasksCount = tasks.filter(t => t.startDate && t.endDate).length;
-      doc.text(`Cakupan Jadwal: ${scheduledTasksCount} dari ${tasks.length} tugas direncanakan (${tasks.length > 0 ? Math.round((scheduledTasksCount / tasks.length) * 100) : 0}%)`, 120, 43);
+      doc.text(
+        `Dibuat pada: ${new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}`,
+        12,
+        43
+      );
+      doc.text(`Kode Proyek: ${selectedProject?.key || "N/A"}`, 12, 48);
+
+      const scheduledTasksCount = tasks.filter((t) => t.startDate && t.endDate).length;
+      doc.text(
+        `Cakupan Jadwal: ${scheduledTasksCount} dari ${tasks.length} tugas direncanakan (${tasks.length > 0 ? Math.round((scheduledTasksCount / tasks.length) * 100) : 0}%)`,
+        120,
+        43
+      );
 
       // Divider
       doc.setDrawColor(colors.border[0], colors.border[1], colors.border[2]);
@@ -465,43 +499,63 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       const startY = 58;
 
       const totalTasks = tasks.length;
-      const doneTasks = tasks.filter(t => t.status === 'Done').length;
-      const progressTasks = tasks.filter(t => t.status === 'In Progress').length;
-      const unscheduledTasks = tasks.filter(t => !t.startDate || !t.endDate).length;
+      const doneTasks = tasks.filter((t) => t.status === "Done").length;
+      const progressTasks = tasks.filter((t) => t.status === "In Progress").length;
+      const unscheduledTasks = tasks.filter((t) => !t.startDate || !t.endDate).length;
 
       const metrics = [
-        { label: 'TOTAL TUGAS', value: `${totalTasks}`, desc: 'Elemen backlog', color: colors.primary },
-        { label: 'SELESAI', value: `${doneTasks}`, desc: 'Selesai & diverifikasi', color: colors.done },
-        { label: 'DALAM PROSES', value: `${progressTasks}`, desc: 'Sedang dikerjakan', color: colors.progress },
-        { label: 'BELUM TERPLOT', value: `${unscheduledTasks}`, desc: 'Tanpa tanggal/jadwal', color: colors.todo }
+        {
+          label: "TOTAL TUGAS",
+          value: `${totalTasks}`,
+          desc: "Elemen backlog",
+          color: colors.primary,
+        },
+        {
+          label: "SELESAI",
+          value: `${doneTasks}`,
+          desc: "Selesai & diverifikasi",
+          color: colors.done,
+        },
+        {
+          label: "DALAM PROSES",
+          value: `${progressTasks}`,
+          desc: "Sedang dikerjakan",
+          color: colors.progress,
+        },
+        {
+          label: "BELUM TERPLOT",
+          value: `${unscheduledTasks}`,
+          desc: "Tanpa tanggal/jadwal",
+          color: colors.todo,
+        },
       ];
 
       metrics.forEach((m, idx) => {
         const x = startX + idx * (tileWidth + tileSpacing);
         // Draw tile background
         doc.setFillColor(colors.neutralBg[0], colors.neutralBg[1], colors.neutralBg[2]);
-        doc.roundedRect(x, startY, tileWidth, tileHeight, 2, 2, 'F');
+        doc.roundedRect(x, startY, tileWidth, tileHeight, 2, 2, "F");
         // Border
         doc.setDrawColor(colors.border[0], colors.border[1], colors.border[2]);
-        doc.roundedRect(x, startY, tileWidth, tileHeight, 2, 2, 'S');
+        doc.roundedRect(x, startY, tileWidth, tileHeight, 2, 2, "S");
 
         // Draw top accent bar
         doc.setFillColor(m.color[0], m.color[1], m.color[2]);
-        doc.rect(x + 1.5, startY + 1.5, tileWidth - 3, 1.5, 'F');
+        doc.rect(x + 1.5, startY + 1.5, tileWidth - 3, 1.5, "F");
 
         // Text labels inside tiles
         doc.setFontSize(7.5);
-        doc.setFont('Helvetica', 'bold');
+        doc.setFont("Helvetica", "bold");
         doc.setTextColor(120, 130, 140);
         doc.text(m.label, x + 4, startY + 7);
 
         doc.setFontSize(14);
-        doc.setFont('Helvetica', 'bold');
+        doc.setFont("Helvetica", "bold");
         doc.setTextColor(colors.textDark[0], colors.textDark[1], colors.textDark[2]);
         doc.text(m.value, x + 4, startY + 15);
 
         doc.setFontSize(6.5);
-        doc.setFont('Helvetica', 'normal');
+        doc.setFont("Helvetica", "normal");
         doc.setTextColor(140, 150, 160);
         doc.text(m.desc, x + 4, startY + 20);
       });
@@ -509,40 +563,40 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       // Progress bar section
       const progressY = startY + tileHeight + 8;
       doc.setFontSize(9.5);
-      doc.setFont('Helvetica', 'bold');
+      doc.setFont("Helvetica", "bold");
       doc.setTextColor(colors.textDark[0], colors.textDark[1], colors.textDark[2]);
-      doc.text('PROGRES IMPLEMENTASI PROYEK', 12, progressY);
+      doc.text("PROGRES IMPLEMENTASI PROYEK", 12, progressY);
 
       const completeRate = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
       doc.setFontSize(9.5);
-      doc.setFont('Helvetica', 'bold');
+      doc.setFont("Helvetica", "bold");
       doc.setTextColor(colors.done[0], colors.done[1], colors.done[2]);
       doc.text(`${completeRate}% SELESAI`, 172, progressY);
 
       // Bar container
       doc.setFillColor(235, 240, 245);
-      doc.roundedRect(12, progressY + 3, 186, 3.5, 1, 1, 'F');
+      doc.roundedRect(12, progressY + 3, 186, 3.5, 1, 1, "F");
       // Completed bar
       if (completeRate > 0) {
         doc.setFillColor(colors.done[0], colors.done[1], colors.done[2]);
-        doc.roundedRect(12, progressY + 3, (186 * completeRate) / 100, 3.5, 1, 1, 'F');
+        doc.roundedRect(12, progressY + 3, (186 * completeRate) / 100, 3.5, 1, 1, "F");
       }
 
       // Executive Brief Narrative
       const narrativeY = progressY + 14;
       doc.setFontSize(9);
-      doc.setFont('Helvetica', 'bold');
+      doc.setFont("Helvetica", "bold");
       doc.setTextColor(colors.textDark[0], colors.textDark[1], colors.textDark[2]);
-      doc.text('RINGKASAN EKSEKUTIF', 12, narrativeY);
+      doc.text("RINGKASAN EKSEKUTIF", 12, narrativeY);
 
-      doc.setFont('Helvetica', 'normal');
+      doc.setFont("Helvetica", "normal");
       doc.setFontSize(8.5);
       doc.setTextColor(100, 110, 120);
-      
-      const notesLine1 = `Ikhtisar status pengiriman ini mewakili batas kinerja aktif dan matriks penjadwalan untuk proyek "${selectedProject?.name || 'N/A'}".`;
+
+      const notesLine1 = `Ikhtisar status pengiriman ini mewakili batas kinerja aktif dan matriks penjadwalan untuk proyek "${selectedProject?.name || "N/A"}".`;
       const notesLine2 = `Roadmap pengembangan mencakup ${totalTasks} elemen pekerjaan yang ditentukan, mewakili hasil kerja strategis yang selaras dengan prioritas bisnis saat ini.`;
       const notesLine3 = `Blok prioritas tinggi, milis milestone kritis, dan batas waktu divisualisasikan pada bagan Gantt yang dilampirkan pada Halaman 2, dengan rincian backlog lengkap dijadwalkan pada direktori Halaman 3.`;
-      
+
       doc.text(notesLine1, 12, narrativeY + 5);
       doc.text(notesLine2, 12, narrativeY + 9);
       doc.text(notesLine3, 12, narrativeY + 13);
@@ -550,114 +604,121 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       // Brief summary list of priorities on frontpage
       const summaryTableY = narrativeY + 22;
       doc.setFontSize(9);
-      doc.setFont('Helvetica', 'bold');
+      doc.setFont("Helvetica", "bold");
       doc.setTextColor(colors.textDark[0], colors.textDark[1], colors.textDark[2]);
-      doc.text('IKHTISAR EPIC MILESTONE', 12, summaryTableY);
+      doc.text("IKHTISAR EPIC MILESTONE", 12, summaryTableY);
 
       // Simple Table Headers
       doc.setFillColor(241, 245, 249);
-      doc.rect(12, summaryTableY + 3, 186, 7.5, 'F');
+      doc.rect(12, summaryTableY + 3, 186, 7.5, "F");
       doc.setDrawColor(218, 226, 233);
-      doc.rect(12, summaryTableY + 3, 186, 7.5, 'S');
+      doc.rect(12, summaryTableY + 3, 186, 7.5, "S");
 
       doc.setFontSize(7.5);
-      doc.setFont('Helvetica', 'bold');
+      doc.setFont("Helvetica", "bold");
       doc.setTextColor(71, 85, 105);
-      doc.text('KUNCI EPIC', 16, summaryTableY + 8);
-      doc.text('JUDUL', 38, summaryTableY + 8);
-      doc.text('STATUS', 115, summaryTableY + 8);
-      doc.text('FOKUS LINIMASA', 145, summaryTableY + 8);
+      doc.text("KUNCI EPIC", 16, summaryTableY + 8);
+      doc.text("JUDUL", 38, summaryTableY + 8);
+      doc.text("STATUS", 115, summaryTableY + 8);
+      doc.text("FOKUS LINIMASA", 145, summaryTableY + 8);
 
       // Render up to 7 Epics on the frontpage
-      const epics = tasks.filter(t => (t.type || '').toLowerCase() === 'epic');
+      const epics = tasks.filter((t) => (t.type || "").toLowerCase() === "epic");
       const epicRowY = summaryTableY + 10.5;
-      
+
       epics.slice(0, 8).forEach((epic, idx) => {
         const currentY = epicRowY + idx * 8.5;
         // Alternating background
         if (idx % 2 === 1) {
           doc.setFillColor(250, 252, 254);
-          doc.rect(12, currentY, 186, 8.5, 'F');
+          doc.rect(12, currentY, 186, 8.5, "F");
         }
         doc.setDrawColor(235, 241, 246);
         doc.line(12, currentY + 8.5, 198, currentY + 8.5);
 
         doc.setFontSize(8);
-        doc.setFont('Helvetica', 'bold');
+        doc.setFont("Helvetica", "bold");
         doc.setTextColor(colors.accent[0], colors.accent[1], colors.accent[2]);
-        doc.text(epic.key || '-', 16, currentY + 5.5);
+        doc.text(epic.key || "-", 16, currentY + 5.5);
 
         doc.setTextColor(colors.textDark[0], colors.textDark[1], colors.textDark[2]);
         // Clip epic title if too long
-        const epicTitle = epic.title.length > 42 ? epic.title.slice(0, 42) + '...' : epic.title;
+        const epicTitle = epic.title.length > 42 ? epic.title.slice(0, 42) + "..." : epic.title;
         doc.text(epicTitle, 38, currentY + 5.5);
 
         // Status Badge text
-        const stat = epic.status || 'To Do';
+        const stat = epic.status || "To Do";
         let displayStatus = stat;
-        if (stat === 'Done') {
-          displayStatus = 'Selesai';
+        if (stat === "Done") {
+          displayStatus = "Selesai";
           doc.setTextColor(colors.done[0], colors.done[1], colors.done[2]);
-        } else if (stat === 'In Progress') {
-          displayStatus = 'Sedang Berjalan';
+        } else if (stat === "In Progress") {
+          displayStatus = "Sedang Berjalan";
           doc.setTextColor(colors.progress[0], colors.progress[1], colors.progress[2]);
         } else {
-          displayStatus = 'Rencana / Backlog';
+          displayStatus = "Rencana / Backlog";
           doc.setTextColor(colors.todo[0], colors.todo[1], colors.todo[2]);
         }
-        
+
         doc.text(displayStatus.toUpperCase(), 115, currentY + 5.5);
 
         // Schedule dates text
-        doc.setFont('Helvetica', 'normal');
+        doc.setFont("Helvetica", "normal");
         doc.setTextColor(110, 120, 130);
-        const datesString = epic.startDate && epic.endDate 
-          ? `${format(ensureDate(epic.startDate), 'dd MMM yyyy')} - ${format(ensureDate(epic.endDate), 'dd MMM yyyy')}`
-          : 'TBD (Belum Terplot)';
+        const datesString =
+          epic.startDate && epic.endDate
+            ? `${format(ensureDate(epic.startDate), "dd MMM yyyy")} - ${format(ensureDate(epic.endDate), "dd MMM yyyy")}`
+            : "TBD (Belum Terplot)";
         doc.text(datesString, 145, currentY + 5.5);
       });
 
       if (epics.length === 0) {
         doc.setFontSize(8.5);
-        doc.setFont('Helvetica', 'italic');
+        doc.setFont("Helvetica", "italic");
         doc.setTextColor(140, 140, 140);
-        doc.text('Belum ada struktur epic utama yang dipetakan di dalam timeline saat ini.', 20, epicRowY + 10);
+        doc.text(
+          "Belum ada struktur epic utama yang dipetakan di dalam timeline saat ini.",
+          20,
+          epicRowY + 10
+        );
       }
 
       // Add Footer on Page 1
       doc.setFontSize(7.5);
-      doc.setFont('Helvetica', 'normal');
+      doc.setFont("Helvetica", "normal");
       doc.setTextColor(160, 170, 180);
-      doc.text('Laporan Eksekutif  |  Halaman 1 dari 3', 12, 287);
-      doc.text('RAHASIA - HANYA UNTUK KEGUNAAN KOMITE PENGARAH INTERNAL', 105, 287, { align: 'center' });
+      doc.text("Laporan Eksekutif  |  Halaman 1 dari 3", 12, 287);
+      doc.text("RAHASIA - HANYA UNTUK KEGUNAAN KOMITE PENGARAH INTERNAL", 105, 287, {
+        align: "center",
+      });
 
       // ==========================================
       // PAGE 2: LANDSCAPE - VISUAL GANTT CHART
       // ==========================================
-      doc.addPage('a4', 'l');
+      doc.addPage("a4", "l");
 
       // Draw landscape header strip
       doc.setFillColor(colors.primary[0], colors.primary[1], colors.primary[2]);
-      doc.rect(0, 0, 297, 20, 'F');
-      
+      doc.rect(0, 0, 297, 20, "F");
+
       doc.setFillColor(colors.accent[0], colors.accent[1], colors.accent[2]);
-      doc.rect(0, 20, 297, 1.2, 'F');
+      doc.rect(0, 20, 297, 1.2, "F");
 
       doc.setTextColor(255, 255, 255);
-      doc.setFont('Helvetica', 'bold');
+      doc.setFont("Helvetica", "bold");
       doc.setFontSize(13);
-      doc.text('REPRESENTASI VISUAL ROADMAP & BAGAN GANTT OTOMATIS', 12, 11.5);
+      doc.text("REPRESENTASI VISUAL ROADMAP & BAGAN GANTT OTOMATIS", 12, 11.5);
 
-      doc.setFont('Helvetica', 'normal');
+      doc.setFont("Helvetica", "normal");
       doc.setFontSize(8);
       doc.setTextColor(210, 220, 235);
-      doc.text('MILESTONE REAL-TIME & TANGKAPAN KOMPONEN INTERAKTIF AKTIF', 12, 16.5);
+      doc.text("MILESTONE REAL-TIME & TANGKAPAN KOMPONEN INTERAKTIF AKTIF", 12, 16.5);
 
       // Add captured roadmap image onto Page 2
       // Canvas dimensions scaling to landscape page
       const landscapeWidth = 273; // 297 - 24 (margins)
       const landscapeHeight = 155; // 210 - 55 (header margins)
-      
+
       const canvasWidth = canvas.width;
       const canvasHeight = canvas.height;
       const hScale = landscapeWidth / canvasWidth;
@@ -666,7 +727,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
 
       const drawWidth = canvasWidth * scale;
       const drawHeight = canvasHeight * scale;
-      
+
       // Center Gantt chart on Page 2
       const drawX = 12 + (landscapeWidth - drawWidth) / 2;
       const drawY = 27 + (landscapeHeight - drawHeight) / 2;
@@ -674,95 +735,96 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       // Draw shadow border frame around chart container
       doc.setDrawColor(200, 210, 220);
       doc.setLineWidth(0.4);
-      doc.rect(drawX - 1.5, drawY - 1.5, drawWidth + 3, drawHeight + 3, 'S');
+      doc.rect(drawX - 1.5, drawY - 1.5, drawWidth + 3, drawHeight + 3, "S");
 
       // Draw the beautiful capture image
-      doc.addImage(imgData, 'PNG', drawX, drawY, drawWidth, drawHeight);
+      doc.addImage(imgData, "PNG", drawX, drawY, drawWidth, drawHeight);
 
       // Legend or Instructions block
       const legendY = 190;
       doc.setFillColor(245, 247, 250);
-      doc.roundedRect(12, legendY, 273, 10, 1.5, 1.5, 'F');
+      doc.roundedRect(12, legendY, 273, 10, 1.5, 1.5, "F");
       // Border
       doc.setDrawColor(230, 235, 240);
-      doc.roundedRect(12, legendY, 273, 10, 1.5, 1.5, 'S');
+      doc.roundedRect(12, legendY, 273, 10, 1.5, 1.5, "S");
 
       doc.setFontSize(7.5);
-      doc.setFont('Helvetica', 'bold');
+      doc.setFont("Helvetica", "bold");
       doc.setTextColor(80, 90, 100);
-      doc.text('LEGENDA BAGAN:  ', 16, legendY + 6.5);
-      
+      doc.text("LEGENDA BAGAN:  ", 16, legendY + 6.5);
+
       doc.setFillColor(colors.primary[0], colors.primary[1], colors.primary[2]);
-      doc.rect(40, legendY + 5, 4, 2.5, 'F');
-      doc.setFont('Helvetica', 'normal');
-      doc.text('Frame Backlog', 46, legendY + 7);
+      doc.rect(40, legendY + 5, 4, 2.5, "F");
+      doc.setFont("Helvetica", "normal");
+      doc.text("Frame Backlog", 46, legendY + 7);
 
       doc.setFillColor(colors.done[0], colors.done[1], colors.done[2]);
-      doc.rect(73, legendY + 5, 4, 2.5, 'F');
-      doc.text('Selesai', 79, legendY + 7);
+      doc.rect(73, legendY + 5, 4, 2.5, "F");
+      doc.text("Selesai", 79, legendY + 7);
 
       doc.setFillColor(colors.progress[0], colors.progress[1], colors.progress[2]);
-      doc.rect(106, legendY + 5, 4, 2.5, 'F');
-      doc.text('Aktif / Dalam Proses', 112, legendY + 7);
+      doc.rect(106, legendY + 5, 4, 2.5, "F");
+      doc.text("Aktif / Dalam Proses", 112, legendY + 7);
 
       doc.setFillColor(colors.todo[0], colors.todo[1], colors.todo[2]);
-      doc.rect(160, legendY + 5, 4, 2.5, 'F');
-      doc.text('Belum Terplot / Backlog', 166, legendY + 7);
+      doc.rect(160, legendY + 5, 4, 2.5, "F");
+      doc.text("Belum Terplot / Backlog", 166, legendY + 7);
 
       doc.setFillColor(147, 51, 234); // Purple 600
-      doc.rect(215, legendY + 5, 4, 2.5, 'F');
-      doc.text('Blok Epic Utama', 221, legendY + 7);
+      doc.rect(215, legendY + 5, 4, 2.5, "F");
+      doc.text("Blok Epic Utama", 221, legendY + 7);
 
       // Add Footer on Page 2
       doc.setTextColor(170, 180, 190);
       doc.setFontSize(7.5);
-      doc.text('Laporan Eksekutif  |  Halaman 2 dari 3', 12, 204);
-      doc.text('RAHASIA - HANYA UNTUK KEGUNAAN KOMITE PENGARAH INTERNAL', 148, 204, { align: 'center' });
-
+      doc.text("Laporan Eksekutif  |  Halaman 2 dari 3", 12, 204);
+      doc.text("RAHASIA - HANYA UNTUK KEGUNAAN KOMITE PENGARAH INTERNAL", 148, 204, {
+        align: "center",
+      });
 
       // ==========================================
       // PAGE 3: PORTRAIT - DETAILED TASK SCHEDULE
       // ==========================================
-      doc.addPage('a4', 'p');
+      doc.addPage("a4", "p");
 
       // Draw third page header strip
       doc.setFillColor(colors.primary[0], colors.primary[1], colors.primary[2]);
-      doc.rect(0, 0, 210, 20, 'F');
-      
+      doc.rect(0, 0, 210, 20, "F");
+
       doc.setFillColor(colors.accent[0], colors.accent[1], colors.accent[2]);
-      doc.rect(0, 20, 210, 1.2, 'F');
+      doc.rect(0, 20, 210, 1.2, "F");
 
       doc.setTextColor(255, 255, 255);
-      doc.setFont('Helvetica', 'bold');
+      doc.setFont("Helvetica", "bold");
       doc.setFontSize(12);
-      doc.text('JADWAL PENGIRIMAN TUGAS KOMPREHENSIF', 12, 11);
+      doc.text("JADWAL PENGIRIMAN TUGAS KOMPREHENSIF", 12, 11);
 
-      doc.setFont('Helvetica', 'normal');
+      doc.setFont("Helvetica", "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(200, 210, 230);
-      doc.text('ALUR WAKTU TUGAS YANG SELARAS DAN ARSIP ROADMAP KOMPREHENSIF', 12, 15.5);
+      doc.text("ALUR WAKTU TUGAS YANG SELARAS DAN ARSIP ROADMAP KOMPREHENSIF", 12, 15.5);
 
       // Column Headers for Detailed tasks table
       let tableY = 28;
       doc.setFillColor(241, 245, 249);
-      doc.rect(12, tableY, 186, 8, 'F');
+      doc.rect(12, tableY, 186, 8, "F");
       doc.setDrawColor(218, 226, 233);
-      doc.rect(12, tableY, 186, 8, 'S');
+      doc.rect(12, tableY, 186, 8, "S");
 
       doc.setFontSize(7.5);
-      doc.setFont('Helvetica', 'bold');
+      doc.setFont("Helvetica", "bold");
       doc.setTextColor(71, 85, 105);
-      doc.text('KUNCI', 15, tableY + 5.5);
-      doc.text('JUDUL RINGKASAN TUGAS', 35, tableY + 5.5);
-      doc.text('TIPE', 104, tableY + 5.5);
-      doc.text('STATUS', 122, tableY + 5.5);
-      doc.text('PRIORITAS', 144, tableY + 5.5);
-      doc.text('FOKUS LINIMASA', 165, tableY + 5.5);
+      doc.text("KUNCI", 15, tableY + 5.5);
+      doc.text("JUDUL RINGKASAN TUGAS", 35, tableY + 5.5);
+      doc.text("TIPE", 104, tableY + 5.5);
+      doc.text("STATUS", 122, tableY + 5.5);
+      doc.text("PRIORITAS", 144, tableY + 5.5);
+      doc.text("FOKUS LINIMASA", 165, tableY + 5.5);
 
       // Loop over and draw ALL renderedRows
       let itemRowY = tableY + 8;
       let totalPagesInDoc = 3;
-      
+
       renderedRows.forEach((row, idx) => {
         const task = row.task;
 
@@ -770,39 +832,41 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
         if (itemRowY > 268) {
           // Footers
           doc.setFontSize(7.5);
-          doc.setFont('Helvetica', 'normal');
+          doc.setFont("Helvetica", "normal");
           doc.setTextColor(170, 180, 190);
           doc.text(`Laporan Eksekutif  |  Halaman ${totalPagesInDoc}`, 12, 287);
-          doc.text('RAHASIA - HANYA UNTUK KEGUNAAN KOMITE PENGARAH INTERNAL', 105, 287, { align: 'center' });
+          doc.text("RAHASIA - HANYA UNTUK KEGUNAAN KOMITE PENGARAH INTERNAL", 105, 287, {
+            align: "center",
+          });
 
-          doc.addPage('a4', 'p');
+          doc.addPage("a4", "p");
           totalPagesInDoc += 1;
 
           // Header
           doc.setFillColor(colors.primary[0], colors.primary[1], colors.primary[2]);
-          doc.rect(0, 0, 210, 15, 'F');
-          
+          doc.rect(0, 0, 210, 15, "F");
+
           doc.setTextColor(255, 255, 255);
-          doc.setFont('Helvetica', 'bold');
+          doc.setFont("Helvetica", "bold");
           doc.setFontSize(10);
-          doc.text('JADWAL PENGIRIMAN TUGAS KOMPREHENSIF (LANJUTAN)', 12, 9.5);
+          doc.text("JADWAL PENGIRIMAN TUGAS KOMPREHENSIF (LANJUTAN)", 12, 9.5);
 
           // Table header again
           tableY = 20;
           doc.setFillColor(241, 245, 249);
-          doc.rect(12, tableY, 186, 8, 'F');
+          doc.rect(12, tableY, 186, 8, "F");
           doc.setDrawColor(218, 226, 233);
-          doc.rect(12, tableY, 186, 8, 'S');
+          doc.rect(12, tableY, 186, 8, "S");
 
           doc.setFontSize(7.5);
-          doc.setFont('Helvetica', 'bold');
+          doc.setFont("Helvetica", "bold");
           doc.setTextColor(71, 85, 105);
-          doc.text('KUNCI', 15, tableY + 5.5);
-          doc.text('JUDUL RINGKASAN TUGAS', 35, tableY + 5.5);
-          doc.text('TIPE', 104, tableY + 5.5);
-          doc.text('STATUS', 122, tableY + 5.5);
-          doc.text('PRIORITAS', 144, tableY + 5.5);
-          doc.text('FOKUS LINIMASA', 165, tableY + 5.5);
+          doc.text("KUNCI", 15, tableY + 5.5);
+          doc.text("JUDUL RINGKASAN TUGAS", 35, tableY + 5.5);
+          doc.text("TIPE", 104, tableY + 5.5);
+          doc.text("STATUS", 122, tableY + 5.5);
+          doc.text("PRIORITAS", 144, tableY + 5.5);
+          doc.text("FOKUS LINIMASA", 165, tableY + 5.5);
 
           itemRowY = tableY + 8;
         }
@@ -810,14 +874,14 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
         // Alternating background row stripes
         if (idx % 2 === 1) {
           doc.setFillColor(250, 252, 254);
-          doc.rect(12, itemRowY, 186, 8.5, 'F');
+          doc.rect(12, itemRowY, 186, 8.5, "F");
         }
         doc.setDrawColor(238, 242, 245);
         doc.line(12, itemRowY + 8.5, 198, itemRowY + 8.5);
 
         // Task Key
         doc.setFontSize(7.5);
-        doc.setFont('Helvetica', 'bold');
+        doc.setFont("Helvetica", "bold");
         doc.setTextColor(colors.accent[0], colors.accent[1], colors.accent[2]);
         doc.text(task.key, 15, itemRowY + 5.5);
 
@@ -825,72 +889,78 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
         doc.setTextColor(colors.textDark[0], colors.textDark[1], colors.textDark[2]);
         const titleIndent = row.isChild ? 41 : 35;
         if (row.isChild) {
-          doc.setFont('Helvetica', 'normal');
+          doc.setFont("Helvetica", "normal");
           doc.setTextColor(100, 110, 120);
-          doc.text('└─', 35, itemRowY + 5.5);
+          doc.text("└─", 35, itemRowY + 5.5);
         } else {
-          doc.setFont('Helvetica', 'bold');
+          doc.setFont("Helvetica", "bold");
         }
 
         // Shorten title to match printable width safely
         const allowedWidth = row.isChild ? 60 : 66;
         let shortTitle = task.title;
         if (shortTitle.length > allowedWidth) {
-          shortTitle = shortTitle.slice(0, allowedWidth) + '...';
+          shortTitle = shortTitle.slice(0, allowedWidth) + "...";
         }
         doc.text(shortTitle, titleIndent, itemRowY + 5.5);
 
         // Task Type
-        doc.setFont('Helvetica', 'normal');
+        doc.setFont("Helvetica", "normal");
         doc.setTextColor(110, 120, 130);
-        
-        let typeLabel: string = task.type || 'task';
-        if (typeLabel.toLowerCase() === 'epic') typeLabel = 'Epic';
-        else if (typeLabel.toLowerCase() === 'story') typeLabel = 'Story';
-        else if (typeLabel.toLowerCase() === 'bug') typeLabel = 'Bug';
-        else if (typeLabel.toLowerCase() === 'task') typeLabel = 'Tugas';
-        else if (typeLabel.toLowerCase() === 'subtask') typeLabel = 'Subtugas';
+
+        let typeLabel: string = task.type || "task";
+        if (typeLabel.toLowerCase() === "epic") typeLabel = "Epic";
+        else if (typeLabel.toLowerCase() === "story") typeLabel = "Story";
+        else if (typeLabel.toLowerCase() === "bug") typeLabel = "Bug";
+        else if (typeLabel.toLowerCase() === "task") typeLabel = "Tugas";
+        else if (typeLabel.toLowerCase() === "subtask") typeLabel = "Subtugas";
 
         doc.text(typeLabel.toUpperCase(), 104, itemRowY + 5.5);
 
         // Task Status
-        const stat = task.status || 'To Do';
+        const stat = task.status || "To Do";
         let displayStatus = stat;
-        if (stat === 'Done') {
-          displayStatus = 'Selesai';
+        if (stat === "Done") {
+          displayStatus = "Selesai";
           doc.setTextColor(colors.done[0], colors.done[1], colors.done[2]);
-        } else if (stat === 'In Progress') {
-          displayStatus = 'Proses';
+        } else if (stat === "In Progress") {
+          displayStatus = "Proses";
           doc.setTextColor(colors.progress[0], colors.progress[1], colors.progress[2]);
         } else {
-          displayStatus = 'Rencana';
+          displayStatus = "Rencana";
           doc.setTextColor(colors.todo[0], colors.todo[1], colors.todo[2]);
         }
-        
-        doc.setFont('Helvetica', 'bold');
+
+        doc.setFont("Helvetica", "bold");
         doc.text(displayStatus.toUpperCase(), 122, itemRowY + 5.5);
 
         // Priority Badge
-        const priorityText = task.priority || 'Medium';
+        const priorityText = task.priority || "Medium";
         let displayPriority = priorityText;
-        if (priorityText === 'Urgent') displayPriority = 'Sangat Kritis';
-        else if (priorityText === 'High') displayPriority = 'Tinggi';
-        else if (priorityText === 'Medium') displayPriority = 'Sedang';
-        else if (priorityText === 'Low') displayPriority = 'Rendah';
+        if (priorityText === "Urgent") displayPriority = "Sangat Kritis";
+        else if (priorityText === "High") displayPriority = "Tinggi";
+        else if (priorityText === "Medium") displayPriority = "Sedang";
+        else if (priorityText === "Low") displayPriority = "Rendah";
 
-        if (priorityText === 'Urgent' || priorityText === 'P0' || priorityText === 'High' || priorityText === 'P1') {
+        if (
+          priorityText === "Urgent" ||
+          priorityText === "P0" ||
+          priorityText === "High" ||
+          priorityText === "P1"
+        ) {
           doc.setTextColor(colors.priorityHigh[0], colors.priorityHigh[1], colors.priorityHigh[2]);
         } else {
           doc.setTextColor(110, 120, 130);
         }
-        doc.setFont('Helvetica', 'normal');
+        doc.setFont("Helvetica", "normal");
         doc.text(displayPriority, 144, itemRowY + 5.5);
 
         // Scheduled range
         doc.setTextColor(110, 120, 130);
-        const dateRangeText = task.startDate && task.endDate 
-          ? `${format(ensureDate(task.startDate), 'dd MMM yy')} - ${format(ensureDate(task.endDate), 'dd MMM yy')}`
-          : 'TBD (Backlog)';
+        const dateRangeText =
+          task.startDate && task.endDate
+            ? `${format(ensureDate(task.startDate), "dd MMM yy")} - ${format(ensureDate(task.endDate), "dd MMM yy")}`
+            : "TBD (Backlog)";
         doc.text(dateRangeText, 165, itemRowY + 5.5);
 
         itemRowY += 8.5;
@@ -898,26 +968,28 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
 
       // Add Final Page Footer for the last iteration
       doc.setFontSize(7.5);
-      doc.setFont('Helvetica', 'normal');
+      doc.setFont("Helvetica", "normal");
       doc.setTextColor(170, 180, 190);
       doc.text(`Laporan Eksekutif  |  Halaman ${totalPagesInDoc} dari ${totalPagesInDoc}`, 12, 287);
-      doc.text('RAHASIA - HANYA UNTUK KEGUNAAN KOMITE PENGARAH INTERNAL', 105, 287, { align: 'center' });
+      doc.text("RAHASIA - HANYA UNTUK KEGUNAAN KOMITE PENGARAH INTERNAL", 105, 287, {
+        align: "center",
+      });
 
       // Save the generated document
-      doc.save(`Roadmap_Laporan_Eksekutif_${selectedProject?.key || 'Export'}.pdf`);
-      toast.success('Berhasil mengekspor ringkasan PDF eksekutif!', { id: toastId });
+      doc.save(`Roadmap_Laporan_Eksekutif_${selectedProject?.key || "Export"}.pdf`);
+      toast.success("Berhasil mengekspor ringkasan PDF eksekutif!", { id: toastId });
     } catch (err) {
       console.error(err);
-      toast.error('Gagal memproses ekspor PDF.', { id: toastId });
+      toast.error("Gagal memproses ekspor PDF.", { id: toastId });
     }
   };
 
   const getTimelineBounds = () => {
-    let minDate = new Date('2099-12-31');
-    let maxDate = new Date('2000-01-01');
+    let minDate = new Date("2099-12-31");
+    let maxDate = new Date("2000-01-01");
     let hasDates = false;
 
-    (tasks || []).forEach(task => {
+    (tasks || []).forEach((task) => {
       if (task.startDate) {
         const start = ensureDate(task.startDate);
         if (start < minDate) minDate = start;
@@ -937,9 +1009,9 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       minDate = startOfMonth(minDate);
       maxDate = endOfMonth(addDays(maxDate, 90));
     }
-    
-    const targetMin = new Date('2026-03-01');
-    const targetMax = new Date('2026-05-31');
+
+    const targetMin = new Date("2026-03-01");
+    const targetMax = new Date("2026-05-31");
     if (minDate > targetMin) minDate = targetMin;
     if (maxDate < targetMax) maxDate = targetMax;
 
@@ -957,7 +1029,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       months.push(current);
       current = addDays(endOfMonth(current), 1);
     }
-    
+
     const weeks = [];
     let currentWeek = startOfWeek(minDate);
     while (currentWeek <= maxDate) {
@@ -967,7 +1039,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
 
     const days = [];
     for (let i = 0; i <= totalDays; i++) {
-        days.push(addDays(minDate, i));
+      days.push(addDays(minDate, i));
     }
 
     const years = [];
@@ -988,26 +1060,26 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       const daysDiff = Math.round(dx / pixelsPerDay);
 
       const newDates = { ...tempDates };
-      const task = tasks.find(t => t.id === timelineInteraction.taskId);
+      const task = tasks.find((t) => t.id === timelineInteraction.taskId);
       if (!task) return;
 
       let newStart = timelineInteraction.initialStart;
       let newEnd = timelineInteraction.initialEnd;
 
-      if (timelineInteraction.type === 'move') {
+      if (timelineInteraction.type === "move") {
         newStart = addDays(timelineInteraction.initialStart, daysDiff);
         newEnd = addDays(timelineInteraction.initialEnd, daysDiff);
-      } else if (timelineInteraction.type === 'resize-start') {
+      } else if (timelineInteraction.type === "resize-start") {
         newStart = addDays(timelineInteraction.initialStart, daysDiff);
         if (newStart > newEnd) newStart = newEnd;
-      } else if (timelineInteraction.type === 'resize-end') {
+      } else if (timelineInteraction.type === "resize-end") {
         newEnd = addDays(timelineInteraction.initialEnd, daysDiff);
         if (newEnd < newStart) newEnd = newStart;
       }
 
       newDates[task.id] = {
-        startDate: format(newStart, 'yyyy-MM-dd'),
-        endDate: format(newEnd, 'yyyy-MM-dd')
+        startDate: format(newStart, "yyyy-MM-dd"),
+        endDate: format(newEnd, "yyyy-MM-dd"),
       };
       setTempDates(newDates);
     };
@@ -1015,25 +1087,31 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
     const handleMouseUp = async () => {
       const pending = tempDates[timelineInteraction.taskId];
       if (pending) {
-        await updateTaskField(timelineInteraction.taskId, 'dates', {
+        await updateTaskField(timelineInteraction.taskId, "dates", {
           startDate: pending.startDate,
-          endDate: pending.endDate
+          endDate: pending.endDate,
         });
       }
       setTimelineInteraction(null);
       setTempDates({});
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [timelineInteraction, tasks, tempDates, pixelsPerDay, updateTaskField]);
 
-
-  const { minDate, totalDays, months: timelineMonths, days: timelineDays, weeks: timelineWeeks, years: timelineYears } = getTimelineBounds();
+  const {
+    minDate,
+    totalDays,
+    months: timelineMonths,
+    days: timelineDays,
+    weeks: timelineWeeks,
+    years: timelineYears,
+  } = getTimelineBounds();
   const today = new Date();
   let todayLeft = 0;
   if (today >= minDate) {
@@ -1042,7 +1120,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
 
   const getEarliestTaskDate = () => {
     let earliest: Date | null = null;
-    (tasks || []).forEach(task => {
+    (tasks || []).forEach((task) => {
       if (task.startDate) {
         const d = ensureDate(task.startDate);
         if (!earliest || d < earliest) {
@@ -1053,13 +1131,13 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
     return earliest || new Date();
   };
 
-  const scrollToDate = (targetDate: Date, behavior: ScrollBehavior = 'smooth') => {
+  const scrollToDate = (targetDate: Date, behavior: ScrollBehavior = "smooth") => {
     if (!timelineMainRef.current) return;
     const daysFromStart = differenceInDays(targetDate, minDate);
     const scrollX = Math.max(0, daysFromStart * pixelsPerDay - 100);
     timelineMainRef.current.scrollTo({
       left: scrollX,
-      behavior
+      behavior,
     });
   };
 
@@ -1068,19 +1146,23 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
     if (!hasAutoScrolledRef.current && tasks && tasks.length > 0) {
       const earliest = getEarliestTaskDate();
       setTimeout(() => {
-        scrollToDate(earliest, 'auto');
+        scrollToDate(earliest, "auto");
         hasAutoScrolledRef.current = true;
       }, 150);
     }
   }, [tasks, pixelsPerDay]);
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-[#f3f3f9] p-4 md:p-5 gap-4 text-left">
+    <div className="flex-1 flex flex-col min-h-0 bg-surface-muted p-4 md:p-5 gap-4 text-left">
       {/* Timeline Controls Header */}
       <div className="bg-surface px-5 py-3.5 rounded-md border border-border-subtle/80 shadow-2xs flex items-center justify-between shrink-0">
         <div>
-          <h2 className="text-base font-semibold text-content-strong tracking-tight">Project Roadmap</h2>
-          <p className="text-xs font-medium text-content-muted mt-0.5">Visualisasi lini masa proyek, epics, dan ketergantungan tugas</p>
+          <h2 className="text-base font-semibold text-content-strong tracking-tight">
+            Project Roadmap
+          </h2>
+          <p className="text-xs font-medium text-content-muted mt-0.5">
+            Visualisasi lini masa proyek, epics, dan ketergantungan tugas
+          </p>
         </div>
         <div className="flex items-center gap-3">
           {/* Quick Action Navigation Buttons */}
@@ -1089,7 +1171,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
               type="button"
               onClick={() => {
                 const earliest = getEarliestTaskDate();
-                scrollToDate(earliest, 'smooth');
+                scrollToDate(earliest, "smooth");
                 toast.success("Berhasil fokus ke Task Pertama Aktif");
               }}
               className="flex items-center gap-1.5 px-2.5 py-1 bg-surface hover:bg-surface-muted text-content-body rounded-md text-xs font-medium shadow-2xs transition-all border border-border-subtle/80 cursor-pointer active:scale-95"
@@ -1101,7 +1183,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
             <button
               type="button"
               onClick={() => {
-                scrollToDate(new Date(), 'smooth');
+                scrollToDate(new Date(), "smooth");
                 toast.success("Berhasil melompat ke garis hari ini (Today)");
               }}
               className="flex items-center gap-1.5 px-2.5 py-1 bg-surface hover:bg-surface-muted text-content-body rounded-md text-xs font-medium shadow-2xs transition-all border border-border-subtle/80 cursor-pointer active:scale-95"
@@ -1115,27 +1197,27 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
           <div className="flex bg-surface rounded-md border border-border-subtle/80 p-1 shadow-2xs items-center gap-0.5">
             <button
               type="button"
-              onClick={() => setPixelsPerDay(prev => Math.max(4, prev - 4))}
+              onClick={() => setPixelsPerDay((prev) => Math.max(4, prev - 4))}
               className="p-1.5 text-xs text-content-muted hover:text-content-strong hover:bg-surface-muted rounded-md transition-colors cursor-pointer"
               title="Zoom Out (Ctrl + Scroll Down)"
             >
               <Minus className="w-3.5 h-3.5" />
             </button>
             <div className="w-px h-4 bg-slate-200 mx-1" />
-            
-            {(['days', 'weeks', 'months'] as const).map((z) => (
-              <button 
-                key={z} 
+
+            {(["days", "weeks", "months"] as const).map((z) => (
+              <button
+                key={z}
                 type="button"
                 onClick={() => {
-                  if (z === 'days') setPixelsPerDay(60);
-                  else if (z === 'weeks') setPixelsPerDay(24);
-                  else if (z === 'months') setPixelsPerDay(8);
+                  if (z === "days") setPixelsPerDay(60);
+                  else if (z === "weeks") setPixelsPerDay(24);
+                  else if (z === "months") setPixelsPerDay(8);
                 }}
                 className={`px-3 py-1 text-xs uppercase tracking-wider rounded-md transition-all cursor-pointer ${
-                  timelineZoom === z 
-                    ? 'bg-primary/10 text-primary font-semibold shadow-2xs border border-primary/20' 
-                    : 'text-content-muted hover:text-content-strong hover:bg-surface-sunken font-medium'
+                  timelineZoom === z
+                    ? "bg-primary/10 text-primary font-semibold shadow-2xs border border-primary/20"
+                    : "text-content-muted hover:text-content-strong hover:bg-surface-sunken font-medium"
                 }`}
               >
                 {z}
@@ -1145,7 +1227,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
             <div className="w-px h-4 bg-slate-200 mx-1" />
             <button
               type="button"
-              onClick={() => setPixelsPerDay(prev => Math.min(150, prev + 4))}
+              onClick={() => setPixelsPerDay((prev) => Math.min(150, prev + 4))}
               className="p-1.5 text-xs text-content-muted hover:text-content-strong hover:bg-surface-muted rounded-md transition-colors cursor-pointer"
               title="Zoom In (Ctrl + Scroll Up)"
             >
@@ -1153,7 +1235,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
             </button>
           </div>
           <div className="relative">
-            <button 
+            <button
               onClick={() => setIsExportMenuOpen(!isExportMenuOpen)}
               onBlur={() => setTimeout(() => setIsExportMenuOpen(false), 200)}
               className="h-8 px-3.5 bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md text-xs font-medium shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
@@ -1163,14 +1245,14 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
             </button>
             {isExportMenuOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-surface rounded-md shadow-md border border-border-subtle/80 py-1.5 z-50">
-                <button 
+                <button
                   onClick={exportTimelineToPdf}
                   className="w-full text-left px-3.5 py-2 hover:bg-surface-sunken text-xs font-medium text-content-body flex items-center gap-2 cursor-pointer transition-colors"
                 >
                   <FileText className="w-4 h-4 text-danger" />
                   <span>PDF Document</span>
                 </button>
-                <button 
+                <button
                   onClick={exportTimelineToPng}
                   className="w-full text-left px-3.5 py-2 hover:bg-surface-sunken text-xs font-medium text-content-body flex items-center gap-2 cursor-pointer transition-colors"
                 >
@@ -1184,20 +1266,29 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       </div>
 
       <div className="flex-1 overflow-hidden flex min-h-0">
-        <div ref={timelineContainerRef} className="print-roadmap-container flex flex-1 w-full relative bg-surface rounded-lg border border-border-subtle/80 shadow-2xs overflow-hidden select-none">
+        <div
+          ref={timelineContainerRef}
+          className="print-roadmap-container flex flex-1 w-full relative bg-surface rounded-lg border border-border-subtle/80 shadow-2xs overflow-hidden select-none"
+        >
           <div className="w-64 md:w-80 shrink-0 border-r border-border-subtle/80 flex flex-col z-20 bg-surface relative">
             <div className="sticky top-0 z-30 h-[73px] bg-surface-sunken/90 backdrop-blur-sm border-b border-border-subtle px-5 flex items-center justify-between">
-              <span className="font-medium text-xs sm:text-[11px] text-content-muted uppercase tracking-widest">Item & Hierarki</span>
+              <span className="font-medium text-xs sm:text-[11px] text-content-muted uppercase tracking-widest">
+                Item & Hierarki
+              </span>
             </div>
-            <div className="flex-1 overflow-y-auto no-scrollbar pb-10 pt-4 border-t border-border-subtle" ref={timelineListRef} onScroll={handleTimelineVerticalScroll}>
+            <div
+              className="flex-1 overflow-y-auto no-scrollbar pb-10 pt-4 border-t border-border-subtle"
+              ref={timelineListRef}
+              onScroll={handleTimelineVerticalScroll}
+            >
               <AnimatePresence initial={false}>
                 {renderedRows.map(({ task, isChild, depth, isLastChild }) => {
-                  const hasChildren = tasks.some(t => t.parentId === task.id);
+                  const hasChildren = tasks.some((t) => t.parentId === task.id);
                   const expanded = expandedEpics[task.id] !== false;
-                  const isEpic = (task.type || '').toLowerCase() === 'epic';
+                  const isEpic = (task.type || "").toLowerCase() === "epic";
 
                   return (
-                    <motion.div 
+                    <motion.div
                       key={task.id}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 56, opacity: 1 }}
@@ -1205,34 +1296,37 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                       transition={{ duration: 0.2, ease: "easeInOut" }}
                       className={cn(
                         "h-14 flex items-center gap-2 border-b border-border-faint bg-surface transition-colors relative z-10 overflow-hidden",
-                        isChild 
-                          ? "bg-surface-sunken/40 hover:bg-surface-sunken/80 pr-3" 
+                        isChild
+                          ? "bg-surface-sunken/40 hover:bg-surface-sunken/80 pr-3"
                           : isEpic
                             ? "bg-purple-50/10 hover:bg-purple-50/40 px-3"
                             : "hover:bg-surface-sunken px-3"
                       )}
                       style={{
-                        ...isChild ? { paddingLeft: `${14 + (depth * 20)}px` } : {},
-                        willChange: "transform, opacity, height"
+                        ...(isChild ? { paddingLeft: `${14 + depth * 20}px` } : {}),
+                        willChange: "transform, opacity, height",
                       }}
                     >
                       {isChild && (
-                        <div className="absolute top-0 bottom-0 pointer-events-none" style={{ left: 0, width: `${14 + (depth * 20)}px` }}>
+                        <div
+                          className="absolute top-0 bottom-0 pointer-events-none"
+                          style={{ left: 0, width: `${14 + depth * 20}px` }}
+                        >
                           {Array.from({ length: depth }).map((_, i) => {
                             const isCurrentDepth = i === depth - 1;
                             return (
                               <React.Fragment key={i}>
-                                <div 
+                                <div
                                   className={cn(
                                     "absolute top-0 w-[2px] bg-slate-200/80",
                                     isCurrentDepth && isLastChild ? "h-7 rounded-bl-lg" : "h-full"
-                                  )} 
-                                  style={{ left: `${14 + (i * 20)}px` }}
+                                  )}
+                                  style={{ left: `${14 + i * 20}px` }}
                                 />
                                 {isCurrentDepth && (
-                                  <div 
-                                     className="absolute top-7 w-[20px] h-[2px] bg-slate-200/80 rounded-tr-lg" 
-                                     style={{ left: `${14 + (i * 20)}px` }}
+                                  <div
+                                    className="absolute top-7 w-[20px] h-[2px] bg-slate-200/80 rounded-tr-lg"
+                                    style={{ left: `${14 + i * 20}px` }}
                                   />
                                 )}
                               </React.Fragment>
@@ -1242,17 +1336,17 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                       )}
 
                       {/* Spacer/Chevron for Tree Hierarchy */}
-                      {(hasChildren) ? (
+                      {hasChildren ? (
                         <button
                           type="button"
                           onClick={() => toggleEpic(task.id)}
                           className="p-1 rounded hover:bg-surface-muted text-content-subtle hover:text-content-secondary transition-all shrink-0 active:scale-95 z-20 bg-inherit"
                         >
-                          <ChevronRight 
+                          <ChevronRight
                             className={cn(
                               "w-3.5 h-3.5 transform transition-transform duration-200 ease-in-out",
                               expanded ? "rotate-90 text-indigo-650" : "text-content-subtle"
-                            )} 
+                            )}
                           />
                         </button>
                       ) : (
@@ -1274,28 +1368,40 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                       </div>
 
                       <div className="flex flex-col min-w-0 flex-1">
-                        <span className={cn(
-                          "text-xs sm:text-[11px] truncate leading-tight tracking-tight select-none",
-                          isChild ? "font-medium text-content-secondary" : "font-medium text-content"
-                        )}>
+                        <span
+                          className={cn(
+                            "text-xs sm:text-[11px] truncate leading-tight tracking-tight select-none",
+                            isChild
+                              ? "font-medium text-content-secondary"
+                              : "font-medium text-content"
+                          )}
+                        >
                           {task.title}
                         </span>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <button 
-                            onClick={(e) => { 
-                              e.stopPropagation(); 
-                              setSelectedTaskForDetail(task); 
-                              setIsTaskDetailModalOpen(true); 
-                            }} 
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedTaskForDetail(task);
+                              setIsTaskDetailModalOpen(true);
+                            }}
                             className="text-xs sm:text-[11px] sm:text-[9px] font-semibold text-primary bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/60 rounded-md px-1 py-0.2 tracking-tight text-left uppercase transition-colors"
                           >
                             {task.key}
                           </button>
-                          <span className="text-xs sm:text-[10px] sm:text-[7px] text-slate-300">•</span>
-                          <span className={cn(
-                            "text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider",
-                            task.status === 'Done' ? "text-emerald-600" : task.status === 'In Progress' ? "text-blue-600" : "text-content-muted"
-                          )}>
+                          <span className="text-xs sm:text-[10px] sm:text-[7px] text-slate-300">
+                            •
+                          </span>
+                          <span
+                            className={cn(
+                              "text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider",
+                              task.status === "Done"
+                                ? "text-emerald-600"
+                                : task.status === "In Progress"
+                                  ? "text-blue-600"
+                                  : "text-content-muted"
+                            )}
+                          >
                             {task.status}
                           </span>
                         </div>
@@ -1306,122 +1412,192 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
               </AnimatePresence>
             </div>
           </div>
-          <div 
-            className={`flex-1 flex flex-col overflow-auto relative bg-[#fcfcfc] ${isDraggingToPan ? 'cursor-grabbing' : 'cursor-grab'}`} 
-            ref={timelineMainRef} 
+          <div
+            className={`flex-1 flex flex-col overflow-auto relative bg-surface ${isDraggingToPan ? "cursor-grabbing" : "cursor-grab"}`}
+            ref={timelineMainRef}
             onScroll={handleTimelineVerticalScroll}
             onMouseDown={handleDragPanMouseDown}
           >
-            <motion.div 
+            <motion.div
               key={timelineZoom}
               initial={{ opacity: 0.3, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="min-w-max relative" 
-              style={{ width: `${totalDays * pixelsPerDay}px`, minHeight: '100%', willChange: "transform, opacity" }}
+              className="min-w-max relative"
+              style={{
+                width: `${totalDays * pixelsPerDay}px`,
+                minHeight: "100%",
+                willChange: "transform, opacity",
+              }}
             >
               <div className="sticky top-0 z-30 h-[73px] bg-surface-sunken/90 backdrop-blur-sm border-b border-border-subtle shadow-soft box-border flex flex-col">
                 <div className="flex h-8 border-b border-border-subtle/50">
-                  {timelineZoom !== 'months' ? timelineMonths.map((m: any) => {
-                    const mStart = startOfMonth(m);
-                    const actualStart = mStart < minDate ? minDate : mStart;
-                    const mEnd = endOfMonth(m);
-                    const expectedEnd = mEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : mEnd;
-                    const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
-                    return (
-                      <div key={m.toISOString()} className="flex items-center px-2 py-1 border-r border-gray-200/50" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                        <span className="text-xs sm:text-[11px] font-medium text-gray-600 uppercase tracking-wider">{format(m, 'MMM yyyy')}</span>
-                      </div>
-                    );
-                  }) : timelineYears.map((y: any) => {
-                    const yStart = startOfYear(y);
-                    const actualStart = yStart < minDate ? minDate : yStart;
-                    const yEnd = endOfYear(y);
-                    const expectedEnd = yEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : yEnd;
-                    const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
-                    return (
-                      <div key={y.toISOString()} className="flex items-center px-2 py-1 border-r border-gray-200/50" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                        <span className="text-xs sm:text-[11px] font-medium text-gray-600 uppercase tracking-wider">{format(y, 'yyyy')}</span>
-                      </div>
-                    );
-                  })}
+                  {timelineZoom !== "months"
+                    ? timelineMonths.map((m: any) => {
+                        const mStart = startOfMonth(m);
+                        const actualStart = mStart < minDate ? minDate : mStart;
+                        const mEnd = endOfMonth(m);
+                        const expectedEnd =
+                          mEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : mEnd;
+                        const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
+                        return (
+                          <div
+                            key={m.toISOString()}
+                            className="flex items-center px-2 py-1 border-r border-border-subtle/50"
+                            style={{ width: `${actualDays * pixelsPerDay}px` }}
+                          >
+                            <span className="text-xs sm:text-[11px] font-medium text-content-secondary uppercase tracking-wider">
+                              {format(m, "MMM yyyy")}
+                            </span>
+                          </div>
+                        );
+                      })
+                    : timelineYears.map((y: any) => {
+                        const yStart = startOfYear(y);
+                        const actualStart = yStart < minDate ? minDate : yStart;
+                        const yEnd = endOfYear(y);
+                        const expectedEnd =
+                          yEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : yEnd;
+                        const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
+                        return (
+                          <div
+                            key={y.toISOString()}
+                            className="flex items-center px-2 py-1 border-r border-border-subtle/50"
+                            style={{ width: `${actualDays * pixelsPerDay}px` }}
+                          >
+                            <span className="text-xs sm:text-[11px] font-medium text-content-secondary uppercase tracking-wider">
+                              {format(y, "yyyy")}
+                            </span>
+                          </div>
+                        );
+                      })}
                 </div>
                 <div className="flex h-10">
-                  {timelineZoom === 'days' && timelineDays.map((d: any, i: number) => (
-                    <div key={d.toISOString()} className="flex items-center justify-center border-r border-gray-200/50 shrink-0" style={{ width: `${pixelsPerDay}px` }}>
-                      <span className="text-xs sm:text-[10px] font-medium text-gray-400">{format(d, 'd')}</span>
-                    </div>
-                  ))}
-                  {timelineZoom === 'weeks' && timelineWeeks.map((w: any, i: number) => {
-                    const wStart = startOfWeek(w);
-                    const actualStart = wStart < minDate ? minDate : wStart;
-                    const wEnd = endOfWeek(w);
-                    const expectedEnd = wEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : wEnd;
-                    const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
-                    return (
-                      <div key={w.toISOString()} className="flex items-center justify-center border-r border-gray-200/50 shrink-0" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                        <span className="text-xs sm:text-[10px] font-medium text-gray-400">W{format(w, 'w')}</span>
+                  {timelineZoom === "days" &&
+                    timelineDays.map((d: any, i: number) => (
+                      <div
+                        key={d.toISOString()}
+                        className="flex items-center justify-center border-r border-border-subtle/50 shrink-0"
+                        style={{ width: `${pixelsPerDay}px` }}
+                      >
+                        <span className="text-xs sm:text-[10px] font-medium text-content-subtle">
+                          {format(d, "d")}
+                        </span>
                       </div>
-                    );
-                  })}
-                  {timelineZoom === 'months' && timelineMonths.map((m: any, i: number) => {
-                    const mStart = startOfMonth(m);
-                    const actualStart = mStart < minDate ? minDate : mStart;
-                    const mEnd = endOfMonth(m);
-                    const expectedEnd = mEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : mEnd;
-                    const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
-                    return (
-                      <div key={m.toISOString()} className="flex items-center justify-center border-r border-gray-200/50 shrink-0" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                        <span className="text-xs sm:text-[10px] font-medium text-gray-400">{format(m, 'MMM')}</span>
-                      </div>
-                    );
-                  })}
+                    ))}
+                  {timelineZoom === "weeks" &&
+                    timelineWeeks.map((w: any, i: number) => {
+                      const wStart = startOfWeek(w);
+                      const actualStart = wStart < minDate ? minDate : wStart;
+                      const wEnd = endOfWeek(w);
+                      const expectedEnd =
+                        wEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : wEnd;
+                      const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
+                      return (
+                        <div
+                          key={w.toISOString()}
+                          className="flex items-center justify-center border-r border-border-subtle/50 shrink-0"
+                          style={{ width: `${actualDays * pixelsPerDay}px` }}
+                        >
+                          <span className="text-xs sm:text-[10px] font-medium text-content-subtle">
+                            W{format(w, "w")}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  {timelineZoom === "months" &&
+                    timelineMonths.map((m: any, i: number) => {
+                      const mStart = startOfMonth(m);
+                      const actualStart = mStart < minDate ? minDate : mStart;
+                      const mEnd = endOfMonth(m);
+                      const expectedEnd =
+                        mEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : mEnd;
+                      const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
+                      return (
+                        <div
+                          key={m.toISOString()}
+                          className="flex items-center justify-center border-r border-border-subtle/50 shrink-0"
+                          style={{ width: `${actualDays * pixelsPerDay}px` }}
+                        >
+                          <span className="text-xs sm:text-[10px] font-medium text-content-subtle">
+                            {format(m, "MMM")}
+                          </span>
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
               <div className="absolute inset-0 pointer-events-none flex z-10 pt-[73px]">
-                {timelineZoom === 'days' && timelineDays.map((d: any, i: number) => (
-                  <div key={'grid-'+d.toISOString()} className={`shrink-0 border-r ${d.getDay() === 0 || d.getDay() === 6 ? 'bg-surface-muted/40 border-border-subtle/50' : 'border-gray-100/50'}`} style={{ width: `${pixelsPerDay}px` }} />
-                ))}
-                {timelineZoom === 'weeks' && timelineWeeks.map((w: any, i: number) => {
-                  const wStart = startOfWeek(w);
-                  const actualStart = wStart < minDate ? minDate : wStart;
-                  const wEnd = endOfWeek(w);
-                  const expectedEnd = wEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : wEnd;
-                  const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
-                  return <div key={'grid-'+w.toISOString()} className="shrink-0 border-r border-gray-100/50" style={{ width: `${actualDays * pixelsPerDay}px` }} />;
-                })}
-                {timelineZoom === 'months' && timelineMonths.map((m: any, i: number) => {
-                  const mStart = startOfMonth(m);
-                  const actualStart = mStart < minDate ? minDate : mStart;
-                  const mEnd = endOfMonth(m);
-                  const expectedEnd = mEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : mEnd;
-                  const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
-                  return <div key={'grid-'+m.toISOString()} className="shrink-0 border-r border-gray-100/50" style={{ width: `${actualDays * pixelsPerDay}px` }} />;
-                })}
+                {timelineZoom === "days" &&
+                  timelineDays.map((d: any, i: number) => (
+                    <div
+                      key={"grid-" + d.toISOString()}
+                      className={`shrink-0 border-r ${d.getDay() === 0 || d.getDay() === 6 ? "bg-surface-muted/40 border-border-subtle/50" : "border-border-faint/50"}`}
+                      style={{ width: `${pixelsPerDay}px` }}
+                    />
+                  ))}
+                {timelineZoom === "weeks" &&
+                  timelineWeeks.map((w: any, i: number) => {
+                    const wStart = startOfWeek(w);
+                    const actualStart = wStart < minDate ? minDate : wStart;
+                    const wEnd = endOfWeek(w);
+                    const expectedEnd =
+                      wEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : wEnd;
+                    const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
+                    return (
+                      <div
+                        key={"grid-" + w.toISOString()}
+                        className="shrink-0 border-r border-border-faint/50"
+                        style={{ width: `${actualDays * pixelsPerDay}px` }}
+                      />
+                    );
+                  })}
+                {timelineZoom === "months" &&
+                  timelineMonths.map((m: any, i: number) => {
+                    const mStart = startOfMonth(m);
+                    const actualStart = mStart < minDate ? minDate : mStart;
+                    const mEnd = endOfMonth(m);
+                    const expectedEnd =
+                      mEnd > addDays(minDate, totalDays) ? addDays(minDate, totalDays) : mEnd;
+                    const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
+                    return (
+                      <div
+                        key={"grid-" + m.toISOString()}
+                        className="shrink-0 border-r border-border-faint/50"
+                        style={{ width: `${actualDays * pixelsPerDay}px` }}
+                      />
+                    );
+                  })}
               </div>
               <div className="relative pt-4 z-20 pb-10 border-t border-border-subtle">
                 <AnimatePresence initial={false}>
                   {renderedRows.map(({ task, isChild }) => {
-                    const dates = tempDates[task.id] || { startDate: task.startDate, endDate: task.endDate };
+                    const dates = tempDates[task.id] || {
+                      startDate: task.startDate,
+                      endDate: task.endDate,
+                    };
                     if (!dates.startDate || !dates.endDate) {
                       return (
-                        <motion.div 
-                          key={task.id} 
+                        <motion.div
+                          key={task.id}
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 56, opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
                           transition={{ duration: 0.2, ease: "easeInOut" }}
-                          className="h-14 relative border-b border-gray-100 bg-transparent flex items-center group/row hover:bg-surface-sunken/50 transition-colors overflow-hidden"
+                          className="h-14 relative border-b border-border-faint bg-transparent flex items-center group/row hover:bg-surface-sunken/50 transition-colors overflow-hidden"
                           style={{ willChange: "transform, opacity, height" }}
                         >
                           <motion.button
-                            whileHover={{ 
-                              scale: 1.04, 
-                              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)" 
+                            whileHover={{
+                              scale: 1.04,
+                              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
                             }}
                             whileTap={{ scale: 0.96 }}
                             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                            onClick={() => { setSelectedTaskForDetail(task); setIsTaskDetailModalOpen(true); }}
+                            onClick={() => {
+                              setSelectedTaskForDetail(task);
+                              setIsTaskDetailModalOpen(true);
+                            }}
                             className="absolute left-6 h-8 px-4 rounded-xl flex items-center bg-surface-sunken/60 border border-border-subtle border-dashed hover:border-indigo-400 hover:bg-surface group-hover/row:bg-surface text-xs sm:text-[10px] font-medium text-content-subtle hover:text-indigo-600 hover:shadow-soft transition-all cursor-pointer gap-2"
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/row:bg-indigo-500 animate-pulse transition-colors" />
@@ -1433,26 +1609,34 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                     const start = ensureDate(dates.startDate);
                     const end = ensureDate(dates.endDate);
                     const left = (differenceInDays(start, minDate) / (totalDays || 1)) * 100;
-                    const width = Math.max(0.5, ((differenceInDays(end, start) + 1) / (totalDays || 1)) * 100);
-                    const isEpic = (task.type || '').toLowerCase() === 'epic';
+                    const width = Math.max(
+                      0.5,
+                      ((differenceInDays(end, start) + 1) / (totalDays || 1)) * 100
+                    );
+                    const isEpic = (task.type || "").toLowerCase() === "epic";
 
                     return (
-                      <motion.div 
-                        key={task.id} 
+                      <motion.div
+                        key={task.id}
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 56, opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="h-14 relative border-b border-gray-100 bg-transparent flex items-center group/row hover:bg-surface-sunken/50 transition-colors overflow-hidden"
+                        className="h-14 relative border-b border-border-faint bg-transparent flex items-center group/row hover:bg-surface-sunken/50 transition-colors overflow-hidden"
                         style={{ willChange: "transform, opacity, height" }}
                       >
                         <motion.div
-                          whileHover={{ 
-                            scale: 1.02, 
+                          whileHover={{
+                            scale: 1.02,
                             y: "-50%",
-                            boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)"
+                            boxShadow:
+                              "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
                           }}
-                          transition={timelineInteraction?.taskId === task.id ? { type: "tween", duration: 0 } : { type: "spring", stiffness: 350, damping: 25 }}
+                          transition={
+                            timelineInteraction?.taskId === task.id
+                              ? { type: "tween", duration: 0 }
+                              : { type: "spring", stiffness: 350, damping: 25 }
+                          }
                           className={cn(
                             "absolute top-1/2 -translate-y-1/2 h-8 rounded-lg shadow-soft flex items-center border overflow-hidden",
                             getStatusColors(task.status, isEpic).bg,
@@ -1462,103 +1646,139 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                             !isEpic && "border-l-[3.5px]",
                             isEpic && "border-l-[3.5px]",
                             "group/bar",
-                            timelineInteraction?.taskId === task.id ? cn("scale-[1.01] shadow-md z-30", getStatusColors(task.status, isEpic).activeBg) : "transition-all"
+                            timelineInteraction?.taskId === task.id
+                              ? cn(
+                                  "scale-[1.01] shadow-md z-30",
+                                  getStatusColors(task.status, isEpic).activeBg
+                                )
+                              : "transition-all"
                           )}
-                          style={{ left: `${left}%`, width: `${width}%`, minWidth: '24px', willChange: "transform, left, width" }}
+                          style={{
+                            left: `${left}%`,
+                            width: `${width}%`,
+                            minWidth: "24px",
+                            willChange: "transform, left, width",
+                          }}
                         >
                           {/* Dynamic Floating Tooltip */}
-                          <div className={cn(
-                            "absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-800 text-white text-xs sm:text-[10px] font-medium px-2.5 py-1.5 rounded-lg shadow-xl pointer-events-none z-50 flex items-center gap-1.5 whitespace-nowrap transition-all duration-150 origin-bottom scale-90 opacity-0",
-                            "group-hover/bar:opacity-100 group-hover/bar:scale-100",
-                            timelineInteraction?.taskId === task.id ? "opacity-100 scale-100 ring-2" : ""
-                          )}>
-                            <span className={cn("font-medium", getStatusColors(task.status, isEpic).tooltipText)}>{format(start, 'dd MMM yyyy')}</span>
+                          <div
+                            className={cn(
+                              "absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-800 text-white text-xs sm:text-[10px] font-medium px-2.5 py-1.5 rounded-lg shadow-xl pointer-events-none z-50 flex items-center gap-1.5 whitespace-nowrap transition-all duration-150 origin-bottom scale-90 opacity-0",
+                              "group-hover/bar:opacity-100 group-hover/bar:scale-100",
+                              timelineInteraction?.taskId === task.id
+                                ? "opacity-100 scale-100 ring-2"
+                                : ""
+                            )}
+                          >
+                            <span
+                              className={cn(
+                                "font-medium",
+                                getStatusColors(task.status, isEpic).tooltipText
+                              )}
+                            >
+                              {format(start, "dd MMM yyyy")}
+                            </span>
                             <span className="text-content-subtle">→</span>
-                            <span className={cn("font-medium", getStatusColors(task.status, isEpic).tooltipText)}>{format(end, 'dd MMM yyyy')}</span>
-                            <span className={cn(
-                              "font-medium px-1.5 py-0.5 rounded text-xs sm:text-[11px] sm:text-[9px] ml-1", 
-                              getStatusColors(task.status, isEpic).tooltipBadge
-                            )}>
+                            <span
+                              className={cn(
+                                "font-medium",
+                                getStatusColors(task.status, isEpic).tooltipText
+                              )}
+                            >
+                              {format(end, "dd MMM yyyy")}
+                            </span>
+                            <span
+                              className={cn(
+                                "font-medium px-1.5 py-0.5 rounded text-xs sm:text-[11px] sm:text-[9px] ml-1",
+                                getStatusColors(task.status, isEpic).tooltipBadge
+                              )}
+                            >
                               {differenceInDays(end, start) + 1} hari
                             </span>
                             <div className="absolute top-full left-1/2 -translate-x-1/2 border-x-4 border-t-4 border-x-transparent border-t-slate-900" />
                           </div>
 
                           {/* Visually Rich Left Resize Handle */}
-                          <div 
+                          <div
                             className={cn(
                               "absolute left-0 top-0 bottom-0 w-3 flex items-center justify-center cursor-ew-resize z-25",
                               "transition-colors",
                               getStatusColors(task.status, isEpic).handle
                             )}
-                            onMouseDown={(e) => { 
-                              e.stopPropagation(); 
-                              setTimelineInteraction({ 
-                                taskId: task.id, 
-                                type: 'resize-start', 
-                                startX: e.clientX, 
-                                initialStart: start, 
-                                initialEnd: end 
-                              }); 
+                            onMouseDown={(e) => {
+                              e.stopPropagation();
+                              setTimelineInteraction({
+                                taskId: task.id,
+                                type: "resize-start",
+                                startX: e.clientX,
+                                initialStart: start,
+                                initialEnd: end,
+                              });
                             }}
                             title="Tarik ujung kiri untuk mengubah tanggal mulai"
                           >
-                            <div className={cn(
-                              "w-[3px] h-3.5 border-l border-r rounded-full transition-colors shadow-soft",
-                              getStatusColors(task.status, isEpic).handleBar
-                            )} />
+                            <div
+                              className={cn(
+                                "w-[3px] h-3.5 border-l border-r rounded-full transition-colors shadow-soft",
+                                getStatusColors(task.status, isEpic).handleBar
+                              )}
+                            />
                           </div>
 
                           {/* Drag and Move Row Area */}
-                          <div 
-                            className="flex-1 h-full px-4 flex items-center min-w-0 cursor-grab active:cursor-grabbing overflow-hidden" 
+                          <div
+                            className="flex-1 h-full px-4 flex items-center min-w-0 cursor-grab active:cursor-grabbing overflow-hidden"
                             onMouseDown={(e) => {
                               // Only trigger move if clicked outside the resize handles
                               const rect = e.currentTarget.getBoundingClientRect();
                               const clickX = e.clientX - rect.left;
                               if (clickX > 12 && clickX < rect.width - 12) {
                                 e.stopPropagation();
-                                setTimelineInteraction({ 
-                                  taskId: task.id, 
-                                  type: 'move', 
-                                  startX: e.clientX, 
-                                  initialStart: start, 
-                                  initialEnd: end 
+                                setTimelineInteraction({
+                                  taskId: task.id,
+                                  type: "move",
+                                  startX: e.clientX,
+                                  initialStart: start,
+                                  initialEnd: end,
                                 });
                               }
                             }}
                           >
-                            <span className={cn(
-                              "text-xs sm:text-[10.5px] font-medium truncate tracking-tight select-none pr-1",
-                              getStatusColors(task.status, isEpic).text
-                            )}>
+                            <span
+                              className={cn(
+                                "text-xs sm:text-[10.5px] font-medium truncate tracking-tight select-none pr-1",
+                                getStatusColors(task.status, isEpic).text
+                              )}
+                            >
                               {task.title}
                             </span>
                           </div>
 
                           {/* Visually Rich Right Resize Handle */}
-                          <div 
+                          <div
                             className={cn(
                               "absolute right-0 top-0 bottom-0 w-3 flex items-center justify-center cursor-ew-resize z-25 rounded-r-lg",
                               "transition-colors",
                               getStatusColors(task.status, isEpic).handleR
                             )}
-                            onMouseDown={(e) => { 
-                              e.stopPropagation(); 
-                              setTimelineInteraction({ 
-                                taskId: task.id, 
-                                type: 'resize-end', 
-                                startX: e.clientX, 
-                                initialStart: start, 
-                                initialEnd: end 
-                              }); 
+                            onMouseDown={(e) => {
+                              e.stopPropagation();
+                              setTimelineInteraction({
+                                taskId: task.id,
+                                type: "resize-end",
+                                startX: e.clientX,
+                                initialStart: start,
+                                initialEnd: end,
+                              });
                             }}
                             title="Tarik ujung kanan untuk mengubah tanggal selesai"
                           >
-                            <div className={cn(
-                              "w-[3px] h-3.5 border-l border-r rounded-full transition-colors shadow-soft",
-                              getStatusColors(task.status, isEpic).handleBarR
-                            )} />
+                            <div
+                              className={cn(
+                                "w-[3px] h-3.5 border-l border-r rounded-full transition-colors shadow-soft",
+                                getStatusColors(task.status, isEpic).handleBarR
+                              )}
+                            />
                           </div>
                         </motion.div>
                       </motion.div>
@@ -1567,7 +1787,10 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                 </AnimatePresence>
               </div>
               {todayLeft >= 0 && todayLeft <= 100 && (
-                <div className="absolute top-0 bottom-0 z-20 border-l-2 border-danger border-dashed pointer-events-none" style={{ left: `${todayLeft}%` }}>
+                <div
+                  className="absolute top-0 bottom-0 z-20 border-l-2 border-danger border-dashed pointer-events-none"
+                  style={{ left: `${todayLeft}%` }}
+                >
                   <div className="bg-danger text-white text-xs sm:text-[11px] sm:text-[9px] font-semibold px-2 py-0.5 rounded-md absolute top-1.5 -translate-x-1/2 shadow-soft flex items-center gap-1 z-30 tracking-wider">
                     <span className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-surface opacity-75"></span>

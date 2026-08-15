@@ -6,20 +6,52 @@ import { useFlowchartHistory } from "../../hooks/useFlowchartHistory";
 import { useFlowchartSelection } from "../../hooks/useFlowchartSelection";
 import { useFlowchartList } from "../../hooks/useFlowchartList";
 import { useFlowchartNodes } from "../../hooks/useFlowchartNodes";
-import { 
-  Plus, Trash2, ArrowRight, Save, RotateCcw, 
-  Sparkles, Eye, Check,
-  Workflow, Database as DbIcon, Circle as CircleIcon,
-  Layers, MousePointer, Hand,
-  StickyNote, Type, Copy,
-  ZoomIn, ZoomOut,
-  Cloud, BookOpen, Edit3, X, FileText, HelpCircle, Info,
-  Folder, User, Undo, Redo, Play, Download, RefreshCw, Upload, Image as ImageIcon,
-  Undo2, Redo2, Database, Activity, Minus, LayoutTemplate,
+import {
+  Plus,
+  Trash2,
+  ArrowRight,
+  Save,
+  RotateCcw,
+  Sparkles,
+  Eye,
+  Check,
+  Workflow,
+  Database as DbIcon,
+  Circle as CircleIcon,
+  Layers,
+  MousePointer,
+  Hand,
+  StickyNote,
+  Type,
+  Copy,
+  ZoomIn,
+  ZoomOut,
+  Cloud,
+  BookOpen,
+  Edit3,
+  X,
+  FileText,
+  HelpCircle,
+  Info,
+  Folder,
+  User,
+  Undo,
+  Redo,
+  Play,
+  Download,
+  RefreshCw,
+  Upload,
+  Image as ImageIcon,
+  Undo2,
+  Redo2,
+  Database,
+  Activity,
+  Minus,
+  LayoutTemplate,
   Users,
   Clock,
   CheckCircle,
-  FileSpreadsheet
+  FileSpreadsheet,
 } from "lucide-react";
 import { toJpeg } from "html-to-image";
 import { Task, Project } from "../../types";
@@ -36,13 +68,7 @@ import { FlowchartEdges } from "./components/FlowchartEdges";
 import { FlowchartMinimap } from "./components/FlowchartMinimap";
 import { NodeContextMenu } from "./components/NodeContextMenu";
 import { CanvasContextMenu } from "./components/CanvasContextMenu";
-import type {
-  FlowNode,
-  FlowEdge,
-  FlowchartDocument,
-  FlowchartData,
-  Point,
-} from "./types";
+import type { FlowNode, FlowEdge, FlowchartDocument, FlowchartData, Point } from "./types";
 import { parseDrawIoXML, parseMiroContent } from "./lib/importers";
 import { colorPalettes } from "./constants";
 // Diberi akhiran Api karena useFlowchartList() juga mengekspos updateFlowchart
@@ -72,14 +98,15 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   setSelectedTaskForDetail,
   setIsTaskDetailModalOpen,
   currentUserProfile,
-  onSaveFlowcharts
+  onSaveFlowcharts,
 }) => {
   // Get active logged in user author name dynamically
   const getResolvedAuthor = () => {
     if (currentUserProfile?.displayName) return currentUserProfile.displayName;
     if (currentUserProfile?.username) return currentUserProfile.username;
     try {
-      const saved = safeSessionStorage.getItem("sessionUser") || safeLocalStorage.getItem("sessionUser");
+      const saved =
+        safeSessionStorage.getItem("sessionUser") || safeLocalStorage.getItem("sessionUser");
       if (saved) {
         const u = JSON.parse(saved);
         return u?.displayName || u?.username || u?.email || "Administrator";
@@ -91,37 +118,55 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   };
 
   // BOLA & Authorization Check (LanPro v1.4)
-  const effectiveUser = currentUserProfile || (() => {
-    try {
-      const stored = safeLocalStorage.getItem('sessionUser') || safeLocalStorage.getItem('lanpro_user') || safeSessionStorage.getItem('sessionUser');
-      return stored ? JSON.parse(stored) : null;
-    } catch (e) {
-      return null;
-    }
-  })();
+  const effectiveUser =
+    currentUserProfile ||
+    (() => {
+      try {
+        const stored =
+          safeLocalStorage.getItem("sessionUser") ||
+          safeLocalStorage.getItem("lanpro_user") ||
+          safeSessionStorage.getItem("sessionUser");
+        return stored ? JSON.parse(stored) : null;
+      } catch (e) {
+        return null;
+      }
+    })();
   const currentUserId = effectiveUser?.id || effectiveUser?.uid || effectiveUser?.userId;
-  const userRoleStr = effectiveUser?.role || effectiveUser?.system_role || 'user';
-  const isAdmin = ['admin', 'sadm', 'admn'].includes(String(userRoleStr).toLowerCase());
+  const userRoleStr = effectiveUser?.role || effectiveUser?.system_role || "user";
+  const isAdmin = ["admin", "sadm", "admn"].includes(String(userRoleStr).toLowerCase());
 
   const isAuthor = (fw: FlowchartData) => {
     if (!fw || !effectiveUser) return false;
-    const author = String(fw.createdBy || '').trim().toLowerCase();
-    const curId = String(effectiveUser.id || '').trim().toLowerCase();
-    const curUid = String(effectiveUser.uid || '').trim().toLowerCase();
-    const curUser = String(effectiveUser.username || '').trim().toLowerCase();
-    const curEmail = String(effectiveUser.email || '').trim().toLowerCase();
-    const curName = String(effectiveUser.name || '').trim().toLowerCase();
-    const curDisplay = String(effectiveUser.displayName || '').trim().toLowerCase();
-    
+    const author = String(fw.createdBy || "")
+      .trim()
+      .toLowerCase();
+    const curId = String(effectiveUser.id || "")
+      .trim()
+      .toLowerCase();
+    const curUid = String(effectiveUser.uid || "")
+      .trim()
+      .toLowerCase();
+    const curUser = String(effectiveUser.username || "")
+      .trim()
+      .toLowerCase();
+    const curEmail = String(effectiveUser.email || "")
+      .trim()
+      .toLowerCase();
+    const curName = String(effectiveUser.name || "")
+      .trim()
+      .toLowerCase();
+    const curDisplay = String(effectiveUser.displayName || "")
+      .trim()
+      .toLowerCase();
+
     return (
-      author !== "" && (
-        author === curId ||
+      author !== "" &&
+      (author === curId ||
         author === curUid ||
         author === curUser ||
         author === curEmail ||
         author === curName ||
-        author === curDisplay
-      )
+        author === curDisplay)
     );
   };
   const canModifyFlowchart = (fw: FlowchartData) => isAuthor(fw) || isAdmin;
@@ -129,84 +174,247 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   // Canvas Viewport & Theme Management
   const canvasHook = useFlowchartCanvas();
   const {
-    panOffset, setPanOffset, zoomLevel, setZoomLevel, isPanning, setIsPanning,
-    panStart, setPanStart,
-    canvasTheme, setCanvasTheme, isSnapToGrid, setIsSnapToGrid,
-    canvasContainerRef, isPanningRef, startCanvasPanning, updatePanOffset, stopCanvasPanning,
-    toggleCanvasTheme, toggleGridSnap, resetZoom, resetPan, resetCanvas, applyGridSnap
+    panOffset,
+    setPanOffset,
+    zoomLevel,
+    setZoomLevel,
+    isPanning,
+    setIsPanning,
+    panStart,
+    setPanStart,
+    canvasTheme,
+    setCanvasTheme,
+    isSnapToGrid,
+    setIsSnapToGrid,
+    canvasContainerRef,
+    isPanningRef,
+    startCanvasPanning,
+    updatePanOffset,
+    stopCanvasPanning,
+    toggleCanvasTheme,
+    toggleGridSnap,
+    resetZoom,
+    resetPan,
+    resetCanvas,
+    applyGridSnap,
   } = canvasHook;
 
   // UI Modals & Sidebars
   const uiHook = useFlowchartUI();
   const {
-    isModalOpen, setIsModalOpen, modalMode, setModalMode, editingFlowId, setEditingFlowId,
-    flowName, setFlowName, flowEpicId, setFlowEpicId, flowDescription, setFlowDescription,
-    flowCategory, setFlowCategory, flowCreator, setFlowCreator, flowExternalUrl, setFlowExternalUrl,
-    isUploadDocModalOpen, setIsUploadDocModalOpen, uploadDocName, setUploadDocName,
-    uploadDocFile, setUploadDocFile, uploadDocBase64, setUploadDocBase64, activeDocumentId, setActiveDocumentId,
-    rightViewMode, setRightViewMode,
-    isLeftSidebarOpen, setIsLeftSidebarOpen, isRightSidebarOpen, setIsRightSidebarOpen,
-    isShapeDropdownOpen, setIsShapeDropdownOpen, shapeSearchQuery, setShapeSearchQuery,
-    selectedAddColor, setSelectedAddColor, expandedGroups, setExpandedGroups,
-    isKeyboardHelpOpen, setIsKeyboardHelpOpen, hoverCoords, setHoverCoords,
-    isImportModalOpen, setIsImportModalOpen, importType, setImportType, parsedImportData,
-    setParsedImportData, parsedFilename, setParsedFilename, dragOverImport, setDragOverImport,
-    openCreateFlowModal, openEditFlowModal, closeFlowModal, resetFlowFormFields,
-    toggleLeftSidebar, toggleRightSidebar,
-    toggleShapeDropdown, toggleGroupExpanded, toggleKeyboardHelp, openImportModal, closeImportModal
+    isModalOpen,
+    setIsModalOpen,
+    modalMode,
+    setModalMode,
+    editingFlowId,
+    setEditingFlowId,
+    flowName,
+    setFlowName,
+    flowEpicId,
+    setFlowEpicId,
+    flowDescription,
+    setFlowDescription,
+    flowCategory,
+    setFlowCategory,
+    flowCreator,
+    setFlowCreator,
+    flowExternalUrl,
+    setFlowExternalUrl,
+    isUploadDocModalOpen,
+    setIsUploadDocModalOpen,
+    uploadDocName,
+    setUploadDocName,
+    uploadDocFile,
+    setUploadDocFile,
+    uploadDocBase64,
+    setUploadDocBase64,
+    activeDocumentId,
+    setActiveDocumentId,
+    rightViewMode,
+    setRightViewMode,
+    isLeftSidebarOpen,
+    setIsLeftSidebarOpen,
+    isRightSidebarOpen,
+    setIsRightSidebarOpen,
+    isShapeDropdownOpen,
+    setIsShapeDropdownOpen,
+    shapeSearchQuery,
+    setShapeSearchQuery,
+    selectedAddColor,
+    setSelectedAddColor,
+    expandedGroups,
+    setExpandedGroups,
+    isKeyboardHelpOpen,
+    setIsKeyboardHelpOpen,
+    hoverCoords,
+    setHoverCoords,
+    isImportModalOpen,
+    setIsImportModalOpen,
+    importType,
+    setImportType,
+    parsedImportData,
+    setParsedImportData,
+    parsedFilename,
+    setParsedFilename,
+    dragOverImport,
+    setDragOverImport,
+    openCreateFlowModal,
+    openEditFlowModal,
+    closeFlowModal,
+    resetFlowFormFields,
+    toggleLeftSidebar,
+    toggleRightSidebar,
+    toggleShapeDropdown,
+    toggleGroupExpanded,
+    toggleKeyboardHelp,
+    openImportModal,
+    closeImportModal,
   } = uiHook;
 
   // History & Undo/Redo Management
   const historyHook = useFlowchartHistory();
   const {
-    historyStack, historyIndex, activeSimNodeId, isSimulating, simCancelRef,
+    historyStack,
+    historyIndex,
+    activeSimNodeId,
+    isSimulating,
+    simCancelRef,
     // Keempat setter di bawah dipakai langsung oleh handleApplyImportReplace dan
     // handleSimulateFlow. Sebelumnya tidak ikut di-destructure, sehingga kedua
     // handler itu melempar ReferenceError begitu tombolnya ditekan.
-    setHistoryStack, setHistoryIndex, setActiveSimNodeId, setIsSimulating,
-    recordHistory, handleUndo, handleRedo, canUndo, canRedo, clearHistory, initializeHistory,
-    getHistoryDepth, getHistoryPosition, startSimulation, stopSimulation, cancelSimulation
+    setHistoryStack,
+    setHistoryIndex,
+    setActiveSimNodeId,
+    setIsSimulating,
+    recordHistory,
+    handleUndo,
+    handleRedo,
+    canUndo,
+    canRedo,
+    clearHistory,
+    initializeHistory,
+    getHistoryDepth,
+    getHistoryPosition,
+    startSimulation,
+    stopSimulation,
+    cancelSimulation,
   } = historyHook;
 
   // Node/Edge Selection & Tool Management
   const selectionHook = useFlowchartSelection();
   const {
-    selectedNodeId, setSelectedNodeId, selectedEdgeId, setSelectedEdgeId,
-    activeTool, setActiveTool, connectSourceId, setConnectSourceId,
-    isSpacePressed, setIsSpacePressed, hoveredNodeId, setHoveredNodeId,
-    hoveredEdgeId, setHoveredEdgeId, copiedNodes, setCopiedNodes,
-    marqueeBox, setMarqueeBox, clearSelection, selectNode, selectEdge,
-    switchTool, startConnection, completeConnection, copyNodesToClipboard,
-    getClipboardNodes, clearClipboard, setMarqueeSelection, updateMarqueeBox,
-    isNodeSelected, isEdgeSelected, isNodeHovered, isEdgeHovered,
-    isInConnectMode, isInPanMode, hasSelection, hasClipboardContent,
-    getMarqueeSelectionCount
+    selectedNodeId,
+    setSelectedNodeId,
+    selectedEdgeId,
+    setSelectedEdgeId,
+    activeTool,
+    setActiveTool,
+    connectSourceId,
+    setConnectSourceId,
+    isSpacePressed,
+    setIsSpacePressed,
+    hoveredNodeId,
+    setHoveredNodeId,
+    hoveredEdgeId,
+    setHoveredEdgeId,
+    copiedNodes,
+    setCopiedNodes,
+    marqueeBox,
+    setMarqueeBox,
+    clearSelection,
+    selectNode,
+    selectEdge,
+    switchTool,
+    startConnection,
+    completeConnection,
+    copyNodesToClipboard,
+    getClipboardNodes,
+    clearClipboard,
+    setMarqueeSelection,
+    updateMarqueeBox,
+    isNodeSelected,
+    isEdgeSelected,
+    isNodeHovered,
+    isEdgeHovered,
+    isInConnectMode,
+    isInPanMode,
+    hasSelection,
+    hasClipboardContent,
+    getMarqueeSelectionCount,
   } = selectionHook;
 
   // Saved Flowcharts List & Pagination
   const listHook = useFlowchartList();
   const {
-    flowcharts, setFlowcharts, selectedFlowId, setSelectedFlowId,
-    isEditorActive, setIsEditorActive, searchQuery, setSearchQuery,
-    currentPage, setCurrentPage, itemsPerPage, setItemsPerPage,
-    sortBy, setSortBy, confirmModal, setConfirmModal,
-    addFlowchart, updateFlowchart, deleteFlowchart, closeConfirmModal,
-    getCurrentFlowchart, getFilteredFlowcharts, getPaginatedFlowcharts,
-    getTotalPages, getTotalCount, resetPagination, resetFilters,
-    selectFlowchart, exitEditor, toggleEditor, addDocumentToFlowchart,
-    removeDocumentFromFlowchart
+    flowcharts,
+    setFlowcharts,
+    selectedFlowId,
+    setSelectedFlowId,
+    isEditorActive,
+    setIsEditorActive,
+    searchQuery,
+    setSearchQuery,
+    currentPage,
+    setCurrentPage,
+    itemsPerPage,
+    setItemsPerPage,
+    sortBy,
+    setSortBy,
+    confirmModal,
+    setConfirmModal,
+    addFlowchart,
+    updateFlowchart,
+    deleteFlowchart,
+    closeConfirmModal,
+    getCurrentFlowchart,
+    getFilteredFlowcharts,
+    getPaginatedFlowcharts,
+    getTotalPages,
+    getTotalCount,
+    resetPagination,
+    resetFilters,
+    selectFlowchart,
+    exitEditor,
+    toggleEditor,
+    addDocumentToFlowchart,
+    removeDocumentFromFlowchart,
   } = listHook;
 
   // Node & Edge Management
   const nodesHook = useFlowchartNodes();
   const {
-    nodes, setNodes, edges, setEdges,
-    addNode, updateNode, deleteNode, deleteNodes, updateNodePosition,
-    updateNodeSize, updateNodeLabel, updateNodeColor, updateNodeStyle,
-    copyNodes, pasteNodes, getNode, getNodes,
-    addEdge, updateEdgeLabel, deleteEdge, deleteNodeEdges, getNodeEdges,
-    getEdge, getIncomingEdges, getOutgoingEdges, clearCanvas, loadContent,
-    getContent, getNodeCount, getEdgeCount, nodeExists, edgeExists
+    nodes,
+    setNodes,
+    edges,
+    setEdges,
+    addNode,
+    updateNode,
+    deleteNode,
+    deleteNodes,
+    updateNodePosition,
+    updateNodeSize,
+    updateNodeLabel,
+    updateNodeColor,
+    updateNodeStyle,
+    copyNodes,
+    pasteNodes,
+    getNode,
+    getNodes,
+    addEdge,
+    updateEdgeLabel,
+    deleteEdge,
+    deleteNodeEdges,
+    getNodeEdges,
+    getEdge,
+    getIncomingEdges,
+    getOutgoingEdges,
+    clearCanvas,
+    loadContent,
+    getContent,
+    getNodeCount,
+    getEdgeCount,
+    nodeExists,
+    edgeExists,
   } = nodesHook;
 
   const currentFlowMetadata = useMemo(() => {
@@ -219,16 +427,18 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     return canModifyFlowchart(currentFlowMetadata);
   }, [selectedFlowId, currentFlowMetadata, canModifyFlowchart]);
 
-
-
-
-
   // Right-click context menu state for flowchart nodes
-  const [nodeContextMenu, setNodeContextMenu] = useState<{ x: number; y: number; nodeId: string } | null>(null);
+  const [nodeContextMenu, setNodeContextMenu] = useState<{
+    x: number;
+    y: number;
+    nodeId: string;
+  } | null>(null);
   const [canvasContextMenu, setCanvasContextMenu] = useState<{ x: number; y: number } | null>(null);
 
   // Custom connection line routing types: bezier (curved), straight (direct), orthogonal (clean right-angles)
-  const [connectorType, setConnectorType] = useState<'bezier' | 'straight' | 'orthogonal'>('bezier');
+  const [connectorType, setConnectorType] = useState<"bezier" | "straight" | "orthogonal">(
+    "bezier"
+  );
 
   // Node Interactive Resizing properties
   const [resizingNodeId, setResizingNodeId] = useState<string | null>(null);
@@ -247,7 +457,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
 
   const handleProcessImportFile = (file: File) => {
     const reader = new FileReader();
@@ -283,17 +492,20 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
           result = parseMiroContent(text, true);
           detectedType = "miro";
         } else {
-          throw new Error("Format file tidak didukung. Silakan gunakan .xml, .drawio, .json, atau .csv.");
+          throw new Error(
+            "Format file tidak didukung. Silakan gunakan .xml, .drawio, .json, atau .csv."
+          );
         }
 
         if (result && (result.nodes.length > 0 || result.edges.length > 0)) {
           setParsedImportData(result);
           setImportType(detectedType);
-          toast.success(`Berhasil memuat file "${file.name}"! Ditemukan ${result.nodes.length} bentuk & ${result.edges.length} garis.`);
+          toast.success(
+            `Berhasil memuat file "${file.name}"! Ditemukan ${result.nodes.length} bentuk & ${result.edges.length} garis.`
+          );
         } else {
           toast.error("Tidak ditemukan bentuk atau garis alur di dalam file ini.");
         }
-
       } catch (err: any) {
         toast.error(`Gagal membaca file: ${err.message || err}`);
         console.error(err);
@@ -316,7 +528,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     if (!parsedImportData) return;
     setNodes(parsedImportData.nodes);
     setEdges(parsedImportData.edges);
-    setHistoryStack([{ nodes: JSON.parse(JSON.stringify(parsedImportData.nodes)), edges: JSON.parse(JSON.stringify(parsedImportData.edges)) }]);
+    setHistoryStack([
+      {
+        nodes: JSON.parse(JSON.stringify(parsedImportData.nodes)),
+        edges: JSON.parse(JSON.stringify(parsedImportData.edges)),
+      },
+    ]);
     setHistoryIndex(0);
     setSelectedNodeId(null);
     setSelectedEdgeId(null);
@@ -327,16 +544,16 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
   const handleApplyImportMerge = () => {
     if (!parsedImportData) return;
-    
+
     let maxX = 0;
-    nodes.forEach(n => {
+    nodes.forEach((n) => {
       if (n.x > maxX) maxX = n.x;
     });
 
     const shiftX = maxX > 0 ? maxX + 180 : 0;
     const idMap: Record<string, string> = {};
 
-    const finalNodes = parsedImportData.nodes.map(n => {
+    const finalNodes = parsedImportData.nodes.map((n) => {
       const newId = `${n.id}-m-${Math.random().toString(36).substr(2, 5)}`;
       idMap[n.id] = newId;
       return {
@@ -346,7 +563,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       };
     });
 
-    const finalEdges = parsedImportData.edges.map(e => ({
+    const finalEdges = parsedImportData.edges.map((e) => ({
       ...e,
       id: `${e.id}-m-${Math.random().toString(36).substr(2, 5)}`,
       fromNodeId: idMap[e.fromNodeId] || e.fromNodeId,
@@ -359,7 +576,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     setNodes(mergedNodes);
     setEdges(mergedEdges);
     recordHistory(mergedNodes, mergedEdges);
-    
+
     setIsImportModalOpen(false);
     setParsedImportData(null);
     toast.success("Berhasil menggabungkan diagram yang diimpor ke dalam kanvas Anda! 🚀");
@@ -392,7 +609,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     const incomingMap = new Map<string, string[]>();
     const outgoingMap = new Map<string, string[]>();
 
-    edges.forEach(e => {
+    edges.forEach((e) => {
       const incoming = incomingMap.get(e.toNodeId) || [];
       incoming.push(e.fromNodeId);
       incomingMap.set(e.toNodeId, incoming);
@@ -405,11 +622,11 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     const nodeLevels = new Map<string, number>();
     const visited = new Set<string>();
 
-    const startNodes = nodes.filter(n => !incomingMap.has(n.id));
+    const startNodes = nodes.filter((n) => !incomingMap.has(n.id));
     const queue: { id: string; level: number }[] = [];
-    
+
     if (startNodes.length > 0) {
-      startNodes.forEach(sn => queue.push({ id: sn.id, level: 0 }));
+      startNodes.forEach((sn) => queue.push({ id: sn.id, level: 0 }));
     } else {
       queue.push({ id: nodes[0].id, level: 0 });
     }
@@ -423,12 +640,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       nodeLevels.set(current.id, currentLevel);
 
       const children = outgoingMap.get(current.id) || [];
-      children.forEach(childId => {
+      children.forEach((childId) => {
         queue.push({ id: childId, level: currentLevel + 1 });
       });
     }
 
-    nodes.forEach(n => {
+    nodes.forEach((n) => {
       if (!nodeLevels.has(n.id)) {
         nodeLevels.set(n.id, 0);
       }
@@ -441,12 +658,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       levelGroups.set(level, group);
     });
 
-    const gapX = 260; 
-    const gapY = 150; 
+    const gapX = 260;
+    const gapY = 150;
     const startX = 180;
     const startY = 160;
 
-    const alignedNodes = nodes.map(node => {
+    const alignedNodes = nodes.map((node) => {
       const level = nodeLevels.get(node.id) || 0;
       const group = levelGroups.get(level) || [];
       const indexInGroup = group.indexOf(node.id);
@@ -457,7 +674,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       return {
         ...node,
         x: startX + level * gapX,
-        y: Math.max(60, startY + offsetY + 200) 
+        y: Math.max(60, startY + offsetY + 200),
       };
     });
 
@@ -480,25 +697,30 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       toast.info("Simulasi Alur Kerja Dihentikan.");
       return;
     }
-    
+
     simCancelRef.current = false;
     setIsSimulating(true);
     toast.success("Memulai Simulasi Langkah Hubungan Alur Kerja...", {
-      description: "Sistem menelusuri alur kerja dari titik awal hingga akhir."
+      description: "Sistem menelusuri alur kerja dari titik awal hingga akhir.",
     });
 
-    const incomingEdgeTargets = new Set(edges.map(e => e.toNodeId));
-    let startNodes = nodes.filter(n => !incomingEdgeTargets.has(n.id));
-    
+    const incomingEdgeTargets = new Set(edges.map((e) => e.toNodeId));
+    let startNodes = nodes.filter((n) => !incomingEdgeTargets.has(n.id));
+
     if (startNodes.length === 0) {
-      startNodes = nodes.filter(n => n.type === "oval" || n.label.toLowerCase().includes("mulai") || n.label.toLowerCase().includes("start"));
+      startNodes = nodes.filter(
+        (n) =>
+          n.type === "oval" ||
+          n.label.toLowerCase().includes("mulai") ||
+          n.label.toLowerCase().includes("start")
+      );
     }
     if (startNodes.length === 0 && nodes.length > 0) {
       startNodes = [nodes[0]];
     }
 
     const visited = new Set<string>();
-    const queue: string[] = startNodes.map(n => n.id);
+    const queue: string[] = startNodes.map((n) => n.id);
 
     while (queue.length > 0 && !simCancelRef.current) {
       const currentId = queue.shift()!;
@@ -507,12 +729,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
       setActiveSimNodeId(currentId);
       // Wait to capture animation effect
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       if (simCancelRef.current) break;
 
-      const outEdges = edges.filter(e => e.fromNodeId === currentId);
-      const childIds = outEdges.map(e => e.toNodeId);
+      const outEdges = edges.filter((e) => e.fromNodeId === currentId);
+      const childIds = outEdges.map((e) => e.toNodeId);
       queue.push(...childIds);
     }
 
@@ -525,17 +747,26 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
   // Download JSON backup
   const handleExportJSON = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(
-      JSON.stringify({
-        name: currentFlowMetadata?.name || "Flowchart Workspace",
-        nodes,
-        edges,
-        theme: canvasTheme
-      }, null, 2)
-    );
-    const downloadAnchor = document.createElement('a');
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(
+        JSON.stringify(
+          {
+            name: currentFlowMetadata?.name || "Flowchart Workspace",
+            nodes,
+            edges,
+            theme: canvasTheme,
+          },
+          null,
+          2
+        )
+      );
+    const downloadAnchor = document.createElement("a");
     downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `${currentFlowMetadata?.name || 'flow_workspace'}.json`);
+    downloadAnchor.setAttribute(
+      "download",
+      `${currentFlowMetadata?.name || "flow_workspace"}.json`
+    );
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
@@ -547,9 +778,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     if (!canvasContainerRef.current) return;
     try {
       toast.info("Menyiapkan gambar...");
-      const dataUrl = await toJpeg(canvasContainerRef.current, { backgroundColor: '#f4f7f9', quality: 0.95 });
-      const link = document.createElement('a');
-      link.download = `${currentFlowMetadata?.name || 'flow_workspace'}.jpg`;
+      const dataUrl = await toJpeg(canvasContainerRef.current, {
+        backgroundColor: "#f4f7f9",
+        quality: 0.95,
+      });
+      const link = document.createElement("a");
+      link.download = `${currentFlowMetadata?.name || "flow_workspace"}.jpg`;
       link.href = dataUrl;
       link.click();
       toast.success("Gambar JPG Berhasil Diunduh!");
@@ -571,17 +805,22 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         if (json && (Array.isArray(json.nodes) || Array.isArray(json.edges))) {
           const loadedNodes = Array.isArray(json.nodes) ? json.nodes : [];
           const loadedEdges = Array.isArray(json.edges) ? json.edges : [];
-          
+
           setNodes(loadedNodes);
           setEdges(loadedEdges);
           if (json.theme) setCanvasTheme(json.theme);
-          
-          setHistoryStack([{ nodes: JSON.parse(JSON.stringify(loadedNodes)), edges: JSON.parse(JSON.stringify(loadedEdges)) }]);
+
+          setHistoryStack([
+            {
+              nodes: JSON.parse(JSON.stringify(loadedNodes)),
+              edges: JSON.parse(JSON.stringify(loadedEdges)),
+            },
+          ]);
           setHistoryIndex(0);
-          
+
           setSelectedNodeId(null);
           setSelectedEdgeId(null);
-          
+
           toast.success("Workspace Diagram Berhasil Di-import! 🎉");
         } else {
           toast.error("Format JSON tidak valid untuk Diagram Flowchart.");
@@ -618,7 +857,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   };
 
   // Filter Tasks which are "epics" to hook them up
-  const availableEpics = tasks.filter(t => t.type === 'epic');
+  const availableEpics = tasks.filter((t) => t.type === "epic");
 
   // Canvas Native Event Listeners for smooth Wheel Zoom/Pan prevention of page scroll
   // Keyboard Shortcuts for extreme flexibility & high-speed diagramming
@@ -626,7 +865,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ignore keyboard shortcuts when the user is typing in a textarea or input field
       const activeEl = document.activeElement;
-      if (activeEl && (activeEl.tagName === "TEXTAREA" || activeEl.tagName === "INPUT" || activeEl.tagName === "SELECT")) {
+      if (
+        activeEl &&
+        (activeEl.tagName === "TEXTAREA" ||
+          activeEl.tagName === "INPUT" ||
+          activeEl.tagName === "SELECT")
+      ) {
         return;
       }
 
@@ -668,30 +912,32 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       if (selectedNodeId && ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
         e.preventDefault();
         const step = e.shiftKey ? 20 : 5;
-        setNodes(prev => prev.map(n => {
-          if (n.id === selectedNodeId) {
-            let nextX = n.x;
-            let nextY = n.y;
-            if (e.key === "ArrowUp") nextY -= step;
-            if (e.key === "ArrowDown") nextY += step;
-            if (e.key === "ArrowLeft") nextX -= step;
-            if (e.key === "ArrowRight") nextX += step;
-            
-            // Constrain
-            nextX = Math.max(10, Math.min(nextX, 3500));
-            nextY = Math.max(10, Math.min(nextY, 2800));
+        setNodes((prev) =>
+          prev.map((n) => {
+            if (n.id === selectedNodeId) {
+              let nextX = n.x;
+              let nextY = n.y;
+              if (e.key === "ArrowUp") nextY -= step;
+              if (e.key === "ArrowDown") nextY += step;
+              if (e.key === "ArrowLeft") nextX -= step;
+              if (e.key === "ArrowRight") nextX += step;
 
-            return { ...n, x: nextX, y: nextY };
-          }
-          return n;
-        }));
+              // Constrain
+              nextX = Math.max(10, Math.min(nextX, 3500));
+              nextY = Math.max(10, Math.min(nextY, 2800));
+
+              return { ...n, x: nextX, y: nextY };
+            }
+            return n;
+          })
+        );
       }
 
       // 4. Ctrl+D or Cmd+D to duplicate
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "d") {
         if (selectedNodeId) {
           e.preventDefault();
-          const nodeToDup = nodes.find(n => n.id === selectedNodeId);
+          const nodeToDup = nodes.find((n) => n.id === selectedNodeId);
           if (nodeToDup) {
             handleDuplicateNode(nodeToDup);
           }
@@ -709,14 +955,14 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c") {
         if (selectedNodeId) {
           e.preventDefault();
-          const nodeToCopy = nodes.find(n => n.id === selectedNodeId);
+          const nodeToCopy = nodes.find((n) => n.id === selectedNodeId);
           if (nodeToCopy) {
             setCopiedNodes([nodeToCopy]);
             toast.success("Objek disalin!");
           }
         } else if (copiedNodes.length > 0) {
-           e.preventDefault();
-           toast.success(copiedNodes.length + " objek disalin!");
+          e.preventDefault();
+          toast.success(copiedNodes.length + " objek disalin!");
         }
       }
 
@@ -724,13 +970,13 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "v") {
         e.preventDefault();
         if (copiedNodes.length > 0) {
-          const newNodes = copiedNodes.map(n => ({
+          const newNodes = copiedNodes.map((n) => ({
             ...n,
             id: `node_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
             x: n.x + 30, // offset pasted copies
-            y: n.y + 30
+            y: n.y + 30,
           }));
-          setNodes(prev => [...prev, ...newNodes]);
+          setNodes((prev) => [...prev, ...newNodes]);
           toast.success(newNodes.length + " objek ditempel!");
           if (newNodes.length === 1) {
             setSelectedNodeId(newNodes[0].id);
@@ -758,7 +1004,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       if ((e.ctrlKey || e.metaKey) && (e.key === "=" || e.key === "+" || e.key === "-")) {
         e.preventDefault();
         const zoomDelta = e.key === "-" ? -0.1 : 0.1;
-        setZoomLevel(prev => Math.min(3.0, Math.max(0.2, prev + zoomDelta)));
+        setZoomLevel((prev) => Math.min(3.0, Math.max(0.2, prev + zoomDelta)));
       }
     };
 
@@ -790,7 +1036,8 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   });
 
   useEffect(() => {
-    const isInteractionActive = draggingNodeId !== null || resizingNodeId !== null || isPanning || marqueeBox !== null;
+    const isInteractionActive =
+      draggingNodeId !== null || resizingNodeId !== null || isPanning || marqueeBox !== null;
     if (!isInteractionActive) return;
 
     const onGlobalMouseMove = (e: MouseEvent) => {
@@ -817,7 +1064,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
   // Load flowcharts list scoped by project ID on load
   useEffect(() => {
-    const projId = selectedProject?.id || selectedProject?.key || 'default';
+    const projId = selectedProject?.id || selectedProject?.key || "default";
     const listKey = `lanpro_flowcharts_${projId}`;
     const saved = safeLocalStorage.getItem(listKey);
     let initialList: FlowchartData[] = [];
@@ -843,7 +1090,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             safeLocalStorage.setItem(listKey, JSON.stringify(apiFlowcharts));
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.warn("Could not sync flowcharts from backend API:", err);
         });
     }
@@ -851,10 +1098,10 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
   // Init empty flowchart state
   const createDefaultInitialFlowchart = (currentList: FlowchartData[]) => {
-    const projId = selectedProject?.id || selectedProject?.key || 'default';
+    const projId = selectedProject?.id || selectedProject?.key || "default";
     setFlowcharts(currentList);
     safeLocalStorage.setItem(`lanpro_flowcharts_${projId}`, JSON.stringify(currentList));
-    
+
     // Set active flow states to empty (not pre-selected)
     setSelectedFlowId(null);
     setNodes([]);
@@ -868,7 +1115,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   // Select flowchart handler
   const handleSelectFlowchart = (id: string, listToUse?: FlowchartData[]) => {
     const list = listToUse || flowcharts;
-    const found = list.find(f => f.id === id);
+    const found = list.find((f) => f.id === id);
     if (found) {
       setSelectedFlowId(id);
       const loadedNodes = found.nodes || [];
@@ -876,9 +1123,14 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       setNodes(loadedNodes);
       setEdges(loadedEdges);
       setCanvasTheme(found.theme || "miro");
-      setHistoryStack([{ nodes: JSON.parse(JSON.stringify(loadedNodes)), edges: JSON.parse(JSON.stringify(loadedEdges)) }]);
+      setHistoryStack([
+        {
+          nodes: JSON.parse(JSON.stringify(loadedNodes)),
+          edges: JSON.parse(JSON.stringify(loadedEdges)),
+        },
+      ]);
       setHistoryIndex(0);
-      
+
       // Clean selections
       setSelectedNodeId(null);
       setSelectedEdgeId(null);
@@ -922,11 +1174,11 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const handleDocumentFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      
+
       // Validasi Tipe File (Excel, Word, PDF)
-      const allowedExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx'];
-      const fileExtension = file.name.split('.').pop()?.toLowerCase();
-      
+      const allowedExtensions = ["pdf", "doc", "docx", "xls", "xlsx"];
+      const fileExtension = file.name.split(".").pop()?.toLowerCase();
+
       if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
         toast.error("Format dokumen tidak sesuai! Harap unggah format Excel, Word, atau PDF.");
         return;
@@ -961,8 +1213,8 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       return;
     }
 
-    const projId = selectedProject?.id || selectedProject?.key || 'default';
-    
+    const projId = selectedProject?.id || selectedProject?.key || "default";
+
     const newDoc: FlowchartDocument = {
       id: `doc-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       name: uploadDocName.trim(),
@@ -971,16 +1223,16 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       fileSize: uploadDocFile.size,
       fileData: uploadDocBase64,
       createdAt: new Date().toLocaleString("id-ID"),
-      createdBy: getResolvedAuthor()
+      createdBy: getResolvedAuthor(),
     };
 
-    setFlowcharts(currentFlowcharts => {
-      const updatedList = currentFlowcharts.map(f => {
+    setFlowcharts((currentFlowcharts) => {
+      const updatedList = currentFlowcharts.map((f) => {
         if (f.id === selectedFlowId) {
           return {
             ...f,
             documents: [...(f.documents || []), newDoc],
-            lastEditedAt: new Date().toLocaleString("id-ID")
+            lastEditedAt: new Date().toLocaleString("id-ID"),
           };
         }
         return f;
@@ -1015,16 +1267,16 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   const handleSaveWorkspace = async (isAutoSave = false) => {
     if (!selectedFlowId) return;
 
-    const projId = selectedProject?.id || selectedProject?.key || 'default';
-    setFlowcharts(currentFlowcharts => {
-      const updatedList = currentFlowcharts.map(f => {
+    const projId = selectedProject?.id || selectedProject?.key || "default";
+    setFlowcharts((currentFlowcharts) => {
+      const updatedList = currentFlowcharts.map((f) => {
         if (f.id === selectedFlowId) {
           return {
             ...f,
             nodes,
             edges,
             theme: canvasTheme,
-            lastEditedAt: new Date().toLocaleString("id-ID")
+            lastEditedAt: new Date().toLocaleString("id-ID"),
           };
         }
         return f;
@@ -1042,7 +1294,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         try {
           const workspaceData = {
             projectId: projId,
-            flowcharts: JSON.parse(safeLocalStorage.getItem(`lanpro_flowcharts_${projId}`) || "[]")
+            flowcharts: JSON.parse(safeLocalStorage.getItem(`lanpro_flowcharts_${projId}`) || "[]"),
           };
           await onSaveFlowcharts(workspaceData);
         } catch (err) {
@@ -1065,11 +1317,11 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
     if (!isConfirmed) return;
 
-    const projId = selectedProject?.id || selectedProject?.key || 'default';
-    const remaining = flowcharts.filter(f => f.id !== id);
+    const projId = selectedProject?.id || selectedProject?.key || "default";
+    const remaining = flowcharts.filter((f) => f.id !== id);
     setFlowcharts(remaining);
     safeLocalStorage.setItem(`lanpro_flowcharts_${projId}`, JSON.stringify(remaining));
-    
+
     if (selectedFlowId === id) {
       if (remaining.length > 0) {
         handleSelectFlowchart(remaining[0].id, remaining);
@@ -1079,7 +1331,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         setEdges([]);
       }
     }
-    
+
     showSuccessAlert("Berhasil!", "Flowchart berhasil dihapus.");
 
     if (selectedProject?.id && !id.startsWith("flow_")) {
@@ -1099,9 +1351,9 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       return;
     }
 
-    const projId = selectedProject?.id || selectedProject?.key || 'default';
+    const projId = selectedProject?.id || selectedProject?.key || "default";
     const listKey = `lanpro_flowcharts_${projId}`;
-    
+
     const currentAuthor = getResolvedAuthor();
     const currentTimestamp = new Date().toLocaleString("id-ID");
 
@@ -1114,14 +1366,24 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         epicTaskId: flowEpicId,
         description: flowDescription,
         nodes: [
-          { id: "node_start", type: "oval", x: 150, y: 150, label: "Mulai", color: "emerald", width: 140, height: 70, fontSize: 12 }
+          {
+            id: "node_start",
+            type: "oval",
+            x: 150,
+            y: 150,
+            label: "Mulai",
+            color: "emerald",
+            width: 140,
+            height: 70,
+            fontSize: 12,
+          },
         ],
         edges: [],
         theme: "miro",
         createdAt: new Date().toLocaleDateString("id-ID"),
         createdBy: flowCreator || currentAuthor,
         lastEditedAt: currentTimestamp,
-        externalUrl: flowExternalUrl
+        externalUrl: flowExternalUrl,
       };
 
       const updated = [newFlow, ...flowcharts];
@@ -1146,7 +1408,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       }
     } else {
       // Edit
-      const updated = flowcharts.map(f => {
+      const updated = flowcharts.map((f) => {
         if (f.id === editingFlowId) {
           return {
             ...f,
@@ -1156,7 +1418,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             description: flowDescription,
             createdBy: flowCreator,
             externalUrl: flowExternalUrl,
-            lastEditedAt: currentTimestamp
+            lastEditedAt: currentTimestamp,
           };
         }
         return f;
@@ -1169,7 +1431,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
       if (selectedProject?.id && editingFlowId && !editingFlowId.startsWith("flow_")) {
         try {
-          const foundFlow = updated.find(f => f.id === editingFlowId);
+          const foundFlow = updated.find((f) => f.id === editingFlowId);
           await updateFlowchartApi(selectedProject.id, editingFlowId, {
             name: flowName.trim(),
             nodes: foundFlow?.nodes || [],
@@ -1186,14 +1448,14 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   // Floating Actions node parameters updates
   const handleUpdateActiveNode = (props: Partial<FlowNode>) => {
     if (!selectedNodeId) return;
-    const updated = nodes.map(n => n.id === selectedNodeId ? { ...n, ...props } : n);
+    const updated = nodes.map((n) => (n.id === selectedNodeId ? { ...n, ...props } : n));
     setNodes(updated);
   };
 
   // Add flow symbol/shape to workspace
   const handleAddNewNode = (type: FlowNode["type"], customColor?: string) => {
     const id = "node_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-    
+
     let defaultLabel = "Teks Baru";
     let defaultColor = customColor || "indigo";
     let width = 140;
@@ -1447,7 +1709,8 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         height = 120;
         break;
       case "umlClass":
-        defaultLabel = "TaskController\n--\n- id: string\n- tasks: List<Task>\n--\n+ update()\n+ create()";
+        defaultLabel =
+          "TaskController\n--\n- id: string\n- tasks: List<Task>\n--\n+ update()\n+ create()";
         defaultColor = "slate";
         width = 180;
         height = 140;
@@ -1639,8 +1902,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     let spawnY = 150;
     if (container) {
       const rect = container.getBoundingClientRect();
-      spawnX = Math.round((rect.width / 2 - panOffset.x) / zoomLevel - width / 2) + (Math.random() * 40 - 20);
-      spawnY = Math.round((rect.height / 2 - panOffset.y) / zoomLevel - height / 2) + (Math.random() * 40 - 20);
+      spawnX =
+        Math.round((rect.width / 2 - panOffset.x) / zoomLevel - width / 2) +
+        (Math.random() * 40 - 20);
+      spawnY =
+        Math.round((rect.height / 2 - panOffset.y) / zoomLevel - height / 2) +
+        (Math.random() * 40 - 20);
     }
 
     const newNode: FlowNode = {
@@ -1655,7 +1922,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       fontSize: fSize,
       fontStyle: fStyle,
       align: alignment,
-      borderStyle: bdStyle
+      borderStyle: bdStyle,
     };
 
     const nextNodes = [...nodes, newNode];
@@ -1664,10 +1931,16 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     setSelectedNodeId(id);
     setSelectedEdgeId(null);
     setIsShapeDropdownOpen(false);
-    toast.success(`Ditambahkan: ${type === 'sticky' ? 'Miro Sticky Note' : type.toUpperCase()}`);
+    toast.success(`Ditambahkan: ${type === "sticky" ? "Miro Sticky Note" : type.toUpperCase()}`);
   };
 
-  const handleAddNewNodeAtPosition = (type: FlowNode["type"], label: string, color: string, clientX: number, clientY: number) => {
+  const handleAddNewNodeAtPosition = (
+    type: FlowNode["type"],
+    label: string,
+    color: string,
+    clientX: number,
+    clientY: number
+  ) => {
     const id = "node_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
     const container = canvasContainerRef.current;
     if (!container) return;
@@ -1734,7 +2007,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       fontSize: fSize,
       fontStyle: fStyle,
       align: alignment,
-      borderStyle: bdStyle
+      borderStyle: bdStyle,
     };
 
     const nextNodes = [...nodes, newNode];
@@ -1752,7 +2025,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     // Do not initiate node dragging if clicking on an input/textarea
     // to allow standard text selection blocking with the cursor
     const target = e.target as HTMLElement;
-    if (target.tagName.toLowerCase() === 'textarea' || target.tagName.toLowerCase() === 'input') {
+    if (target.tagName.toLowerCase() === "textarea" || target.tagName.toLowerCase() === "input") {
       return;
     }
 
@@ -1762,17 +2035,17 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       return;
     }
 
-    if (activeTool === 'hand') {
+    if (activeTool === "hand") {
       startCanvasPanning(e.clientX, e.clientY);
       return;
     }
 
-    if (activeTool === 'connect') {
+    if (activeTool === "connect") {
       handleConnectClick(node.id);
       return;
     }
 
-    if (!copiedNodes.some(n => n.id === node.id)) {
+    if (!copiedNodes.some((n) => n.id === node.id)) {
       setCopiedNodes([]);
     }
 
@@ -1782,29 +2055,28 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
     const clientX = e.clientX;
     const clientY = e.clientY;
-    
+
     setDragOffset({
-      x: (clientX / zoomLevel) - node.x,
-      y: (clientY / zoomLevel) - node.y
+      x: clientX / zoomLevel - node.x,
+      y: clientY / zoomLevel - node.y,
     });
   };
-
 
   const handleCanvasMouseDown = (e: React.MouseEvent) => {
     setSelectedNodeId(null);
     setSelectedEdgeId(null);
     setCopiedNodes([]);
-    
-    if (activeTool === 'hand' || isSpacePressed || e.button === 1 || e.shiftKey) {
+
+    if (activeTool === "hand" || isSpacePressed || e.button === 1 || e.shiftKey) {
       startCanvasPanning(e.clientX, e.clientY);
-    } else if (activeTool === 'select') {
+    } else if (activeTool === "select") {
       const rect = canvasContainerRef.current?.getBoundingClientRect();
       if (rect) {
         setMarqueeBox({
           startX: e.clientX,
           startY: e.clientY,
           currentX: e.clientX,
-          currentY: e.clientY
+          currentY: e.clientY,
         });
       }
     }
@@ -1816,9 +2088,9 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     const targetElement = e.target as HTMLElement;
     // If we click inside an input, textarea or interactive buttons, ignore spawn
     if (
-      targetElement.closest("button") || 
-      targetElement.closest("textarea") || 
-      targetElement.closest("input") || 
+      targetElement.closest("button") ||
+      targetElement.closest("textarea") ||
+      targetElement.closest("input") ||
       targetElement.closest("select") ||
       targetElement.closest(".absolute.z-20") // this targets the node item wrapper!
     ) {
@@ -1846,7 +2118,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       width: 110,
       height: 110,
       fontSize: 12,
-      borderStyle: "none"
+      borderStyle: "none",
     };
 
     const nextNodes = [...nodes, newNode];
@@ -1856,10 +2128,14 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     toast.success("Catatan Miro-style ditambahkan via klik ganda! 💡");
   };
 
-  const handleResizeMouseDown = (e: React.MouseEvent, nodeId: string, direction: "se" | "e" | "s") => {
+  const handleResizeMouseDown = (
+    e: React.MouseEvent,
+    nodeId: string,
+    direction: "se" | "e" | "s"
+  ) => {
     e.stopPropagation();
     e.preventDefault();
-    const node = nodes.find(n => n.id === nodeId);
+    const node = nodes.find((n) => n.id === nodeId);
     if (!node) return;
 
     setResizingNodeId(nodeId);
@@ -1870,7 +2146,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       initialHeight: node.height || 70,
       initialX: node.x,
       initialY: node.y,
-      direction
+      direction,
     });
   };
 
@@ -1886,8 +2162,10 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     }
 
     if (marqueeBox) {
-      setMarqueeBox(prev => prev ? { ...prev, currentX: e.clientX, currentY: e.clientY } : null);
-      
+      setMarqueeBox((prev) =>
+        prev ? { ...prev, currentX: e.clientX, currentY: e.clientY } : null
+      );
+
       // Live marquee selection feedback
       if (canvasContainerRef.current) {
         const rect = canvasContainerRef.current.getBoundingClientRect();
@@ -1895,20 +2173,27 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         const right = Math.max(marqueeBox.startX, e.clientX);
         const top = Math.min(marqueeBox.startY, e.clientY);
         const bottom = Math.max(marqueeBox.startY, e.clientY);
-        
+
         const canvasLeft = (left - rect.left - panOffset.x) / zoomLevel;
         const canvasRight = (right - rect.left - panOffset.x) / zoomLevel;
         const canvasTop = (top - rect.top - panOffset.y) / zoomLevel;
         const canvasBottom = (bottom - rect.top - panOffset.y) / zoomLevel;
 
-        const intersected = nodes.filter(n => {
+        const intersected = nodes.filter((n) => {
           const nw = n.width || 130;
           const nh = n.height || 70;
-          return (n.x + nw > canvasLeft && n.x < canvasRight && n.y + nh > canvasTop && n.y < canvasBottom);
+          return (
+            n.x + nw > canvasLeft && n.x < canvasRight && n.y + nh > canvasTop && n.y < canvasBottom
+          );
         });
-        
+
         // Prevent continuous array recreation if length is same
-        setCopiedNodes(prev => prev.length === intersected.length && prev.every(p => intersected.find(i => i.id === p.id)) ? prev : intersected);
+        setCopiedNodes((prev) =>
+          prev.length === intersected.length &&
+          prev.every((p) => intersected.find((i) => i.id === p.id))
+            ? prev
+            : intersected
+        );
       }
       return;
     }
@@ -1925,41 +2210,43 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     if (resizingNodeId && resizeStart) {
       const deltaX = (e.clientX - resizeStart.clientX) / zoomLevel;
       const deltaY = (e.clientY - resizeStart.clientY) / zoomLevel;
-      
-      setNodes(prev => prev.map(n => {
-        if (n.id === resizingNodeId) {
-          let newWidth = resizeStart.initialWidth;
-          let newHeight = resizeStart.initialHeight;
 
-          if (resizeStart.direction.includes("e")) {
-            newWidth = Math.max(50, resizeStart.initialWidth + deltaX);
-          }
-          if (resizeStart.direction.includes("s")) {
-            newHeight = Math.max(40, resizeStart.initialHeight + deltaY);
-          }
+      setNodes((prev) =>
+        prev.map((n) => {
+          if (n.id === resizingNodeId) {
+            let newWidth = resizeStart.initialWidth;
+            let newHeight = resizeStart.initialHeight;
 
-          if (isSnapToGrid) {
-            const snapStep = canvasTheme === "miro" ? 20 : 15;
-            newWidth = Math.round(newWidth / snapStep) * snapStep;
-            newHeight = Math.round(newHeight / snapStep) * snapStep;
-          }
+            if (resizeStart.direction.includes("e")) {
+              newWidth = Math.max(50, resizeStart.initialWidth + deltaX);
+            }
+            if (resizeStart.direction.includes("s")) {
+              newHeight = Math.max(40, resizeStart.initialHeight + deltaY);
+            }
 
-          return {
-            ...n,
-            width: newWidth,
-            height: newHeight
-          };
-        }
-        return n;
-      }));
+            if (isSnapToGrid) {
+              const snapStep = canvasTheme === "miro" ? 20 : 15;
+              newWidth = Math.round(newWidth / snapStep) * snapStep;
+              newHeight = Math.round(newHeight / snapStep) * snapStep;
+            }
+
+            return {
+              ...n,
+              width: newWidth,
+              height: newHeight,
+            };
+          }
+          return n;
+        })
+      );
       return;
     }
 
     // 3. Handle Shape Dragging
     if (!draggingNodeId) return;
 
-    const newX = Math.round((e.clientX / zoomLevel) - dragOffset.x);
-    const newY = Math.round((e.clientY / zoomLevel) - dragOffset.y);
+    const newX = Math.round(e.clientX / zoomLevel - dragOffset.x);
+    const newY = Math.round(e.clientY / zoomLevel - dragOffset.y);
 
     const boundedX = Math.max(10, Math.min(newX, 3500));
     const boundedY = Math.max(10, Math.min(newY, 2800));
@@ -1973,26 +2260,26 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       finalY = Math.round(boundedY / snapStep) * snapStep;
     }
 
-    const isMultiDragging = copiedNodes.some(n => n.id === draggingNodeId);
+    const isMultiDragging = copiedNodes.some((n) => n.id === draggingNodeId);
 
-    setNodes(prev => {
-      const draggedNodeState = prev.find(n => n.id === draggingNodeId);
+    setNodes((prev) => {
+      const draggedNodeState = prev.find((n) => n.id === draggingNodeId);
       if (!draggedNodeState) return prev;
-      
+
       const movedX = finalX - draggedNodeState.x;
       const movedY = finalY - draggedNodeState.y;
 
       if (movedX === 0 && movedY === 0) return prev;
 
       if (isMultiDragging) {
-         return prev.map(n => {
-           if (copiedNodes.some(copy => copy.id === n.id)) {
-             return { ...n, x: n.x + movedX, y: n.y + movedY };
-           }
-           return n;
-         });
+        return prev.map((n) => {
+          if (copiedNodes.some((copy) => copy.id === n.id)) {
+            return { ...n, x: n.x + movedX, y: n.y + movedY };
+          }
+          return n;
+        });
       } else {
-         return prev.map(n => n.id === draggingNodeId ? { ...n, x: finalX, y: finalY } : n);
+        return prev.map((n) => (n.id === draggingNodeId ? { ...n, x: finalX, y: finalY } : n));
       }
     });
   };
@@ -2035,7 +2322,9 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         return;
       }
 
-      const relationExists = edges.some(edge => edge.fromNodeId === connectSourceId && edge.toNodeId === nodeId);
+      const relationExists = edges.some(
+        (edge) => edge.fromNodeId === connectSourceId && edge.toNodeId === nodeId
+      );
       if (relationExists) {
         toast.info("Hubungan sudah ada.");
       } else {
@@ -2047,31 +2336,35 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       }
 
       setConnectSourceId(null);
-      setActiveTool('select');
+      setActiveTool("select");
     }
   };
 
   // Node / Arrow delete handler
   const handleDeleteSelected = () => {
     if (selectedNodeId) {
-      const updatedNodes = nodes.filter(n => n.id !== selectedNodeId);
-      const updatedEdges = edges.filter(edge => edge.fromNodeId !== selectedNodeId && edge.toNodeId !== selectedNodeId);
+      const updatedNodes = nodes.filter((n) => n.id !== selectedNodeId);
+      const updatedEdges = edges.filter(
+        (edge) => edge.fromNodeId !== selectedNodeId && edge.toNodeId !== selectedNodeId
+      );
       setNodes(updatedNodes);
       setEdges(updatedEdges);
       recordHistory(updatedNodes, updatedEdges);
       setSelectedNodeId(null);
       toast.success("Komponen berhasil dikosongkan.");
     } else if (copiedNodes.length > 0) {
-      const copiedIds = copiedNodes.map(n => n.id);
-      const updatedNodes = nodes.filter(n => !copiedIds.includes(n.id));
-      const updatedEdges = edges.filter(edge => !copiedIds.includes(edge.fromNodeId) && !copiedIds.includes(edge.toNodeId));
+      const copiedIds = copiedNodes.map((n) => n.id);
+      const updatedNodes = nodes.filter((n) => !copiedIds.includes(n.id));
+      const updatedEdges = edges.filter(
+        (edge) => !copiedIds.includes(edge.fromNodeId) && !copiedIds.includes(edge.toNodeId)
+      );
       setNodes(updatedNodes);
       setEdges(updatedEdges);
       recordHistory(updatedNodes, updatedEdges);
       setCopiedNodes([]);
       toast.success(`${copiedIds.length} blok komponen berhasil dihapus.`);
     } else if (selectedEdgeId) {
-      const updatedEdges = edges.filter(edge => edge.id !== selectedEdgeId);
+      const updatedEdges = edges.filter((edge) => edge.id !== selectedEdgeId);
       setEdges(updatedEdges);
       recordHistory(nodes, updatedEdges);
       setSelectedEdgeId(null);
@@ -2089,7 +2382,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       id,
       x: node.x + 35,
       y: node.y + 35,
-      label: `${node.label} (Salinan)`
+      label: `${node.label} (Salinan)`,
     };
     const nextNodes = [...nodes, duplicated];
     setNodes(nextNodes);
@@ -2100,8 +2393,10 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
   // Right-click context menu specific handlers
   const handleContextMenuDeleteNode = (nodeId: string) => {
-    const updatedNodes = nodes.filter(n => n.id !== nodeId);
-    const updatedEdges = edges.filter(edge => edge.fromNodeId !== nodeId && edge.toNodeId !== nodeId);
+    const updatedNodes = nodes.filter((n) => n.id !== nodeId);
+    const updatedEdges = edges.filter(
+      (edge) => edge.fromNodeId !== nodeId && edge.toNodeId !== nodeId
+    );
     setNodes(updatedNodes);
     setEdges(updatedEdges);
     recordHistory(updatedNodes, updatedEdges);
@@ -2118,14 +2413,14 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
   };
 
   const handleContextMenuChangeColor = (nodeId: string, newColor: string) => {
-    const updated = nodes.map(n => n.id === nodeId ? { ...n, color: newColor } : n);
+    const updated = nodes.map((n) => (n.id === nodeId ? { ...n, color: newColor } : n));
     setNodes(updated);
     recordHistory(updated, edges);
     toast.success(`Warna komponen berhasil diubah ke ${newColor.toUpperCase()}.`);
   };
 
   const handleContextMenuDuplicate = (nodeId: string) => {
-    const targetNode = nodes.find(n => n.id === nodeId);
+    const targetNode = nodes.find((n) => n.id === nodeId);
     if (targetNode) {
       handleDuplicateNode(targetNode);
     }
@@ -2133,27 +2428,29 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
   // Position logic helper
   const getNodeCenter = (nodeId: string) => {
-    const node = nodes.find(n => n.id === nodeId);
+    const node = nodes.find((n) => n.id === nodeId);
     if (!node) return { x: 0, y: 0 };
-    
+
     const width = node.width || 140;
     const height = node.height || 70;
-    
+
     return {
       x: node.x + width / 2,
-      y: node.y + height / 2
+      y: node.y + height / 2,
     };
   };
 
   const getLinkedTaskDetails = (taskId?: string) => {
     if (!taskId) return null;
-    return tasks.find(t => t.id === taskId);
+    return tasks.find((t) => t.id === taskId);
   };
 
-  const linkedEpic = currentFlowMetadata?.epicTaskId ? tasks.find(t => t.id === currentFlowMetadata.epicTaskId) : null;
+  const linkedEpic = currentFlowMetadata?.epicTaskId
+    ? tasks.find((t) => t.id === currentFlowMetadata.epicTaskId)
+    : null;
 
   // --- DASHBOARD SEARCH, SORT & PAGINATION LOGIC ---
-  const filteredFlowcharts = flowcharts.filter(fw => {
+  const filteredFlowcharts = flowcharts.filter((fw) => {
     const nameMatch = fw.name.toLowerCase().includes(searchQuery.toLowerCase());
     const descMatch = (fw.description || "").toLowerCase().includes(searchQuery.toLowerCase());
     return nameMatch || descMatch;
@@ -2200,369 +2497,420 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         />
       ) : (
         <div className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-surface-sunken p-4 md:p-6 space-y-4 animate-in fade-in duration-500 font-sans">
-      
-      {/* VIEW-PORT UTAMA (DASHBOARD DENGAN EMBED VIEWER & TOGGLE KANVAS) */}
-      <div className="flex-1 flex flex-col min-h-[600px] bg-transparent relative mb-8">
-        {!selectedFlowId ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 bg-surface border border-border-subtle rounded-lg shadow-soft">
-            <div className="w-16 h-16 bg-surface border border-border-faint shadow-soft rounded-xl flex items-center justify-center mb-4 text-violet-600">
-              <FileText className="w-6 h-6 animate-pulse" />
-            </div>
-            <h2 className="text-base font-medium text-content-strong mb-1">Manajemen Dokumentasi</h2>
-            <p className="text-xs text-content-muted font-medium">Pilih dokumen di sidebar atau buat baru untuk melihat preview dan merancang alur.</p>
-            <button 
-              onClick={openCreateModal}
-              className="mt-4 flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-medium p-2.5 px-5 rounded-xl text-xs shadow-md transition-all active:scale-95"
-            >
-              <Plus className="w-4 h-4" /> Tambah Dokumen Baru
-            </button>
-          </div>
-        ) : (
-          <div className="flex-1 flex flex-col min-h-0 relative space-y-4">
-            
-            {/* Panel 1: Top Actions */}
-            <div className="bg-surface border border-border-subtle rounded-md p-4 flex items-center justify-between shadow-xs shrink-0">
-              <button
-                onClick={() => {
-                  setIsEditorActive(false);
-                  setSelectedFlowId(null);
-                  setCurrentPage(1);
-                }}
-                className="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/15 border border-primary/20 px-3 py-1.5 rounded-md transition-all cursor-pointer shrink-0 shadow-2xs"
-              >
-                ← Back to Flowchart List
-              </button>
-
-              {/* Action Buttons & View Mode Toggle */}
-              <div className="flex items-center flex-wrap gap-3 shrink-0">
-                {/* View Mode Segmented Control Toggle */}
-                <div className="bg-surface-muted p-1 rounded-md flex items-center border border-border-subtle/60 shadow-inner">
-                  <button
-                    onClick={() => setRightViewMode("embed")}
-                    className={cn(
-                      "px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5",
-                      rightViewMode === "embed"
-                        ? "bg-surface text-content shadow-2xs font-semibold"
-                        : "text-content-muted hover:text-content-strong"
-                    )}
-                  >
-                    <BookOpen className="w-3.5 h-3.5" /> Document List
-                  </button>
-                  <button
-                    onClick={() => setRightViewMode("canvas")}
-                    className={cn(
-                      "px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5",
-                      rightViewMode === "canvas"
-                        ? "bg-surface text-content shadow-2xs font-semibold"
-                        : "text-content-muted hover:text-content-strong"
-                    )}
-                  >
-                    <Workflow className="w-3.5 h-3.5" /> Flow Diagram
-                  </button>
+          {/* VIEW-PORT UTAMA (DASHBOARD DENGAN EMBED VIEWER & TOGGLE KANVAS) */}
+          <div className="flex-1 flex flex-col min-h-[600px] bg-transparent relative mb-8">
+            {!selectedFlowId ? (
+              <div className="flex-1 flex flex-col items-center justify-center p-8 bg-surface border border-border-subtle rounded-lg shadow-soft">
+                <div className="w-16 h-16 bg-surface border border-border-faint shadow-soft rounded-xl flex items-center justify-center mb-4 text-violet-600">
+                  <FileText className="w-6 h-6 animate-pulse" />
                 </div>
-
-                {/* Edit & Delete Action Buttons */}
-                {currentFlowMetadata && canModifyFlowchart(currentFlowMetadata) && (
-                  <div className="flex items-center gap-1.5 bg-surface-muted p-1 rounded-md border border-border-subtle/60">
-                    <button
-                      onClick={(e) => openEditModal(currentFlowMetadata, e)}
-                      className="p-1.5 bg-surface hover:bg-surface-sunken text-content-secondary hover:text-primary rounded-md transition-all cursor-pointer shadow-2xs border border-border-subtle/80"
-                      title="Edit document metadata"
-                    >
-                      <Edit3 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={(e) => handleDeleteFlowchart(currentFlowMetadata.id, e)}
-                      className="p-1.5 bg-surface hover:bg-rose-50 text-content-secondary hover:text-rose-600 rounded-md transition-all cursor-pointer shadow-2xs border border-border-subtle/80"
-                      title="Delete document"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                )}
+                <h2 className="text-base font-medium text-content-strong mb-1">
+                  Manajemen Dokumentasi
+                </h2>
+                <p className="text-xs text-content-muted font-medium">
+                  Pilih dokumen di sidebar atau buat baru untuk melihat preview dan merancang alur.
+                </p>
+                <button
+                  onClick={openCreateModal}
+                  className="mt-4 flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-medium p-2.5 px-5 rounded-xl text-xs shadow-md transition-all active:scale-95"
+                >
+                  <Plus className="w-4 h-4" /> Tambah Dokumen Baru
+                </button>
               </div>
-            </div>
+            ) : (
+              <div className="flex-1 flex flex-col min-h-0 relative space-y-4">
+                {/* Panel 1: Top Actions */}
+                <div className="bg-surface border border-border-subtle rounded-md p-4 flex items-center justify-between shadow-xs shrink-0">
+                  <button
+                    onClick={() => {
+                      setIsEditorActive(false);
+                      setSelectedFlowId(null);
+                      setCurrentPage(1);
+                    }}
+                    className="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/15 border border-primary/20 px-3 py-1.5 rounded-md transition-all cursor-pointer shrink-0 shadow-2xs"
+                  >
+                    ← Back to Flowchart List
+                  </button>
 
-            {/* Panel 2: Meta Context & Title */}
-            <div className="bg-surface border border-border-subtle rounded-lg p-5 md:p-6 shadow-soft shrink-0">
-              <div className="flex flex-wrap items-center gap-2 select-none mb-3">
-                {/* Category Badge */}
-                {currentFlowMetadata?.category === "PRD" && (
-                  <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-surface-muted text-content-body border border-border-subtle/80 rounded-full">
-                    📄 PRD
-                  </span>
-                )}
-                {currentFlowMetadata?.category === "Panduan" && (
-                  <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200/80 rounded-full">
-                    📖 Panduan
-                  </span>
-                )}
-                {currentFlowMetadata?.category === "Laporan" && (
-                  <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full">
-                    📊 Laporan
-                  </span>
-                )}
-                {!currentFlowMetadata?.category && (
-                  <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-violet-50 text-violet-700 border border-violet-200/80 rounded-full">
-                    ⚙️ Umum
-                  </span>
-                )}
-
-                {/* Creator Info */}
-                <span className="text-xs text-content-muted font-medium flex items-center gap-1">
-                  <User className="w-3 h-3" /> Oleh <strong className="text-content-strong">{currentFlowMetadata?.createdBy || "Azlan Irwan"}</strong>
-                </span>
-
-                <span className="text-slate-300">•</span>
-
-                {/* Date */}
-                <span className="text-xs sm:text-[10px] text-content-subtle font-medium flex items-center gap-1">
-                  Diperbarui {currentFlowMetadata?.lastEditedAt || currentFlowMetadata?.createdAt}
-                </span>
-                
-                {linkedEpic && (
-                  <>
-                    <span className="text-slate-300">•</span>
-                    <span className="text-xs sm:text-[10px] font-medium text-indigo-750 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full truncate max-w-[180px]" title={linkedEpic.title}>
-                      🎯 Epic: {linkedEpic.title}
-                    </span>
-                  </>
-                )}
-              </div>
-
-              <h2 className="text-xl md:text-2xl font-medium text-content tracking-tight leading-snug flex items-center gap-2">
-                <Workflow className="w-6 h-6 text-violet-600 shrink-0" />
-                <span className="truncate">{currentFlowMetadata?.name}</span>
-              </h2>
-              
-              {currentFlowMetadata?.description && (
-                <p className="text-xs text-content-muted font-medium max-w-3xl leading-relaxed mt-2">
-                  {currentFlowMetadata.description}
-</p>
-              )}
-            </div>
-
-            {/* Panel 3: Main Viewport (Canvas / Viewer) */}
-            <div className="bg-surface border border-border-subtle rounded-lg shadow-soft flex-1 min-h-[600px] relative flex flex-col overflow-hidden">
-              
-              {rightViewMode === "embed" ? (
-                /* 1. EMBED VIEWER (SPLIT PANE) */
-                <div className="flex-1 flex flex-col min-h-0 bg-surface">
-                  
-                  {/* LEFT PANE: Daftar Dokumen */}
-                  <div className="w-full flex-1 bg-surface-sunken/50 flex flex-col">
-                    {/* Header Left Pane */}
-                    <div className="p-4 border-b border-border-subtle flex items-center justify-between bg-surface shrink-0">
-                      <h4 className="text-sm font-medium text-content-strong flex items-center gap-2">
-                        <FileText className="w-5 h-5 text-violet-600" />
-                        Daftar Dokumen
-                      </h4>
+                  {/* Action Buttons & View Mode Toggle */}
+                  <div className="flex items-center flex-wrap gap-3 shrink-0">
+                    {/* View Mode Segmented Control Toggle */}
+                    <div className="bg-surface-muted p-1 rounded-md flex items-center border border-border-subtle/60 shadow-inner">
                       <button
-                        onClick={openUploadDocumentModal}
-                        className="p-2 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded text-xs transition-colors cursor-pointer shadow-soft active:scale-95 flex items-center gap-2"
-                        title="Upload Dokumen Baru"
+                        onClick={() => setRightViewMode("embed")}
+                        className={cn(
+                          "px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5",
+                          rightViewMode === "embed"
+                            ? "bg-surface text-content shadow-2xs font-semibold"
+                            : "text-content-muted hover:text-content-strong"
+                        )}
                       >
-                        <Plus className="w-4 h-4" /> Tambah Dokumen
+                        <BookOpen className="w-3.5 h-3.5" /> Document List
+                      </button>
+                      <button
+                        onClick={() => setRightViewMode("canvas")}
+                        className={cn(
+                          "px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5",
+                          rightViewMode === "canvas"
+                            ? "bg-surface text-content shadow-2xs font-semibold"
+                            : "text-content-muted hover:text-content-strong"
+                        )}
+                      >
+                        <Workflow className="w-3.5 h-3.5" /> Flow Diagram
                       </button>
                     </div>
-                    {/* List Items */}
-                    <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-3">
-                      {currentFlowMetadata?.documents && currentFlowMetadata.documents.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                          {currentFlowMetadata.documents.map((doc, idx) => (
-                            <div 
-                              key={doc.id}
-                              className="p-4 rounded-xl border border-border-subtle bg-surface flex flex-col gap-4 shadow-soft hover:shadow hover:border-violet-300 transition-all group"
-                            >
-                              <div className="flex items-start justify-between gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center shrink-0">
-                                  <FileText className="w-5 h-5" />
-                                </div>
-                                <div className="flex flex-col flex-1 min-w-0">
-                                  <span className="text-sm font-medium text-content-strong truncate">{doc.name}</span>
-                                  <span className="text-xs text-content-muted font-medium truncate mt-0.5">{doc.fileName}</span>
-                                  {doc.fileSize && (
-                                    <span className="text-xs sm:text-[10px] text-content-subtle mt-1">{(doc.fileSize / 1024 / 1024).toFixed(2)} MB</span>
-                                  )}
-                                </div>
-                              </div>
-                              <div className="pt-3 border-t border-border-faint flex items-center justify-end">
-                                <a 
-                                  href={doc.fileData} 
-                                  download={doc.fileName}
-                                  className="flex items-center gap-2 text-xs font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors"
-                                >
-                                  <Download className="w-3.5 h-3.5" /> Download
-                                </a>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
-                          <div className="w-16 h-16 bg-surface-muted border border-border-subtle rounded-full flex items-center justify-center mb-4">
-                            <FileText className="w-8 h-8 text-content-subtle opacity-50" />
-                          </div>
-                          <h3 className="text-sm font-medium text-content-body mb-2">Belum Ada Dokumen</h3>
-                          <span className="text-xs text-content-muted font-medium max-w-sm">
-                            Anda belum menambahkan dokumen apapun ke dalam flowchart ini. Silakan klik tombol "Tambah Dokumen" untuk mulai mengunggah file.
-                          </span>
-                        </div>
-                      )}
-                    </div>
+
+                    {/* Edit & Delete Action Buttons */}
+                    {currentFlowMetadata && canModifyFlowchart(currentFlowMetadata) && (
+                      <div className="flex items-center gap-1.5 bg-surface-muted p-1 rounded-md border border-border-subtle/60">
+                        <button
+                          onClick={(e) => openEditModal(currentFlowMetadata, e)}
+                          className="p-1.5 bg-surface hover:bg-surface-sunken text-content-secondary hover:text-primary rounded-md transition-all cursor-pointer shadow-2xs border border-border-subtle/80"
+                          title="Edit document metadata"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={(e) => handleDeleteFlowchart(currentFlowMetadata.id, e)}
+                          className="p-1.5 bg-surface hover:bg-rose-50 text-content-secondary hover:text-rose-600 rounded-md transition-all cursor-pointer shadow-2xs border border-border-subtle/80"
+                          title="Delete document"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
-              ) : (
-                /* 2. HIGH-FIDELITY MIRO CANVAS WORKSPACE (DIAGRAM ALUR) */
-                <div className="flex-1 relative overflow-hidden bg-surface flex flex-col h-full min-h-0">
-                  
-                  {/* FLOATING QUICK CANVAS CONTROL BAR ON TOP OF THE BOARD */}
-                  <CanvasToolbar
-                    currentFlowMetadata={currentFlowMetadata}
-                    canvasTheme={canvasTheme}
-                    setCanvasTheme={setCanvasTheme}
-                    isSnapToGrid={isSnapToGrid}
-                    setIsSnapToGrid={setIsSnapToGrid}
-                    handleExportJPG={handleExportJPG}
-                    handleExportJSON={handleExportJSON}
-                    isRightSidebarOpen={isRightSidebarOpen}
-                    setIsRightSidebarOpen={setIsRightSidebarOpen}
-                  />
 
-                  {/* FLOATING MIRO TOOLBAR (SISI KIRI CANVAS) */}
-        <div className={cn(
-          "absolute top-28 md:top-24 z-20 flex flex-col gap-2.5 bg-surface/70 hover:bg-surface/85 backdrop-blur-md border border-border-subtle/40 p-2.5 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shrink-0 select-none items-center transition-all duration-300 left-4"
-        )}>
-            
-            {/* Active tools selector */}
-            <button 
-              onClick={() => { setActiveTool('select'); setConnectSourceId(null); }}
-              className={cn(
-                "p-2 rounded-lg transition-all",
-                activeTool === 'select' ? "bg-violet-650 text-white shadow-md scale-105" : "text-slate-650 hover:bg-surface-muted"
-              )}
-              title="Pointer Selector tool"
-            >
-              <MousePointer className="w-4 h-4" />
-            </button>
+                {/* Panel 2: Meta Context & Title */}
+                <div className="bg-surface border border-border-subtle rounded-lg p-5 md:p-6 shadow-soft shrink-0">
+                  <div className="flex flex-wrap items-center gap-2 select-none mb-3">
+                    {/* Category Badge */}
+                    {currentFlowMetadata?.category === "PRD" && (
+                      <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-surface-muted text-content-body border border-border-subtle/80 rounded-full">
+                        📄 PRD
+                      </span>
+                    )}
+                    {currentFlowMetadata?.category === "Panduan" && (
+                      <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200/80 rounded-full">
+                        📖 Panduan
+                      </span>
+                    )}
+                    {currentFlowMetadata?.category === "Laporan" && (
+                      <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full">
+                        📊 Laporan
+                      </span>
+                    )}
+                    {!currentFlowMetadata?.category && (
+                      <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-violet-50 text-violet-700 border border-violet-200/80 rounded-full">
+                        ⚙️ Umum
+                      </span>
+                    )}
 
-            <button 
-              onClick={() => { setActiveTool('hand'); setConnectSourceId(null); }}
-              className={cn(
-                "p-2 rounded-lg transition-all",
-                activeTool === 'hand' ? "bg-violet-650 text-white shadow-md scale-105" : "text-slate-650 hover:bg-surface-muted"
-              )}
-              title="Hand Panner tool"
-            >
-              <Hand className="w-4 h-4" />
-            </button>
+                    {/* Creator Info */}
+                    <span className="text-xs text-content-muted font-medium flex items-center gap-1">
+                      <User className="w-3 h-3" /> Oleh{" "}
+                      <strong className="text-content-strong">
+                        {currentFlowMetadata?.createdBy || "Azlan Irwan"}
+                      </strong>
+                    </span>
 
-            <div className="w-6 h-px bg-slate-200" />
+                    <span className="text-slate-300">•</span>
 
-            {/* Quick Sticky Note Adder */}
-            <button 
-              onClick={() => handleAddNewNode("sticky", "yellow")}
-              className="p-2 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 rounded-lg transition-all flex flex-col items-center shrink-0 w-10"
-              title="Quick Yellow Sticky Note"
-            >
-              <StickyNote className="w-4 h-4 text-amber-500 fill-amber-300" />
-              <span className="text-xs sm:text-[10px] sm:text-[7.5px] font-medium uppercase tracking-tight text-amber-600 mt-0.5">Sticky</span>
-            </button>
+                    {/* Date */}
+                    <span className="text-xs sm:text-[10px] text-content-subtle font-medium flex items-center gap-1">
+                      Diperbarui{" "}
+                      {currentFlowMetadata?.lastEditedAt || currentFlowMetadata?.createdAt}
+                    </span>
 
-            {/* Shapes COLLECTION TRIGGER */}
-            <ShapePalette
-              isShapeDropdownOpen={isShapeDropdownOpen}
-              setIsShapeDropdownOpen={setIsShapeDropdownOpen}
-              selectedAddColor={selectedAddColor}
-              setSelectedAddColor={setSelectedAddColor}
-              shapeSearchQuery={shapeSearchQuery}
-              setShapeSearchQuery={setShapeSearchQuery}
-              expandedGroups={expandedGroups}
-              toggleGroupExpanded={toggleGroupExpanded}
-              handleAddNewNode={handleAddNewNode}
-            />
+                    {linkedEpic && (
+                      <>
+                        <span className="text-slate-300">•</span>
+                        <span
+                          className="text-xs sm:text-[10px] font-medium text-indigo-750 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full truncate max-w-[180px]"
+                          title={linkedEpic.title}
+                        >
+                          🎯 Epic: {linkedEpic.title}
+                        </span>
+                      </>
+                    )}
+                  </div>
 
-            {/* Quick Link connection helper */}
-            <button 
-              onClick={() => {
-                setActiveTool('connect');
-                setConnectSourceId(null);
-                toast.info("Mode Anak Panah Aktif. Klik bentuk asal di Canvas, lalu klik bentuk penerima.");
-              }}
-              className={cn(
-                "p-2 rounded-lg transition-all flex flex-col items-center w-10 border border-border-faint",
-                activeTool === 'connect' ? "bg-amber-505 bg-amber-400 text-content" : "text-slate-650 hover:bg-surface-muted"
-              )}
-              title="Anak Panah Penghubung shapes"
-            >
-              <ArrowRight className="w-4 h-4" />
-              <span className="text-xs sm:text-[10px] sm:text-[7.5px] font-medium uppercase tracking-tight mt-0.5">Arrow</span>
-            </button>
+                  <h2 className="text-xl md:text-2xl font-medium text-content tracking-tight leading-snug flex items-center gap-2">
+                    <Workflow className="w-6 h-6 text-violet-600 shrink-0" />
+                    <span className="truncate">{currentFlowMetadata?.name}</span>
+                  </h2>
 
-            <button 
-              onClick={() => handleAddNewNode("text")}
-              className="p-2 hover:bg-surface-muted text-slate-650 rounded-lg transition-all flex flex-col items-center w-10"
-              title="Tambahkan Teks dokumentasi"
-            >
-              <Type className="w-4 h-4 text-slate-505" />
-              <span className="text-xs sm:text-[10px] sm:text-[7.5px] font-medium uppercase tracking-tight mt-0.5">Text</span>
-            </button>
+                  {currentFlowMetadata?.description && (
+                    <p className="text-xs text-content-muted font-medium max-w-3xl leading-relaxed mt-2">
+                      {currentFlowMetadata.description}
+                    </p>
+                  )}
+                </div>
 
-            <div className="w-6 h-px bg-slate-200" />
+                {/* Panel 3: Main Viewport (Canvas / Viewer) */}
+                <div className="bg-surface border border-border-subtle rounded-lg shadow-soft flex-1 min-h-[600px] relative flex flex-col overflow-hidden">
+                  {rightViewMode === "embed" ? (
+                    /* 1. EMBED VIEWER (SPLIT PANE) */
+                    <div className="flex-1 flex flex-col min-h-0 bg-surface">
+                      {/* LEFT PANE: Daftar Dokumen */}
+                      <div className="w-full flex-1 bg-surface-sunken/50 flex flex-col">
+                        {/* Header Left Pane */}
+                        <div className="p-4 border-b border-border-subtle flex items-center justify-between bg-surface shrink-0">
+                          <h4 className="text-sm font-medium text-content-strong flex items-center gap-2">
+                            <FileText className="w-5 h-5 text-violet-600" />
+                            Daftar Dokumen
+                          </h4>
+                          <button
+                            onClick={openUploadDocumentModal}
+                            className="p-2 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded text-xs transition-colors cursor-pointer shadow-soft active:scale-95 flex items-center gap-2"
+                            title="Upload Dokumen Baru"
+                          >
+                            <Plus className="w-4 h-4" /> Tambah Dokumen
+                          </button>
+                        </div>
+                        {/* List Items */}
+                        <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-3">
+                          {currentFlowMetadata?.documents &&
+                          currentFlowMetadata.documents.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                              {currentFlowMetadata.documents.map((doc, idx) => (
+                                <div
+                                  key={doc.id}
+                                  className="p-4 rounded-xl border border-border-subtle bg-surface flex flex-col gap-4 shadow-soft hover:shadow hover:border-violet-300 transition-all group"
+                                >
+                                  <div className="flex items-start justify-between gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center shrink-0">
+                                      <FileText className="w-5 h-5" />
+                                    </div>
+                                    <div className="flex flex-col flex-1 min-w-0">
+                                      <span className="text-sm font-medium text-content-strong truncate">
+                                        {doc.name}
+                                      </span>
+                                      <span className="text-xs text-content-muted font-medium truncate mt-0.5">
+                                        {doc.fileName}
+                                      </span>
+                                      {doc.fileSize && (
+                                        <span className="text-xs sm:text-[10px] text-content-subtle mt-1">
+                                          {(doc.fileSize / 1024 / 1024).toFixed(2)} MB
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="pt-3 border-t border-border-faint flex items-center justify-end">
+                                    <a
+                                      href={doc.fileData}
+                                      download={doc.fileName}
+                                      className="flex items-center gap-2 text-xs font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors"
+                                    >
+                                      <Download className="w-3.5 h-3.5" /> Download
+                                    </a>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
+                              <div className="w-16 h-16 bg-surface-muted border border-border-subtle rounded-full flex items-center justify-center mb-4">
+                                <FileText className="w-8 h-8 text-content-subtle opacity-50" />
+                              </div>
+                              <h3 className="text-sm font-medium text-content-body mb-2">
+                                Belum Ada Dokumen
+                              </h3>
+                              <span className="text-xs text-content-muted font-medium max-w-sm">
+                                Anda belum menambahkan dokumen apapun ke dalam flowchart ini.
+                                Silakan klik tombol "Tambah Dokumen" untuk mulai mengunggah file.
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    /* 2. HIGH-FIDELITY MIRO CANVAS WORKSPACE (DIAGRAM ALUR) */
+                    <div className="flex-1 relative overflow-hidden bg-surface flex flex-col h-full min-h-0">
+                      {/* FLOATING QUICK CANVAS CONTROL BAR ON TOP OF THE BOARD */}
+                      <CanvasToolbar
+                        currentFlowMetadata={currentFlowMetadata}
+                        canvasTheme={canvasTheme}
+                        setCanvasTheme={setCanvasTheme}
+                        isSnapToGrid={isSnapToGrid}
+                        setIsSnapToGrid={setIsSnapToGrid}
+                        handleExportJPG={handleExportJPG}
+                        handleExportJSON={handleExportJSON}
+                        isRightSidebarOpen={isRightSidebarOpen}
+                        setIsRightSidebarOpen={setIsRightSidebarOpen}
+                      />
 
-            {/* Quick tutorial indicator */}
-            <div className="text-content-subtle hover:text-violet-600 transition-colors cursor-pointer">
-              <HelpCircle className="w-4 h-4" onClick={() => toast.info("Gunakan menu ini untuk menambahkan komponen ke visual whiteboard. Anda dapat mengubah isi teks dengan mengetik langsung diatas bentuk.")} />
-            </div>
+                      {/* FLOATING MIRO TOOLBAR (SISI KIRI CANVAS) */}
+                      <div
+                        className={cn(
+                          "absolute top-28 md:top-24 z-20 flex flex-col gap-2.5 bg-surface/70 hover:bg-surface/85 backdrop-blur-md border border-border-subtle/40 p-2.5 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] shrink-0 select-none items-center transition-all duration-300 left-4"
+                        )}
+                      >
+                        {/* Active tools selector */}
+                        <button
+                          onClick={() => {
+                            setActiveTool("select");
+                            setConnectSourceId(null);
+                          }}
+                          className={cn(
+                            "p-2 rounded-lg transition-all",
+                            activeTool === "select"
+                              ? "bg-violet-650 text-white shadow-md scale-105"
+                              : "text-slate-650 hover:bg-surface-muted"
+                          )}
+                          title="Pointer Selector tool"
+                        >
+                          <MousePointer className="w-4 h-4" />
+                        </button>
 
-          </div>
+                        <button
+                          onClick={() => {
+                            setActiveTool("hand");
+                            setConnectSourceId(null);
+                          }}
+                          className={cn(
+                            "p-2 rounded-lg transition-all",
+                            activeTool === "hand"
+                              ? "bg-violet-650 text-white shadow-md scale-105"
+                              : "text-slate-650 hover:bg-surface-muted"
+                          )}
+                          title="Hand Panner tool"
+                        >
+                          <Hand className="w-4 h-4" />
+                        </button>
 
-          {/* ACTIVE DRAWING SHEET CANVAS (THE BASE BACKGROUND LAYER) */}
-          <div 
-            className={cn(
-              "absolute inset-0 w-full h-full overflow-hidden z-0 transition-colors duration-300 rounded-xl",
-              canvasTheme === 'miro' 
-                ? "bg-[#faf9f6]/95 text-slate-850 grid-dots-light" 
-                : "bg-[#0a1124] text-sky-100 grid-blueprint-dark border-slate-800"
-            )}
-            onMouseDown={handleCanvasMouseDown}
-            onMouseMove={handleCanvasMouseMove}
-            onMouseUp={handleCanvasMouseUp}
-            onDoubleClick={handleCanvasDoubleClick}
-            onContextMenu={(e) => {
-              const targetElement = e.target as HTMLElement;
-              if (
-                targetElement.closest("button") || 
-                targetElement.closest("textarea") || 
-                targetElement.closest("input") || 
-                targetElement.closest("select") ||
-                targetElement.closest(".absolute.z-20") ||
-                targetElement.closest(".z-50") ||
-                targetElement.closest(".absolute.z-30")
-              ) {
-                return;
-              }
-              e.preventDefault();
-              e.stopPropagation();
-              setNodeContextMenu(null);
-              if (isWorkspaceEditable) {
-                setCanvasContextMenu({
-                  x: e.clientX,
-                  y: e.clientY
-                });
-              }
-            }}
-            ref={canvasContainerRef}
-            style={{ 
-              cursor: activeTool === 'hand' || isSpacePressed || isPanning ? (isPanning ? "grabbing" : "grab") : "default",
-              backgroundPosition: `${panOffset.x}px ${panOffset.y}px`,
-              backgroundSize: canvasTheme === 'miro' ? `${20 * zoomLevel}px ${20 * zoomLevel}px` : `${30 * zoomLevel}px ${30 * zoomLevel}px`
-            }}
-          >
+                        <div className="w-6 h-px bg-slate-200" />
 
+                        {/* Quick Sticky Note Adder */}
+                        <button
+                          onClick={() => handleAddNewNode("sticky", "yellow")}
+                          className="p-2 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 rounded-lg transition-all flex flex-col items-center shrink-0 w-10"
+                          title="Quick Yellow Sticky Note"
+                        >
+                          <StickyNote className="w-4 h-4 text-amber-500 fill-amber-300" />
+                          <span className="text-xs sm:text-[10px] sm:text-[7.5px] font-medium uppercase tracking-tight text-amber-600 mt-0.5">
+                            Sticky
+                          </span>
+                        </button>
 
-            {/* Custom SVG styling injection */}
-            <style dangerouslySetInnerHTML={{__html: `
+                        {/* Shapes COLLECTION TRIGGER */}
+                        <ShapePalette
+                          isShapeDropdownOpen={isShapeDropdownOpen}
+                          setIsShapeDropdownOpen={setIsShapeDropdownOpen}
+                          selectedAddColor={selectedAddColor}
+                          setSelectedAddColor={setSelectedAddColor}
+                          shapeSearchQuery={shapeSearchQuery}
+                          setShapeSearchQuery={setShapeSearchQuery}
+                          expandedGroups={expandedGroups}
+                          toggleGroupExpanded={toggleGroupExpanded}
+                          handleAddNewNode={handleAddNewNode}
+                        />
+
+                        {/* Quick Link connection helper */}
+                        <button
+                          onClick={() => {
+                            setActiveTool("connect");
+                            setConnectSourceId(null);
+                            toast.info(
+                              "Mode Anak Panah Aktif. Klik bentuk asal di Canvas, lalu klik bentuk penerima."
+                            );
+                          }}
+                          className={cn(
+                            "p-2 rounded-lg transition-all flex flex-col items-center w-10 border border-border-faint",
+                            activeTool === "connect"
+                              ? "bg-amber-505 bg-amber-400 text-content"
+                              : "text-slate-650 hover:bg-surface-muted"
+                          )}
+                          title="Anak Panah Penghubung shapes"
+                        >
+                          <ArrowRight className="w-4 h-4" />
+                          <span className="text-xs sm:text-[10px] sm:text-[7.5px] font-medium uppercase tracking-tight mt-0.5">
+                            Arrow
+                          </span>
+                        </button>
+
+                        <button
+                          onClick={() => handleAddNewNode("text")}
+                          className="p-2 hover:bg-surface-muted text-slate-650 rounded-lg transition-all flex flex-col items-center w-10"
+                          title="Tambahkan Teks dokumentasi"
+                        >
+                          <Type className="w-4 h-4 text-slate-505" />
+                          <span className="text-xs sm:text-[10px] sm:text-[7.5px] font-medium uppercase tracking-tight mt-0.5">
+                            Text
+                          </span>
+                        </button>
+
+                        <div className="w-6 h-px bg-slate-200" />
+
+                        {/* Quick tutorial indicator */}
+                        <div className="text-content-subtle hover:text-violet-600 transition-colors cursor-pointer">
+                          <HelpCircle
+                            className="w-4 h-4"
+                            onClick={() =>
+                              toast.info(
+                                "Gunakan menu ini untuk menambahkan komponen ke visual whiteboard. Anda dapat mengubah isi teks dengan mengetik langsung diatas bentuk."
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+
+                      {/* ACTIVE DRAWING SHEET CANVAS (THE BASE BACKGROUND LAYER) */}
+                      <div
+                        className={cn(
+                          "absolute inset-0 w-full h-full overflow-hidden z-0 transition-colors duration-300 rounded-xl",
+                          canvasTheme === "miro"
+                            ? "bg-surface/95 text-slate-850 grid-dots-light"
+                            : "bg-[#0a1124] text-sky-100 grid-blueprint-dark border-slate-800"
+                        )}
+                        onMouseDown={handleCanvasMouseDown}
+                        onMouseMove={handleCanvasMouseMove}
+                        onMouseUp={handleCanvasMouseUp}
+                        onDoubleClick={handleCanvasDoubleClick}
+                        onContextMenu={(e) => {
+                          const targetElement = e.target as HTMLElement;
+                          if (
+                            targetElement.closest("button") ||
+                            targetElement.closest("textarea") ||
+                            targetElement.closest("input") ||
+                            targetElement.closest("select") ||
+                            targetElement.closest(".absolute.z-20") ||
+                            targetElement.closest(".z-50") ||
+                            targetElement.closest(".absolute.z-30")
+                          ) {
+                            return;
+                          }
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setNodeContextMenu(null);
+                          if (isWorkspaceEditable) {
+                            setCanvasContextMenu({
+                              x: e.clientX,
+                              y: e.clientY,
+                            });
+                          }
+                        }}
+                        ref={canvasContainerRef}
+                        style={{
+                          cursor:
+                            activeTool === "hand" || isSpacePressed || isPanning
+                              ? isPanning
+                                ? "grabbing"
+                                : "grab"
+                              : "default",
+                          backgroundPosition: `${panOffset.x}px ${panOffset.y}px`,
+                          backgroundSize:
+                            canvasTheme === "miro"
+                              ? `${20 * zoomLevel}px ${20 * zoomLevel}px`
+                              : `${30 * zoomLevel}px ${30 * zoomLevel}px`,
+                        }}
+                      >
+                        {/* Custom SVG styling injection */}
+                        <style
+                          dangerouslySetInnerHTML={{
+                            __html: `
               .grid-dots-light {
                 background-image: radial-gradient(circle, rgba(148, 163, 184, 0.15) 1.5px, transparent 1.5px);
               }
@@ -2583,100 +2931,111 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 background: #5c6270;
                 border-radius: 4px;
               }
-            `}} />
+            `,
+                          }}
+                        />
 
-            {/* THE INFINITE ROTTABLE / TRANSLATABLE VIEWER PORT */}
-            <div 
-              style={{ 
-                transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel})`, 
-                transformOrigin: "top left",
-                width: "3500px",
-                height: "2800px"
-              }}
-              className="absolute inset-0 p-12 select-none"
-              onDragOver={(e) => e.preventDefault()}
-            >
+                        {/* THE INFINITE ROTTABLE / TRANSLATABLE VIEWER PORT */}
+                        <div
+                          style={{
+                            transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel})`,
+                            transformOrigin: "top left",
+                            width: "3500px",
+                            height: "2800px",
+                          }}
+                          className="absolute inset-0 p-12 select-none"
+                          onDragOver={(e) => e.preventDefault()}
+                        >
+                          {/* RENDER MARQUEE SELECTION BOX */}
+                          {marqueeBox && (
+                            <div
+                              className="absolute border border-blue-500 bg-blue-500/10 z-[100] pointer-events-none"
+                              style={{
+                                left:
+                                  (Math.min(marqueeBox.startX, marqueeBox.currentX) -
+                                    (canvasContainerRef.current?.getBoundingClientRect().left ||
+                                      0) -
+                                    panOffset.x) /
+                                  zoomLevel,
+                                top:
+                                  (Math.min(marqueeBox.startY, marqueeBox.currentY) -
+                                    (canvasContainerRef.current?.getBoundingClientRect().top || 0) -
+                                    panOffset.y) /
+                                  zoomLevel,
+                                width:
+                                  Math.abs(marqueeBox.currentX - marqueeBox.startX) / zoomLevel,
+                                height:
+                                  Math.abs(marqueeBox.currentY - marqueeBox.startY) / zoomLevel,
+                              }}
+                            />
+                          )}
 
-              {/* RENDER MARQUEE SELECTION BOX */}
-              {marqueeBox && (
-                <div 
-                  className="absolute border border-blue-500 bg-blue-500/10 z-[100] pointer-events-none"
-                  style={{
-                    left: (Math.min(marqueeBox.startX, marqueeBox.currentX) - (canvasContainerRef.current?.getBoundingClientRect().left || 0) - panOffset.x) / zoomLevel,
-                    top: (Math.min(marqueeBox.startY, marqueeBox.currentY) - (canvasContainerRef.current?.getBoundingClientRect().top || 0) - panOffset.y) / zoomLevel,
-                    width: Math.abs(marqueeBox.currentX - marqueeBox.startX) / zoomLevel,
-                    height: Math.abs(marqueeBox.currentY - marqueeBox.startY) / zoomLevel,
-                  }}
-                />
-              )}
-              
-              {/* CANVAS OVERLAY BEZIER ROUTERS */}
-              <FlowchartEdges
-                edges={edges}
-                nodes={nodes}
-                canvasTheme={canvasTheme}
-                selectedEdgeId={selectedEdgeId}
-                setSelectedEdgeId={setSelectedEdgeId}
-                hoveredEdgeId={hoveredEdgeId}
-                setHoveredEdgeId={setHoveredEdgeId}
-                selectedNodeId={selectedNodeId}
-                setSelectedNodeId={setSelectedNodeId}
-                hoveredNodeId={hoveredNodeId}
-                connectSourceId={connectSourceId}
-                setConnectSourceId={setConnectSourceId}
-                hoverCoords={hoverCoords}
-                connectorType={connectorType}
-                getNodeCenter={getNodeCenter}
-              />
+                          {/* CANVAS OVERLAY BEZIER ROUTERS */}
+                          <FlowchartEdges
+                            edges={edges}
+                            nodes={nodes}
+                            canvasTheme={canvasTheme}
+                            selectedEdgeId={selectedEdgeId}
+                            setSelectedEdgeId={setSelectedEdgeId}
+                            hoveredEdgeId={hoveredEdgeId}
+                            setHoveredEdgeId={setHoveredEdgeId}
+                            selectedNodeId={selectedNodeId}
+                            setSelectedNodeId={setSelectedNodeId}
+                            hoveredNodeId={hoveredNodeId}
+                            connectSourceId={connectSourceId}
+                            setConnectSourceId={setConnectSourceId}
+                            hoverCoords={hoverCoords}
+                            connectorType={connectorType}
+                            getNodeCenter={getNodeCenter}
+                          />
 
-              {/* RENDER DYNAMIC SHAPES */}
-              {nodes.map((node) => (
-                <FlowchartNode
-                  key={node.id}
-                  node={node}
-                  selectedNodeId={selectedNodeId}
-                  setSelectedNodeId={setSelectedNodeId}
-                  setSelectedEdgeId={setSelectedEdgeId}
-                  copiedNodes={copiedNodes}
-                  connectSourceId={connectSourceId}
-                  setConnectSourceId={setConnectSourceId}
-                  hoveredNodeId={hoveredNodeId}
-                  setHoveredNodeId={setHoveredNodeId}
-                  draggingNodeId={draggingNodeId}
-                  activeSimNodeId={activeSimNodeId}
-                  canvasTheme={canvasTheme}
-                  isWorkspaceEditable={isWorkspaceEditable}
-                  setActiveTool={setActiveTool}
-                  setNodes={setNodes}
-                  setEdges={setEdges}
-                  setNodeContextMenu={setNodeContextMenu}
-                  handleNodeMouseDown={handleNodeMouseDown}
-                  handleResizeMouseDown={handleResizeMouseDown}
-                  handleConnectPortClick={handleConnectPortClick}
-                  handleUpdateActiveNode={handleUpdateActiveNode}
-                  handleDuplicateNode={handleDuplicateNode}
-                  handleDeleteSelected={handleDeleteSelected}
-                  getLinkedTaskDetails={getLinkedTaskDetails}
-                  setSelectedTaskForDetail={setSelectedTaskForDetail}
-                  setIsTaskDetailModalOpen={setIsTaskDetailModalOpen}
-                />
-              ))}
+                          {/* RENDER DYNAMIC SHAPES */}
+                          {nodes.map((node) => (
+                            <FlowchartNode
+                              key={node.id}
+                              node={node}
+                              selectedNodeId={selectedNodeId}
+                              setSelectedNodeId={setSelectedNodeId}
+                              setSelectedEdgeId={setSelectedEdgeId}
+                              copiedNodes={copiedNodes}
+                              connectSourceId={connectSourceId}
+                              setConnectSourceId={setConnectSourceId}
+                              hoveredNodeId={hoveredNodeId}
+                              setHoveredNodeId={setHoveredNodeId}
+                              draggingNodeId={draggingNodeId}
+                              activeSimNodeId={activeSimNodeId}
+                              canvasTheme={canvasTheme}
+                              isWorkspaceEditable={isWorkspaceEditable}
+                              setActiveTool={setActiveTool}
+                              setNodes={setNodes}
+                              setEdges={setEdges}
+                              setNodeContextMenu={setNodeContextMenu}
+                              handleNodeMouseDown={handleNodeMouseDown}
+                              handleResizeMouseDown={handleResizeMouseDown}
+                              handleConnectPortClick={handleConnectPortClick}
+                              handleUpdateActiveNode={handleUpdateActiveNode}
+                              handleDuplicateNode={handleDuplicateNode}
+                              handleDeleteSelected={handleDeleteSelected}
+                              getLinkedTaskDetails={getLinkedTaskDetails}
+                              setSelectedTaskForDetail={setSelectedTaskForDetail}
+                              setIsTaskDetailModalOpen={setIsTaskDetailModalOpen}
+                            />
+                          ))}
+                        </div>
 
-            </div>
+                        {/* FLOATING FLOWCHART INTERACTIVE MINIMAP VIEW */}
+                        <FlowchartMinimap
+                          nodes={nodes}
+                          edges={edges}
+                          panOffset={panOffset}
+                          zoomLevel={zoomLevel}
+                          setPanOffset={setPanOffset}
+                          canvasContainerRef={canvasContainerRef}
+                          canvasTheme={canvasTheme}
+                        />
 
-            {/* FLOATING FLOWCHART INTERACTIVE MINIMAP VIEW */}
-            <FlowchartMinimap
-              nodes={nodes}
-              edges={edges}
-              panOffset={panOffset}
-              zoomLevel={zoomLevel}
-              setPanOffset={setPanOffset}
-              canvasContainerRef={canvasContainerRef}
-              canvasTheme={canvasTheme}
-            />
-
-             {/* Miro Coordinate & Element Stats Hover HUD overlay (HIDDEN AS REQUESTED) */}
-            {/* <div className={cn(
+                        {/* Miro Coordinate & Element Stats Hover HUD overlay (HIDDEN AS REQUESTED) */}
+                        {/* <div className={cn(
               "absolute bottom-16 z-30 p-1.5 px-3 bg-slate-900/95 backdrop-blur-sm border border-slate-800 text-slate-300 shadow-xl rounded-xl flex items-center gap-2 text-xs sm:text-[10px] font-mono select-none transition-all duration-300",
               // HUD hidden coordinate info
               false ? "left-[356px]" : "left-4"
@@ -2691,103 +3050,117 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               <span className="text-violet-300 font-medium">{nodes.length} Objek</span>
             </div> */}
 
-            {/* FLOATING ACTION FLAPS OVERLAYS FOR ZERO-CLICK SIDEBAR EXPANSION */}
-            {/* Left sidebar flap toggle deleted as requested by user to make canvas full */}
+                        {/* FLOATING ACTION FLAPS OVERLAYS FOR ZERO-CLICK SIDEBAR EXPANSION */}
+                        {/* Left sidebar flap toggle deleted as requested by user to make canvas full */}
 
-            {/* Right sidebar flap toggle */}
-            <button
-              onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
-              className={cn(
-                "absolute bottom-4 z-30 p-2 bg-surface/70 backdrop-blur hover:bg-surface/85 border border-border-subtle/40 text-content-body hover:text-violet-600 shadow-soft-lg rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 text-xs font-medium transition-all duration-300",
-                isRightSidebarOpen ? "right-[356px]" : "right-4"
-              )}
-              title="Toggle Panel Properti"
-            >
-              <Edit3 className="w-3.5 h-3.5 text-current" />
-              <span className="text-xs sm:text-[10px] uppercase tracking-wider">Editor Properti</span>
-              <span>{isRightSidebarOpen ? "▶" : "◀"}</span>
-            </button>
+                        {/* Right sidebar flap toggle */}
+                        <button
+                          onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
+                          className={cn(
+                            "absolute bottom-4 z-30 p-2 bg-surface/70 backdrop-blur hover:bg-surface/85 border border-border-subtle/40 text-content-body hover:text-violet-600 shadow-soft-lg rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 text-xs font-medium transition-all duration-300",
+                            isRightSidebarOpen ? "right-[356px]" : "right-4"
+                          )}
+                          title="Toggle Panel Properti"
+                        >
+                          <Edit3 className="w-3.5 h-3.5 text-current" />
+                          <span className="text-xs sm:text-[10px] uppercase tracking-wider">
+                            Editor Properti
+                          </span>
+                          <span>{isRightSidebarOpen ? "▶" : "◀"}</span>
+                        </button>
 
-            {/* FLOATING CANVAS ACTION RIBBON (CENTER DOCK) */}
-            <div className="absolute left-1/2 -translate-x-1/2 bottom-4 z-30 flex items-center gap-1.5 bg-surface/70 hover:bg-surface/85 backdrop-blur-md border border-border-subtle/40 p-1.5 px-3 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] select-none max-w-[85%] md:max-w-full transition-all duration-300">
-              
-              {/* Undo Button */}
-              <button
-                onClick={handleUndoClick}
-                disabled={historyIndex <= 0}
-                className={cn(
-                  "p-2 rounded-xl transition-all flex items-center justify-center",
-                  historyIndex <= 0
-                    ? "text-slate-300 cursor-not-allowed"
-                    : "text-slate-750 hover:bg-surface-muted hover:text-violet-600 active:scale-95"
-                )}
-                title="Undo Gagal Langkah (Ctrl+Z)"
-              >
-                <Undo className="w-3.5 h-3.5" />
-              </button>
+                        {/* FLOATING CANVAS ACTION RIBBON (CENTER DOCK) */}
+                        <div className="absolute left-1/2 -translate-x-1/2 bottom-4 z-30 flex items-center gap-1.5 bg-surface/70 hover:bg-surface/85 backdrop-blur-md border border-border-subtle/40 p-1.5 px-3 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] select-none max-w-[85%] md:max-w-full transition-all duration-300">
+                          {/* Undo Button */}
+                          <button
+                            onClick={handleUndoClick}
+                            disabled={historyIndex <= 0}
+                            className={cn(
+                              "p-2 rounded-xl transition-all flex items-center justify-center",
+                              historyIndex <= 0
+                                ? "text-slate-300 cursor-not-allowed"
+                                : "text-slate-750 hover:bg-surface-muted hover:text-violet-600 active:scale-95"
+                            )}
+                            title="Undo Gagal Langkah (Ctrl+Z)"
+                          >
+                            <Undo className="w-3.5 h-3.5" />
+                          </button>
 
-              {/* Redo Button */}
-              <button
-                onClick={handleRedoClick}
-                disabled={historyIndex >= historyStack.length - 1}
-                className={cn(
-                  "p-2 rounded-xl transition-all flex items-center justify-center",
-                  historyIndex >= historyStack.length - 1
-                    ? "text-slate-300 cursor-not-allowed"
-                    : "text-slate-750 hover:bg-surface-muted hover:text-violet-600 active:scale-95"
-                )}
-                title="Redo Langkah Batal (Ctrl+Shift+Z)"
-              >
-                <Redo className="w-3.5 h-3.5" />
-              </button>
+                          {/* Redo Button */}
+                          <button
+                            onClick={handleRedoClick}
+                            disabled={historyIndex >= historyStack.length - 1}
+                            className={cn(
+                              "p-2 rounded-xl transition-all flex items-center justify-center",
+                              historyIndex >= historyStack.length - 1
+                                ? "text-slate-300 cursor-not-allowed"
+                                : "text-slate-750 hover:bg-surface-muted hover:text-violet-600 active:scale-95"
+                            )}
+                            title="Redo Langkah Batal (Ctrl+Shift+Z)"
+                          >
+                            <Redo className="w-3.5 h-3.5" />
+                          </button>
 
-              <div className="w-px h-5 bg-slate-200 mx-1" />
+                          <div className="w-px h-5 bg-slate-200 mx-1" />
 
-              {/* Auto-Align Layout Engine */}
-              <button
-                onClick={handleAutoAlignNodes}
-                className="p-1 px-2 text-content-body hover:bg-surface-muted hover:text-violet-605 rounded-xl transition-all flex items-center gap-1 active:scale-95 text-xs sm:text-[10px] font-medium"
-                title="Otomatis merapikan format diagram secara horizontal & vertikal"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-violet-600 fill-violet-200" />
-                <span className="hidden sm:inline">Auto-Align</span>
-              </button>
+                          {/* Auto-Align Layout Engine */}
+                          <button
+                            onClick={handleAutoAlignNodes}
+                            className="p-1 px-2 text-content-body hover:bg-surface-muted hover:text-violet-605 rounded-xl transition-all flex items-center gap-1 active:scale-95 text-xs sm:text-[10px] font-medium"
+                            title="Otomatis merapikan format diagram secara horizontal & vertikal"
+                          >
+                            <Sparkles className="w-3.5 h-3.5 text-violet-600 fill-violet-200" />
+                            <span className="hidden sm:inline">Auto-Align</span>
+                          </button>
 
-              {/* Live Flow Simulator */}
-              <button
-                onClick={handleSimulateFlow}
-                className={cn(
-                  "p-1 px-2 rounded-xl transition-all flex items-center gap-1 active:scale-95 text-xs sm:text-[10px] font-medium",
-                  isSimulating 
-                    ? "bg-red-50 text-red-600 hover:bg-red-100 border border-red-150 shadow-soft" 
-                    : "text-content-body hover:bg-surface-muted hover:text-emerald-600"
-                )}
-                title={isSimulating ? "Hentikan Simulasi" : "Jalankan Simulasi Alur Kerja Visual"}
-              >
-                <Play className={cn("w-3.5 h-3.5", isSimulating ? "text-red-500 fill-red-200 animate-pulse" : "text-emerald-500 fill-emerald-200")} />
-                <span className="hidden sm:inline">{isSimulating ? "Stop Sim" : "Simulasikan"}</span>
-              </button>
+                          {/* Live Flow Simulator */}
+                          <button
+                            onClick={handleSimulateFlow}
+                            className={cn(
+                              "p-1 px-2 rounded-xl transition-all flex items-center gap-1 active:scale-95 text-xs sm:text-[10px] font-medium",
+                              isSimulating
+                                ? "bg-red-50 text-red-600 hover:bg-red-100 border border-red-150 shadow-soft"
+                                : "text-content-body hover:bg-surface-muted hover:text-emerald-600"
+                            )}
+                            title={
+                              isSimulating
+                                ? "Hentikan Simulasi"
+                                : "Jalankan Simulasi Alur Kerja Visual"
+                            }
+                          >
+                            <Play
+                              className={cn(
+                                "w-3.5 h-3.5",
+                                isSimulating
+                                  ? "text-red-500 fill-red-200 animate-pulse"
+                                  : "text-emerald-500 fill-emerald-200"
+                              )}
+                            />
+                            <span className="hidden sm:inline">
+                              {isSimulating ? "Stop Sim" : "Simulasikan"}
+                            </span>
+                          </button>
 
-              <div className="w-px h-5 bg-slate-200 mx-1" />
+                          <div className="w-px h-5 bg-slate-200 mx-1" />
 
-              {/* Export JPG Image */}
-              <button
-                onClick={handleExportJPG}
-                className="p-2 text-content-muted hover:bg-surface-muted hover:text-emerald-600 rounded-xl transition-all flex items-center justify-center active:scale-95"
-                title="Unduh sebagai Gambar JPG"
-              >
-                <ImageIcon className="w-3.5 h-3.5 text-emerald-500" />
-              </button>
+                          {/* Export JPG Image */}
+                          <button
+                            onClick={handleExportJPG}
+                            className="p-2 text-content-muted hover:bg-surface-muted hover:text-emerald-600 rounded-xl transition-all flex items-center justify-center active:scale-95"
+                            title="Unduh sebagai Gambar JPG"
+                          >
+                            <ImageIcon className="w-3.5 h-3.5 text-emerald-500" />
+                          </button>
 
-              {/* Download JSON backup */}
-              <button
-                onClick={handleExportJSON}
-                className="p-2 text-content-muted hover:bg-surface-muted hover:text-blue-600 rounded-xl transition-all flex items-center justify-center active:scale-95"
-                title="Ekspor Workspace ke JSON"
-              >
-                <Download className="w-3.5 h-3.5 text-blue-500" />
-              </button>
-              {/*
+                          {/* Download JSON backup */}
+                          <button
+                            onClick={handleExportJSON}
+                            className="p-2 text-content-muted hover:bg-surface-muted hover:text-blue-600 rounded-xl transition-all flex items-center justify-center active:scale-95"
+                            title="Ekspor Workspace ke JSON"
+                          >
+                            <Download className="w-3.5 h-3.5 text-blue-500" />
+                          </button>
+                          {/*
                 Impor diagram dari Draw.io, Miro, atau JSON.
                 Seluruh alurnya (modal, handler, dan parser Draw.io/Miro
                 sepanjang ~700 baris) sudah ada sejak lama tetapi tidak pernah
@@ -2795,356 +3168,442 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 mana pun, sehingga isImportModalOpen selalu false. Tombol ini
                 yang menyambungkannya.
               */}
-              <button
-                onClick={openImportModal}
-                className="p-2 text-content-muted hover:bg-surface-muted hover:text-emerald-600 rounded-xl transition-all flex items-center justify-center active:scale-95"
-                title="Impor Diagram (Draw.io, Miro, atau JSON)"
-              >
-                <Upload className="w-3.5 h-3.5 text-emerald-500" />
-              </button>
+                          <button
+                            onClick={openImportModal}
+                            className="p-2 text-content-muted hover:bg-surface-muted hover:text-emerald-600 rounded-xl transition-all flex items-center justify-center active:scale-95"
+                            title="Impor Diagram (Draw.io, Miro, atau JSON)"
+                          >
+                            <Upload className="w-3.5 h-3.5 text-emerald-500" />
+                          </button>
 
-              {/* Simpan Alur DB */}
-              {isWorkspaceEditable ? (
-                <button
-                  onClick={() => handleSaveWorkspace()}
-                  className="p-2 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-xl flex items-center gap-1.5 transition-all shadow-soft active:scale-95"
-                  title="Simpan seluruh flowchart ini ke database"
-                >
-                  <Save className="w-3.5 h-3.5" />
-                </button>
-              ) : (
-                <div className="px-2.5 py-1.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl flex items-center gap-1 text-xs sm:text-[10px] font-medium shadow-2xs">
-                  <Eye className="w-3.5 h-3.5 text-amber-500" />
-                  <span className="hidden sm:inline">Mode Baca Saja</span>
-                </div>
-              )}
-
-              <div className="w-px h-5 bg-slate-200 mx-1" />
-
-              {/* Clear Canvas */}
-              <button
-                onClick={handleClearWhiteboard}
-                className="p-2 text-content-subtle hover:bg-rose-50 hover:text-rose-600 rounded-xl transition-all flex items-center justify-center active:scale-95"
-                title="Bersihkan Semua Bentuk dan Garis Kanvas"
-              >
-                <RefreshCw className="w-3.5 h-3.5 text-rose-500" />
-              </button>
-
-              <div className="w-px h-5 bg-slate-200 mx-1" />
-              
-              {/* Zoom Controls */}
-              <div className="flex items-center gap-0.5 bg-surface-sunken/50 rounded-xl p-0.5 border border-border-subtle/60">
-                <button
-                  onClick={() => setZoomLevel(prev => Math.max(0.2, prev - 0.1))}
-                  className="p-1.5 text-content-muted hover:bg-slate-200 hover:text-content-strong rounded-lg transition-all active:scale-95"
-                  title="Perkecil (-)"
-                >
-                  <ZoomOut className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={() => setZoomLevel(1)}
-                  className="px-2 text-xs sm:text-[10px] font-medium text-content-secondary hover:text-violet-600 w-11 text-center font-mono cursor-pointer transition-colors"
-                  title="Reset Zoom (100%)"
-                >
-                  {Math.round(zoomLevel * 100)}%
-                </button>
-                <button
-                  onClick={() => setZoomLevel(prev => Math.min(3.0, prev + 0.1))}
-                  className="p-1.5 text-content-muted hover:bg-slate-200 hover:text-content-strong rounded-lg transition-all active:scale-95"
-                  title="Perbesar (+)"
-                >
-                  <ZoomIn className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-              <div className="w-px h-5 bg-slate-200 mx-1" />
-
-              {/* Keyboard assistance trigger */}
-              <button
-                onClick={() => setIsKeyboardHelpOpen(!isKeyboardHelpOpen)}
-                className={cn(
-                  "p-2 rounded-xl transition-all flex items-center justify-center",
-                  isKeyboardHelpOpen ? "bg-amber-50 text-amber-600 border border-amber-250" : "text-content-muted hover:bg-surface-muted"
-                )}
-                title="Bantuan Navigasi & Pintasan Keyboard"
-              >
-                <HelpCircle className="w-3.5 h-3.5" />
-              </button>
-
-            </div>
-
-            {/* KEYBOARD SHORTCUTS NAVIGATIONAL HELP PANELS */}
-            {isKeyboardHelpOpen && (
-              <div className="absolute left-4 right-4 md:left-auto md:right-4 bottom-20 z-40 bg-slate-900/95 backdrop-blur text-white p-4 rounded-xl border border-slate-750 shadow-2xl max-w-sm space-y-3 p-4 select-none">
-                <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-                  <span className="font-medium uppercase tracking-widest text-xs sm:text-[11px] sm:text-[9.5px] text-violet-400">Pintasan Keyboard & Tips</span>
-                  <button onClick={() => setIsKeyboardHelpOpen(false)} className="text-content-subtle hover:text-white transition-colors">
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-                <div className="space-y-2 text-xs sm:text-[11px] leading-relaxed">
-                  <div className="flex justify-between items-center">
-                    <span className="text-content-subtle font-medium font-sans">Batal Aksi (Undo)</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Ctrl + Z</kbd>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-content-subtle font-medium font-sans">Ulangi Aksi (Redo)</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Ctrl + Y / Ctrl+Shift+Z</kbd>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-content-subtle font-medium font-sans">Duplikasi Bentuk</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Ctrl + D</kbd>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-content-subtle font-medium font-sans">Geser Alur (Nudge)</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Tombol Panah Arrow (↑↓←→)</kbd>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-content-subtle font-medium font-sans font-sans">Geser Kelompok Lebar</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Shift + Panah</kbd>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-content-subtle font-medium font-sans">Batalkan Pilihan / Tool</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Esc</kbd>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-content-subtle font-medium font-sans">Hapus Element Terpilih</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium font-sans">Delete / Backspace</kbd>
-                  </div>
-                </div>
-                <div className="h-px bg-slate-800 my-1" />
-                <p className="text-xs sm:text-[10px] text-content-subtle italic font-mono leading-relaxed">
-                  💡 Tips BNI Doc: Aktifkan mode &ldquo;Arrow&rdquo; dari toolbar sebelah kiri, klik pada komponen awal, lalu klik pada komponen kedua untuk menyambung koneksi anak panah alur secara instan.
-                </p>
-              </div>
-            )}
-
-          </div>
-
-          {/* RIGHT EDIT ATTRIBUTES PANEL - SHAPES DETAILS EDITOR (FLOATING SHEET OVERLAY) */}
-          <div 
-            className={cn(
-              "absolute right-4 top-4 bottom-4 w-80 bg-surface/70 hover:bg-surface/85 backdrop-blur-md border border-border-subtle/40 rounded-xl py-4 px-4 space-y-4 shrink-0 overflow-y-auto z-20 text-xs shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col",
-              isRightSidebarOpen ? "translate-x-0 opacity-100 pointer-events-auto" : "translate-x-[360px] opacity-0 pointer-events-none"
-            )}
-          >
-            
-            {selectedNodeId ? (
-              <div className="space-y-4">
-                
-                <div className="flex justify-between items-center bg-surface-sunken p-2.5 rounded-lg border border-border-subtle">
-                  <div>
-                    <span className="text-xs sm:text-[10px] sm:text-[8.5px] font-medium tracking-wider text-slate-550 text-content-muted uppercase">Selected Component</span>
-                    <div className="text-content font-medium capitalize flex items-center gap-1.5 mt-0.5 text-xs">
-                      <div className="w-2 h-2 rounded bg-violet-500" />
-                      {nodes.find(n => n.id === selectedNodeId)?.type || "Unknown"}
-                    </div>
-                  </div>
-                  <button 
-                    onClick={handleDeleteSelected}
-                    className="p-2 bg-rose-50 rounded-lg hover:bg-rose-100 text-rose-600 transition-all active:scale-95 shadow-soft border border-rose-150"
-                    title="Hapus shape"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                {/* Shape Type Dropper Selector (Miro Dynamic conversion) */}
-                <div className="space-y-1.5">
-                  <label className="text-xs sm:text-[10px] uppercase font-medium text-slate-550 text-content-muted font-medium flex items-center gap-1">
-                    <Layers className="w-3.5 h-3.5 text-violet-600" />
-                    <span>Ubah Bentuk / Tipe Shape</span>
-                  </label>
-                  <select
-                    value={nodes.find(n => n.id === selectedNodeId)?.type || "rect"}
-                    onChange={(e) => {
-                      const newType = e.target.value as FlowNode["type"];
-                      handleUpdateActiveNode({ type: newType });
-                      toast.success(`Mengubah bentuk komponen alur menjadi: ${newType.toUpperCase()}`);
-                    }}
-                    className="w-full text-xs bg-surface-sunken border border-border-subtle rounded-lg p-2 text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 font-medium transition-all"
-                  >
-                    <option value="rect">🔲 Proses (Rectangle)</option>
-                    <option value="decision">🔶 Decision / Keputusan (Diamond)</option>
-                    <option value="predefined">📋 Predefined Process (Double Border)</option>
-                    <option value="database">🛢️ Database Server (Cylinder)</option>
-                    <option value="oval">🟢 Start / End (Oval Boundary)</option>
-                    <option value="circle">⚪ Bulatan Kategori (Circle)</option>
-                    <option value="sticky">💛 Catatan Tempel Miro (Sticky)</option>
-                    <option value="cloud">☁️ Arsitektur Awan (Cloud)</option>
-                    <option value="parallelogram">📐 Input / Output (Parallelogram)</option>
-                    <option value="document">📄 Dokumen Laporan (Document)</option>
-                    <option value="actor">👤 Aktor Pengguna (User Actor)</option>
-                    <option value="folder">📂 Folder Penyimpanan (Folder)</option>
-                    <option value="card">🗂️ Story Backlog Card</option>
-                    <option value="text">✏️ Tulisan Bebas (Plain Text)</option>
-                  </select>
-                </div>
-
-                {/* Edit inline message */}
-                <div className="space-y-1.5">
-                  <label className="text-xs sm:text-[10px] uppercase font-medium text-slate-550 text-content-muted font-medium">Sunting Teks</label>
-                  <textarea
-                    value={nodes.find(n => n.id === selectedNodeId)?.label || ""}
-                    onChange={(e) => handleUpdateActiveNode({ label: e.target.value })}
-                    className="w-full h-16 text-xs bg-surface-sunken border border-border-subtle rounded p-2 text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 font-medium transition-all"
-                    placeholder="Masukkan label teks..."
-                  />
-                </div>
-
-                {/* Shape Theme Colors (Miro aesthetics) */}
-                <div className="space-y-2">
-                  <span className="text-xs sm:text-[10px] uppercase font-medium text-slate-550 text-content-muted block font-medium">Warna Palette Miro</span>
-                  <div className="grid grid-cols-6 gap-1.5">
-                    {Object.keys(colorPalettes).map((colName) => {
-                      const isActive = nodes.find(n => n.id === selectedNodeId)?.color === colName;
-                      return (
-                        <button
-                          key={colName}
-                          onClick={() => handleUpdateActiveNode({ color: colName })}
-                          className={cn(
-                            "h-5 rounded-md hover:scale-105 border transition-all",
-                            colorPalettes[colName].preview,
-                            isActive ? "border-slate-400 ring-2 ring-violet-500 scale-105" : "border-border-subtle"
+                          {/* Simpan Alur DB */}
+                          {isWorkspaceEditable ? (
+                            <button
+                              onClick={() => handleSaveWorkspace()}
+                              className="p-2 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-xl flex items-center gap-1.5 transition-all shadow-soft active:scale-95"
+                              title="Simpan seluruh flowchart ini ke database"
+                            >
+                              <Save className="w-3.5 h-3.5" />
+                            </button>
+                          ) : (
+                            <div className="px-2.5 py-1.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl flex items-center gap-1 text-xs sm:text-[10px] font-medium shadow-2xs">
+                              <Eye className="w-3.5 h-3.5 text-amber-500" />
+                              <span className="hidden sm:inline">Mode Baca Saja</span>
+                            </div>
                           )}
-                          title={colName}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
 
-                {/* Borders parameters styling */}
-                <div className="space-y-1.5">
-                  <span className="text-xs sm:text-[10px] uppercase font-medium text-content-muted block font-medium">Gaya Garis Bingkai</span>
-                  <div className="grid grid-cols-3 gap-1">
-                    {[
-                      { l: "Solid", val: "solid" },
-                      { l: "Putus", val: "dashed" },
-                      { l: "Tanpa Garis", val: "none" }
-                    ].map((st) => {
-                      const currentVal = nodes.find(n => n.id === selectedNodeId)?.borderStyle || "solid";
-                      return (
-                        <button
-                          key={st.val}
-                          onClick={() => handleUpdateActiveNode({ borderStyle: st.val as any })}
-                          className={cn(
-                            "p-1 rounded font-medium text-xs sm:text-[10px] text-center border capitalize transition-all",
-                            currentVal === st.val 
-                              ? "bg-violet-50 text-violet-700 border-violet-200" 
-                              : "bg-surface-sunken text-content-secondary border-border-subtle hover:bg-surface-muted"
-                          )}
-                        >
-                          {st.l}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+                          <div className="w-px h-5 bg-slate-200 mx-1" />
 
-                {/* Dimension adjustments */}
-                <div className="space-y-2">
-                  <span className="text-xs sm:text-[10px] uppercase font-medium text-content-muted block font-medium">Dimensi Ukuran</span>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle font-medium">Lebar (W)</span>
-                      <input
-                        type="number"
-                        min="40"
-                        max="500"
-                        value={nodes.find(n => n.id === selectedNodeId)?.width || 120}
-                        onChange={(e) => handleUpdateActiveNode({ width: parseInt(e.target.value) || 120 })}
-                        className="w-full text-xs font-mono bg-surface-sunken border border-border-subtle rounded p-1 mt-0.5 text-center text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all font-medium"
-                      />
+                          {/* Clear Canvas */}
+                          <button
+                            onClick={handleClearWhiteboard}
+                            className="p-2 text-content-subtle hover:bg-rose-50 hover:text-rose-600 rounded-xl transition-all flex items-center justify-center active:scale-95"
+                            title="Bersihkan Semua Bentuk dan Garis Kanvas"
+                          >
+                            <RefreshCw className="w-3.5 h-3.5 text-rose-500" />
+                          </button>
+
+                          <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                          {/* Zoom Controls */}
+                          <div className="flex items-center gap-0.5 bg-surface-sunken/50 rounded-xl p-0.5 border border-border-subtle/60">
+                            <button
+                              onClick={() => setZoomLevel((prev) => Math.max(0.2, prev - 0.1))}
+                              className="p-1.5 text-content-muted hover:bg-slate-200 hover:text-content-strong rounded-lg transition-all active:scale-95"
+                              title="Perkecil (-)"
+                            >
+                              <ZoomOut className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => setZoomLevel(1)}
+                              className="px-2 text-xs sm:text-[10px] font-medium text-content-secondary hover:text-violet-600 w-11 text-center font-mono cursor-pointer transition-colors"
+                              title="Reset Zoom (100%)"
+                            >
+                              {Math.round(zoomLevel * 100)}%
+                            </button>
+                            <button
+                              onClick={() => setZoomLevel((prev) => Math.min(3.0, prev + 0.1))}
+                              className="p-1.5 text-content-muted hover:bg-slate-200 hover:text-content-strong rounded-lg transition-all active:scale-95"
+                              title="Perbesar (+)"
+                            >
+                              <ZoomIn className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
+                          <div className="w-px h-5 bg-slate-200 mx-1" />
+
+                          {/* Keyboard assistance trigger */}
+                          <button
+                            onClick={() => setIsKeyboardHelpOpen(!isKeyboardHelpOpen)}
+                            className={cn(
+                              "p-2 rounded-xl transition-all flex items-center justify-center",
+                              isKeyboardHelpOpen
+                                ? "bg-amber-50 text-amber-600 border border-amber-250"
+                                : "text-content-muted hover:bg-surface-muted"
+                            )}
+                            title="Bantuan Navigasi & Pintasan Keyboard"
+                          >
+                            <HelpCircle className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+
+                        {/* KEYBOARD SHORTCUTS NAVIGATIONAL HELP PANELS */}
+                        {isKeyboardHelpOpen && (
+                          <div className="absolute left-4 right-4 md:left-auto md:right-4 bottom-20 z-40 bg-slate-900/95 backdrop-blur text-white p-4 rounded-xl border border-slate-750 shadow-2xl max-w-sm space-y-3 p-4 select-none">
+                            <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+                              <span className="font-medium uppercase tracking-widest text-xs sm:text-[11px] sm:text-[9.5px] text-violet-400">
+                                Pintasan Keyboard & Tips
+                              </span>
+                              <button
+                                onClick={() => setIsKeyboardHelpOpen(false)}
+                                className="text-content-subtle hover:text-white transition-colors"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                            <div className="space-y-2 text-xs sm:text-[11px] leading-relaxed">
+                              <div className="flex justify-between items-center">
+                                <span className="text-content-subtle font-medium font-sans">
+                                  Batal Aksi (Undo)
+                                </span>
+                                <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">
+                                  Ctrl + Z
+                                </kbd>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-content-subtle font-medium font-sans">
+                                  Ulangi Aksi (Redo)
+                                </span>
+                                <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">
+                                  Ctrl + Y / Ctrl+Shift+Z
+                                </kbd>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-content-subtle font-medium font-sans">
+                                  Duplikasi Bentuk
+                                </span>
+                                <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">
+                                  Ctrl + D
+                                </kbd>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-content-subtle font-medium font-sans">
+                                  Geser Alur (Nudge)
+                                </span>
+                                <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">
+                                  Tombol Panah Arrow (↑↓←→)
+                                </kbd>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-content-subtle font-medium font-sans font-sans">
+                                  Geser Kelompok Lebar
+                                </span>
+                                <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">
+                                  Shift + Panah
+                                </kbd>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-content-subtle font-medium font-sans">
+                                  Batalkan Pilihan / Tool
+                                </span>
+                                <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">
+                                  Esc
+                                </kbd>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-content-subtle font-medium font-sans">
+                                  Hapus Element Terpilih
+                                </span>
+                                <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium font-sans">
+                                  Delete / Backspace
+                                </kbd>
+                              </div>
+                            </div>
+                            <div className="h-px bg-slate-800 my-1" />
+                            <p className="text-xs sm:text-[10px] text-content-subtle italic font-mono leading-relaxed">
+                              💡 Tips BNI Doc: Aktifkan mode &ldquo;Arrow&rdquo; dari toolbar
+                              sebelah kiri, klik pada komponen awal, lalu klik pada komponen kedua
+                              untuk menyambung koneksi anak panah alur secara instan.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* RIGHT EDIT ATTRIBUTES PANEL - SHAPES DETAILS EDITOR (FLOATING SHEET OVERLAY) */}
+                      <div
+                        className={cn(
+                          "absolute right-4 top-4 bottom-4 w-80 bg-surface/70 hover:bg-surface/85 backdrop-blur-md border border-border-subtle/40 rounded-xl py-4 px-4 space-y-4 shrink-0 overflow-y-auto z-20 text-xs shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col",
+                          isRightSidebarOpen
+                            ? "translate-x-0 opacity-100 pointer-events-auto"
+                            : "translate-x-[360px] opacity-0 pointer-events-none"
+                        )}
+                      >
+                        {selectedNodeId ? (
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center bg-surface-sunken p-2.5 rounded-lg border border-border-subtle">
+                              <div>
+                                <span className="text-xs sm:text-[10px] sm:text-[8.5px] font-medium tracking-wider text-slate-550 text-content-muted uppercase">
+                                  Selected Component
+                                </span>
+                                <div className="text-content font-medium capitalize flex items-center gap-1.5 mt-0.5 text-xs">
+                                  <div className="w-2 h-2 rounded bg-violet-500" />
+                                  {nodes.find((n) => n.id === selectedNodeId)?.type || "Unknown"}
+                                </div>
+                              </div>
+                              <button
+                                onClick={handleDeleteSelected}
+                                className="p-2 bg-rose-50 rounded-lg hover:bg-rose-100 text-rose-600 transition-all active:scale-95 shadow-soft border border-rose-150"
+                                title="Hapus shape"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+
+                            {/* Shape Type Dropper Selector (Miro Dynamic conversion) */}
+                            <div className="space-y-1.5">
+                              <label className="text-xs sm:text-[10px] uppercase font-medium text-slate-550 text-content-muted font-medium flex items-center gap-1">
+                                <Layers className="w-3.5 h-3.5 text-violet-600" />
+                                <span>Ubah Bentuk / Tipe Shape</span>
+                              </label>
+                              <select
+                                value={nodes.find((n) => n.id === selectedNodeId)?.type || "rect"}
+                                onChange={(e) => {
+                                  const newType = e.target.value as FlowNode["type"];
+                                  handleUpdateActiveNode({ type: newType });
+                                  toast.success(
+                                    `Mengubah bentuk komponen alur menjadi: ${newType.toUpperCase()}`
+                                  );
+                                }}
+                                className="w-full text-xs bg-surface-sunken border border-border-subtle rounded-lg p-2 text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 font-medium transition-all"
+                              >
+                                <option value="rect">🔲 Proses (Rectangle)</option>
+                                <option value="decision">🔶 Decision / Keputusan (Diamond)</option>
+                                <option value="predefined">
+                                  📋 Predefined Process (Double Border)
+                                </option>
+                                <option value="database">🛢️ Database Server (Cylinder)</option>
+                                <option value="oval">🟢 Start / End (Oval Boundary)</option>
+                                <option value="circle">⚪ Bulatan Kategori (Circle)</option>
+                                <option value="sticky">💛 Catatan Tempel Miro (Sticky)</option>
+                                <option value="cloud">☁️ Arsitektur Awan (Cloud)</option>
+                                <option value="parallelogram">
+                                  📐 Input / Output (Parallelogram)
+                                </option>
+                                <option value="document">📄 Dokumen Laporan (Document)</option>
+                                <option value="actor">👤 Aktor Pengguna (User Actor)</option>
+                                <option value="folder">📂 Folder Penyimpanan (Folder)</option>
+                                <option value="card">🗂️ Story Backlog Card</option>
+                                <option value="text">✏️ Tulisan Bebas (Plain Text)</option>
+                              </select>
+                            </div>
+
+                            {/* Edit inline message */}
+                            <div className="space-y-1.5">
+                              <label className="text-xs sm:text-[10px] uppercase font-medium text-slate-550 text-content-muted font-medium">
+                                Sunting Teks
+                              </label>
+                              <textarea
+                                value={nodes.find((n) => n.id === selectedNodeId)?.label || ""}
+                                onChange={(e) => handleUpdateActiveNode({ label: e.target.value })}
+                                className="w-full h-16 text-xs bg-surface-sunken border border-border-subtle rounded p-2 text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 font-medium transition-all"
+                                placeholder="Masukkan label teks..."
+                              />
+                            </div>
+
+                            {/* Shape Theme Colors (Miro aesthetics) */}
+                            <div className="space-y-2">
+                              <span className="text-xs sm:text-[10px] uppercase font-medium text-slate-550 text-content-muted block font-medium">
+                                Warna Palette Miro
+                              </span>
+                              <div className="grid grid-cols-6 gap-1.5">
+                                {Object.keys(colorPalettes).map((colName) => {
+                                  const isActive =
+                                    nodes.find((n) => n.id === selectedNodeId)?.color === colName;
+                                  return (
+                                    <button
+                                      key={colName}
+                                      onClick={() => handleUpdateActiveNode({ color: colName })}
+                                      className={cn(
+                                        "h-5 rounded-md hover:scale-105 border transition-all",
+                                        colorPalettes[colName].preview,
+                                        isActive
+                                          ? "border-slate-400 ring-2 ring-violet-500 scale-105"
+                                          : "border-border-subtle"
+                                      )}
+                                      title={colName}
+                                    />
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            {/* Borders parameters styling */}
+                            <div className="space-y-1.5">
+                              <span className="text-xs sm:text-[10px] uppercase font-medium text-content-muted block font-medium">
+                                Gaya Garis Bingkai
+                              </span>
+                              <div className="grid grid-cols-3 gap-1">
+                                {[
+                                  { l: "Solid", val: "solid" },
+                                  { l: "Putus", val: "dashed" },
+                                  { l: "Tanpa Garis", val: "none" },
+                                ].map((st) => {
+                                  const currentVal =
+                                    nodes.find((n) => n.id === selectedNodeId)?.borderStyle ||
+                                    "solid";
+                                  return (
+                                    <button
+                                      key={st.val}
+                                      onClick={() =>
+                                        handleUpdateActiveNode({ borderStyle: st.val as any })
+                                      }
+                                      className={cn(
+                                        "p-1 rounded font-medium text-xs sm:text-[10px] text-center border capitalize transition-all",
+                                        currentVal === st.val
+                                          ? "bg-violet-50 text-violet-700 border-violet-200"
+                                          : "bg-surface-sunken text-content-secondary border-border-subtle hover:bg-surface-muted"
+                                      )}
+                                    >
+                                      {st.l}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            {/* Dimension adjustments */}
+                            <div className="space-y-2">
+                              <span className="text-xs sm:text-[10px] uppercase font-medium text-content-muted block font-medium">
+                                Dimensi Ukuran
+                              </span>
+                              <div className="grid grid-cols-2 gap-2">
+                                <div>
+                                  <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle font-medium">
+                                    Lebar (W)
+                                  </span>
+                                  <input
+                                    type="number"
+                                    min="40"
+                                    max="500"
+                                    value={nodes.find((n) => n.id === selectedNodeId)?.width || 120}
+                                    onChange={(e) =>
+                                      handleUpdateActiveNode({
+                                        width: parseInt(e.target.value) || 120,
+                                      })
+                                    }
+                                    className="w-full text-xs font-mono bg-surface-sunken border border-border-subtle rounded p-1 mt-0.5 text-center text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all font-medium"
+                                  />
+                                </div>
+                                <div>
+                                  <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle font-medium">
+                                    Tinggi (H)
+                                  </span>
+                                  <input
+                                    type="number"
+                                    min="40"
+                                    max="500"
+                                    value={
+                                      nodes.find((n) => n.id === selectedNodeId)?.height || 120
+                                    }
+                                    onChange={(e) =>
+                                      handleUpdateActiveNode({
+                                        height: parseInt(e.target.value) || 120,
+                                      })
+                                    }
+                                    className="w-full text-xs font-mono bg-surface-sunken border border-border-subtle rounded p-1 mt-0.5 text-center text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all font-medium"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Integration with Workspace tasks list (LINKING TASKS BACKLOG TO SHAPES) */}
+                            <div className="space-y-1.5 pt-2 border-t border-border-subtle">
+                              <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted flex items-center gap-1 font-medium">
+                                <Workflow className="w-3.5 h-3.5 text-violet-600" />
+                                <span>Link Task Backlog BNI</span>
+                              </label>
+                              <p className="text-xs sm:text-[11px] sm:text-[9px] text-content-muted mb-2 font-medium">
+                                Hubungkan bentuk dengan sprint backlog agar status tersinkronisasi
+                                otomatis.
+                              </p>
+
+                              <select
+                                value={nodes.find((n) => n.id === selectedNodeId)?.taskId || ""}
+                                onChange={(e) =>
+                                  handleUpdateActiveNode({ taskId: e.target.value || undefined })
+                                }
+                                className="w-full text-xs bg-surface-sunken border border-border-subtle rounded p-1.5 text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all font-medium"
+                              >
+                                <option value="">-- Hubungkan Task --</option>
+                                {tasks.map((t) => (
+                                  <option key={t.id} value={t.id}>
+                                    [{t.key}] {t.title} ({t.status})
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                        ) : selectedEdgeId ? (
+                          <div className="space-y-4">
+                            <div className="bg-surface-sunken p-3 rounded-lg border border-border-subtle">
+                              <span className="text-xs sm:text-[10px] sm:text-[8px] font-mono text-content-muted uppercase tracking-widest block font-medium">
+                                Selected Relation
+                              </span>
+                              <div className="text-content font-medium mt-1 text-xs">
+                                Garis Alur Penghubung
+                              </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                              <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted font-medium">
+                                Lebel pada Garis Alur
+                              </label>
+                              <input
+                                type="text"
+                                value={edges.find((e) => e.id === selectedEdgeId)?.label || ""}
+                                onChange={(e) => {
+                                  const updated = edges.map((edge) =>
+                                    edge.id === selectedEdgeId
+                                      ? { ...edge, label: e.target.value }
+                                      : edge
+                                  );
+                                  setEdges(updated);
+                                }}
+                                className="w-full text-xs bg-surface-sunken border border-border-subtle rounded p-2 text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 font-medium transition-all"
+                                placeholder="Ya / Tidak / Proses..."
+                              />
+                            </div>
+
+                            <button
+                              onClick={handleDeleteSelected}
+                              className="w-full p-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-medium rounded text-xs flex items-center justify-center gap-2 transition-all"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" /> Putuskan Alur
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="text-center py-16 text-content-muted space-y-3">
+                            <div className="w-10 h-10 bg-surface-sunken rounded-full flex items-center justify-center mx-auto text-content-subtle border border-border-subtle shadow-soft">
+                              <MousePointer className="w-4 h-4 text-violet-600" />
+                            </div>
+                            <div className="text-xs sm:text-[11px] font-medium text-content">
+                              Tidak ada komponen dipilih
+                            </div>
+                            <p className="text-xs sm:text-[10px] text-content-muted max-w-[190px] mx-auto leading-relaxed">
+                              Klik satu komponen bentuk, catatan tempel, atau anak panah alir di
+                              canvas untuk mengubah properti ornamen.
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle font-medium">Tinggi (H)</span>
-                      <input
-                        type="number"
-                        min="40"
-                        max="500"
-                        value={nodes.find(n => n.id === selectedNodeId)?.height || 120}
-                        onChange={(e) => handleUpdateActiveNode({ height: parseInt(e.target.value) || 120 })}
-                        className="w-full text-xs font-mono bg-surface-sunken border border-border-subtle rounded p-1 mt-0.5 text-center text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all font-medium"
-                      />
-                    </div>
-                  </div>
+                  )}
                 </div>
-
-                {/* Integration with Workspace tasks list (LINKING TASKS BACKLOG TO SHAPES) */}
-                <div className="space-y-1.5 pt-2 border-t border-border-subtle">
-                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted flex items-center gap-1 font-medium">
-                    <Workflow className="w-3.5 h-3.5 text-violet-600" />
-                    <span>Link Task Backlog BNI</span>
-                  </label>
-                  <p className="text-xs sm:text-[11px] sm:text-[9px] text-content-muted mb-2 font-medium">Hubungkan bentuk dengan sprint backlog agar status tersinkronisasi otomatis.</p>
-                  
-                  <select
-                    value={nodes.find(n => n.id === selectedNodeId)?.taskId || ""}
-                    onChange={(e) => handleUpdateActiveNode({ taskId: e.target.value || undefined })}
-                    className="w-full text-xs bg-surface-sunken border border-border-subtle rounded p-1.5 text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all font-medium"
-                  >
-                    <option value="">-- Hubungkan Task --</option>
-                    {tasks.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        [{t.key}] {t.title} ({t.status})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-              </div>
-            ) : selectedEdgeId ? (
-              <div className="space-y-4">
-                
-                <div className="bg-surface-sunken p-3 rounded-lg border border-border-subtle">
-                  <span className="text-xs sm:text-[10px] sm:text-[8px] font-mono text-content-muted uppercase tracking-widest block font-medium">Selected Relation</span>
-                  <div className="text-content font-medium mt-1 text-xs">Garis Alur Penghubung</div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted font-medium">Lebel pada Garis Alur</label>
-                  <input
-                    type="text"
-                    value={edges.find(e => e.id === selectedEdgeId)?.label || ""}
-                    onChange={(e) => {
-                      const updated = edges.map(edge => edge.id === selectedEdgeId ? { ...edge, label: e.target.value } : edge);
-                      setEdges(updated);
-                    }}
-                    className="w-full text-xs bg-surface-sunken border border-border-subtle rounded p-2 text-content focus:bg-surface focus:outline-none focus:ring-1 focus:ring-violet-500 font-medium transition-all"
-                    placeholder="Ya / Tidak / Proses..."
-                  />
-                </div>
-
-                <button
-                  onClick={handleDeleteSelected}
-                  className="w-full p-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-medium rounded text-xs flex items-center justify-center gap-2 transition-all"
-                >
-                  <Trash2 className="w-3.5 h-3.5" /> Putuskan Alur
-                </button>
-
-              </div>
-            ) : (
-              <div className="text-center py-16 text-content-muted space-y-3">
-                <div className="w-10 h-10 bg-surface-sunken rounded-full flex items-center justify-center mx-auto text-content-subtle border border-border-subtle shadow-soft">
-                  <MousePointer className="w-4 h-4 text-violet-600" />
-                </div>
-                <div className="text-xs sm:text-[11px] font-medium text-content">Tidak ada komponen dipilih</div>
-                <p className="text-xs sm:text-[10px] text-content-muted max-w-[190px] mx-auto leading-relaxed">
-                  Klik satu komponen bentuk, catatan tempel, atau anak panah alir di canvas untuk mengubah properti ornamen.
-                </p>
               </div>
             )}
-
           </div>
         </div>
       )}
-    </div>
-  </div>
-)}
-</div>
-</div>
-)}
 
       {/* DETAILED POPUP DIALOG: MULTI-FORMAT DIAGRAM IMPORT (Draw.io, Miro, JSON) */}
       <ImportDiagramModal
@@ -3167,7 +3626,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-surface border border-border-subtle w-full max-w-md rounded-xl shadow-xl overflow-hidden text-content-strong">
-            
             {/* Modal Head */}
             <div className="px-5 py-4 bg-surface border-b border-border-subtle flex justify-between items-center">
               <div className="flex items-center gap-2">
@@ -3178,7 +3636,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   {modalMode === "create" ? "Tambah Data Flowchart" : "Sunting Detail Dokumen"}
                 </h3>
               </div>
-              <button 
+              <button
                 onClick={() => setIsModalOpen(false)}
                 className="p-1 hover:bg-surface-muted rounded-lg text-content-subtle hover:text-content-secondary transition-all"
               >
@@ -3188,7 +3646,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
             {/* Modal Body / Form */}
             <form onSubmit={handleModalSubmit} className="p-5 space-y-4 text-xs">
-              
               <div className="space-y-1.5">
                 <label className="text-xs sm:text-[11px] font-medium text-content-body">
                   Nama Dokumen / Flowchart <span className="text-rose-500">*</span>
@@ -3232,7 +3689,8 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   className="w-full text-xs font-medium bg-surface-sunken border border-border-subtle rounded-lg p-2.5 text-content-strong placeholder:text-content-subtle focus:bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
                 />
                 <p className="text-xs sm:text-[10px] text-content-subtle leading-normal">
-                  Jika memasukkan link Google Docs/Sheets/Slides, sistem akan mengubah tautan secara otomatis ke mode preview interaktif.
+                  Jika memasukkan link Google Docs/Sheets/Slides, sistem akan mengubah tautan secara
+                  otomatis ke mode preview interaktif.
                 </p>
               </div>
 
@@ -3254,12 +3712,15 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   ))}
                 </select>
                 <p className="text-xs sm:text-[10px] text-content-subtle leading-relaxed">
-                  Hubungkan dengan epic utama dari backlog workspace agar dokumentasi diagram alur berkaitan erat dengan milestone tim.
+                  Hubungkan dengan epic utama dari backlog workspace agar dokumentasi diagram alur
+                  berkaitan erat dengan milestone tim.
                 </p>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs sm:text-[11px] font-medium text-content-body">Deskripsi Arsitektur</label>
+                <label className="text-xs sm:text-[11px] font-medium text-content-body">
+                  Deskripsi Arsitektur
+                </label>
                 <textarea
                   placeholder="Ketikan ringkasan atau batasan proses flowchart ini..."
                   value={flowDescription}
@@ -3284,7 +3745,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   {modalMode === "create" ? "Buat Dokumen" : "Simpan Perubahan"}
                 </button>
               </div>
-
             </form>
           </div>
         </div>
@@ -3295,7 +3755,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
           x={nodeContextMenu.x}
           y={nodeContextMenu.y}
           nodeId={nodeContextMenu.nodeId}
-          nodeColor={nodes.find(n => n.id === nodeContextMenu.nodeId)?.color || "indigo"}
+          nodeColor={nodes.find((n) => n.id === nodeContextMenu.nodeId)?.color || "indigo"}
           onClose={() => setNodeContextMenu(null)}
           onDelete={handleContextMenuDeleteNode}
           onEditProperties={handleContextMenuEditProperties}
@@ -3309,9 +3769,17 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
           x={canvasContextMenu.x}
           y={canvasContextMenu.y}
           onClose={() => setCanvasContextMenu(null)}
-          onAddNode={(type, label, color) => handleAddNewNodeAtPosition(type as any, label, color, canvasContextMenu.x, canvasContextMenu.y)}
-          onZoomIn={() => setZoomLevel(prev => Math.min(3.0, prev + 0.1))}
-          onZoomOut={() => setZoomLevel(prev => Math.max(0.2, prev - 0.1))}
+          onAddNode={(type, label, color) =>
+            handleAddNewNodeAtPosition(
+              type as any,
+              label,
+              color,
+              canvasContextMenu.x,
+              canvasContextMenu.y
+            )
+          }
+          onZoomIn={() => setZoomLevel((prev) => Math.min(3.0, prev + 0.1))}
+          onZoomOut={() => setZoomLevel((prev) => Math.max(0.2, prev - 0.1))}
           onResetZoom={() => {
             setZoomLevel(0.9);
             setPanOffset({ x: 50, y: 50 });
@@ -3333,9 +3801,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 <div className="w-8 h-8 rounded-md bg-primary/10 text-primary flex items-center justify-center">
                   <FileText className="w-4 h-4" />
                 </div>
-                <h3 className="text-sm font-medium text-content">
-                  Upload Dokumen Baru
-                </h3>
+                <h3 className="text-sm font-medium text-content">Upload Dokumen Baru</h3>
               </div>
               <button
                 onClick={closeUploadDocumentModal}
@@ -3344,10 +3810,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 <X className="w-4 h-4" />
               </button>
             </div>
-            
+
             <div className="p-5 flex-1 overflow-y-auto space-y-4 text-xs">
               <div>
-                <label className="block text-xs sm:text-[11px] font-medium text-content-body mb-1.5">Nama Dokumen</label>
+                <label className="block text-xs sm:text-[11px] font-medium text-content-body mb-1.5">
+                  Nama Dokumen
+                </label>
                 <input
                   type="text"
                   value={uploadDocName}
@@ -3358,10 +3826,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs sm:text-[11px] font-medium text-content-body mb-1.5">Upload File (Max 5MB)</label>
+                <label className="block text-xs sm:text-[11px] font-medium text-content-body mb-1.5">
+                  Upload File (Max 5MB)
+                </label>
                 <div className="border border-dashed border-slate-300 rounded-md p-6 flex flex-col items-center justify-center bg-surface-sunken/50 relative overflow-hidden group hover:border-primary transition-colors">
-                  <input 
-                    type="file" 
+                  <input
+                    type="file"
                     onChange={handleDocumentFileChange}
                     accept=".pdf,.doc,.docx,.xls,.xlsx"
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
@@ -3369,14 +3839,22 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   <div className="w-10 h-10 bg-surface shadow-2xs border border-border-subtle rounded-full flex items-center justify-center mb-2.5 group-hover:scale-105 transition-all text-primary">
                     <Upload className="w-4 h-4" />
                   </div>
-                  <p className="text-xs font-medium text-content-body mb-0.5">Pilih atau Seret File Kesini</p>
-                  <p className="text-xs sm:text-[10px] text-content-subtle font-medium">Mendukung PDF, Word, Excel (Max. 5MB)</p>
-                  
+                  <p className="text-xs font-medium text-content-body mb-0.5">
+                    Pilih atau Seret File Kesini
+                  </p>
+                  <p className="text-xs sm:text-[10px] text-content-subtle font-medium">
+                    Mendukung PDF, Word, Excel (Max. 5MB)
+                  </p>
+
                   {uploadDocFile && (
                     <div className="mt-3 p-2.5 bg-indigo-50/80 border border-indigo-100 rounded-md w-full flex items-center justify-between">
                       <div className="flex flex-col min-w-0">
-                        <span className="text-xs font-medium text-primary truncate">{uploadDocFile.name}</span>
-                        <span className="text-xs sm:text-[10px] text-content-muted font-medium">{(uploadDocFile.size / 1024 / 1024).toFixed(2)} MB</span>
+                        <span className="text-xs font-medium text-primary truncate">
+                          {uploadDocFile.name}
+                        </span>
+                        <span className="text-xs sm:text-[10px] text-content-muted font-medium">
+                          {(uploadDocFile.size / 1024 / 1024).toFixed(2)} MB
+                        </span>
                       </div>
                       <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
                     </div>
@@ -3384,7 +3862,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 </div>
               </div>
             </div>
-            
+
             <div className="px-5 py-3.5 border-t border-border-faint bg-surface-sunken/50 flex justify-end items-center gap-2">
               <button
                 onClick={closeUploadDocumentModal}
@@ -3406,7 +3884,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
       <ConfirmationModal
         isOpen={confirmModal.isOpen}
-        onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+        onClose={() => setConfirmModal((prev) => ({ ...prev, isOpen: false }))}
         title={confirmModal.title}
         message={confirmModal.message}
         onConfirm={confirmModal.onConfirm}
@@ -3414,7 +3892,6 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
         cancelText="Batal"
         variant="danger"
       />
-
     </div>
   );
 };
