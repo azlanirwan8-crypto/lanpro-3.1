@@ -3698,7 +3698,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
 
       {/* Mobile Menu Button */}
       <button
-        className="md:hidden p-2 text-gray-500 z-50 absolute top-4 left-4"
+        className="md:hidden p-2.5 min-w-11 min-h-11 flex items-center justify-center text-content-muted z-50 absolute top-4 left-4"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
       >
         <Menu className="w-6 h-6" />
@@ -3783,7 +3783,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
                   setEditingProject(selectedProject);
                   setIsEditProjectModalOpen(true);
                 }}
-                className="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full text-slate-400 hover:text-slate-600 group transition-all"
+                className="p-2.5 min-w-11 min-h-11 flex items-center justify-center hover:bg-surface-sunken rounded-full text-content-subtle hover:text-content-secondary group transition-all"
                 title="Pengaturan Proyek"
               >
                 <Settings className="w-5 h-5 group-hover:rotate-90 transition-transform" />
@@ -3793,7 +3793,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
             {/* Fullscreen Toggle Button */}
             <button
               onClick={toggleFullscreen}
-              className="hidden sm:flex p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-800 rounded-full transition-all items-center justify-center"
+              className="hidden sm:flex p-2.5 min-w-11 min-h-11 items-center justify-center text-content-subtle hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-800 rounded-full transition-all items-center justify-center"
               title={isFullscreen ? "Keluar Layar Penuh" : "Layar Penuh"}
             >
               {isFullscreen ? (
@@ -3807,7 +3807,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
             <div className="relative" ref={themeDropdownRef}>
               <button
                 onClick={() => setIsThemeOpen(!isThemeOpen)}
-                className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:text-indigo-400 dark:hover:bg-slate-800 rounded-full transition-all flex items-center justify-center relative"
+                className="p-2.5 min-w-11 min-h-11 items-center justify-center text-content-subtle hover:text-indigo-600 hover:bg-indigo-50 dark:hover:text-indigo-400 dark:hover:bg-slate-800 rounded-full transition-all flex items-center justify-center relative"
                 title="Ubah Tema"
               >
                 {theme === 'light' ? (
@@ -3857,7 +3857,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
             <div className="relative" ref={notificationsRef}>
               <button
                 onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                className="p-2 text-slate-400 hover:text-violet-600 hover:bg-violet-50 rounded-full transition-all relative"
+                className="p-2.5 min-w-11 min-h-11 flex items-center justify-center text-content-subtle hover:text-violet-600 hover:bg-violet-50 rounded-full transition-all relative"
                 title="Notifikasi"
               >
                 <Bell className="w-5 h-5" />

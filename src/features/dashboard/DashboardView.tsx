@@ -613,7 +613,7 @@ export function DashboardView(props: DashboardViewProps) {
             {props.setIsNewTaskModalOpen && (
               <button
                 onClick={() => props.setIsNewTaskModalOpen?.(true)}
-                className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white px-3.5 py-2 rounded-lg text-xs font-medium shadow-sm transition-all cursor-pointer shrink-0"
+                className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white px-3.5 py-2.5 min-h-11 rounded-lg text-xs font-medium shadow-sm transition-all cursor-pointer shrink-0"
               >
                 <Plus className="w-4 h-4" />
                 <span>Task Baru</span>
@@ -644,7 +644,7 @@ export function DashboardView(props: DashboardViewProps) {
               <span className="flex items-center gap-1 font-medium text-emerald-600">
                 <ArrowUpRight className="w-3.5 h-3.5" /> {completionPercentage}% Completed
               </span>
-              <button onClick={() => props.setCurrentView('kanban')} className="text-slate-400 hover:text-indigo-600 text-[11px] font-medium underline transition">
+              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
                 View all tasks
               </button>
             </div>
@@ -665,7 +665,7 @@ export function DashboardView(props: DashboardViewProps) {
               <span className="font-medium text-blue-600">
                 {inProgressTasks.length} In Progress
               </span>
-              <button onClick={() => props.setCurrentView('kanban')} className="text-slate-400 hover:text-indigo-600 text-[11px] font-medium underline transition">
+              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
                 View active board
               </button>
             </div>
@@ -686,7 +686,7 @@ export function DashboardView(props: DashboardViewProps) {
               <span className="flex items-center gap-1 font-medium text-emerald-600">
                 <ArrowUpRight className="w-3.5 h-3.5" /> +{completionPercentage}% Rate
               </span>
-              <button onClick={() => props.setCurrentView('kanban')} className="text-slate-400 hover:text-indigo-600 text-[11px] font-medium underline transition">
+              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
                 View done list
               </button>
             </div>
@@ -707,7 +707,7 @@ export function DashboardView(props: DashboardViewProps) {
               <span className="font-medium text-rose-600">
                 {blockedTasks.length} Blocked • {overdueTasks.length} Overdue
               </span>
-              <button onClick={() => props.setCurrentView('kanban')} className="text-slate-400 hover:text-indigo-600 text-[11px] font-medium underline transition">
+              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
                 Resolve issues
               </button>
             </div>
@@ -734,7 +734,7 @@ export function DashboardView(props: DashboardViewProps) {
                       key={filter}
                       onClick={() => setRevenueFilter(filter)}
                       className={cn(
-                        "px-3 py-1 rounded text-[11px] font-medium transition cursor-pointer",
+                        "px-3 py-2.5 min-h-11 min-w-11 inline-flex items-center justify-center rounded text-[11px] font-medium transition cursor-pointer",
                         revenueFilter === filter
                           ? "bg-indigo-600 text-white shadow-2xs"
                           : "text-slate-600 dark:text-slate-300 hover:text-slate-900"
@@ -860,7 +860,7 @@ export function DashboardView(props: DashboardViewProps) {
                   </h3>
                   <p className="text-[11px] text-slate-400 mt-0.5 font-medium">Alokasi & penyelesaian task tiap anggota tim dengan indikator beban kerja</p>
                 </div>
-                <button onClick={() => props.setCurrentView('team')} className="text-xs font-medium text-indigo-600 hover:underline cursor-pointer">
+                <button onClick={() => props.setCurrentView('team')} className="text-xs font-medium text-indigo-600 hover:underline cursor-pointer inline-flex items-center min-h-11 py-2">
                   Manage Team
                 </button>
               </div>
@@ -955,7 +955,7 @@ export function DashboardView(props: DashboardViewProps) {
                   </h3>
                   <p className="text-[11px] text-slate-400 mt-0.5 font-medium">Progress pencapaian Epic & milestone utama proyek</p>
                 </div>
-                <button onClick={() => props.setCurrentView('roadmap')} className="text-xs font-medium text-indigo-600 hover:underline">
+                <button onClick={() => props.setCurrentView('roadmap')} className="text-xs font-medium text-indigo-600 hover:underline inline-flex items-center min-h-11 py-2">
                   View Roadmap
                 </button>
               </div>
@@ -1069,7 +1069,7 @@ export function DashboardView(props: DashboardViewProps) {
                   <Zap className="w-4 h-4 text-amber-500" />
                   Task Priority Breakdown
                 </h3>
-                <button onClick={() => props.setCurrentView('kanban')} className="text-xs font-medium text-indigo-600 hover:underline">Filter</button>
+                <button onClick={() => props.setCurrentView('kanban')} className="text-xs font-medium text-indigo-600 hover:underline inline-flex items-center min-h-11 py-2">Filter</button>
               </div>
 
               <div className="space-y-3">
