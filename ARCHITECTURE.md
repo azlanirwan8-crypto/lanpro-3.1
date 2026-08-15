@@ -350,3 +350,104 @@ menunggu adanya test render.
 - **Password Neon lama** sudah dirotasi dan terbukti mati (`28P01`), tetapi
   nilainya masih tercatat di histori git. Pembersihan histori bersifat higiene,
   bukan lagi mitigasi risiko.
+
+---
+
+## 6. Sistem desain
+
+LanPro **tidak memakai template Velzon**. Tidak ada Bootstrap, DataTables,
+Select2, maupun Flatpickr di `package.json`, dan nol class `.card` / `.btn
+btn-primary` di seluruh `src/`. Yang dipakai adalah **Tailwind CSS v4 murni**
+yang meminjam bahasa visual Velzon: warna primer `#405189`, font Inter, dan
+kebiasaan-kebiasaan yang membuat Velzon terasa halus.
+
+Membedakan keduanya penting. Mengaudit repo ini terhadap class Velzon akan
+menghasilkan temuan palsu, karena class itu memang tidak akan pernah ada.
+
+### 6.1 Warna hanya lewat token
+
+**Dilarang menulis nilai warna langsung di JSX.** Seluruh warna berasal dari
+token semantik di `@theme` pada `src/index.css`:
+
+| Peran | Token | Terang | Gelap |
+|---|---|---|---|
+| Merek | `primary`, `primary-hover`, `primary-active` | `#405189` | `#7183bd` |
+| Status | `success`, `warning`, `danger`, `info` | — | dinaikkan terangnya |
+| Permukaan | `surface`, `surface-muted`, `surface-sunken` | `#ffffff` | `#121a2a` |
+| Garis | `border-subtle`, `border-faint` | `#e2e8f0` | `#24314a` |
+| Teks | `content`, `content-strong`, `content-body`, `content-secondary`, `content-muted`, `content-subtle` | `#0f172a`…`#94a3b8` | dibalik |
+
+Aturan ini bukan soal kerapian. Sebelum token ada, `#405189` tertulis 426 kali
+dan tujuh layar sama sekali tidak punya penanganan mode gelap — kartu putih
+dengan teks putih, rasio kontras sekitar 1:1.
+
+### 6.2 Mode gelap tanpa prefix `dark:`
+
+Nilai token berganti sendiri di blok `html.dark`, sehingga **satu class
+`bg-surface` sudah benar di kedua mode**. Jangan menambahkan `dark:` untuk
+warna yang sudah punya token — itu menimpa token dengan nilai mati dan justru
+mengembalikan masalah yang sedang dihindari.
+
+Konsekuensi yang diinginkan: layar baru ikut benar di mode gelap tanpa usaha
+tambahan.
+
+### 6.3 Area sentuh minimum 44px
+
+Tombol, item navigasi, dan tautan yang bisa diklik wajib setinggi minimal 44px
+(`min-h-11`) — ambang WCAG 2.5.5. Untuk tautan kecil di dalam kartu, perbesar
+AREA-nya dengan `inline-flex items-center min-h-11 py-2`, jangan ukuran
+hurufnya; memperbesar huruf merusak hierarki visual kartu.
+
+### 6.4 Tipografi mobile-first
+
+Ukuran font arbitrer ditulis dengan nilai dasar yang nyaman di ponsel dan
+breakpoint `sm:` untuk kerapatan desktop:
+
+```
+text-xs sm:text-[10px]      bukan   text-[10px]
+text-[11px] sm:text-[9px]   bukan   text-[9px]
+```
+
+Tabel berkolom banyak memang butuh teks rapat di desktop; yang tidak boleh
+adalah memaksakan kerapatan itu ke layar 375px.
+
+### 6.5 Kehalusan
+
+Empat kebiasaan yang membuat tampilan terasa halus, semuanya di `src/index.css`:
+
+1. Transisi 150ms pada elemen interaktif, dibatasi pada properti murah.
+2. Bayangan berlapis dua (`shadow-soft`, `shadow-soft-lg`), alpha diturunkan
+   di mode gelap karena bayangan hitam di atas permukaan gelap tidak terbaca.
+3. Animasi masuk dropdown 120ms (`animate-dropdown`).
+4. Blok `prefers-reduced-motion` — tanpa ini seluruh kehalusan di atas menjadi
+   gangguan bagi sebagian pengguna.
+
+### 6.6 Komponen dasar
+
+`src/components/ui/CoreUI.tsx` menyediakan `Button`, `Input`, `Textarea`,
+`Card`, `CardHeader`, `CardBody`, dan `Badge`. Pakai komponen ini alih-alih
+menyusun ulang utility yang sama di tiap layar.
+
+Tabel WAJIB dibungkus `<ResponsiveTable>`; ia menyediakan kontainer
+`overflow-x-auto` sehingga tabel selebar apa pun bisa digeser di ponsel tanpa
+membocorkan tata letak halaman.
+
+Notifikasi WAJIB lewat `src/lib/sweetalert.ts` (`confirmDeleteAlert`,
+`showSuccessAlert`, `showErrorAlert`). Ketiganya memakai `buttonsStyling:false`
+dan `customClass`. Jangan memanggil `Swal.fire` langsung, dan jangan memakai
+`alert()`/`confirm()` bawaan browser.
+
+### 6.7 Utang desain yang masih terbuka
+
+- **Kontras sidebar.** 15–16 dari 20 node teks sidebar gagal WCAG AA di mode
+  terang MAUPUN gelap. Angka yang hampir sama di kedua mode menunjukkan ini
+  masalah palet sidebar itu sendiri, bukan mode gelap.
+- **Jarak antar target sentuh.** 11 pasang target berjarak kurang dari 8px di
+  viewport 375px. Ini persoalan tata letak, bukan ukuran, dan belum tergarap.
+- **46 nilai hex** masih tertulis di atribut SVG `fill`/`stroke` dan prop
+  `lord-icon`, yang bukan class CSS sehingga tidak bisa memakai utility
+  Tailwind. Bisa dialihkan ke `var(--color-*)` bila diperlukan.
+- **Empat berkas** (`DashboardView`, `NotebookLM`, `UserDetailView`, `kanban`)
+  masih memakai prefix `dark:` alih-alih token. Keduanya berfungsi; menyatukan
+  ke token adalah konsolidasi, bukan perbaikan kerusakan.
+- **Layar di atas 1024px belum diuji.** Panel pengujian terbatas 679px.

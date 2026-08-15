@@ -41,6 +41,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { hasPermission } from "../../lib/permissions";
+import { ResponsiveTable } from "../../components/ResponsiveTable";
 
 interface DiscussionPointsTableProps {
   projectId: string;
@@ -530,7 +531,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
           {/* STREAMLINED LIVE EDITABLE DATA TABLE */}
           <div className="bg-surface border border-border-subtle/80 rounded-lg shadow-2xs overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-left text-xs">
+            <ResponsiveTable className="w-full border-collapse text-left text-xs">
             <thead>
               <tr className="bg-primary/5 border-b border-primary/15 text-xs sm:text-[11px] font-medium uppercase tracking-wider text-primary">
                 <th className="py-3 px-4 w-12 text-center">No</th>
@@ -788,7 +789,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
               </tr>
             )}
           </tbody>
-        </table>
+        </ResponsiveTable>
       </div>
     </div>
 

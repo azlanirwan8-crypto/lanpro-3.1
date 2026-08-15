@@ -89,18 +89,27 @@ export const Button = ({
   disabled = false,
   size = "md",
 }: any) => {
+  /* Warna diambil dari token merek, bukan palet Tailwind bawaan. Versi
+   * sebelumnya memakai bg-blue-600 dan gray-*, sehingga tombol "bersama" ini
+   * justru satu-satunya tempat di aplikasi yang TIDAK memakai warna merek.
+   *
+   * Tinggi minimum 44px pada ukuran md dan lg memenuhi WCAG 2.5.5; ukuran sm
+   * disediakan untuk toolbar padat di desktop dan sengaja tidak dipaksa 44px,
+   * tetapi tetap diberi min-h-9 agar tidak sekecil sebelumnya. */
   const base =
-    "rounded-lg font-medium transition-all flex items-center gap-2 disabled:opacity-50";
+    "rounded-lg font-medium transition-all inline-flex items-center justify-center gap-2 " +
+    "disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none " +
+    "focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-1 active:scale-[0.98]";
   const sizes: any = {
-    sm: "px-3 py-1.5 text-xs",
-    md: "px-4 py-2 text-sm",
-    lg: "px-6 py-3 text-base",
+    sm: "px-3 py-2 min-h-9 text-xs",
+    md: "px-4 py-2.5 min-h-11 text-sm",
+    lg: "px-6 py-3 min-h-12 text-base",
   };
   const variants: any = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700",
-    secondary: "bg-gray-100 text-gray-700 hover:bg-gray-200",
-    danger: "bg-red-100 text-red-600 hover:bg-red-200",
-    ghost: "text-gray-600 hover:bg-gray-100",
+    primary: "bg-primary text-white hover:bg-primary-hover active:bg-primary-active shadow-soft",
+    secondary: "bg-surface-muted text-content-body hover:bg-border-subtle border border-border-subtle",
+    danger: "bg-danger text-white hover:opacity-90 shadow-soft",
+    ghost: "text-content-secondary hover:bg-surface-muted",
   };
   return (
     <button
@@ -127,7 +136,7 @@ export const Input = ({
     value={value ?? ""}
     onChange={onChange}
     placeholder={placeholder}
-    className={`w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all ${className}`}
+    className={`w-full px-4 py-2.5 min-h-11 bg-surface text-content border border-border-subtle rounded-lg placeholder:text-content-subtle focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all ${className}`}
     {...props}
   />
 );
@@ -144,7 +153,7 @@ export const Textarea = ({
     onChange={onChange}
     placeholder={placeholder}
     rows={rows}
-    className={`w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none ${className}`}
+    className={`w-full px-4 py-2.5 bg-surface text-content border border-border-subtle rounded-lg placeholder:text-content-subtle focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none ${className}`}
   />
 );
 
@@ -239,4 +248,79 @@ export const VelzonFloatingParticles = () => {
   );
 };
 
+/* ─── Card ─────────────────────────────────────────────────────────────────
+ * Kartu adalah wadah paling sering dipakai di aplikasi ini, tetapi selama ini
+ * ditulis ulang di tiap layar dengan kombinasi utility yang sedikit berbeda —
+ * ada yang rounded-lg, ada rounded-xl, ada shadow-sm, ada tanpa bayangan.
+ * Ketiga komponen di bawah menyatukannya, memakai token sehingga otomatis
+ * benar di mode gelap.
+ * ───────────────────────────────────────────────────────────────────────── */
 
+export const Card = ({ children, className = "", ...props }: any) => (
+  <div
+    className={cn(
+      "bg-surface border border-border-subtle rounded-lg shadow-soft overflow-hidden",
+      className
+    )}
+    {...props}
+  >
+    {children}
+  </div>
+);
+
+export const CardHeader = ({ children, className = "", ...props }: any) => (
+  <div
+    className={cn(
+      "px-5 py-4 border-b border-border-subtle flex items-center justify-between gap-3",
+      className
+    )}
+    {...props}
+  >
+    {children}
+  </div>
+);
+
+export const CardBody = ({ children, className = "", ...props }: any) => (
+  <div className={cn("p-5", className)} {...props}>
+    {children}
+  </div>
+);
+
+/* ─── Badge ────────────────────────────────────────────────────────────────
+ * Label status kecil. Varian mengikuti warna status pada sistem token, dengan
+ * latar transparan agar terbaca di mode terang maupun gelap tanpa perlu dua
+ * definisi warna.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+type BadgeVariant = "primary" | "success" | "warning" | "danger" | "info" | "neutral";
+
+export const Badge = ({
+  children,
+  variant = "neutral",
+  className = "",
+}: {
+  children: React.ReactNode;
+  variant?: BadgeVariant;
+  className?: string;
+}) => {
+  const variants: Record<BadgeVariant, string> = {
+    primary: "bg-primary/10 text-primary border-primary/20",
+    success: "bg-success/10 text-success border-success/20",
+    warning: "bg-warning/15 text-warning border-warning/30",
+    danger: "bg-danger/10 text-danger border-danger/20",
+    info: "bg-info/10 text-info border-info/20",
+    neutral: "bg-surface-muted text-content-secondary border-border-subtle",
+  };
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 px-2.5 py-1 rounded-md border",
+        "text-xs sm:text-[11px] font-medium uppercase tracking-wide whitespace-nowrap",
+        variants[variant],
+        className
+      )}
+    >
+      {children}
+    </span>
+  );
+};

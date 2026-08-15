@@ -12,6 +12,7 @@ import { DEFAULT_PERMISSIONS as ROLE_DEFAULT_PERMISSIONS } from '../../lib/permi
 import { useAdminUsers } from './hooks';
 import { Button, Modal, UserAvatar } from './styles';
 import { toast } from 'sonner';
+import { ResponsiveTable } from "../../components/ResponsiveTable";
 import {
   MODULE_DESCRIPTIONS,
   ROLE_DESCRIPTIONS,
@@ -640,7 +641,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
           )}
 
           <div className="overflow-x-auto flex-1">
-            <table className="w-full text-left border-collapse min-w-[900px]">
+            <ResponsiveTable className="w-full text-left border-collapse min-w-[900px]">
               <thead>
                 <tr className="bg-surface-sunken/80 border-b border-border-faint text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider whitespace-nowrap">
                   <th className="py-3.5 px-4 text-center w-12">
@@ -874,7 +875,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                    </tr>
                 )}
               </tbody>
-            </table>
+            </ResponsiveTable>
           </div>
 
            {/* Enterprise DataTable Pagination & Entries Controls */}
