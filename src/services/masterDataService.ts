@@ -111,3 +111,12 @@ export const masterDataService = {
     }
   }
 };
+
+/* ---------------------------------------------------------------------------
+ * Diekstrak dari AppContainer. URL dan bentuk body dipertahankan apa adanya.
+ * ------------------------------------------------------------------------- */
+
+export const fetchMasterDataAll = () => apiRequest("/api/master-data");
+
+export const updateMasterDataOrder = (itemId: string, order: number) =>
+  apiRequest(`/api/master-data/${itemId}`, { method: "PUT", body: { order } });
