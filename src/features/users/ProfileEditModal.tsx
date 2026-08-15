@@ -150,6 +150,11 @@ export const ProfileEditModal = ({
       });
 
       if (onProfileUpdated) {
+        // KETIGA kunci avatar dikirim. Basis data menyimpan nilai yang sama di
+        // avatar_url, photoURL, dan avatarUrl, dan komponen yang berbeda membaca
+        // kunci yang berbeda. Mengirim sebagian saja meninggalkan kunci basi di
+        // state induk — pemakai yang membaca kunci itu tetap menampilkan foto
+        // lama sampai halaman dimuat ulang.
         onProfileUpdated({
           displayName,
           username,
@@ -157,6 +162,7 @@ export const ProfileEditModal = ({
           phone,
           photoURL: finalPhotoURL,
           avatar_url: finalPhotoURL,
+          avatarUrl: finalPhotoURL,
         });
       }
 
@@ -180,7 +186,27 @@ export const ProfileEditModal = ({
       <div className="space-y-6">
         <div className="flex gap-4 items-center bg-surface-sunken p-4 rounded-xl border border-border-faint relative">
           <div className="relative group cursor-pointer">
-            <UserAvatar user={{ ...userProfile, displayName, username, photoURL: previewUrl || photoURL } as any} className="w-16 h-16 text-2xl" />
+            {/* Ketiga kunci avatar WAJIB ditimpa sekaligus, bukan photoURL saja.
+                UserAvatar meresolusi sumber gambar dengan urutan
+                avatar_url -> photoURL -> avatarUrl, sehingga menimpa photoURL
+                saja membuat avatar_url LAMA dari spread userProfile tetap
+                menang — preview menampilkan foto lama meski berkas baru sudah
+                dipilih. Itu gejala yang dilaporkan dari penggunaan nyata.
+
+                `key` memaksa elemen dibuat ulang saat sumber berubah, supaya
+                status galat gambar sebelumnya tidak terbawa. */}
+            <UserAvatar
+              key={previewUrl || photoURL || 'kosong'}
+              user={{
+                ...userProfile,
+                displayName,
+                username,
+                avatar_url: previewUrl || photoURL,
+                photoURL: previewUrl || photoURL,
+                avatarUrl: previewUrl || photoURL,
+              } as any}
+              className="w-16 h-16 text-2xl"
+            />
             {previewUrl && (
               <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-xs sm:text-[11px] sm:text-[9px] font-semibold px-2 py-0.5 rounded-full shadow-xs whitespace-nowrap z-20">
                 Pratinjau

@@ -4878,16 +4878,24 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
           isOpen={isProfileModalOpen}
           onClose={() => setIsProfileModalOpen(false)}
           userProfile={currentUser}
-          onProfileUpdated={(updatedProfile) => {
+          onProfileUpdated={(updatedProfile: any) => {
             if (currentUser) {
-              const newUser = { ...currentUser, ...updatedProfile };
+              // Nilai avatar diseragamkan ke ketiga kunci sebelum digabung,
+              // sehingga tidak ada kunci basi yang tertinggal apa pun bentuk
+              // payload yang dikirim modal.
+              const avatarBaru =
+                updatedProfile?.avatar_url ?? updatedProfile?.photoURL ?? updatedProfile?.avatarUrl;
+              const profilSeragam = avatarBaru
+                ? { ...updatedProfile, avatar_url: avatarBaru, photoURL: avatarBaru, avatarUrl: avatarBaru }
+                : updatedProfile;
+              const newUser = { ...currentUser, ...profilSeragam };
               setCurrentUser(newUser);
               setCurrentUserProfile(newUser);
               safeLocalStorage.setItem("sessionUser", JSON.stringify(newUser));
               setAllUsers((prevUsers) =>
                 prevUsers.map((u) =>
                   u.id === newUser.id || u.uid === newUser.uid
-                    ? { ...u, ...updatedProfile }
+                    ? { ...u, ...profilSeragam }
                     : u
                 )
               );
