@@ -56,10 +56,10 @@ const translateFieldName = (field: string): string => {
  */
 const renderStatusBadge = (status: string) => {
   const s = status ? status.trim().toLowerCase() : "";
-  let colorClass = "bg-slate-100 text-slate-700 border-slate-200";
+  let colorClass = "bg-surface-muted text-content-body border-border-subtle";
   
   if (s === "to do" || s === "backlog" || s === "none" || s === "unassigned") {
-    colorClass = "bg-slate-100 text-slate-600 border-slate-200/80";
+    colorClass = "bg-surface-muted text-content-secondary border-border-subtle/80";
   } else if (s === "in progress" || s === "dev" || s === "development" || s === "ready for dev") {
     colorClass = "bg-blue-50 text-blue-700 border-blue-100";
   } else if (s === "review" || s === "qa" || s === "testing" || s === "ready for qa") {
@@ -102,9 +102,9 @@ export const formatNotification = (
 
   // Initialize output fields
   let icon = <HelpCircle className="w-4 h-4" />;
-  let iconBgClass = "bg-slate-100 text-slate-500";
+  let iconBgClass = "bg-surface-muted text-content-muted";
   let badgeText = "NOTIFIKASI";
-  let badgeClass = "bg-slate-50 text-slate-600 border-slate-200";
+  let badgeClass = "bg-surface-sunken text-content-secondary border-border-subtle";
   let formattedTitleStr = rawTitle;
   let activityType: ParsedNotification["activityType"] = "general";
 
@@ -173,10 +173,10 @@ export const formatNotification = (
       break;
 
     case "update":
-      icon = <Edit3 className="w-4 h-4 text-slate-600" />;
-      iconBgClass = "bg-slate-100 border border-slate-200 text-slate-600";
+      icon = <Edit3 className="w-4 h-4 text-content-secondary" />;
+      iconBgClass = "bg-surface-muted border border-border-subtle text-content-secondary";
       badgeText = "PEMBARUAN";
-      badgeClass = "bg-slate-100 text-slate-700 border-slate-300";
+      badgeClass = "bg-surface-muted text-content-body border-slate-300";
       formattedTitleStr = "Detail Tugas Diperbarui";
       break;
 
@@ -197,16 +197,16 @@ export const formatNotification = (
       break;
 
     default:
-      icon = <FileText className="w-4 h-4 text-slate-500" />;
-      iconBgClass = "bg-slate-50 border border-slate-100 text-slate-500";
+      icon = <FileText className="w-4 h-4 text-content-muted" />;
+      iconBgClass = "bg-surface-sunken border border-border-faint text-content-muted";
       badgeText = "PROYEK";
-      badgeClass = "bg-slate-50 text-slate-600 border-slate-200";
+      badgeClass = "bg-surface-sunken text-content-secondary border-border-subtle";
       break;
   }
 
   // Formatting Title element with styling (Compact: text-xs)
   const formattedTitle = (
-    <div className="flex items-center gap-1 font-medium text-slate-800 text-xs">
+    <div className="flex items-center gap-1 font-medium text-content-strong text-xs">
       <span>{formattedTitleStr}</span>
     </div>
   );
@@ -294,7 +294,7 @@ export const formatNotification = (
     const code = match[1];
     const name = match[2];
     parts.push(
-      <span key={`task-${code}-${startIndex}`} className="inline-flex items-center gap-0.5 px-1 py-0 rounded bg-slate-100 hover:bg-slate-200 border border-slate-200/60 text-xs sm:text-[10px] font-medium text-slate-800 font-mono transition-colors my-0.5 select-all">
+      <span key={`task-${code}-${startIndex}`} className="inline-flex items-center gap-0.5 px-1 py-0 rounded bg-surface-muted hover:bg-slate-200 border border-border-subtle/60 text-xs sm:text-[10px] font-medium text-content-strong font-mono transition-colors my-0.5 select-all">
         <span className="text-violet-600 font-medium">{code}</span>
         <span className="text-slate-300">|</span>
         <span className="truncate max-w-[120px]">{name}</span>
@@ -310,7 +310,7 @@ export const formatNotification = (
 
   // Render finalized beautiful message Node (Compact: text-xs sm:text-[11px])
   const formattedMessage = (
-    <div className="text-xs sm:text-[11px] text-slate-500 leading-tight mt-0.5">
+    <div className="text-xs sm:text-[11px] text-content-muted leading-tight mt-0.5">
       <div className="flex flex-wrap items-center gap-x-0.5">
         {parts.length > 0 ? (
           parts.map((p, i) => <React.Fragment key={i}>{p}</React.Fragment>)
@@ -325,21 +325,21 @@ export const formatNotification = (
         const toMatch = rawMessage.match(/menjadi\s+"([^"]+)"/i);
         if (statusMatch && statusMatch[1] && statusMatch[2]) {
           return (
-            <div className="mt-1 flex items-center gap-1 text-slate-500 bg-slate-50 border border-slate-100 rounded-md p-1 px-1.5 max-w-fit">
-              <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-slate-400">Transisi:</span>
+            <div className="mt-1 flex items-center gap-1 text-content-muted bg-surface-sunken border border-border-faint rounded-md p-1 px-1.5 max-w-fit">
+              <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-content-subtle">Transisi:</span>
               <div className="flex items-center gap-0.5">
                 {renderStatusBadge(statusMatch[1])}
-                <span className="text-slate-400 text-xs sm:text-[11px] sm:text-[9px]">➔</span>
+                <span className="text-content-subtle text-xs sm:text-[11px] sm:text-[9px]">➔</span>
                 {renderStatusBadge(statusMatch[2])}
               </div>
             </div>
           );
         } else if (toMatch && toMatch[1]) {
           return (
-            <div className="mt-1 flex items-center gap-1 text-slate-500 bg-slate-50 border border-slate-100 rounded-md p-1 px-1.5 max-w-fit">
-              <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-slate-400">Transisi:</span>
+            <div className="mt-1 flex items-center gap-1 text-content-muted bg-surface-sunken border border-border-faint rounded-md p-1 px-1.5 max-w-fit">
+              <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-content-subtle">Transisi:</span>
               <div className="flex items-center gap-0.5">
-                <span className="text-slate-400 text-xs sm:text-[11px] sm:text-[9px] font-medium">Ke</span>
+                <span className="text-content-subtle text-xs sm:text-[11px] sm:text-[9px] font-medium">Ke</span>
                 {renderStatusBadge(toMatch[1])}
               </div>
             </div>
@@ -350,7 +350,7 @@ export const formatNotification = (
 
       {/* Special Block: Render comments inside stylized blockquotes (Compact: mt-1 pl-2 py-0.5 px-1.5) */}
       {commentBlock && (
-        <div className="mt-1 pl-2 border-l-2 border-violet-500 bg-slate-50/60 py-0.5 px-1.5 rounded-r text-slate-600 italic font-medium text-xs sm:text-[11px] max-w-prose">
+        <div className="mt-1 pl-2 border-l-2 border-violet-500 bg-surface-sunken/60 py-0.5 px-1.5 rounded-r text-content-secondary italic font-medium text-xs sm:text-[11px] max-w-prose">
           "{commentBlock}"
         </div>
       )}

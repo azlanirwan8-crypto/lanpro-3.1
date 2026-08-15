@@ -66,7 +66,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                         {notifications.filter((n) => !n.read).length} New
                       </span>
                       <button
-                        className="p-1 text-content-muted hover:text-slate-600 hover:bg-surface-muted rounded-full transition-all"
+                        className="p-1 text-content-muted hover:text-content-secondary hover:bg-surface-muted rounded-full transition-all"
                         title="Mark all read"
                         onClick={async () => {
                           try {

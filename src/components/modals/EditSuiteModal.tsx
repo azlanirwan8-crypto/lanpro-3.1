@@ -30,24 +30,24 @@ export const EditSuiteModal: React.FC<EditSuiteModalProps> = ({
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className="bg-white border border-slate-200/80 rounded-md p-6 max-w-sm w-full shadow-2xl space-y-4"
+          className="bg-surface border border-border-subtle/80 rounded-md p-6 max-w-sm w-full shadow-2xl space-y-4"
         >
-          <h3 className="text-sm font-medium text-slate-800 uppercase tracking-wider">Ubah Info Dokumen Suite</h3>
+          <h3 className="text-sm font-medium text-content-strong uppercase tracking-wider">Ubah Info Dokumen Suite</h3>
           <div className="space-y-3">
             <div className="space-y-1">
-              <label className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-wider block">Nama Dokumen</label>
+              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">Nama Dokumen</label>
               <input
                 type="text"
                 value={editName}
                 onChange={(e) => onNameChange(e.target.value)}
-                className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800"
+                className="w-full text-xs p-2.5 bg-surface-sunken border border-border-subtle rounded-md font-medium text-content-strong"
               />
             </div>
           </div>
           <div className="flex justify-end gap-2.5 pt-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-slate-100 text-slate-600 text-xs font-medium rounded-md cursor-pointer"
+              className="px-4 py-2 bg-surface-muted text-content-secondary text-xs font-medium rounded-md cursor-pointer"
             >
               Batal
             </button>

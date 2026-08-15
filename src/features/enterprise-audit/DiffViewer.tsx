@@ -22,7 +22,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) 
 
   if (allKeys.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+      <div className="flex flex-col items-center justify-center py-8 text-content-subtle bg-surface-sunken rounded-xl border border-dashed border-border-subtle">
         <Minus className="w-6 h-6 mb-2 opacity-20" />
         <p className="text-sm italic">Tidak ada perubahan field data yang terdeteksi.</p>
       </div>
@@ -37,14 +37,14 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) 
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-      <div className="grid grid-cols-12 gap-0 bg-slate-50 border-b border-slate-200 text-xs sm:text-[10px] font-medium text-slate-500 uppercase tracking-widest p-3">
+    <div className="overflow-hidden rounded-xl border border-border-subtle bg-surface">
+      <div className="grid grid-cols-12 gap-0 bg-surface-sunken border-b border-border-subtle text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-widest p-3">
         <div className="col-span-4 px-2">Nama Field</div>
-        <div className="col-span-4 px-2 border-l border-slate-200">Nilai Lama</div>
-        <div className="col-span-4 px-2 border-l border-slate-200">Nilai Baru</div>
+        <div className="col-span-4 px-2 border-l border-border-subtle">Nilai Lama</div>
+        <div className="col-span-4 px-2 border-l border-border-subtle">Nilai Baru</div>
       </div>
       
-      <div className="divide-y divide-slate-100 max-h-[500px] overflow-y-auto custom-scrollbar">
+      <div className="divide-y divide-border-faint max-h-[500px] overflow-y-auto custom-scrollbar">
         {allKeys.map(key => {
           const oldVal = oldValues?.[key];
           const newVal = newValues?.[key];
@@ -58,15 +58,15 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) 
               key={key} 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className={`grid grid-cols-12 gap-0 py-3 px-3 items-center transition-colors hover:bg-slate-50/50 ${isDifferent ? 'bg-indigo-50/10' : ''}`}
+              className={`grid grid-cols-12 gap-0 py-3 px-3 items-center transition-colors hover:bg-surface-sunken/50 ${isDifferent ? 'bg-indigo-50/10' : ''}`}
             >
               <div className="col-span-4 px-2">
-                <span className="text-xs font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded-md break-all">{key}</span>
+                <span className="text-xs font-medium text-content-body bg-surface-muted px-2 py-1 rounded-md break-all">{key}</span>
               </div>
               
-              <div className="col-span-4 px-2 border-l border-slate-100 min-h-[1.5rem] flex items-center">
+              <div className="col-span-4 px-2 border-l border-border-faint min-h-[1.5rem] flex items-center">
                 {oldVal === undefined || oldVal === null ? (
-                  <span className="text-xs sm:text-[10px] font-medium text-slate-400 italic flex items-center gap-1">
+                  <span className="text-xs sm:text-[10px] font-medium text-content-subtle italic flex items-center gap-1">
                     <Minus className="w-2 h-2" /> Data Baru
                   </span>
                 ) : (
@@ -76,7 +76,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) 
                 )}
               </div>
 
-              <div className="col-span-4 px-2 border-l border-slate-100 min-h-[1.5rem] flex items-center">
+              <div className="col-span-4 px-2 border-l border-border-faint min-h-[1.5rem] flex items-center">
                 {newVal === undefined || newVal === null ? (
                    <span className="text-xs sm:text-[10px] font-medium text-rose-400 italic">Dihapus</span>
                 ) : (

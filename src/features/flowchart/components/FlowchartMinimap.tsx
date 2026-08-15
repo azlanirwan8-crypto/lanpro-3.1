@@ -161,7 +161,7 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
             className={cn(
               "p-2 rounded-xl border mb-2 shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-300 relative overflow-hidden",
               isMiro 
-                ? "bg-white/80 border-slate-200/40 backdrop-blur-md text-slate-800" 
+                ? "bg-surface/80 border-border-subtle/40 backdrop-blur-md text-content-strong" 
                 : "bg-slate-950/80 border-slate-880/60 backdrop-blur-md text-slate-100"
             )}
           >
@@ -182,7 +182,7 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
               className={cn(
                 "relative rounded-xl overflow-hidden cursor-crosshair border transition-colors duration-300",
                 isMiro 
-                  ? "bg-slate-50/70 border-slate-200/50" 
+                  ? "bg-surface-sunken/70 border-border-subtle/50" 
                   : "bg-slate-900/50 border-slate-850"
               )}
             >
@@ -254,7 +254,7 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
             </div>
 
             {/* Bottom mini status bar */}
-            <div className="flex justify-between items-center mt-1 px-1 text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider text-slate-400">
+            <div className="flex justify-between items-center mt-1 px-1 text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider text-content-subtle">
               <span className="flex items-center gap-1">
                 <Move className="w-2.5 h-2.5 text-indigo-500" />
                 <span>Drag to pan</span>
@@ -271,11 +271,11 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
         className={cn(
           "flex items-center gap-2 px-3 py-1.5 rounded-xl border font-medium text-xs sm:text-[11px] sm:text-[9px] uppercase tracking-wider transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.04)] cursor-pointer active:scale-95",
           isMiro 
-            ? "bg-white/80 hover:bg-white/95 border-slate-200/40 text-slate-650 hover:text-indigo-600" 
+            ? "bg-surface/80 hover:bg-surface/95 border-border-subtle/40 text-slate-650 hover:text-indigo-600" 
             : "bg-slate-900/80 hover:bg-slate-850/95 border-slate-800/60 text-slate-350 hover:text-blue-400"
         )}
       >
-        <Map className={cn("w-3.5 h-3.5", isOpen ? "text-indigo-500 animate-pulse" : "text-slate-400")} />
+        <Map className={cn("w-3.5 h-3.5", isOpen ? "text-indigo-500 animate-pulse" : "text-content-subtle")} />
         <span>Minimap</span>
         {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
       </button>

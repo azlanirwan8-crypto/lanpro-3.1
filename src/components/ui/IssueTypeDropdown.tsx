@@ -36,17 +36,17 @@ export const IssueTypeDropdown = ({ isOpen, onToggle, selectedType, onSelect, ma
       <button 
         ref={buttonRef}
         onClick={(e) => { e.stopPropagation(); onToggle(); }}
-        className="flex items-center gap-1 p-1 hover:bg-slate-100 rounded transition-colors"
+        className="flex items-center gap-1 p-1 hover:bg-surface-muted rounded transition-colors"
       >
         {typeData?.icon ? <RenderIcon iconName={typeData.icon} className="w-3.5 h-3.5" style={{ color: typeData.color }} /> : <Zap className="w-3.5 h-3.5 text-blue-600" />}
-        <ChevronDown className="w-3 h-3 text-slate-400" />
+        <ChevronDown className="w-3 h-3 text-content-subtle" />
       </button>
       
       {isOpen && (
         <Portal>
           <div className="fixed inset-0 z-[500]" onClick={(e) => { e.stopPropagation(); onToggle(); }} />
           <div 
-            className="fixed z-[501] bg-white border border-slate-200 rounded-xl shadow-xl p-2 animate-in fade-in zoom-in duration-200"
+            className="fixed z-[501] bg-surface border border-border-subtle rounded-xl shadow-xl p-2 animate-in fade-in zoom-in duration-200"
             style={{ 
               top: `${dropdownPosition.top + 4}px`, 
               left: `${dropdownPosition.left}px`,
@@ -63,7 +63,7 @@ export const IssueTypeDropdown = ({ isOpen, onToggle, selectedType, onSelect, ma
                     onSelect(type.label);
                     onToggle();
                   }}
-                  className="w-full flex items-center gap-2 p-2 hover:bg-slate-50 rounded-lg text-sm text-slate-700"
+                  className="w-full flex items-center gap-2 p-2 hover:bg-surface-sunken rounded-lg text-sm text-content-body"
                 >
                   <RenderIcon iconName={type.icon} className="w-4 h-4" style={{ color: type.color }} />
                   {type.label}

@@ -157,7 +157,7 @@ export const ProfileEditModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Edit Profil">
       <div className="space-y-6">
-        <div className="flex gap-4 items-center bg-slate-50 p-4 rounded-xl border border-slate-100 relative">
+        <div className="flex gap-4 items-center bg-surface-sunken p-4 rounded-xl border border-border-faint relative">
           <div className="relative group cursor-pointer">
             <UserAvatar user={{ ...userProfile, displayName, username, photoURL: previewUrl || photoURL } as any} className="w-16 h-16 text-2xl" />
             {previewUrl && (
@@ -171,16 +171,16 @@ export const ProfileEditModal = ({
             </label>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-medium text-slate-800">
+            <p className="text-sm font-medium text-content-strong">
               {displayName}
             </p>
-            <p className="text-xs text-slate-500">{email}</p>
+            <p className="text-xs text-content-muted">{email}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1">
-            <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider">
+            <label className="block text-xs font-medium text-content-muted uppercase tracking-wider">
               Nama Lengkap
             </label>
             <Input
@@ -190,7 +190,7 @@ export const ProfileEditModal = ({
           </div>
 
           <div className="space-y-1">
-            <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider">
+            <label className="block text-xs font-medium text-content-muted uppercase tracking-wider">
               Username
             </label>
             <Input
@@ -200,25 +200,25 @@ export const ProfileEditModal = ({
           </div>
 
           <div className="space-y-1 md:col-span-2">
-            <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider">
+            <label className="block text-xs font-medium text-content-muted uppercase tracking-wider">
               Email
             </label>
             <Input value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
 
           <div className="space-y-1 md:col-span-2">
-            <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider">
+            <label className="block text-xs font-medium text-content-muted uppercase tracking-wider">
               Nomor Telepon
             </label>
             <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
           </div>
         </div>
 
-        <div className="pt-4 border-t border-slate-100 space-y-3">
-          <h4 className="text-sm font-medium text-slate-800">Ubah Password</h4>
+        <div className="pt-4 border-t border-border-faint space-y-3">
+          <h4 className="text-sm font-medium text-content-strong">Ubah Password</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1 relative">
-              <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider">
+              <label className="block text-xs font-medium text-content-muted uppercase tracking-wider">
                 Password Lama
               </label>
               <Input
@@ -234,14 +234,14 @@ export const ProfileEditModal = ({
               {error && <p className="text-xs sm:text-[10px] text-red-500 font-medium">{error}</p>}
               <button
                 type="button"
-                className="absolute right-3 top-8 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-8 text-content-subtle hover:text-content-secondary"
                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
               >
                 {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
             <div className="space-y-1 relative">
-              <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider">
+              <label className="block text-xs font-medium text-content-muted uppercase tracking-wider">
                 Password Baru
               </label>
               <Input
@@ -253,7 +253,7 @@ export const ProfileEditModal = ({
               />
               <button
                 type="button"
-                className="absolute right-3 top-8 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-8 text-content-subtle hover:text-content-secondary"
                 onClick={() => setShowNewPassword(!showNewPassword)}
               >
                 {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}

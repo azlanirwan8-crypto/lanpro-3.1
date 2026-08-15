@@ -176,20 +176,20 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
 
   return (
     <div className="flex-1 overflow-hidden p-4 md:p-5 flex">
-      <div ref={timelineContainerRef} className="print-roadmap-container flex flex-1 w-full relative bg-white rounded-md border border-slate-200/80 shadow-2xs overflow-hidden select-none">
-        <div className="w-80 shrink-0 border-r border-slate-200/80 flex flex-col z-20 bg-white relative">
-          <div className="sticky top-0 z-30 h-[73px] bg-slate-50/90 backdrop-blur-sm border-b border-slate-200 px-4 flex items-center justify-between">
-            <span className="font-semibold text-xs text-slate-600 uppercase tracking-wider">Epic / Task</span>
+      <div ref={timelineContainerRef} className="print-roadmap-container flex flex-1 w-full relative bg-surface rounded-md border border-border-subtle/80 shadow-2xs overflow-hidden select-none">
+        <div className="w-80 shrink-0 border-r border-border-subtle/80 flex flex-col z-20 bg-surface relative">
+          <div className="sticky top-0 z-30 h-[73px] bg-surface-sunken/90 backdrop-blur-sm border-b border-border-subtle px-4 flex items-center justify-between">
+            <span className="font-semibold text-xs text-content-secondary uppercase tracking-wider">Epic / Task</span>
           </div>
           <div className="flex-1 overflow-y-auto no-scrollbar pb-24" ref={timelineListRef} onScroll={handleTimelineVerticalScroll}>
             {localTasks.map(task => (
-              <div key={task.id} className="h-16 flex items-center gap-3 px-4 border-b border-slate-100 bg-white hover:bg-slate-50 transition-colors relative z-10">
+              <div key={task.id} className="h-16 flex items-center gap-3 px-4 border-b border-border-faint bg-surface hover:bg-surface-sunken transition-colors relative z-10">
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-xs font-semibold text-slate-800 truncate">{task.title}</span>
+                  <span className="text-xs font-semibold text-content-strong truncate">{task.title}</span>
                   <div className="flex items-center gap-2 mt-1">
                     <button onClick={(e) => { e.stopPropagation(); setSelectedTaskForDetail(task); setIsTaskDetailModalOpen(true); }} className="text-xs sm:text-[11px] sm:text-[9px] font-semibold text-primary bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/60 rounded-md px-1.5 py-0.5 tracking-tight text-left uppercase transition-colors">{task.key}</button>
                     <div className="w-1 h-1 rounded-full bg-slate-300" />
-                    <span className="text-xs sm:text-[11px] sm:text-[9px] font-semibold uppercase text-slate-500 tracking-wider">{task.status}</span>
+                    <span className="text-xs sm:text-[11px] sm:text-[9px] font-semibold uppercase text-content-muted tracking-wider">{task.status}</span>
                   </div>
                 </div>
               </div>
@@ -280,7 +280,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
             <div className="relative pt-0 z-20">
               {localTasks.map((task, idx) => {
                 const dates = tempDates[task.id] || { startDate: task.startDate, endDate: task.endDate };
-                if (!dates.startDate || !dates.endDate) return <div key={task.id} className="h-16 border-b border-gray-200 bg-white/50" />;
+                if (!dates.startDate || !dates.endDate) return <div key={task.id} className="h-16 border-b border-gray-200 bg-surface/50" />;
                 const start = ensureDate(dates.startDate);
                 const end = ensureDate(dates.endDate);
                 const left = (differenceInDays(start, minDate) / (totalDays || 1)) * 100;

@@ -24,7 +24,7 @@ export const SprintBanner: React.FC<SprintBannerProps> = ({
       <div className="space-y-4 relative z-10 flex-1">
         <div className="flex items-center gap-2">
           <Zap className="w-4 h-4 text-amber-300 animate-pulse" />
-          <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-indigo-100 bg-white/10 px-2.5 py-1 rounded-full border border-white/10">
+          <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-indigo-100 bg-surface/10 px-2.5 py-1 rounded-full border border-white/10">
             CURRENT SPRINT: {activeSprint ? activeSprint.name.toUpperCase() : "NONE"}
           </span>
         </div>
@@ -55,7 +55,7 @@ export const SprintBanner: React.FC<SprintBannerProps> = ({
       </div>
 
       {/* Progress Radial Gauge */}
-      <div className="relative z-10 shrink-0 self-center md:self-auto flex items-center justify-center p-1 bg-white/5 backdrop-blur-md rounded-xl border border-white/10 shadow-soft-lg w-28 h-28">
+      <div className="relative z-10 shrink-0 self-center md:self-auto flex items-center justify-center p-1 bg-surface/5 backdrop-blur-md rounded-xl border border-white/10 shadow-soft-lg w-28 h-28">
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-2xl font-medium text-white">{sprintProgress}%</span>
           <span className="text-xs sm:text-[10px] sm:text-[7px] font-medium tracking-widest text-indigo-200 uppercase leading-none mt-0.5">

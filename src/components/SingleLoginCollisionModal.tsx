@@ -26,46 +26,46 @@ export const SingleLoginCollisionModal: React.FC<Props> = ({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-md rounded-xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col animate-in zoom-in-95 duration-200">
-        <div className="bg-rose-50/50 p-6 flex flex-col items-center justify-center border-b border-slate-100 relative">
+      <div className="bg-surface w-full max-w-md rounded-xl shadow-2xl overflow-hidden border border-border-faint flex flex-col animate-in zoom-in-95 duration-200">
+        <div className="bg-rose-50/50 p-6 flex flex-col items-center justify-center border-b border-border-faint relative">
           <button 
             onClick={onClose}
             disabled={isLoading}
-            className="absolute top-4 right-4 p-2 bg-white rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors shadow-soft disabled:opacity-50"
+            className="absolute top-4 right-4 p-2 bg-surface rounded-full text-content-subtle hover:text-content-secondary hover:bg-surface-muted transition-colors shadow-soft disabled:opacity-50"
           >
             <X className="w-4 h-4" />
           </button>
-          <div className="w-16 h-16 bg-white rounded-full shadow-soft border border-rose-100 flex items-center justify-center mb-4 relative">
+          <div className="w-16 h-16 bg-surface rounded-full shadow-soft border border-rose-100 flex items-center justify-center mb-4 relative">
             <div className="absolute inset-0 rounded-full border-2 border-rose-400 border-t-transparent animate-spin opacity-20"></div>
             <AlertTriangle className="w-8 h-8 text-rose-500" />
           </div>
-          <h2 className="text-xl font-medium text-slate-800 text-center">Akun Anda Masih Aktif</h2>
-          <p className="text-sm text-slate-500 text-center mt-2 max-w-[280px]">
+          <h2 className="text-xl font-medium text-content-strong text-center">Akun Anda Masih Aktif</h2>
+          <p className="text-sm text-content-muted text-center mt-2 max-w-[280px]">
             Sistem mendeteksi bahwa akun ini sedang digunakan di perangkat atau browser lain.
           </p>
         </div>
 
         <div className="p-6">
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6">
+          <div className="bg-surface-sunken border border-border-subtle rounded-xl p-4 mb-6">
             <div className="flex items-center gap-2 mb-3">
               <Activity className="w-4 h-4 text-emerald-500" />
-              <span className="text-xs font-medium text-slate-600 uppercase tracking-wider">Sesi Aktif Saat Ini</span>
+              <span className="text-xs font-medium text-content-secondary uppercase tracking-wider">Sesi Aktif Saat Ini</span>
             </div>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <Globe className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
+                <Globe className="w-4 h-4 text-content-subtle mt-0.5 shrink-0" />
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs sm:text-[10px] text-slate-400 font-medium uppercase">IP Address</div>
-                  <div className="text-sm font-medium text-slate-700 truncate">{activeSession?.ip || "Tidak diketahui"}</div>
+                  <div className="text-xs sm:text-[10px] text-content-subtle font-medium uppercase">IP Address</div>
+                  <div className="text-sm font-medium text-content-body truncate">{activeSession?.ip || "Tidak diketahui"}</div>
                 </div>
               </div>
               <div className="h-px bg-slate-200 w-full" />
               <div className="flex items-start gap-3">
-                <Monitor className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
+                <Monitor className="w-4 h-4 text-content-subtle mt-0.5 shrink-0" />
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs sm:text-[10px] text-slate-400 font-medium uppercase">Perangkat & Browser</div>
-                  <div className="text-sm font-medium text-slate-700 truncate">{activeSession?.device || "Perangkat Tidak Diketahui"}</div>
-                  <div className="text-xs text-slate-500 truncate">{activeSession?.browser || "Browser Tidak Diketahui"}</div>
+                  <div className="text-xs sm:text-[10px] text-content-subtle font-medium uppercase">Perangkat & Browser</div>
+                  <div className="text-sm font-medium text-content-body truncate">{activeSession?.device || "Perangkat Tidak Diketahui"}</div>
+                  <div className="text-xs text-content-muted truncate">{activeSession?.browser || "Browser Tidak Diketahui"}</div>
                 </div>
               </div>
             </div>
@@ -75,7 +75,7 @@ export const SingleLoginCollisionModal: React.FC<Props> = ({
             <button
               onClick={onClose}
               disabled={isLoading}
-              className="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl font-medium text-sm hover:bg-slate-50 transition-colors disabled:opacity-50"
+              className="flex-1 px-4 py-2.5 bg-surface border border-border-subtle text-content-secondary rounded-xl font-medium text-sm hover:bg-surface-sunken transition-colors disabled:opacity-50"
             >
               Batalkan
             </button>

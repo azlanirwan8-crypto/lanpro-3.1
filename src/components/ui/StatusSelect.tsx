@@ -37,7 +37,7 @@ export const StatusSelect = ({ value, onChange, statuses, disabled, className }:
         onClick={(e) => { e.stopPropagation(); !disabled && setIsOpen(!isOpen); }}
         disabled={disabled}
         className={cn(
-          "flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg transition-all w-full justify-between text-left",
+          "flex items-center gap-2 px-3 py-2 bg-surface border border-gray-200 rounded-lg transition-all w-full justify-between text-left",
           disabled ? "bg-gray-50 border-gray-100 cursor-not-allowed opacity-75" : "hover:border-blue-400 cursor-pointer shadow-soft hover:shadow-md"
         )}
       >
@@ -56,7 +56,7 @@ export const StatusSelect = ({ value, onChange, statuses, disabled, className }:
         <Portal>
           <div className="fixed inset-0 z-[60]" onClick={(e) => { e.stopPropagation(); setIsOpen(false); }} />
           <div 
-            className="fixed z-[70] bg-white rounded-lg shadow-xl border border-gray-100 p-1 min-w-[160px]"
+            className="fixed z-[70] bg-surface rounded-lg shadow-xl border border-gray-100 p-1 min-w-[160px]"
             style={{ 
               top: `${dropdownPosition.top + 4}px`, 
               left: `${dropdownPosition.left}px`,

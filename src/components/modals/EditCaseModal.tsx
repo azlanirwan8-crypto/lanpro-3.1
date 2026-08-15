@@ -42,25 +42,25 @@ export const EditCaseModal: React.FC<EditCaseModalProps> = ({
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className="bg-white border border-slate-200/80 rounded-md p-6 max-w-lg w-full shadow-2xl space-y-4"
+          className="bg-surface border border-border-subtle/80 rounded-md p-6 max-w-lg w-full shadow-2xl space-y-4"
         >
-          <h3 className="text-sm font-medium text-slate-800 uppercase tracking-wider">Ubah Test Case Detail</h3>
+          <h3 className="text-sm font-medium text-content-strong uppercase tracking-wider">Ubah Test Case Detail</h3>
           <div className="space-y-3">
             <div className="space-y-1">
-              <label className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-wider block">Judul Test Case</label>
+              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">Judul Test Case</label>
               <input
                 type="text"
                 value={editTitle}
                 onChange={(e) => onTitleChange(e.target.value)}
-                className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800"
+                className="w-full text-xs p-2.5 bg-surface-sunken border border-border-subtle rounded-md font-medium text-content-strong"
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-wider block">Prioritas</label>
+              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">Prioritas</label>
               <select
                 value={editPriority}
                 onChange={(e) => onPriorityChange(e.target.value as any)}
-                className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800 cursor-pointer"
+                className="w-full text-xs p-2.5 bg-surface-sunken border border-border-subtle rounded-md font-medium text-content-strong cursor-pointer"
               >
                 <option value="Low">Low Priority</option>
                 <option value="Medium">Medium Priority</option>
@@ -69,28 +69,28 @@ export const EditCaseModal: React.FC<EditCaseModalProps> = ({
               </select>
             </div>
             <div className="space-y-1">
-              <label className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-wider block">Langkah Pengujian</label>
+              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">Langkah Pengujian</label>
               <textarea
                 rows={3}
                 value={editSteps}
                 onChange={(e) => onStepsChange(e.target.value)}
-                className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800"
+                className="w-full text-xs p-2.5 bg-surface-sunken border border-border-subtle rounded-md font-medium text-content-strong"
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-wider block">Hasil yang Diharapkan</label>
+              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">Hasil yang Diharapkan</label>
               <textarea
                 rows={2}
                 value={editExpected}
                 onChange={(e) => onExpectedChange(e.target.value)}
-                className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800"
+                className="w-full text-xs p-2.5 bg-surface-sunken border border-border-subtle rounded-md font-medium text-content-strong"
               />
             </div>
           </div>
           <div className="flex justify-end gap-2.5 pt-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-slate-100 text-slate-600 text-xs font-medium rounded-md cursor-pointer"
+              className="px-4 py-2 bg-surface-muted text-content-secondary text-xs font-medium rounded-md cursor-pointer"
             >
               Batal
             </button>

@@ -28,21 +28,21 @@ export const SettingsPage: React.FC = () => {
   });
 
   return (
-    <div className="w-full flex-1 flex flex-col p-3 md:p-5 min-h-0 overflow-hidden bg-slate-50/60 text-left">
-      <div className="flex-1 flex flex-col min-h-0 bg-white border border-slate-200/80 rounded-lg shadow-2xs overflow-hidden">
-        <div className="px-5 py-3.5 border-b border-slate-200/80 bg-slate-50/80 shrink-0 flex items-center justify-between">
-          <h1 className="text-xs font-medium text-slate-800 uppercase tracking-wide">System Configuration & Integrations</h1>
+    <div className="w-full flex-1 flex flex-col p-3 md:p-5 min-h-0 overflow-hidden bg-surface-sunken/60 text-left">
+      <div className="flex-1 flex flex-col min-h-0 bg-surface border border-border-subtle/80 rounded-lg shadow-2xs overflow-hidden">
+        <div className="px-5 py-3.5 border-b border-border-subtle/80 bg-surface-sunken/80 shrink-0 flex items-center justify-between">
+          <h1 className="text-xs font-medium text-content-strong uppercase tracking-wide">System Configuration & Integrations</h1>
         </div>
         
         <div className="flex-1 overflow-auto flex flex-col">
           {/* Tabs */}
-          <div className="flex border-b border-slate-200/80 px-5 bg-white">
+          <div className="flex border-b border-border-subtle/80 px-5 bg-surface">
             <button
               onClick={() => setActiveTab('email')}
               className={`flex items-center gap-2 px-4 py-3 text-xs font-medium transition-all border-b-2 cursor-pointer ${
                   activeTab === 'email' 
                   ? 'text-emerald-600 border-emerald-500 bg-emerald-50/30' 
-                  : 'text-slate-500 border-transparent hover:text-slate-700'
+                  : 'text-content-muted border-transparent hover:text-content-body'
               }`}
             >
               <Mail size={15} />
@@ -53,7 +53,7 @@ export const SettingsPage: React.FC = () => {
               className={`flex items-center gap-2 px-4 py-3 text-xs font-medium transition-all border-b-2 cursor-pointer ${
                   activeTab === 'whatsapp' 
                   ? 'text-emerald-600 border-emerald-500 bg-emerald-50/30' 
-                  : 'text-slate-500 border-transparent hover:text-slate-700'
+                  : 'text-content-muted border-transparent hover:text-content-body'
               }`}
             >
               <MessageSquare size={15} />
@@ -70,7 +70,7 @@ export const SettingsPage: React.FC = () => {
                 <WhatsAppConfigForm formData={waConfig} setFormData={setWaConfig} />
               )}
             </div>
-            <div className="lg:col-span-7 border-l border-slate-200/80 pl-5">
+            <div className="lg:col-span-7 border-l border-border-subtle/80 pl-5">
               <BroadcastMonitor 
                 emailTemplate={{ subject: emailConfig.subjectTemplate, body: emailConfig.bodyTemplate }}
                 waTemplate={waConfig.messageTemplate}

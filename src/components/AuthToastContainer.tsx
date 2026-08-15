@@ -472,12 +472,12 @@ const VelzonSweetAlertModal: React.FC<VelzonSweetAlertModalProps> = ({ notificat
       animate={{ scale: 1, opacity: 1, y: 0 }}
       exit={{ scale: 0.85, opacity: 0, y: 15 }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
-      className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center relative overflow-hidden font-sans border border-slate-100"
+      className="bg-surface rounded-xl shadow-2xl p-8 max-w-md w-full text-center relative overflow-hidden font-sans border border-border-faint"
     >
       {/* Close X Button at Top Right */}
       <button 
         onClick={onDismiss}
-        className="absolute top-4 right-4 text-slate-300 hover:text-slate-600 transition-colors p-1 rounded-md"
+        className="absolute top-4 right-4 text-slate-300 hover:text-content-secondary transition-colors p-1 rounded-md"
         title="Close"
       >
         <X className="w-5 h-5" />
@@ -489,12 +489,12 @@ const VelzonSweetAlertModal: React.FC<VelzonSweetAlertModalProps> = ({ notificat
       {type === 'warning' && <VelzonWarningIcon />}
 
       {/* Main Title */}
-      <h3 className="text-xl font-medium text-slate-800 tracking-tight mb-2">
+      <h3 className="text-xl font-medium text-content-strong tracking-tight mb-2">
         {displayTitle}
       </h3>
 
       {/* Message Body */}
-      <p className="text-sm text-slate-500 font-normal leading-relaxed mb-6 px-2">
+      <p className="text-sm text-content-muted font-normal leading-relaxed mb-6 px-2">
         {message}
       </p>
 

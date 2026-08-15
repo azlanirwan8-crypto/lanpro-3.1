@@ -23,7 +23,7 @@ export const WikiEmptyState: React.FC<WikiEmptyStateProps> = ({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="bg-white/45 backdrop-blur-xl rounded-xl border border-slate-200/50 p-8 sm:p-14 text-center max-w-xl mx-auto mt-8 shadow-[0_8px_32px_0_rgba(99,102,241,0.04),inset_0_1.5px_1.5px_rgba(255,255,255,0.8)] select-none relative overflow-hidden"
+      className="bg-surface/45 backdrop-blur-xl rounded-xl border border-border-subtle/50 p-8 sm:p-14 text-center max-w-xl mx-auto mt-8 shadow-[0_8px_32px_0_rgba(99,102,241,0.04),inset_0_1.5px_1.5px_rgba(255,255,255,0.8)] select-none relative overflow-hidden"
     >
       {/* Decorative ambient background glows */}
       <div className="absolute -top-12 -left-12 w-40 h-40 bg-indigo-400/10 rounded-full blur-3xl pointer-events-none" />
@@ -44,7 +44,7 @@ export const WikiEmptyState: React.FC<WikiEmptyStateProps> = ({
         >
           {/* Circular backdrop rings with gradient & blur */}
           <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-100/40 to-violet-100/40 border border-indigo-200/20 blur-md scale-95" />
-          <div className="absolute w-24 h-24 rounded-full bg-white/70 shadow-soft-lg shadow-indigo-600/5 border border-indigo-100/50 flex items-center justify-center" />
+          <div className="absolute w-24 h-24 rounded-full bg-surface/70 shadow-soft-lg shadow-indigo-600/5 border border-indigo-100/50 flex items-center justify-center" />
           
           {/* Floating sparks & decorative mini-icons */}
           <motion.div
@@ -120,11 +120,11 @@ export const WikiEmptyState: React.FC<WikiEmptyStateProps> = ({
       </div>
 
       {/* Heading & Sub-paragraph */}
-      <h3 className="text-lg font-medium text-slate-800 tracking-tight leading-snug">
+      <h3 className="text-lg font-medium text-content-strong tracking-tight leading-snug">
         {isFiltered ? 'Dokumen Tidak Ditemukan' : 'Mulai Tulis Dokumentasi Proyek'}
       </h3>
       
-      <p className="text-xs text-slate-400 font-medium max-w-sm mx-auto mt-2 leading-relaxed">
+      <p className="text-xs text-content-subtle font-medium max-w-sm mx-auto mt-2 leading-relaxed">
         {isFiltered 
           ? `Tidak menemukan hasil untuk kata kunci "${searchQuery}" atau kategori "${selectedCategory}". Coba bersihkan filter pencarian.`
           : 'Belum ada panduan SOP, spesifikasi produk, atau laporan untuk proyek ini. Abadikan pengetahuan tim Anda sekarang.'}
@@ -135,7 +135,7 @@ export const WikiEmptyState: React.FC<WikiEmptyStateProps> = ({
         {isFiltered && (
           <button
             onClick={onResetFilters}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-md font-medium text-xs transition-all cursor-pointer shadow-2xs"
+            className="flex items-center gap-2 px-4 py-2.5 bg-surface hover:bg-surface-sunken text-content-secondary border border-border-subtle rounded-md font-medium text-xs transition-all cursor-pointer shadow-2xs"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Bersihkan Pencarian</span>
@@ -149,7 +149,7 @@ export const WikiEmptyState: React.FC<WikiEmptyStateProps> = ({
           className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover active:bg-primary-active text-white font-medium text-xs rounded-md shadow-xs transition-all cursor-pointer relative overflow-hidden group"
         >
           {/* Dynamic shimmer gloss on button hover */}
-          <div className="absolute inset-0 w-1/2 h-full bg-white/10 skew-x-12 -translate-x-full group-hover:animate-shimmer pointer-events-none" />
+          <div className="absolute inset-0 w-1/2 h-full bg-surface/10 skew-x-12 -translate-x-full group-hover:animate-shimmer pointer-events-none" />
           <Plus className="w-4 h-4 text-white" />
           <span>{isFiltered ? 'Buat Dokumen Baru' : 'Tambah Dokumen Pertama'}</span>
         </motion.button>

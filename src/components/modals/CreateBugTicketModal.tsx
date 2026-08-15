@@ -77,16 +77,16 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className="bg-white border border-slate-200/80 rounded-md p-6 max-w-2xl w-full shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto custom-scrollbar"
+          className="bg-surface border border-border-subtle/80 rounded-md p-6 max-w-2xl w-full shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto custom-scrollbar"
         >
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="flex items-center justify-between border-b border-border-faint pb-3">
             <div className="flex items-center gap-2.5">
               <div className="p-2.5 bg-rose-50 text-danger rounded-md">
                 <Bug className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-medium text-slate-800">Buat Tiket Bug Terstruktur</h3>
-                <p className="text-xs sm:text-[11px] text-slate-500 font-medium">
+                <h3 className="text-base font-medium text-content-strong">Buat Tiket Bug Terstruktur</h3>
+                <p className="text-xs sm:text-[11px] text-content-muted font-medium">
                   Dibuat dari Test Case #{testCase.rowNum}
                 </p>
               </div>
@@ -94,7 +94,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-1 rounded-md hover:bg-slate-100 text-slate-400 hover:text-slate-600"
+              className="p-1 rounded-md hover:bg-surface-muted text-content-subtle hover:text-content-secondary"
             >
               <XCircle className="w-5 h-5" />
             </button>
@@ -102,7 +102,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
 
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs sm:text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+              <label className="text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                 JUDUL TIKET BUG *
               </label>
               <input
@@ -110,7 +110,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
                 required
                 value={titleInput}
                 onChange={(e) => onTitleChange(e.target.value)}
-                className="w-full text-xs p-3 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800 focus:border-primary focus:outline-none"
+                className="w-full text-xs p-3 bg-surface-sunken border border-border-subtle rounded-md font-medium text-content-strong focus:border-primary focus:outline-none"
               />
             </div>
 
@@ -122,35 +122,35 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
 
               <div
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-full text-xs p-3 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800 flex items-center justify-between cursor-pointer hover:border-primary"
+                className="w-full text-xs p-3 bg-surface-sunken border border-border-subtle rounded-md font-medium text-content-strong flex items-center justify-between cursor-pointer hover:border-primary"
               >
                 <span className="truncate">
                   {selectedParentTask
                     ? `[${selectedParentTask.key || selectedParentTask.taskKey || "TASK"}] ${selectedParentTask.title}`
                     : "-- Pilih Target Epic / Task Utama --"}
                 </span>
-                <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
+                <ChevronDown className="w-4 h-4 text-content-subtle shrink-0" />
               </div>
 
               {isDropdownOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setIsDropdownOpen(false)} />
-                  <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-md shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute left-0 right-0 top-full mt-1 bg-surface border border-border-subtle rounded-md shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
                     <div className="relative mb-2">
-                      <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
+                      <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-content-subtle" />
                       <input
                         autoFocus
                         type="text"
                         placeholder="Cari nama Epic atau Task..."
                         value={parentSearchTerm}
                         onChange={(e) => onSearchTermChange(e.target.value)}
-                        className="w-full text-xs pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-md focus:outline-none"
+                        className="w-full text-xs pl-8 pr-3 py-1.5 bg-surface-sunken border border-border-subtle rounded-md focus:outline-none"
                       />
                     </div>
 
-                    <div className="max-h-48 overflow-y-auto border border-slate-100 rounded-md divide-y divide-slate-100 bg-white custom-scrollbar">
+                    <div className="max-h-48 overflow-y-auto border border-border-faint rounded-md divide-y divide-border-faint bg-surface custom-scrollbar">
                       {filteredParents.length === 0 ? (
-                        <div className="p-3 text-center text-xs text-slate-400">
+                        <div className="p-3 text-center text-xs text-content-subtle">
                           Tidak ada task target yang cocok.
                         </div>
                       ) : (
@@ -164,7 +164,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
                             className={`p-2.5 text-xs font-medium flex items-center justify-between cursor-pointer transition-colors ${
                               selectedParentId === pt.id
                                 ? "bg-rose-50/70 text-danger"
-                                : "hover:bg-slate-50 text-slate-700"
+                                : "hover:bg-surface-sunken text-content-body"
                             }`}
                           >
                             <span className="truncate">
@@ -182,13 +182,13 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs sm:text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+                <label className="text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                   SEVERITAS BUG
                 </label>
                 <select
                   value={priorityInput}
                   onChange={(e) => onPriorityChange(e.target.value)}
-                  className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800"
+                  className="w-full text-xs p-2.5 bg-surface-sunken border border-border-subtle rounded-md font-medium text-content-strong"
                 >
                   <option value="Critical">Critical</option>
                   <option value="High">High</option>
@@ -198,13 +198,13 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs sm:text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+                <label className="text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                   ASSIGNEE DEVELOPER
                 </label>
                 <select
                   value={assigneeInput}
                   onChange={(e) => onAssigneeChange(e.target.value)}
-                  className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800"
+                  className="w-full text-xs p-2.5 bg-surface-sunken border border-border-subtle rounded-md font-medium text-content-strong"
                 >
                   <option value="">-- Belum Ditugaskan --</option>
                   {(projectMembers || []).map((m: any, mIdx: number) => (
@@ -217,14 +217,14 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs sm:text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+              <label className="text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                 DESKRIPSI BUG
               </label>
               <textarea
                 rows={5}
                 value={descriptionInput}
                 onChange={(e) => onDescriptionChange(e.target.value)}
-                className="w-full text-xs p-3 bg-slate-50 border border-slate-200 rounded-md font-mono text-slate-700 focus:outline-none"
+                className="w-full text-xs p-3 bg-surface-sunken border border-border-subtle rounded-md font-mono text-content-body focus:outline-none"
               />
             </div>
 
@@ -232,7 +232,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-md uppercase tracking-wider cursor-pointer"
+                className="flex-1 py-3 bg-surface-muted hover:bg-slate-200 text-content-body text-xs font-medium rounded-md uppercase tracking-wider cursor-pointer"
               >
                 Batal
               </button>

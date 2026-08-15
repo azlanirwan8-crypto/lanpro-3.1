@@ -11,18 +11,18 @@ interface ChartProps {
 
 export const DashboardDonutChart: React.FC<ChartProps> = ({ data, colors, totalTasks, title }) => {
   return (
-    <div className="bg-white rounded-xl p-5 border border-slate-100/80 shadow-soft flex flex-col h-full">
-      <div className="flex justify-between items-center mb-4 pb-2 border-b border-slate-100 select-none shrink-0">
-        <span className="text-xs sm:text-[10px] font-medium tracking-widest text-slate-800 uppercase">{title}</span>
+    <div className="bg-surface rounded-xl p-5 border border-border-faint/80 shadow-soft flex flex-col h-full">
+      <div className="flex justify-between items-center mb-4 pb-2 border-b border-border-faint select-none shrink-0">
+        <span className="text-xs sm:text-[10px] font-medium tracking-widest text-content-strong uppercase">{title}</span>
       </div>
       <div className="flex-1 w-full h-[220px] min-h-[200px] flex items-center relative">
         {data.length === 0 ? (
-          <div className="flex items-center justify-center py-10 text-slate-400 italic text-xs w-full">No tasks found.</div>
+          <div className="flex items-center justify-center py-10 text-content-subtle italic text-xs w-full">No tasks found.</div>
         ) : (
           <>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 mr-[40%]">
-              <span className="text-xs sm:text-[10px] text-slate-400 font-medium uppercase">Total</span>
-              <span className="text-lg font-medium text-slate-800">{totalTasks}</span>
+              <span className="text-xs sm:text-[10px] text-content-subtle font-medium uppercase">Total</span>
+              <span className="text-lg font-medium text-content-strong">{totalTasks}</span>
             </div>
             <motion.div className="w-full h-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -36,10 +36,10 @@ export const DashboardDonutChart: React.FC<ChartProps> = ({ data, colors, totalT
             </motion.div>
             <div className="flex flex-col justify-center gap-2 pl-4 shrink-0">
               {data.map((item, idx) => (
-                <div key={idx} className="flex items-center gap-2 text-xs sm:text-[10px] font-medium text-slate-600">
+                <div key={idx} className="flex items-center gap-2 text-xs sm:text-[10px] font-medium text-content-secondary">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: colors[idx % colors.length] }} />
                   <span className="truncate max-w-[80px]">{item.name}</span>
-                  <span className="text-slate-400">({item.value})</span>
+                  <span className="text-content-subtle">({item.value})</span>
                 </div>
               ))}
             </div>

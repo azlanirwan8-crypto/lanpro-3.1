@@ -63,36 +63,36 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className="bg-white border border-slate-200/80 rounded-md p-6 max-w-3xl w-full shadow-2xl space-y-4"
+          className="bg-surface border border-border-subtle/80 rounded-md p-6 max-w-3xl w-full shadow-2xl space-y-4"
         >
-          <div className="flex justify-between items-center pb-3 border-b border-slate-100">
+          <div className="flex justify-between items-center pb-3 border-b border-border-faint">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-md bg-primary/10 text-primary flex items-center justify-center font-medium">
                 <Plus className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-slate-800 uppercase tracking-wider">Tambah Test Case Baru</h3>
-                <p className="text-xs sm:text-[11px] text-slate-400 font-medium">Input manual atau bulk upload Excel</p>
+                <h3 className="text-sm font-medium text-content-strong uppercase tracking-wider">Tambah Test Case Baru</h3>
+                <p className="text-xs sm:text-[11px] text-content-subtle font-medium">Input manual atau bulk upload Excel</p>
               </div>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-md hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+              className="p-1.5 rounded-md hover:bg-surface-muted text-content-subtle hover:text-content-secondary transition-colors cursor-pointer"
             >
               <XCircle className="w-5 h-5" />
             </button>
           </div>
 
           {/* Tab Switcher */}
-          <div className="flex gap-2 p-1 bg-slate-100 rounded-md">
+          <div className="flex gap-2 p-1 bg-surface-muted rounded-md">
             <button
               type="button"
               onClick={() => onTabChange("single")}
               className={`flex-1 py-2 text-xs font-medium uppercase tracking-wider rounded-md transition-all cursor-pointer ${
                 activeTab === "single"
-                  ? "bg-white text-primary shadow-xs border border-slate-200/80"
-                  : "text-slate-500 hover:text-slate-700"
+                  ? "bg-surface text-primary shadow-xs border border-border-subtle/80"
+                  : "text-content-muted hover:text-content-body"
               }`}
             >
               Single Input (Manual)
@@ -102,8 +102,8 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
               onClick={() => onTabChange("bulk")}
               className={`flex-1 py-2 text-xs font-medium uppercase tracking-wider rounded-md transition-all cursor-pointer ${
                 activeTab === "bulk"
-                  ? "bg-white text-primary shadow-xs border border-slate-200/80"
-                  : "text-slate-500 hover:text-slate-700"
+                  ? "bg-surface text-primary shadow-xs border border-border-subtle/80"
+                  : "text-content-muted hover:text-content-body"
               }`}
             >
               Bulk Upload (Excel)
@@ -126,7 +126,7 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[calc(100vh-320px)] overflow-y-auto pr-1 custom-scrollbar">
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs sm:text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
+                    <label className="text-xs sm:text-[10px] text-content-muted font-medium uppercase tracking-wider block">
                       Judul Test Case *
                     </label>
                     <input
@@ -135,18 +135,18 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
                       value={caseTitle}
                       onChange={(e) => onTitleChange(e.target.value)}
                       placeholder="Masukkan judul skenario pengujian..."
-                      className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md focus:border-primary focus:outline-none font-medium"
+                      className="w-full text-xs p-2.5 bg-surface-sunken border border-border-subtle rounded-md focus:border-primary focus:outline-none font-medium"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs sm:text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
+                    <label className="text-xs sm:text-[10px] text-content-muted font-medium uppercase tracking-wider block">
                       Tingkat Prioritas *
                     </label>
                     <select
                       value={casePriority}
                       onChange={(e) => onPriorityChange(e.target.value as any)}
-                      className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md focus:border-primary focus:outline-none font-medium text-slate-700 cursor-pointer"
+                      className="w-full text-xs p-2.5 bg-surface-sunken border border-border-subtle rounded-md focus:border-primary focus:outline-none font-medium text-content-body cursor-pointer"
                     >
                       <option value="Low">Low Priority</option>
                       <option value="Medium">Medium Priority</option>
@@ -158,7 +158,7 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
 
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs sm:text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
+                    <label className="text-xs sm:text-[10px] text-content-muted font-medium uppercase tracking-wider block">
                       Langkah Pengujian *
                     </label>
                     <textarea
@@ -167,12 +167,12 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
                       value={caseSteps}
                       onChange={(e) => onStepsChange(e.target.value)}
                       placeholder="Tuliskan urutan aksi pengujian..."
-                      className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md focus:border-primary focus:outline-none font-medium"
+                      className="w-full text-xs p-2.5 bg-surface-sunken border border-border-subtle rounded-md focus:border-primary focus:outline-none font-medium"
                     />
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs sm:text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
+                    <label className="text-xs sm:text-[10px] text-content-muted font-medium uppercase tracking-wider block">
                       Hasil yang Diharapkan *
                     </label>
                     <textarea
@@ -181,17 +181,17 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
                       value={caseExpected}
                       onChange={(e) => onExpectedChange(e.target.value)}
                       placeholder="Tuliskan ekspektasi hasil akhir..."
-                      className="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md focus:border-primary focus:outline-none font-medium"
+                      className="w-full text-xs p-2.5 bg-surface-sunken border border-border-subtle rounded-md focus:border-primary focus:outline-none font-medium"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+              <div className="flex justify-end gap-2.5 pt-3 border-t border-border-faint">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium uppercase tracking-wider rounded-md cursor-pointer"
+                  className="px-4 py-2 bg-surface-muted hover:bg-slate-200 text-content-body text-xs font-medium uppercase tracking-wider rounded-md cursor-pointer"
                 >
                   Batal
                 </button>
@@ -210,7 +210,7 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
               <div className="flex items-center justify-between bg-indigo-50/60 border border-indigo-100 p-3 rounded-md">
                 <div>
                   <h4 className="text-xs font-medium text-primary">Butuh Berkas Template Excel?</h4>
-                  <p className="text-xs sm:text-[10px] text-slate-500 font-medium">Unduh contoh struktur kolom resmi</p>
+                  <p className="text-xs sm:text-[10px] text-content-muted font-medium">Unduh contoh struktur kolom resmi</p>
                 </div>
                 <button
                   type="button"
@@ -222,11 +222,11 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
                 </button>
               </div>
 
-              <div className="border-2 border-dashed border-slate-200 hover:border-primary rounded-md p-8 text-center space-y-3 transition-colors bg-slate-50/50">
+              <div className="border-2 border-dashed border-border-subtle hover:border-primary rounded-md p-8 text-center space-y-3 transition-colors bg-surface-sunken/50">
                 <Upload className="w-10 h-10 text-primary mx-auto" />
                 <div>
-                  <p className="text-xs font-medium text-slate-700">Unggah berkas Excel (.xlsx / .csv)</p>
-                  <p className="text-xs sm:text-[10px] text-slate-400 mt-1">
+                  <p className="text-xs font-medium text-content-body">Unggah berkas Excel (.xlsx / .csv)</p>
+                  <p className="text-xs sm:text-[10px] text-content-subtle mt-1">
                     Format kolom: Judul, Deskripsi_Langkah, Hasil_Ekspektasi, Prioritas
                   </p>
                 </div>
@@ -245,11 +245,11 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
                 </label>
               </div>
 
-              <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
+              <div className="flex justify-end gap-2.5 pt-3 border-t border-border-faint">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium uppercase tracking-wider rounded-md cursor-pointer"
+                  className="px-4 py-2 bg-surface-muted hover:bg-slate-200 text-content-body text-xs font-medium uppercase tracking-wider rounded-md cursor-pointer"
                 >
                   Batal
                 </button>

@@ -26,19 +26,19 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className="bg-white border border-slate-200/80 rounded-md p-6 max-w-sm w-full shadow-2xl space-y-4 text-center"
+          className="bg-surface border border-border-subtle/80 rounded-md p-6 max-w-sm w-full shadow-2xl space-y-4 text-center"
         >
           <Trash2 className="w-10 h-10 text-danger mx-auto" />
           <div>
-            <h3 className="text-sm font-medium text-slate-800 uppercase tracking-wider">{title}</h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <h3 className="text-sm font-medium text-content-strong uppercase tracking-wider">{title}</h3>
+            <p className="text-xs text-content-muted mt-1">
               Apakah Anda yakin ingin menghapus <strong>{itemName}</strong>?
             </p>
           </div>
           <div className="flex gap-2.5 pt-2">
             <button
               onClick={onClose}
-              className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-md cursor-pointer transition-colors"
+              className="flex-1 py-2.5 bg-surface-muted hover:bg-slate-200 text-content-body text-xs font-medium rounded-md cursor-pointer transition-colors"
             >
               Batal
             </button>
