@@ -13,6 +13,13 @@ import { validateFileClient } from '../../lib/fileSecurity';
 import Markdown from 'react-markdown';
 import { Project, AppRole } from '../../types';
 import { hasPermission } from '../../lib/permissions';
+import {
+  fetchWikiSources,
+  fetchMeetingSources,
+  sendChat,
+  generateOverview,
+  generateAudio,
+} from './services/notebooklm.service';
 
 interface Source {
   id: string;
@@ -152,14 +159,11 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
   const loadProjectSources = async () => {
     setLoadingSources(true);
     try {
-      const token = safeLocalStorage.getItem('token') || '';
       const initialSources: Source[] = [];
 
       // 1. Fetch Wiki / Dokumentasi
       try {
-        const wikiRes = await fetch(`/api/projects/${project.id}/wiki`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const wikiRes = await fetchWikiSources(project.id);
         if (wikiRes.ok) {
           const wikiData = await wikiRes.json();
           const docs = Array.isArray(wikiData) ? wikiData : (wikiData.data || []);
@@ -181,9 +185,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
 
       // 2. Fetch Meeting Notes
       try {
-        const meetingRes = await fetch(`/api/projects/${project.id}/meetings`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        const meetingRes = await fetchMeetingSources(project.id);
         if (meetingRes.ok) {
           const meetingData = await meetingRes.json();
           const meetings = Array.isArray(meetingData) ? meetingData : (meetingData.data || []);
@@ -258,21 +260,13 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
     setIsGenerating(true);
 
     try {
-      const token = safeLocalStorage.getItem('token') || '';
-      const response = await fetch('/api/notebooklm/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
+      const response = await sendChat({
           projectId: project.id,
           sources: activeSources,
           prompt: textToSend,
           model: selectedModel,
           history: chatHistory.map(m => ({ role: m.role, text: m.text }))
-        })
-      });
+        });
 
       const data = await response.json();
       if (!response.ok || data.status === 'error') {
@@ -305,18 +299,10 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
     setActiveTab('overview');
 
     try {
-      const token = safeLocalStorage.getItem('token') || '';
-      const response = await fetch('/api/notebooklm/generate-overview', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
+      const response = await generateOverview({
           sources: activeSources,
           type
-        })
-      });
+        });
 
       const data = await response.json();
       if (!response.ok || data.status === 'error') {
@@ -349,18 +335,10 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
     if (!text.trim()) return;
     setIsAudioLoading(true);
     try {
-      const token = safeLocalStorage.getItem('token') || '';
-      const response = await fetch('/api/notebooklm/generate-audio', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
+      const response = await generateAudio({
           text,
           voiceName: audioVoice
-        })
-      });
+        });
 
       const data = await response.json();
       if (!response.ok || data.status === 'error') {
