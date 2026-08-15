@@ -97,12 +97,12 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
 
   if (!activeSuite) {
     return (
-      <div className="lg:col-span-9 bg-white border border-slate-200/80 p-10 rounded-md text-center shadow-xs">
+      <div className="lg:col-span-9 bg-surface border border-border-subtle/80 p-10 rounded-md text-center shadow-xs">
         <div className="w-10 h-10 bg-primary/10 text-primary rounded-md flex items-center justify-center mx-auto mb-2.5">
           <FileSpreadsheet className="w-5 h-5" />
         </div>
-        <h3 className="text-sm font-medium text-slate-800">Silakan Pilih Modul Testing</h3>
-        <p className="text-xs text-slate-400 font-medium mt-1">
+        <h3 className="text-sm font-medium text-content-strong">Silakan Pilih Modul Testing</h3>
+        <p className="text-xs text-content-subtle font-medium mt-1">
           Pilih dokumen pengujian di panel sebelah kiri untuk menampilkan matriks eksekusi test case.
         </p>
       </div>
@@ -137,16 +137,16 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
   return (
     <div className="lg:col-span-9 space-y-3.5 lg:sticky lg:top-4">
       {/* Velzon Header & Micro Stats Box */}
-      <div className="bg-white border border-slate-200/80 p-4 rounded-md shadow-xs space-y-3">
+      <div className="bg-surface border border-border-subtle/80 p-4 rounded-md shadow-xs space-y-3">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5">
           <div>
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 bg-primary text-white font-medium text-[9px] rounded-md uppercase tracking-wider">
                 {activeSuite.phase}
               </span>
-              <h2 className="text-base font-medium text-slate-800 tracking-tight">{cleanSuiteName}</h2>
+              <h2 className="text-base font-medium text-content-strong tracking-tight">{cleanSuiteName}</h2>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+            <p className="text-[11px] text-content-subtle font-medium mt-0.5">
               Diupload oleh: {activeSuite.uploadedBy} • {new Date(activeSuite.uploadedAt).toLocaleDateString("id-ID")}
             </p>
           </div>
@@ -180,7 +180,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
 
             <button
               onClick={handleExportQAReport}
-              className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-md text-xs flex items-center gap-1 transition-all cursor-pointer"
+              className="px-2.5 py-1.5 bg-surface-muted hover:bg-slate-200 text-content-body font-medium rounded-md text-xs flex items-center gap-1 transition-all cursor-pointer"
               title="Export Laporan Eksekusi QA"
             >
               <Download className="w-3.5 h-3.5 text-primary" />
@@ -208,9 +208,9 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
             <span className="text-[9px] text-primary font-medium uppercase tracking-wider block">Total Case</span>
             <span className="text-base font-medium text-primary block mt-0.5">{totalCasesCount}</span>
           </div>
-          <div className="bg-slate-50 p-2 rounded-md border border-slate-200/60 text-center">
-            <span className="text-[9px] text-slate-500 font-medium uppercase tracking-wider block">Passed Rate</span>
-            <span className="text-base font-medium text-slate-800 block mt-0.5">{passedPercent}%</span>
+          <div className="bg-surface-sunken p-2 rounded-md border border-border-subtle/60 text-center">
+            <span className="text-[9px] text-content-muted font-medium uppercase tracking-wider block">Passed Rate</span>
+            <span className="text-base font-medium text-content-strong block mt-0.5">{passedPercent}%</span>
           </div>
           <div className="bg-emerald-50/50 p-2 rounded-md border border-emerald-100 text-center">
             <span className="text-[9px] text-success font-medium uppercase tracking-wider block">PASSED</span>
@@ -224,17 +224,17 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
             <span className="text-[9px] text-warning font-medium uppercase tracking-wider block">BLOCKED</span>
             <span className="text-base font-medium text-warning block mt-0.5">{blockedCasesCount}</span>
           </div>
-          <div className="bg-slate-50 p-2 rounded-md border border-slate-200/60 text-center">
-            <span className="text-[9px] text-slate-500 font-medium uppercase tracking-wider block">RETEST/PEND</span>
-            <span className="text-base font-medium text-slate-700 block mt-0.5">
+          <div className="bg-surface-sunken p-2 rounded-md border border-border-subtle/60 text-center">
+            <span className="text-[9px] text-content-muted font-medium uppercase tracking-wider block">RETEST/PEND</span>
+            <span className="text-base font-medium text-content-body block mt-0.5">
               {retestCasesCount + pendingCasesCount}
             </span>
           </div>
         </div>
 
         {/* ELEGANT TOP RIGHT SEARCH & FILTER BAR */}
-        <div className="flex items-center justify-between gap-2.5 pt-2.5 border-t border-slate-100">
-          <div className="text-[11px] font-medium text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+        <div className="flex items-center justify-between gap-2.5 pt-2.5 border-t border-border-faint">
+          <div className="text-[11px] font-medium text-content-strong uppercase tracking-wider flex items-center gap-1.5">
             <FileSpreadsheet className="w-3.5 h-3.5 text-primary" />
             <span>Matriks Skenario Test Case ({searchedCases.length})</span>
           </div>
@@ -242,23 +242,23 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
           <div className="flex items-center gap-2">
             {/* Elegant Search Input */}
             <div className="relative">
-              <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-400" />
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-2 text-content-subtle" />
               <input
                 type="text"
                 placeholder="Cari scenario..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-7 pr-2.5 py-1 bg-slate-50 border border-slate-200/80 rounded-md text-xs font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary transition-all w-36 sm:w-48"
+                className="pl-7 pr-2.5 py-1 bg-surface-sunken border border-border-subtle/80 rounded-md text-xs font-medium text-content-body focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary transition-all w-36 sm:w-48"
               />
             </div>
 
             {/* Elegant Filter Status Select */}
-            <div className="relative flex items-center gap-1 bg-slate-50 border border-slate-200/80 rounded-md px-2 py-1 text-xs font-medium text-slate-700">
+            <div className="relative flex items-center gap-1 bg-surface-sunken border border-border-subtle/80 rounded-md px-2 py-1 text-xs font-medium text-content-body">
               <Filter className="w-3 h-3 text-primary" />
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as any)}
-                className="bg-transparent border-none outline-none font-medium text-xs cursor-pointer text-slate-700 pr-1"
+                className="bg-transparent border-none outline-none font-medium text-xs cursor-pointer text-content-body pr-1"
               >
                 <option value="ALL">Status: Semua (ALL)</option>
                 <option value="Passed">Status: Passed</option>
@@ -276,7 +276,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
       {selectedCaseIds.length > 0 && (canUpdate || isAdminRole) && (
         <div className="bg-gradient-to-r from-primary to-indigo-900 text-white p-3 rounded-md shadow-xl flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 bg-white/10 rounded-md">
+            <span className="p-1.5 bg-surface/10 rounded-md">
               <CheckSquare className="w-4 h-4 text-emerald-400" />
             </span>
             <span className="text-xs font-medium">
@@ -289,7 +289,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
             <div className="relative">
               <button
                 onClick={() => setIsBulkPicDropdownOpen(!isBulkPicDropdownOpen)}
-                className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-medium rounded-md flex items-center gap-1.5 transition-all cursor-pointer border border-white/20"
+                className="px-3 py-1.5 bg-surface/10 hover:bg-surface/20 text-white text-xs font-medium rounded-md flex items-center gap-1.5 transition-all cursor-pointer border border-white/20"
               >
                 <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Bulk Assign PIC</span>
@@ -299,8 +299,8 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
               {isBulkPicDropdownOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setIsBulkPicDropdownOpen(false)} />
-                  <div className="absolute right-0 top-full mt-1.5 w-60 bg-white text-slate-800 rounded-md shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-primary border-b border-slate-100 mb-1">
+                  <div className="absolute right-0 top-full mt-1.5 w-60 bg-surface text-content-strong rounded-md shadow-2xl border border-border-subtle py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-primary border-b border-border-faint mb-1">
                       Tetapkan PIC ke {selectedCaseIds.length} Task
                     </div>
                     <button
@@ -339,7 +339,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
             <div className="relative">
               <button
                 onClick={() => setIsBulkStatusDropdownOpen(!isBulkStatusDropdownOpen)}
-                className="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-medium rounded-md flex items-center gap-1.5 transition-all cursor-pointer border border-white/20"
+                className="px-3 py-1.5 bg-surface/10 hover:bg-surface/20 text-white text-xs font-medium rounded-md flex items-center gap-1.5 transition-all cursor-pointer border border-white/20"
               >
                 <Layers className="w-3.5 h-3.5 text-amber-300" />
                 <span>Bulk Status</span>
@@ -349,7 +349,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
               {isBulkStatusDropdownOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setIsBulkStatusDropdownOpen(false)} />
-                  <div className="absolute right-0 top-full mt-1.5 w-44 bg-white text-slate-800 rounded-md shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute right-0 top-full mt-1.5 w-44 bg-surface text-content-strong rounded-md shadow-2xl border border-border-subtle py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
                     {["Passed", "Failed", "Blocked", "Retest", "Pending"].map((st) => (
                       <button
                         key={st}
@@ -382,7 +382,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
       )}
 
       {/* ULTRA-SLEEK 5-COLUMN ENTERPRISE QA TABLE MATRIX */}
-      <div className="bg-white border border-slate-200/80 rounded-md shadow-xs overflow-hidden">
+      <div className="bg-surface border border-border-subtle/80 rounded-md shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -405,10 +405,10 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                 <th className="py-2.5 px-3 w-28 text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+            <tbody className="divide-y divide-border-faint text-xs font-medium text-content-body">
               {searchedCases.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-10 text-slate-400 font-medium">
+                  <td colSpan={6} className="text-center py-10 text-content-subtle font-medium">
                     Tidak ada test case yang sesuai dengan filter atau kata kunci pencarian.
                   </td>
                 </tr>
@@ -446,12 +446,12 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                       </td>
 
                       {/* Row Num */}
-                      <td className="py-2.5 px-3 text-center font-medium text-slate-400 text-xs group-hover:text-primary">
+                      <td className="py-2.5 px-3 text-center font-medium text-content-subtle text-xs group-hover:text-primary">
                         {tc.rowNum || idx + 1}
                       </td>
 
                       {/* Title & Linked Bug Key */}
-                      <td className="py-2.5 px-4 font-medium text-slate-800">
+                      <td className="py-2.5 px-4 font-medium text-content-strong">
                         <div className="flex items-center gap-2">
                           <span className="line-clamp-1 text-xs group-hover:text-primary transition-colors">
                             {tc.title}
@@ -472,7 +472,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                             tc.priority === "Critical" || tc.priority === "High"
                               ? "bg-rose-50 text-danger border border-rose-200/60"
                               : tc.priority === "Low"
-                              ? "bg-slate-100 text-slate-600 border border-slate-200/60"
+                              ? "bg-surface-muted text-content-secondary border border-border-subtle/60"
                               : "bg-amber-50 text-warning border border-amber-200/60"
                           }`}
                         >
@@ -496,7 +496,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                 ? "bg-amber-50 text-warning border-amber-200"
                                 : tc.status === "Retest"
                                 ? "bg-indigo-50 text-indigo-700 border-indigo-200"
-                                : "bg-slate-100 text-slate-600 border-slate-200"
+                                : "bg-surface-muted text-content-secondary border-border-subtle"
                             }`}
                           >
                             <option value="Passed">Passed</option>
@@ -520,7 +520,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                               } ${
                                 tc.assignedTo
                                   ? "bg-primary/10 border-primary/40"
-                                  : "bg-slate-100 border-slate-200/80 text-slate-500"
+                                  : "bg-surface-muted border-border-subtle/80 text-content-muted"
                               }`}
                               title={
                                 tc.assignedTo
@@ -531,7 +531,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                               {tc.assignedTo ? (
                                 <UserAvatar uid={tc.assignedTo} members={projectMembers} className="w-5.5 h-5.5 rounded-full" />
                               ) : (
-                                <User className="w-3 h-3 text-slate-400" />
+                                <User className="w-3 h-3 text-content-subtle" />
                               )}
                             </button>
 
@@ -545,8 +545,8 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                     setActiveCasePicDropdownId(null);
                                   }}
                                 />
-                                <div className="absolute right-0 top-full mt-1.5 w-56 bg-white rounded-md shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                                  <div className="px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-primary border-b border-slate-100 mb-1">
+                                <div className="absolute right-0 top-full mt-1.5 w-56 bg-surface rounded-md shadow-2xl border border-border-subtle py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                                  <div className="px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-primary border-b border-border-faint mb-1">
                                     Assign PIC Task (Tim Proyek)
                                   </div>
                                   <button
@@ -555,7 +555,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                       handleUpdateCasePic(activeSuite.id, tc.id, "");
                                     }}
                                     className={`w-full text-left px-3.5 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors flex items-center justify-between ${
-                                      !tc.assignedTo ? "bg-indigo-50/60 text-primary" : "text-slate-700"
+                                      !tc.assignedTo ? "bg-indigo-50/60 text-primary" : "text-content-body"
                                     }`}
                                   >
                                     <span>Semua PIC Proyek (All Members)</span>
@@ -573,7 +573,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                             handleUpdateCasePic(activeSuite.id, tc.id, mId);
                                           }}
                                           className={`w-full text-left px-3.5 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors flex items-center justify-between gap-2 ${
-                                            isSelected ? "bg-indigo-50/60 text-primary" : "text-slate-700"
+                                            isSelected ? "bg-indigo-50/60 text-primary" : "text-content-body"
                                           }`}
                                         >
                                           <div className="flex items-center gap-2 truncate">
@@ -597,7 +597,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                         <div className="flex items-center justify-center gap-1">
                           <button
                             onClick={() => setSelectedTestCase(tc)}
-                            className="p-1 text-slate-400 hover:text-primary hover:bg-indigo-50 rounded-md transition-all"
+                            className="p-1 text-content-subtle hover:text-primary hover:bg-indigo-50 rounded-md transition-all"
                             title="Lihat Detail Skenario & Langkah Pengujian"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -623,7 +623,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                 setCaseEditPriority(tc.priority || "Medium");
                                 setCaseEditAssignedTo(tc.assignedTo || "");
                               }}
-                              className="p-1 text-slate-400 hover:text-primary hover:bg-indigo-50 rounded-md transition-all"
+                              className="p-1 text-content-subtle hover:text-primary hover:bg-indigo-50 rounded-md transition-all"
                               title="Edit Test Case"
                             >
                               <Edit3 className="w-3.5 h-3.5" />
@@ -633,7 +633,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                           {canDelete && (
                             <button
                               onClick={() => setCaseToDelete(tc)}
-                              className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all"
+                              className="p-1 text-content-subtle hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all"
                               title="Hapus Test Case"
                             >
                               <Trash2 className="w-3.5 h-3.5" />

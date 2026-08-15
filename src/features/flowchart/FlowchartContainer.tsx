@@ -2266,14 +2266,14 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   <div className="flex items-center gap-1.5 bg-surface-muted p-1 rounded-md border border-border-subtle/60">
                     <button
                       onClick={(e) => openEditModal(currentFlowMetadata, e)}
-                      className="p-1.5 bg-surface hover:bg-surface-sunken text-content-muted hover:text-primary rounded-md transition-all cursor-pointer shadow-2xs border border-border-subtle/80"
+                      className="p-1.5 bg-surface hover:bg-surface-sunken text-content-secondary hover:text-primary rounded-md transition-all cursor-pointer shadow-2xs border border-border-subtle/80"
                       title="Edit document metadata"
                     >
                       <Edit3 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={(e) => handleDeleteFlowchart(currentFlowMetadata.id, e)}
-                      className="p-1.5 bg-surface hover:bg-rose-50 text-content-muted hover:text-rose-600 rounded-md transition-all cursor-pointer shadow-2xs border border-border-subtle/80"
+                      className="p-1.5 bg-surface hover:bg-rose-50 text-content-secondary hover:text-rose-600 rounded-md transition-all cursor-pointer shadow-2xs border border-border-subtle/80"
                       title="Delete document"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -2288,7 +2288,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               <div className="flex flex-wrap items-center gap-2 select-none mb-3">
                 {/* Category Badge */}
                 {currentFlowMetadata?.category === "PRD" && (
-                  <span className="px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider bg-surface-muted text-content-strong border border-border-subtle/80 rounded-full">
+                  <span className="px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider bg-surface-muted text-content-body border border-border-subtle/80 rounded-full">
                     📄 PRD
                   </span>
                 )}
@@ -2403,7 +2403,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                           <div className="w-16 h-16 bg-surface-muted border border-border-subtle rounded-full flex items-center justify-center mb-4">
                             <FileText className="w-8 h-8 text-content-subtle opacity-50" />
                           </div>
-                          <h3 className="text-sm font-medium text-content-strong mb-2">Belum Ada Dokumen</h3>
+                          <h3 className="text-sm font-medium text-content-body mb-2">Belum Ada Dokumen</h3>
                           <span className="text-xs text-content-muted font-medium max-w-sm">
                             Anda belum menambahkan dokumen apapun ke dalam flowchart ini. Silakan klik tombol "Tambah Dokumen" untuk mulai mengunggah file.
                           </span>
@@ -2698,7 +2698,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             <button
               onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
               className={cn(
-                "absolute bottom-4 z-30 p-2 bg-surface/70 backdrop-blur hover:bg-surface/85 border border-border-subtle/40 text-content-strong hover:text-violet-600 shadow-lg rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 text-xs font-medium transition-all duration-300",
+                "absolute bottom-4 z-30 p-2 bg-surface/70 backdrop-blur hover:bg-surface/85 border border-border-subtle/40 text-content-body hover:text-violet-600 shadow-lg rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 text-xs font-medium transition-all duration-300",
                 isRightSidebarOpen ? "right-[356px]" : "right-4"
               )}
               title="Toggle Panel Properti"
@@ -2746,7 +2746,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               {/* Auto-Align Layout Engine */}
               <button
                 onClick={handleAutoAlignNodes}
-                className="p-1 px-2 text-content-strong hover:bg-surface-muted hover:text-violet-605 rounded-xl transition-all flex items-center gap-1 active:scale-95 text-[10px] font-medium"
+                className="p-1 px-2 text-content-body hover:bg-surface-muted hover:text-violet-605 rounded-xl transition-all flex items-center gap-1 active:scale-95 text-[10px] font-medium"
                 title="Otomatis merapikan format diagram secara horizontal & vertikal"
               >
                 <Sparkles className="w-3.5 h-3.5 text-violet-600 fill-violet-200" />
@@ -2760,7 +2760,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   "p-1 px-2 rounded-xl transition-all flex items-center gap-1 active:scale-95 text-[10px] font-medium",
                   isSimulating 
                     ? "bg-red-50 text-red-600 hover:bg-red-100 border border-red-150 shadow-sm" 
-                    : "text-content-strong hover:bg-surface-muted hover:text-emerald-600"
+                    : "text-content-body hover:bg-surface-muted hover:text-emerald-600"
                 )}
                 title={isSimulating ? "Hentikan Simulasi" : "Jalankan Simulasi Alur Kerja Visual"}
               >
@@ -2843,7 +2843,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 </button>
                 <button
                   onClick={() => setZoomLevel(1)}
-                  className="px-2 text-[10px] font-medium text-content-muted hover:text-violet-600 w-11 text-center font-mono cursor-pointer transition-colors"
+                  className="px-2 text-[10px] font-medium text-content-secondary hover:text-violet-600 w-11 text-center font-mono cursor-pointer transition-colors"
                   title="Reset Zoom (100%)"
                 >
                   {Math.round(zoomLevel * 100)}%
@@ -3032,7 +3032,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                             "p-1 rounded font-medium text-[10px] text-center border capitalize transition-all",
                             currentVal === st.val 
                               ? "bg-violet-50 text-violet-700 border-violet-200" 
-                              : "bg-surface-sunken text-content-muted border-border-subtle hover:bg-surface-muted"
+                              : "bg-surface-sunken text-content-secondary border-border-subtle hover:bg-surface-muted"
                           )}
                         >
                           {st.l}
@@ -3180,7 +3180,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               </div>
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 hover:bg-surface-muted rounded-lg text-content-subtle hover:text-content-muted transition-all"
+                className="p-1 hover:bg-surface-muted rounded-lg text-content-subtle hover:text-content-secondary transition-all"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -3190,7 +3190,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             <form onSubmit={handleModalSubmit} className="p-5 space-y-4 text-xs">
               
               <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-content-strong">
+                <label className="text-[11px] font-medium text-content-body">
                   Nama Dokumen / Flowchart <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -3205,7 +3205,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
               {/* Kategori Select */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-content-strong">
+                <label className="text-[11px] font-medium text-content-body">
                   Kategori Dokumen <span className="text-rose-500">*</span>
                 </label>
                 <select
@@ -3221,7 +3221,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
               {/* Tautan Eksternal Input */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-content-strong">
+                <label className="text-[11px] font-medium text-content-body">
                   Tautan Eksternal (Google Docs / Sheets / Slides / URL)
                 </label>
                 <input
@@ -3238,7 +3238,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
               {/* Link Epic Option integration */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-content-strong flex items-center gap-1.5">
+                <label className="text-[11px] font-medium text-content-body flex items-center gap-1.5">
                   <Workflow className="w-3.5 h-3.5 text-primary" /> Link Epic Terkait
                 </label>
                 <select
@@ -3259,7 +3259,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-content-strong">Deskripsi Arsitektur</label>
+                <label className="text-[11px] font-medium text-content-body">Deskripsi Arsitektur</label>
                 <textarea
                   placeholder="Ketikan ringkasan atau batasan proses flowchart ini..."
                   value={flowDescription}
@@ -3273,7 +3273,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-lg bg-surface-muted hover:bg-slate-200 font-medium text-content-strong transition-all text-xs"
+                  className="px-4 py-2 rounded-lg bg-surface-muted hover:bg-slate-200 font-medium text-content-body transition-all text-xs"
                 >
                   Batal
                 </button>
@@ -3339,7 +3339,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               </div>
               <button
                 onClick={closeUploadDocumentModal}
-                className="p-1 hover:bg-surface-muted rounded-md text-content-subtle hover:text-content-muted transition-colors"
+                className="p-1 hover:bg-surface-muted rounded-md text-content-subtle hover:text-content-secondary transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -3347,7 +3347,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             
             <div className="p-5 flex-1 overflow-y-auto space-y-4 text-xs">
               <div>
-                <label className="block text-[11px] font-medium text-content-strong mb-1.5">Nama Dokumen</label>
+                <label className="block text-[11px] font-medium text-content-body mb-1.5">Nama Dokumen</label>
                 <input
                   type="text"
                   value={uploadDocName}
@@ -3358,7 +3358,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-content-strong mb-1.5">Upload File (Max 5MB)</label>
+                <label className="block text-[11px] font-medium text-content-body mb-1.5">Upload File (Max 5MB)</label>
                 <div className="border border-dashed border-slate-300 rounded-md p-6 flex flex-col items-center justify-center bg-surface-sunken/50 relative overflow-hidden group hover:border-primary transition-colors">
                   <input 
                     type="file" 
@@ -3369,7 +3369,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   <div className="w-10 h-10 bg-surface shadow-2xs border border-border-subtle rounded-full flex items-center justify-center mb-2.5 group-hover:scale-105 transition-all text-primary">
                     <Upload className="w-4 h-4" />
                   </div>
-                  <p className="text-xs font-medium text-content-strong mb-0.5">Pilih atau Seret File Kesini</p>
+                  <p className="text-xs font-medium text-content-body mb-0.5">Pilih atau Seret File Kesini</p>
                   <p className="text-[10px] text-content-subtle font-medium">Mendukung PDF, Word, Excel (Max. 5MB)</p>
                   
                   {uploadDocFile && (
@@ -3388,7 +3388,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             <div className="px-5 py-3.5 border-t border-border-faint bg-surface-sunken/50 flex justify-end items-center gap-2">
               <button
                 onClick={closeUploadDocumentModal}
-                className="px-4 py-2 text-xs font-medium text-content-strong hover:bg-slate-200 rounded-md transition-colors"
+                className="px-4 py-2 text-xs font-medium text-content-body hover:bg-slate-200 rounded-md transition-colors"
               >
                 Batal
               </button>

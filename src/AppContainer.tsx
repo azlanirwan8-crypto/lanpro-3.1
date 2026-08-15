@@ -3613,7 +3613,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen flex flex-col lg:flex-row font-sans bg-slate-50 overflow-x-hidden">
+      <div className="min-h-screen flex flex-col lg:flex-row font-sans bg-surface-sunken overflow-x-hidden">
         <Toaster position="top-right" richColors />
         <RateLimitIndicator />
 
@@ -3621,7 +3621,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
         <AuthHeroPanel />
 
         {/* Form Side with Watermark & Animated Form Switching */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 lg:p-12 bg-[#f3f3f9] relative overflow-y-auto min-h-screen">
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 lg:p-12 bg-surface-muted relative overflow-y-auto min-h-screen">
           <AuthWatermarkPattern />
 
           <AnimatePresence mode="wait">
@@ -3681,7 +3681,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
   <PresenceProvider currentUser={currentUser} socket={socket} allUsers={allUsers}>
     <Toaster position="top-right" richColors closeButton duration={5000} />
     <RateLimitIndicator />
-    <div className="min-h-screen flex h-screen bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-slate-100 transition-colors duration-200">
+    <div className="min-h-screen flex h-screen bg-surface-sunken text-content transition-colors duration-200">
       {/* Backdrop Overlay for Mobile Sidebar */}
       <AnimatePresence>
         {isMobileMenuOpen && (

@@ -200,7 +200,7 @@ export const TeamManagementPanel = ({
           <div>
             <h1 className="text-xl font-medium text-content-strong tracking-tight">Team Management</h1>
             <p className="text-xs text-content-muted font-medium mt-0.5">
-              Daftar anggota tim yang bergabung dalam proyek {selectedProject ? <span className="font-medium text-content-strong">{selectedProject.name} ({selectedProject.key})</span> : ''}
+              Daftar anggota tim yang bergabung dalam proyek {selectedProject ? <span className="font-medium text-content-body">{selectedProject.name} ({selectedProject.key})</span> : ''}
             </p>
           </div>
         </div>
@@ -265,7 +265,7 @@ export const TeamManagementPanel = ({
               placeholder="Search for name, designation, or email..." 
               value={teamSearch} 
               onChange={(e) => setTeamSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-1.5 bg-surface-sunken border border-border-subtle rounded-md text-xs focus:ring-1 focus:ring-indigo-500 focus:bg-surface outline-none text-content-strong font-medium transition-all"
+              className="w-full pl-9 pr-4 py-1.5 bg-surface-sunken border border-border-subtle rounded-md text-xs focus:ring-1 focus:ring-indigo-500 focus:bg-surface outline-none text-content-body font-medium transition-all"
             />
           </div>
 
@@ -274,7 +274,7 @@ export const TeamManagementPanel = ({
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
-                className="w-full pl-3 pr-8 py-1.5 bg-surface-sunken border border-border-subtle rounded-md outline-none text-content-strong font-medium text-xs cursor-pointer appearance-none"
+                className="w-full pl-3 pr-8 py-1.5 bg-surface-sunken border border-border-subtle rounded-md outline-none text-content-body font-medium text-xs cursor-pointer appearance-none"
               >
                 <option value="all">Semua Role</option>
                 <option value="admin">Admin</option>
@@ -308,7 +308,7 @@ export const TeamManagementPanel = ({
 
             <button
               onClick={handleExportTeamCSV}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-surface-muted hover:bg-slate-200 text-content-strong border border-border-subtle rounded-md text-xs font-medium shadow-2xs transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-surface-muted hover:bg-slate-200 text-content-body border border-border-subtle rounded-md text-xs font-medium shadow-2xs transition-all cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" /> Export CSV
             </button>
@@ -378,7 +378,7 @@ export const TeamManagementPanel = ({
                     {/* View Profile Button Only */}
                     <button
                       onClick={() => setSelectedProfileUser(person)}
-                      className="w-full py-2 bg-surface-muted hover:bg-indigo-50 hover:text-indigo-600 text-content-strong text-xs font-medium rounded-md transition-colors border border-border-subtle/70 shadow-2xs cursor-pointer"
+                      className="w-full py-2 bg-surface-muted hover:bg-indigo-50 hover:text-indigo-600 text-content-body text-xs font-medium rounded-md transition-colors border border-border-subtle/70 shadow-2xs cursor-pointer"
                     >
                       View Profile
                     </button>
@@ -453,7 +453,7 @@ export const TeamManagementPanel = ({
                         <td className="px-5 py-3.5 text-right">
                           <button
                             onClick={() => setSelectedProfileUser(person)}
-                            className="px-3 py-1 bg-surface-muted hover:bg-indigo-50 hover:text-indigo-600 text-content-strong text-xs font-medium rounded-md transition-colors border border-border-subtle/70 shadow-2xs cursor-pointer"
+                            className="px-3 py-1 bg-surface-muted hover:bg-indigo-50 hover:text-indigo-600 text-content-body text-xs font-medium rounded-md transition-colors border border-border-subtle/70 shadow-2xs cursor-pointer"
                           >
                             View Profile
                           </button>
@@ -503,13 +503,13 @@ export const TeamManagementPanel = ({
               <div className="mt-4 p-3 bg-surface-sunken rounded-lg border border-border-subtle/80 space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-content-subtle font-medium">Project Role</span>
-                  <span className="font-medium text-content-strong capitalize">
+                  <span className="font-medium text-content-body capitalize">
                     {selectedProject?.memberRoles?.[selectedProfileUser.uid] || selectedProfileUser.role || 'Member'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-content-subtle font-medium">Assigned Tasks</span>
-                  <span className="font-medium text-content-strong">
+                  <span className="font-medium text-content-body">
                     {getUserTasks(selectedProfileUser).length} Tasks
                   </span>
                 </div>
@@ -517,15 +517,15 @@ export const TeamManagementPanel = ({
 
               {/* Task list preview */}
               <div className="mt-4">
-                <h4 className="text-xs font-medium text-content-strong uppercase tracking-wider mb-2">Tugas yang Ditugaskan</h4>
+                <h4 className="text-xs font-medium text-content-body uppercase tracking-wider mb-2">Tugas yang Ditugaskan</h4>
                 <div className="max-h-40 overflow-y-auto space-y-1.5 custom-scrollbar pr-1">
                   {getUserTasks(selectedProfileUser).map(t => (
                     <div key={t.id} className="p-2 bg-surface rounded border border-border-subtle/80 text-xs flex items-center justify-between">
                       <div className="flex items-center gap-2 truncate">
                         <span className="font-mono text-[10px] font-medium text-indigo-600 bg-indigo-50 px-1 rounded">{t.key}</span>
-                        <span className="truncate text-content-strong font-medium">{t.title}</span>
+                        <span className="truncate text-content-body font-medium">{t.title}</span>
                       </div>
-                      <span className="text-[10px] font-medium px-1.5 py-0.5 bg-surface-muted text-content-muted rounded shrink-0">{t.status}</span>
+                      <span className="text-[10px] font-medium px-1.5 py-0.5 bg-surface-muted text-content-secondary rounded shrink-0">{t.status}</span>
                     </div>
                   ))}
                   {getUserTasks(selectedProfileUser).length === 0 && (
@@ -537,7 +537,7 @@ export const TeamManagementPanel = ({
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => setSelectedProfileUser(null)}
-                  className="px-4 py-1.5 bg-surface-muted hover:bg-slate-200 text-content-strong text-xs font-medium rounded-md transition-colors border border-border-subtle cursor-pointer"
+                  className="px-4 py-1.5 bg-surface-muted hover:bg-slate-200 text-content-body text-xs font-medium rounded-md transition-colors border border-border-subtle cursor-pointer"
                 >
                   Tutup
                 </button>

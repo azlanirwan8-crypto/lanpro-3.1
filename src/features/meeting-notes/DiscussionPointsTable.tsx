@@ -341,18 +341,18 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
   }));
 
   return (
-    <div className="bg-white flex flex-col font-sans text-left">
+    <div className="bg-surface flex flex-col font-sans text-left">
       {/* Header Bar Clean Title */}
-      <div className="px-5 py-4 border-b border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-50/40">
+      <div className="px-5 py-4 border-b border-border-subtle/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-surface-sunken/40">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-primary shadow-2xs">
             <MessageSquare className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-medium text-slate-800 tracking-tight">
+            <h3 className="text-sm font-medium text-content-strong tracking-tight">
               Poin Diskusi & Keputusan
             </h3>
-            <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">
+            <p className="text-[10px] text-content-muted font-medium uppercase tracking-wider">
               Discussion points & action items
             </p>
           </div>
@@ -361,7 +361,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
         <div className="flex items-center gap-3 w-full sm:w-auto">
           {!showAiAssistant && (
             <div className="relative flex-1 sm:w-64">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-content-subtle absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Cari poin diskusi..."
@@ -370,7 +370,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-medium text-slate-800 outline-none shadow-2xs"
+                className="w-full pl-9 pr-3 py-2 bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-medium text-content-strong outline-none shadow-2xs"
               />
             </div>
           )}
@@ -380,7 +380,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
             className={cn(
               "inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-medium transition-all border shadow-2xs cursor-pointer shrink-0",
               showAiAssistant
-                ? "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300"
+                ? "bg-surface-muted hover:bg-slate-200 text-content-body border-slate-300"
                 : "bg-indigo-50 hover:bg-indigo-100/80 text-primary border-indigo-100"
             )}
           >
@@ -402,21 +402,21 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
       {/* Edit Modal Popup (When clicking edit icon on a row) */}
       {editingId !== null && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-[9999] animate-in fade-in duration-200">
-          <div className="bg-white rounded-lg w-full max-w-2xl shadow-xl border border-slate-200 animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh] overflow-hidden">
-            <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 shrink-0">
+          <div className="bg-surface rounded-lg w-full max-w-2xl shadow-xl border border-border-subtle animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh] overflow-hidden">
+            <div className="px-5 py-4 border-b border-border-faint flex items-center justify-between bg-surface-sunken/50 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-md bg-indigo-50 flex items-center justify-center border border-indigo-100 text-primary">
                   <Edit2 className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-slate-800 tracking-tight">Edit Poin Diskusi</h3>
-                  <p className="text-[11px] text-slate-500 font-medium">Ubah detail, catatan, atau penanggung jawab</p>
+                  <h3 className="text-sm font-medium text-content-strong tracking-tight">Edit Poin Diskusi</h3>
+                  <p className="text-[11px] text-content-muted font-medium">Ubah detail, catatan, atau penanggung jawab</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => { setEditingId(null); setEditForm({}); }}
-                className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+                className="p-1.5 text-content-subtle hover:text-content-secondary hover:bg-surface-muted rounded-md transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -424,9 +424,9 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
 
             <div className="p-5 overflow-y-auto flex-1 space-y-4">
               <div className="space-y-1.5">
-                <label className="text-[10px] uppercase font-medium text-slate-500 tracking-wider">Concern / Topic *</label>
+                <label className="text-[10px] uppercase font-medium text-content-muted tracking-wider">Concern / Topic *</label>
                 <textarea
-                  className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-md text-xs font-medium text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 min-h-[80px] shadow-2xs"
+                  className="w-full px-3.5 py-2 bg-surface border border-border-subtle rounded-md text-xs font-medium text-content-strong outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 min-h-[80px] shadow-2xs"
                   value={editForm.concern || ""}
                   onChange={(e) => setEditForm({ ...editForm, concern: e.target.value })}
                 />
@@ -434,19 +434,19 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase font-medium text-slate-500 tracking-wider">Catatan / Keterangan</label>
+                  <label className="text-[10px] uppercase font-medium text-content-muted tracking-wider">Catatan / Keterangan</label>
                   <input
                     type="text"
-                    className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-md text-xs font-medium text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 shadow-2xs"
+                    className="w-full px-3.5 py-2 bg-surface border border-border-subtle rounded-md text-xs font-medium text-content-strong outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 shadow-2xs"
                     value={editForm.keterangan || ""}
                     onChange={(e) => setEditForm({ ...editForm, keterangan: e.target.value })}
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase font-medium text-slate-500 tracking-wider">Tindakan Lanjut</label>
+                  <label className="text-[10px] uppercase font-medium text-content-muted tracking-wider">Tindakan Lanjut</label>
                   <input
                     type="text"
-                    className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-md text-xs font-medium text-slate-800 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 shadow-2xs"
+                    className="w-full px-3.5 py-2 bg-surface border border-border-subtle rounded-md text-xs font-medium text-content-strong outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 shadow-2xs"
                     value={editForm.tindakanLanjut || ""}
                     onChange={(e) => setEditForm({ ...editForm, tindakanLanjut: e.target.value })}
                   />
@@ -455,7 +455,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase font-medium text-slate-500 tracking-wider">PIC (Assigned To)</label>
+                  <label className="text-[10px] uppercase font-medium text-content-muted tracking-wider">PIC (Assigned To)</label>
                   <StyledDropdown
                     value={editForm.assignTo || "Unassigned"}
                     onChange={(val) => setEditForm({ ...editForm, assignTo: val })}
@@ -463,37 +463,37 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                     members={projectMembers}
                     type="member"
                     masterData={masterData}
-                    buttonClassName="w-full h-9 px-3 bg-white border border-slate-200 text-xs text-left text-slate-700 rounded-md font-medium shadow-2xs"
+                    buttonClassName="w-full h-9 px-3 bg-surface border border-border-subtle text-xs text-left text-content-body rounded-md font-medium shadow-2xs"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase font-medium text-slate-500 tracking-wider">Fitur</label>
+                  <label className="text-[10px] uppercase font-medium text-content-muted tracking-wider">Fitur</label>
                   <StyledDropdown
                     value={editForm.fitur || ""}
                     onChange={(val) => setEditForm({ ...editForm, fitur: val })}
                     options={masterData.filter(m => m.type?.toLowerCase() === 'fitur').map(m => ({ id: m.label, label: m.label, color: m.color, icon: m.icon }))}
                     type="fitur"
                     masterData={masterData}
-                    buttonClassName="w-full h-9 px-3 bg-white border border-slate-200 text-xs text-left text-slate-700 rounded-md font-medium shadow-2xs"
+                    buttonClassName="w-full h-9 px-3 bg-surface border border-border-subtle text-xs text-left text-content-body rounded-md font-medium shadow-2xs"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase font-medium text-slate-500 tracking-wider">Target Date</label>
+                  <label className="text-[10px] uppercase font-medium text-content-muted tracking-wider">Target Date</label>
                   <input
                     type="date"
                     value={editForm.targetDate || ""}
                     onChange={(e) => setEditForm({ ...editForm, targetDate: e.target.value })}
-                    className="w-full h-9 px-3 bg-white border border-slate-200 text-xs font-medium text-slate-700 rounded-md outline-none shadow-2xs"
+                    className="w-full h-9 px-3 bg-surface border border-border-subtle text-xs font-medium text-content-body rounded-md outline-none shadow-2xs"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="px-5 py-3.5 border-t border-slate-100 flex justify-end gap-2.5 bg-slate-50 shrink-0">
+            <div className="px-5 py-3.5 border-t border-border-faint flex justify-end gap-2.5 bg-surface-sunken shrink-0">
               <button
                 type="button"
                 onClick={() => { setEditingId(null); setEditForm({}); }}
-                className="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-md border border-slate-200 bg-white transition-all cursor-pointer shadow-2xs"
+                className="px-4 py-2 text-xs font-medium text-content-secondary hover:bg-surface-muted rounded-md border border-border-subtle bg-surface transition-all cursor-pointer shadow-2xs"
               >
                 Batal
               </button>
@@ -528,7 +528,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
       ) : (
         <div className="space-y-4">
           {/* STREAMLINED LIVE EDITABLE DATA TABLE */}
-          <div className="bg-white border border-slate-200/80 rounded-lg shadow-2xs overflow-hidden">
+          <div className="bg-surface border border-border-subtle/80 rounded-lg shadow-2xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left text-xs">
             <thead>
@@ -544,7 +544,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                 <th className="py-3 px-4 w-24 text-center">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody className="divide-y divide-border-faint text-content-body">
               {paginatedPoints.map((p, idx) => {
                 const isOwner = p.authorId === (currentUser?.uid || "");
                 const isCompleted = p.status === "completed";
@@ -553,19 +553,19 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                                      p.assignTo || "Unassigned";
 
                 return (
-                  <tr key={p.id} className="hover:bg-slate-50/70 transition-colors group">
-                    <td className="py-3 px-4 text-center text-slate-400 font-medium text-xs align-middle">
+                  <tr key={p.id} className="hover:bg-surface-sunken/70 transition-colors group">
+                    <td className="py-3 px-4 text-center text-content-subtle font-medium text-xs align-middle">
                       {String((currentPage - 1) * itemsPerPage + idx + 1).padStart(2, "0")}
                     </td>
 
                     {/* Concern */}
                     <td className="py-3 px-4 align-middle">
-                      <div className={`font-medium text-slate-900 text-xs leading-snug ${isCompleted ? "line-through text-slate-400" : ""}`}>
+                      <div className={`font-medium text-content text-xs leading-snug ${isCompleted ? "line-through text-content-subtle" : ""}`}>
                         {p.concern}
                       </div>
                       {(p.tindakanLanjut || p.next_action) && (
-                        <div className="text-primary text-[11px] font-medium flex items-center gap-1 mt-1 pt-1 border-t border-slate-100">
-                          <span className="uppercase text-[9px] text-slate-400 font-medium">Next:</span>
+                        <div className="text-primary text-[11px] font-medium flex items-center gap-1 mt-1 pt-1 border-t border-border-faint">
+                          <span className="uppercase text-[9px] text-content-subtle font-medium">Next:</span>
                           {p.tindakanLanjut || p.next_action}
                         </div>
                       )}
@@ -573,7 +573,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
 
                     {/* Catatan / Keterangan */}
                     <td className="py-3 px-4 align-middle">
-                      <div className="text-slate-600 text-xs font-normal leading-relaxed">
+                      <div className="text-content-secondary text-xs font-normal leading-relaxed">
                         {p.keterangan || p.comment || <span className="text-slate-300 italic">No notes</span>}
                       </div>
                     </td>
@@ -604,7 +604,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
 
                     {/* PIC */}
                     <td className="py-3 px-4 align-middle">
-                      <div className="text-xs font-medium text-slate-800">
+                      <div className="text-xs font-medium text-content-strong">
                         {assigneeName}
                       </div>
                     </td>
@@ -612,8 +612,8 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                     {/* Target Date */}
                     <td className="py-3 px-4 align-middle">
                       {(p.targetDate || p.target_date) ? (
-                        <div className="flex items-center gap-1 text-xs text-slate-600 font-medium">
-                          <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <div className="flex items-center gap-1 text-xs text-content-secondary font-medium">
+                          <Calendar className="w-3.5 h-3.5 text-content-subtle shrink-0" />
                           <span>{p.targetDate || p.target_date}</span>
                         </div>
                       ) : (
@@ -634,11 +634,11 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                             className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer border shadow-2xs active:scale-95 ${
                               count > 0
                                 ? "bg-indigo-50 hover:bg-indigo-100 text-primary border-indigo-200/80"
-                                : "bg-slate-50 hover:bg-slate-100 text-slate-400 border-slate-200/60"
+                                : "bg-surface-sunken hover:bg-surface-muted text-content-subtle border-border-subtle/60"
                             }`}
                             title="Buka Thread Komentar & Balasan"
                           >
-                            <MessageSquare className={`w-3.5 h-3.5 ${count > 0 ? "text-primary fill-indigo-100" : "text-slate-400"}`} />
+                            <MessageSquare className={`w-3.5 h-3.5 ${count > 0 ? "text-primary fill-indigo-100" : "text-content-subtle"}`} />
                             <span>{count}</span>
                           </button>
                         );
@@ -673,7 +673,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                         {hasPermission(userRole, "meetingNotes", "update", isOwner, permissions) && (
                           <button
                             onClick={() => startEdit(p)}
-                            className="p-1.5 text-slate-500 hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
+                            className="p-1.5 text-content-muted hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
                             title="Edit"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -682,7 +682,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                         {hasPermission(userRole, "meetingNotes", "delete", isOwner, permissions) && (
                           <button
                             onClick={() => handleDelete(p.id!)}
-                            className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer"
+                            className="p-1.5 text-content-muted hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer"
                             title="Hapus"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -709,7 +709,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                       value={quickConcern}
                       onChange={(e) => setQuickConcern(e.target.value)}
                       onKeyDown={(e) => { if (e.key === 'Enter') handleLiveQuickAdd(); }}
-                      className="w-full px-3 py-1.5 bg-white border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-medium text-slate-800 outline-none shadow-2xs placeholder:text-slate-400"
+                      className="w-full px-3 py-1.5 bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-medium text-content-strong outline-none shadow-2xs placeholder:text-content-subtle"
                     />
                   </td>
 
@@ -721,7 +721,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                       value={quickCatatan}
                       onChange={(e) => setQuickCatatan(e.target.value)}
                       onKeyDown={(e) => { if (e.key === 'Enter') handleLiveQuickAdd(); }}
-                      className="w-full px-3 py-1.5 bg-white border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-normal text-slate-700 outline-none placeholder:text-slate-400 shadow-2xs"
+                      className="w-full px-3 py-1.5 bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-normal text-content-body outline-none placeholder:text-content-subtle shadow-2xs"
                     />
                   </td>
 
@@ -733,7 +733,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                       options={masterData.filter(m => m.type?.toLowerCase() === 'fitur').map(m => ({ id: m.label, label: m.label, color: m.color, icon: m.icon }))}
                       type="fitur"
                       masterData={masterData}
-                      buttonClassName="w-full h-8 px-2.5 bg-white border border-slate-200 text-xs text-left text-slate-700 rounded-md font-medium shadow-2xs"
+                      buttonClassName="w-full h-8 px-2.5 bg-surface border border-border-subtle text-xs text-left text-content-body rounded-md font-medium shadow-2xs"
                     />
                   </td>
 
@@ -746,7 +746,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                       members={projectMembers}
                       type="member"
                       masterData={masterData}
-                      buttonClassName="w-full h-8 px-2.5 bg-white border border-slate-200 text-xs text-left text-slate-700 rounded-md font-medium shadow-2xs"
+                      buttonClassName="w-full h-8 px-2.5 bg-surface border border-border-subtle text-xs text-left text-content-body rounded-md font-medium shadow-2xs"
                     />
                   </td>
 
@@ -756,7 +756,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                       type="date"
                       value={quickTargetDate}
                       onChange={(e) => setQuickTargetDate(e.target.value)}
-                      className="w-full h-8 px-2 bg-white border border-slate-200 text-xs font-medium text-slate-700 rounded-md outline-none shadow-2xs"
+                      className="w-full h-8 px-2 bg-surface border border-border-subtle text-xs font-medium text-content-body rounded-md outline-none shadow-2xs"
                     />
                   </td>
 
@@ -793,7 +793,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
     </div>
 
       {/* Pagination Footer */}
-      <div className="px-6 py-3.5 bg-slate-50/60 border-t border-slate-200 flex items-center justify-between text-xs  text-slate-600">
+      <div className="px-6 py-3.5 bg-surface-sunken/60 border-t border-border-subtle flex items-center justify-between text-xs  text-content-secondary">
         <div>
           Menampilkan {paginatedPoints.length} dari {filteredPoints.length} poin (Total: {points.length})
         </div>
@@ -801,17 +801,17 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 shadow-2xs cursor-pointer"
+            className="px-3 py-1.5 bg-surface border border-border-subtle rounded-lg text-content-body hover:bg-surface-muted disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 shadow-2xs cursor-pointer"
           >
             <ChevronLeft className="w-3.5 h-3.5" /> Prev
           </button>
-          <span className="px-3 py-1  bg-white border border-slate-200 rounded-lg text-indigo-600 shadow-2xs">
+          <span className="px-3 py-1  bg-surface border border-border-subtle rounded-lg text-indigo-600 shadow-2xs">
             {currentPage} of {totalPages}
           </span>
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage >= totalPages}
-            className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 shadow-2xs cursor-pointer"
+            className="px-3 py-1.5 bg-surface border border-border-subtle rounded-lg text-content-body hover:bg-surface-muted disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 shadow-2xs cursor-pointer"
           >
             Next <ChevronRight className="w-3.5 h-3.5" />
           </button>
@@ -824,8 +824,8 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
       {activeThreadPoint && (
         <div className="fixed inset-0 bg-slate-950/50 backdrop-blur-xs z-[9999] flex justify-end animate-in fade-in duration-200">
           <div className="absolute inset-0" onClick={() => setActiveThreadPoint(null)} />
-          <div className="relative bg-white w-full max-w-lg h-full shadow-2xl border-l border-slate-200 flex flex-col animate-in slide-in-from-right duration-250 text-left">
-            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/80 shrink-0">
+          <div className="relative bg-surface w-full max-w-lg h-full shadow-2xl border-l border-border-subtle flex flex-col animate-in slide-in-from-right duration-250 text-left">
+            <div className="p-5 border-b border-border-faint flex items-center justify-between bg-surface-sunken/80 shrink-0">
               <div className="flex items-center gap-3 pr-4">
                 <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center border border-indigo-200 shrink-0">
                   <MessageSquare className="w-5 h-5" />
@@ -834,28 +834,28 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                   <span className="text-[10px] font-medium uppercase tracking-widest text-indigo-600 block">
                     Thread Discussions
                   </span>
-                  <h3 className="text-sm font-medium text-slate-900 truncate">
+                  <h3 className="text-sm font-medium text-content truncate">
                     {activeThreadPoint.concern}
                   </h3>
                 </div>
               </div>
               <button
                 onClick={() => setActiveThreadPoint(null)}
-                className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-xl transition-colors cursor-pointer shrink-0"
+                className="p-2 text-content-subtle hover:text-content-body hover:bg-slate-200/60 rounded-xl transition-colors cursor-pointer shrink-0"
                 title="Tutup Thread"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex-1 p-5 overflow-y-auto flex flex-col gap-4 bg-slate-50/30">
+            <div className="flex-1 p-5 overflow-y-auto flex flex-col gap-4 bg-surface-sunken/30">
               {threadComments.length === 0 ? (
                 <div className="text-center py-16 px-4">
                   <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto mb-3 text-indigo-400">
                     <MessageSquare className="w-6 h-6" />
                   </div>
-                  <h4 className="text-xs  text-slate-700">Belum Ada Balasan Komentar</h4>
-                  <p className="text-[11px] text-slate-400  mt-1 leading-normal">
+                  <h4 className="text-xs  text-content-body">Belum Ada Balasan Komentar</h4>
+                  <p className="text-[11px] text-content-subtle  mt-1 leading-normal">
                     Jadilah yang pertama memberikan balasan atau instruksi tambahan untuk PIC topik ini!
                   </p>
                 </div>
@@ -878,19 +878,19 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                         {!isMine && (
                           <div className="flex items-center gap-1.5 mb-1 ml-1">
                             <UserAvatar uid={commentUserId} members={users} name={authorName} className="w-4 h-4 text-[9px]" />
-                            <span className="text-[10px] text-slate-500 font-medium">{authorName}</span>
+                            <span className="text-[10px] text-content-muted font-medium">{authorName}</span>
                           </div>
                         )}
                         <div className={cn(
                           "px-3.5 py-2 rounded-2xl relative shadow-sm group",
-                          isMine ? "bg-indigo-600 text-white rounded-br-sm" : "bg-white text-slate-800 border border-slate-200 rounded-bl-sm"
+                          isMine ? "bg-indigo-600 text-white rounded-br-sm" : "bg-surface text-content-strong border border-border-subtle rounded-bl-sm"
                         )}>
                           <p className="text-[13px] leading-relaxed whitespace-pre-wrap break-words min-w-[50px] pb-3.5">
                             {commentBody}
                           </p>
                           <span className={cn(
                             "absolute bottom-1 right-3 text-[9px]  tracking-tight",
-                            isMine ? "text-indigo-200" : "text-slate-400"
+                            isMine ? "text-indigo-200" : "text-content-subtle"
                           )}>
                             {new Date(commentDate).toLocaleTimeString("id-ID", {
                               hour: "2-digit",
@@ -905,8 +905,8 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
               )}
             </div>
 
-            <div className="p-4 border-t border-slate-200 bg-white shrink-0">
-              <div className="flex items-center gap-2 bg-slate-100 rounded-full px-4 py-2">
+            <div className="p-4 border-t border-border-subtle bg-surface shrink-0">
+              <div className="flex items-center gap-2 bg-surface-muted rounded-full px-4 py-2">
                 <input
                   type="text"
                   placeholder="Tulis balasan atau instruksi untuk PIC..."
@@ -917,7 +917,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                       handleSendThreadComment();
                     }
                   }}
-                  className="w-full bg-transparent border-0 focus:ring-0 outline-none text-xs font-medium text-slate-800 placeholder:text-slate-400 py-1"
+                  className="w-full bg-transparent border-0 focus:ring-0 outline-none text-xs font-medium text-content-strong placeholder:text-content-subtle py-1"
                 />
                 <button
                   onClick={handleSendThreadComment}

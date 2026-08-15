@@ -479,7 +479,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                 <div className="flex items-center gap-2">
                     <button
                         onClick={handleExportCSV}
-                        className="bg-surface-sunken hover:bg-surface-muted text-content-strong border border-border-subtle hover:border-slate-300 font-medium py-1.5 px-3 rounded text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-[0.98] shadow-2xs h-8.5"
+                        className="bg-surface-sunken hover:bg-surface-muted text-content-body border border-border-subtle hover:border-slate-300 font-medium py-1.5 px-3 rounded text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-[0.98] shadow-2xs h-8.5"
                     >
                         <Download className="w-3.5 h-3.5 text-content-muted" /> Export CSV
                     </button>
@@ -506,7 +506,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                 <select
                     value={filterRole}
                     onChange={(e) => setFilterRole(e.target.value)}
-                    className="px-3 py-1.5 bg-surface-sunken/50 border border-border-subtle/80 rounded focus:bg-surface focus:ring-1 focus:ring-indigo-500/10 outline-none text-content-strong font-medium text-xs cursor-pointer h-8.5"
+                    className="px-3 py-1.5 bg-surface-sunken/50 border border-border-subtle/80 rounded focus:bg-surface focus:ring-1 focus:ring-indigo-500/10 outline-none text-content-body font-medium text-xs cursor-pointer h-8.5"
                 >
                     <option value="all">All Roles</option>
                     <option value="admin">Admin</option>
@@ -518,7 +518,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                 <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-1.5 bg-surface-sunken/50 border border-border-subtle/80 rounded focus:bg-surface focus:ring-1 focus:ring-indigo-500/10 outline-none text-content-strong font-medium text-xs cursor-pointer h-8.5"
+                    className="px-3 py-1.5 bg-surface-sunken/50 border border-border-subtle/80 rounded focus:bg-surface focus:ring-1 focus:ring-indigo-500/10 outline-none text-content-body font-medium text-xs cursor-pointer h-8.5"
                 >
                     <option value="all">All Status</option>
                     <option value="approved">Approved</option>
@@ -760,7 +760,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                       </td>
                       <td className="py-3.5 px-4">
                           <div className="flex flex-col">
-                              <span className="text-xs font-medium text-content-strong">
+                              <span className="text-xs font-medium text-content-body">
                                   {user.department ? getDepartmentName(user.department) : '-'}
                               </span>
                               <span className="text-[10px] text-content-muted uppercase tracking-widest">
@@ -800,7 +800,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                           user.role === 'admin' ? "bg-rose-50 text-rose-600 border-rose-200" :
                           user.role === 'head' ? "bg-purple-50 text-purple-600 border-purple-200" :
                           user.role === 'manager' ? "bg-blue-50 text-blue-600 border-blue-200" :
-                          "bg-surface-sunken text-content-muted border-border-subtle"
+                          "bg-surface-sunken text-content-secondary border-border-subtle"
                         )}>
                           {user.role}
                         </span>
@@ -891,7 +891,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                      setItemsPerPage(Number(e.target.value));
                      setCurrentPage(1);
                    }}
-                   className="bg-surface border border-border-subtle rounded-md px-2 py-1 text-xs font-medium text-content-strong outline-none focus:border-indigo-500 cursor-pointer"
+                   className="bg-surface border border-border-subtle rounded-md px-2 py-1 text-xs font-medium text-content-body outline-none focus:border-indigo-500 cursor-pointer"
                  >
                    <option value={10}>10</option>
                    <option value={25}>25</option>
@@ -917,7 +917,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                        onClick={() => setCurrentPage(i + 1)}
                        className={cn(
                            "w-7 h-7 rounded-lg text-xs font-medium transition-colors",
-                           currentPage === i + 1 ? "bg-indigo-600 text-white shadow-2xs" : "bg-surface border border-border-subtle text-content-muted hover:bg-surface-sunken"
+                           currentPage === i + 1 ? "bg-indigo-600 text-white shadow-2xs" : "bg-surface border border-border-subtle text-content-secondary hover:bg-surface-sunken"
                        )}
                    >
                        {i + 1}
@@ -1152,7 +1152,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
           maxWidth="max-w-md"
         >
           <div className="space-y-6 py-2">
-            <p className="text-sm text-content-muted leading-relaxed">
+            <p className="text-sm text-content-secondary leading-relaxed">
               {confirmModal.message}
             </p>
             <div className="flex justify-end gap-3 pt-2">

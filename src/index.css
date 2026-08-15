@@ -39,6 +39,8 @@
   --color-surface-sunken: #f8fafc;  /* = slate-50  */
   --color-content: #0f172a;         /* = slate-900 */
   --color-content-strong: #1e293b;  /* = slate-800 */
+  --color-content-body: #334155;    /* = slate-700 */
+  --color-content-secondary: #475569; /* = slate-600 */
   --color-content-muted: #64748b;   /* = slate-500 */
   --color-content-subtle: #94a3b8;  /* = slate-400 */
 }
@@ -65,6 +67,8 @@ html.dark {
   --color-surface-sunken: #080c15;
   --color-content: #f1f5f9;
   --color-content-strong: #e2e8f0;
+  --color-content-body: #cbd5e1;
+  --color-content-secondary: #a9b6c8;
   --color-content-muted: #94a3b8;
   --color-content-subtle: #7c8ba1;
 }

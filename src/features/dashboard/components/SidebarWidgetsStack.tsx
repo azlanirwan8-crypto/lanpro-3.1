@@ -67,7 +67,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
   return (
     <div className="flex-1 overflow-y-auto no-scrollbar space-y-6 h-auto p-1 select-none">
       {/* My Active Tasks */}
-      <div className="bg-white shadow-sm border border-slate-200/80 rounded-xl p-5">
+      <div className="bg-surface shadow-sm border border-border-subtle/80 rounded-xl p-5">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-[10px] font-medium uppercase tracking-widest text-indigo-700 flex items-center gap-2">
             <Zap className="w-4 h-4 text-indigo-500" /> My Active Tasks ({myActiveTasks.length})
@@ -80,7 +80,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
         </div>
         <div className="space-y-2.5 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
           {myActiveTasks.length === 0 ? (
-            <div className="text-xs text-slate-400 font-medium italic text-center p-3">
+            <div className="text-xs text-content-subtle font-medium italic text-center p-3">
               No active tasks assigned to you.
             </div>
           ) : (
@@ -91,7 +91,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
                   "group p-3 rounded-xl border transition-all cursor-pointer",
                   isDueSoon24h(task.endDate)
                     ? "border-amber-400 bg-amber-50/20 shadow-[0_0_12px_rgba(245,158,11,0.15)] hover:border-amber-500 hover:bg-amber-50/30"
-                    : "border-indigo-100/50 hover:border-indigo-300 hover:shadow-2xs bg-white"
+                    : "border-indigo-100/50 hover:border-indigo-300 hover:shadow-2xs bg-surface"
                 )}
                 onClick={() => {
                   setSelectedTaskForDetail(task);
@@ -109,11 +109,11 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
                       </span>
                     )}
                   </div>
-                  <div className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+                  <div className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">
                     {task.priority}
                   </div>
                 </div>
-                <div className="text-xs font-medium text-slate-800 leading-snug line-clamp-2">
+                <div className="text-xs font-medium text-content-strong leading-snug line-clamp-2">
                   {task.title}
                 </div>
               </div>
@@ -142,13 +142,13 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
         </div>
         <div className="space-y-2.5 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
           {blockedTasks.length === 0 ? (
-            <div className="text-xs text-slate-400 font-medium italic p-2">No blocked tasks.</div>
+            <div className="text-xs text-content-subtle font-medium italic p-2">No blocked tasks.</div>
           ) : (
             blockedTasks.map((task) => (
               <div
                 key={task.id}
                 className={cn(
-                  "group p-3 rounded-xl border transition-all cursor-pointer bg-white",
+                  "group p-3 rounded-xl border transition-all cursor-pointer bg-surface",
                   isDueSoon24h(task.endDate)
                     ? "border-amber-400 bg-amber-50/20 shadow-[0_0_12px_rgba(245,158,11,0.15)] hover:border-amber-500 hover:bg-amber-50/30"
                     : "border-rose-100 hover:border-rose-300 hover:shadow-2xs"
@@ -169,7 +169,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
                   </div>
                   <div className="text-[10px] font-medium text-rose-500 uppercase tracking-wider">Blocked</div>
                 </div>
-                <div className="text-xs font-medium text-slate-800 leading-snug line-clamp-2">
+                <div className="text-xs font-medium text-content-strong leading-snug line-clamp-2">
                   {task.title}
                 </div>
               </div>
@@ -179,18 +179,18 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
       </div>
 
       {/* Needs Attention / Overdue */}
-      <div className="bg-white shadow-sm border border-rose-100/80 rounded-xl p-5">
-        <h3 className="text-[10px] font-medium uppercase tracking-widest text-slate-800 flex items-center gap-2 mb-3">
+      <div className="bg-surface shadow-sm border border-rose-100/80 rounded-xl p-5">
+        <h3 className="text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2 mb-3">
           <AlertCircle className="w-4 h-4 text-rose-500 animate-pulse" /> Needs Attention ({overdueTasks.length})
         </h3>
         <div className="space-y-2.5 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
           {overdueTasks.length === 0 ? (
-            <div className="text-xs text-slate-400 font-medium italic p-2">All clear! No overdue tasks.</div>
+            <div className="text-xs text-content-subtle font-medium italic p-2">All clear! No overdue tasks.</div>
           ) : (
             overdueTasks.map((task) => (
               <div
                 key={task.id}
-                className="group p-3 rounded-xl border border-slate-100 hover:border-rose-200 hover:shadow-2xs transition-all cursor-pointer bg-white"
+                className="group p-3 rounded-xl border border-border-faint hover:border-rose-200 hover:shadow-2xs transition-all cursor-pointer bg-surface"
                 onClick={() => {
                   setSelectedTaskForDetail(task);
                   setIsTaskDetailModalOpen(true);
@@ -200,7 +200,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
                   <div className="text-[10px] font-medium text-indigo-600">{task.key}</div>
                   <div className="text-[10px] font-medium text-rose-500 uppercase tracking-wider">Overdue</div>
                 </div>
-                <div className="text-xs font-medium text-slate-800 leading-snug line-clamp-2">
+                <div className="text-xs font-medium text-content-strong leading-snug line-clamp-2">
                   {task.title}
                 </div>
               </div>
@@ -210,9 +210,9 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
       </div>
 
       {/* Due Soon */}
-      <div className="bg-white shadow-sm border border-slate-100/80 rounded-xl p-5">
+      <div className="bg-surface shadow-sm border border-border-faint/80 rounded-xl p-5">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-[10px] font-medium uppercase tracking-widest text-slate-800 flex items-center gap-2">
+          <h3 className="text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2">
             <Zap className="w-4 h-4 text-amber-500" /> Due Soon (3 Days) ({dueSoonTasks.length})
           </h3>
           {dueSoonTasks.some(task => isDueSoon24h(task.endDate)) && (
@@ -223,7 +223,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
         </div>
         <div className="space-y-2.5 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
           {dueSoonTasks.length === 0 ? (
-            <div className="text-xs text-slate-400 font-medium italic p-2">No urgent deadlines in next 3 days.</div>
+            <div className="text-xs text-content-subtle font-medium italic p-2">No urgent deadlines in next 3 days.</div>
           ) : (
             dueSoonTasks.map((task) => (
               <div
@@ -232,7 +232,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
                   "group p-3 rounded-xl border transition-all cursor-pointer",
                   isDueSoon24h(task.endDate)
                     ? "border-amber-400 bg-amber-50/20 shadow-[0_0_12px_rgba(245,158,11,0.15)] hover:border-amber-500 hover:bg-amber-50/30"
-                    : "border-slate-100 hover:border-indigo-200 hover:shadow-2xs bg-white"
+                    : "border-border-faint hover:border-indigo-200 hover:shadow-2xs bg-surface"
                 )}
                 onClick={() => {
                   setSelectedTaskForDetail(task);
@@ -248,13 +248,13 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
                       </span>
                     )}
                   </div>
-                  <div className="text-[10px] font-medium text-slate-400">
+                  <div className="text-[10px] font-medium text-content-subtle">
                     {formatDistanceToNow(ensureDate(task.endDate!), {
                       addSuffix: true,
                     })}
                   </div>
                 </div>
-                <div className="text-xs font-medium text-slate-800 leading-snug line-clamp-2">
+                <div className="text-xs font-medium text-content-strong leading-snug line-clamp-2">
                   {task.title}
                 </div>
               </div>
@@ -264,27 +264,27 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
       </div>
 
       {/* Recent Meeting Notes */}
-      <div className="bg-white shadow-sm border border-slate-100/80 rounded-xl p-5">
+      <div className="bg-surface shadow-sm border border-border-faint/80 rounded-xl p-5">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-[10px] font-medium uppercase tracking-widest text-slate-800 flex items-center gap-2">
+          <h3 className="text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2">
             <Video className="w-4 h-4 text-sky-500" /> Recent Meetings ({meetings.length})
           </h3>
         </div>
         <div className="space-y-2.5 max-h-[280px] overflow-y-auto custom-scrollbar pr-1">
           {meetings.length === 0 ? (
-            <div className="text-xs text-slate-400 font-medium italic p-2">No meeting notes yet.</div>
+            <div className="text-xs text-content-subtle font-medium italic p-2">No meeting notes yet.</div>
           ) : (
             meetings.map((meeting: any) => (
               <div
                 key={meeting.id}
-                className="group p-3 rounded-xl border border-slate-200/70 hover:border-sky-300 transition-all cursor-pointer bg-white shadow-2xs"
+                className="group p-3 rounded-xl border border-border-subtle/70 hover:border-sky-300 transition-all cursor-pointer bg-surface shadow-2xs"
                 onClick={() => setCurrentView("meetings")}
               >
-                <div className="text-xs font-medium text-slate-800 line-clamp-1 mb-1 leading-normal">
+                <div className="text-xs font-medium text-content-strong line-clamp-1 mb-1 leading-normal">
                   {meeting.title}
                 </div>
-                <div className="flex justify-between items-center text-[10px] text-slate-400">
-                  <span className="font-medium uppercase text-slate-500">
+                <div className="flex justify-between items-center text-[10px] text-content-subtle">
+                  <span className="font-medium uppercase text-content-muted">
                     {format(ensureDate(meeting.createdAt), "MMM dd, yyyy")}
                   </span>
                   <span className="text-sky-500 flex items-center gap-1 font-medium">
@@ -298,26 +298,26 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
       </div>
 
       {/* Recent Documentation */}
-      <div className="bg-white shadow-sm border border-slate-100/80 rounded-xl p-5">
+      <div className="bg-surface shadow-sm border border-border-faint/80 rounded-xl p-5">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-[10px] font-medium uppercase tracking-widest text-slate-800 flex items-center gap-2">
+          <h3 className="text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2">
             <FileText className="w-4 h-4 text-teal-500" /> Documentation ({documents.length})
           </h3>
         </div>
         <div className="space-y-2.5 max-h-[280px] overflow-y-auto custom-scrollbar pr-1">
           {documents.length === 0 ? (
-            <div className="text-xs text-slate-400 font-medium italic p-2">No documents uploaded.</div>
+            <div className="text-xs text-content-subtle font-medium italic p-2">No documents uploaded.</div>
           ) : (
             documents.map((doc: any) => (
               <div
                 key={doc.id}
-                className="group p-3 rounded-xl border border-slate-100 hover:border-teal-200 hover:shadow-2xs transition-all cursor-pointer bg-white"
+                className="group p-3 rounded-xl border border-border-faint hover:border-teal-200 hover:shadow-2xs transition-all cursor-pointer bg-surface"
                 onClick={() => setCurrentView("wiki")}
               >
-                <div className="text-xs font-medium text-slate-800 leading-snug line-clamp-1 mb-1">
+                <div className="text-xs font-medium text-content-strong leading-snug line-clamp-1 mb-1">
                   {doc.title}
                 </div>
-                <div className="text-[10px] font-medium text-slate-400 flex justify-between">
+                <div className="text-[10px] font-medium text-content-subtle flex justify-between">
                   <span className="uppercase tracking-wider text-teal-600 bg-teal-50 px-1 py-0.5 rounded font-mono">
                     {doc.type || "DOC"}
                   </span>
@@ -350,7 +350,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
                   <div className="text-[11px] text-slate-300 font-medium leading-tight">
                     <span className="text-white font-medium">{author}</span> {humanizeActivityAction(log.action)}
                   </div>
-                  <div className="text-[9px] text-slate-400 mt-0.5">
+                  <div className="text-[9px] text-content-subtle mt-0.5">
                     {formatDistanceToNow(ensureDate(log.createdAt), {
                       addSuffix: true,
                     })}
@@ -362,7 +362,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
         </div>
         <button
           onClick={() => setCurrentView("activity")}
-          className="w-full mt-4 py-2 text-xs font-medium uppercase tracking-wider text-white bg-white/10 hover:bg-white/20 rounded-lg transition-colors border border-white/10 cursor-pointer"
+          className="w-full mt-4 py-2 text-xs font-medium uppercase tracking-wider text-white bg-surface/10 hover:bg-surface/20 rounded-lg transition-colors border border-white/10 cursor-pointer"
         >
           View Full Audit Log
         </button>

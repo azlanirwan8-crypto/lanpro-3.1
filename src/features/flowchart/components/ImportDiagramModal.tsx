@@ -57,15 +57,15 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
 
   return (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 select-none">
-          <div className="bg-white border border-slate-200 w-full max-w-xl rounded-xl shadow-xl overflow-hidden flex flex-col text-slate-800 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh]">
+          <div className="bg-surface border border-border-subtle w-full max-w-xl rounded-xl shadow-xl overflow-hidden flex flex-col text-content-strong animate-in fade-in zoom-in-95 duration-150 max-h-[90vh]">
 
             {/* Modal Head */}
-            <div className="px-5 py-4 bg-white border-b border-slate-200 flex justify-between items-center shrink-0">
+            <div className="px-5 py-4 bg-surface border-b border-border-subtle flex justify-between items-center shrink-0">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
                   <Upload className="w-4 h-4" />
                 </div>
-                <h3 className="font-medium text-sm text-slate-900">
+                <h3 className="font-medium text-sm text-content">
                   Integrasi & Impor File Alur Kerja
                 </h3>
               </div>
@@ -74,7 +74,7 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
                   setIsImportModalOpen(false);
                   setParsedImportData(null);
                 }}
-                className="p-1 hover:bg-slate-200 rounded-lg text-slate-400 hover:text-slate-600 transition-all active:scale-95"
+                className="p-1 hover:bg-slate-200 rounded-lg text-content-subtle hover:text-content-secondary transition-all active:scale-95"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -94,12 +94,12 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
                     "p-3 rounded-xl border text-center transition-all flex flex-col items-center gap-1.5",
                     importType === "drawio"
                       ? "bg-orange-50/70 border-orange-200 text-orange-800 ring-2 ring-orange-500/20 font-medium"
-                      : "border-slate-200 hover:bg-slate-50 text-slate-605 hover:border-slate-300 font-medium"
+                      : "border-border-subtle hover:bg-surface-sunken text-slate-605 hover:border-slate-300 font-medium"
                   )}
                 >
                   <span className="text-xl">📊</span>
                   <div className="text-[10px] font-medium uppercase tracking-wider">Draw.io / XML</div>
-                  <div className="text-[9px] text-slate-500 font-medium">File .xml / .drawio</div>
+                  <div className="text-[9px] text-content-muted font-medium">File .xml / .drawio</div>
                 </button>
 
                 <button
@@ -113,12 +113,12 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
                     "p-3 rounded-xl border text-center transition-all flex flex-col items-center gap-1.5",
                     importType === "miro"
                       ? "bg-amber-50/70 border-amber-200 text-amber-800 ring-2 ring-amber-500/20 font-medium"
-                      : "border-slate-200 hover:bg-slate-50 text-slate-605 hover:border-slate-300 font-medium"
+                      : "border-border-subtle hover:bg-surface-sunken text-slate-605 hover:border-slate-300 font-medium"
                   )}
                 >
                   <span className="text-xl">🟡</span>
                   <div className="text-[10px] font-medium uppercase tracking-wider">Miro Board</div>
-                  <div className="text-[9px] text-slate-500 font-medium">Miro .json / .csv</div>
+                  <div className="text-[9px] text-content-muted font-medium">Miro .json / .csv</div>
                 </button>
 
                 <button
@@ -132,17 +132,17 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
                     "p-3 rounded-xl border text-center transition-all flex flex-col items-center gap-1.5",
                     importType === "native"
                       ? "bg-indigo-50/70 border-indigo-200 text-indigo-800 ring-2 ring-indigo-500/20 font-medium"
-                      : "border-slate-200 hover:bg-slate-50 text-slate-605 hover:border-slate-300 font-medium"
+                      : "border-border-subtle hover:bg-surface-sunken text-slate-605 hover:border-slate-300 font-medium"
                   )}
                 >
                   <span className="text-xl">🔮</span>
                   <div className="text-[10px] font-medium uppercase tracking-wider">Format Cadangan</div>
-                  <div className="text-[9px] text-slate-500 font-medium">Bawaan File .json</div>
+                  <div className="text-[9px] text-content-muted font-medium">Bawaan File .json</div>
                 </button>
               </div>
 
               {/* Guidelines helper text */}
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] leading-relaxed text-slate-550">
+              <div className="bg-surface-sunken p-3 rounded-xl border border-border-subtle text-[11px] leading-relaxed text-slate-550">
                 {importType === "drawio" && (
                   <p>
                     💡 <strong>Petunjuk Draw.io</strong>: Anda dapat mengekspor diagram dari Draw.io sebagai berkas <strong>XML Terkompresi maupun Mentah (.xml / .drawio)</strong>. Sistem kami secara otomatis mengonversi bentuk dasar, warna, label, serta garis penghubung agar kompatibel di whiteboard.
@@ -195,7 +195,7 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
                     ? "border-violet-500 bg-violet-50 text-violet-700"
                     : parsedImportData
                     ? "border-emerald-300 bg-emerald-50/10 text-emerald-800 animate-pulse"
-                    : "border-slate-300 hover:border-indigo-400 hover:bg-slate-50 text-slate-500 font-medium"
+                    : "border-slate-300 hover:border-indigo-400 hover:bg-surface-sunken text-content-muted font-medium"
                 )}
               >
                 {parsedImportData ? (
@@ -211,14 +211,14 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
                     <span>Tarik & lepas file di sini atau klik untuk memilih file</span>
                   )}
                   {parsedFilename && (
-                    <span className="text-[10px] text-slate-600 font-mono block mt-2 bg-slate-100 p-1 px-2.5 rounded-lg border border-slate-200 inline-block">
+                    <span className="text-[10px] text-content-secondary font-mono block mt-2 bg-surface-muted p-1 px-2.5 rounded-lg border border-border-subtle inline-block">
                       📎 {parsedFilename}
                     </span>
                   )}
                 </div>
 
                 {!parsedImportData && (
-                  <p className="text-[9px] text-slate-400 font-medium">
+                  <p className="text-[9px] text-content-subtle font-medium">
                     Mendukung ekstensi {importType === "drawio" ? ".xml, .drawio" : importType === "miro" ? ".json, .csv" : ".json"}
                   </p>
                 )}
@@ -227,24 +227,24 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
               {/* Analytical preview result of parser */}
               {parsedImportData && (
                 <div className="bg-emerald-50/60 border border-emerald-200 rounded-xl p-4 space-y-2 text-[11px] animate-fade-in text-emerald-900 leading-relaxed font-sans font-medium">
-                  <span className="font-medium uppercase tracking-widest text-[9.5px] text-emerald-800 flex items-center gap-1.5 shadow-sm bg-white p-1 px-2.5 w-fit rounded-full border border-emerald-100">
+                  <span className="font-medium uppercase tracking-widest text-[9.5px] text-emerald-800 flex items-center gap-1.5 shadow-sm bg-surface p-1 px-2.5 w-fit rounded-full border border-emerald-100">
                     🔍 Ulasan Kesiapan Diagram
                   </span>
 
                   <div className="grid grid-cols-2 gap-3 pt-1">
-                    <div className="bg-white p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2 shadow-inner">
+                    <div className="bg-surface p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2 shadow-inner">
                       <span className="text-xl">🛠️</span>
                       <div>
-                        <div className="font-medium text-slate-900 text-xs">{parsedImportData.nodes.length}</div>
-                        <div className="text-[9px] text-slate-500 font-medium uppercase tracking-wider">Bentuk & Ornamen (Nodes)</div>
+                        <div className="font-medium text-content text-xs">{parsedImportData.nodes.length}</div>
+                        <div className="text-[9px] text-content-muted font-medium uppercase tracking-wider">Bentuk & Ornamen (Nodes)</div>
                       </div>
                     </div>
 
-                    <div className="bg-white p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2 shadow-inner">
+                    <div className="bg-surface p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2 shadow-inner">
                       <span className="text-xl">🖧</span>
                       <div>
-                        <div className="font-medium text-slate-900 text-xs">{parsedImportData.edges.length}</div>
-                        <div className="text-[9px] text-slate-500 font-medium uppercase tracking-wider">Anak Panah Penghubung (Edges)</div>
+                        <div className="font-medium text-content text-xs">{parsedImportData.edges.length}</div>
+                        <div className="text-[9px] text-content-muted font-medium uppercase tracking-wider">Anak Panah Penghubung (Edges)</div>
                       </div>
                     </div>
                   </div>
@@ -258,14 +258,14 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
             </div>
 
             {/* Modal Actions */}
-            <div className="p-4 px-5 bg-slate-50 border-t border-slate-200 flex justify-between items-center shrink-0">
+            <div className="p-4 px-5 bg-surface-sunken border-t border-border-subtle flex justify-between items-center shrink-0">
               <button
                 type="button"
                 onClick={() => {
                   setIsImportModalOpen(false);
                   setParsedImportData(null);
                 }}
-                className="p-2 px-4 rounded-xl bg-slate-200/80 hover:bg-slate-300 font-medium border border-slate-300 text-slate-600 hover:text-slate-800 transition-all text-[11px] active:scale-95"
+                className="p-2 px-4 rounded-xl bg-slate-200/80 hover:bg-slate-300 font-medium border border-slate-300 text-content-secondary hover:text-content-strong transition-all text-[11px] active:scale-95"
               >
                 Tutup
               </button>
@@ -275,7 +275,7 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
                   <button
                     type="button"
                     onClick={handleApplyImportMerge}
-                    className="p-2 px-3 bg-white hover:bg-indigo-50 border border-indigo-200 hover:border-indigo-300 text-indigo-700 hover:text-indigo-900 font-medium rounded-xl transition-all text-[11px] shadow-sm flex items-center gap-1 active:scale-95"
+                    className="p-2 px-3 bg-surface hover:bg-indigo-50 border border-indigo-200 hover:border-indigo-300 text-indigo-700 hover:text-indigo-900 font-medium rounded-xl transition-all text-[11px] shadow-sm flex items-center gap-1 active:scale-95"
                   >
                     <span>➕ Gabungkan ke Kanvas</span>
                   </button>
@@ -288,7 +288,7 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
                   </button>
                 </div>
               ) : (
-                <div className="text-[10px] text-slate-400 italic font-medium">Silakan tarik / pilih diagram di atas</div>
+                <div className="text-[10px] text-content-subtle italic font-medium">Silakan tarik / pilih diagram di atas</div>
               )}
             </div>
           </div>
