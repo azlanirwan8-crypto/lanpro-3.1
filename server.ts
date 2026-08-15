@@ -412,6 +412,15 @@ async function startServer() {
   const { default: taskRoutes } = await import('./server/routes/task.routes.ts');
   app.use(taskRoutes);
 
+  // Chat dan notifikasi sebelumnya menumpang di task.routes.ts. Urutan mount
+  // dipertahankan tepat setelahnya agar semantik pencocokan Express tidak
+  // berubah — jalurnya memang tidak beririsan, tetapi urutan tetap dijaga.
+  const { default: chatRoutes } = await import('./server/routes/chat.routes.ts');
+  app.use(chatRoutes);
+
+  const { default: notificationsRoutes } = await import('./server/routes/notifications.routes.ts');
+  app.use(notificationsRoutes);
+
   const { default: notebooklmRoutes } = await import('./server/routes/notebooklm.routes.ts');
   app.use(notebooklmRoutes);
 
