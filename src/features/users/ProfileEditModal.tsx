@@ -103,8 +103,29 @@ export const ProfileEditModal = ({
         if (uploadData && (uploadData.status === 'success' || uploadData.avatar_url)) {
           finalPhotoURL = uploadData.avatar_url || uploadData.data?.avatar_url || uploadData.data?.photoURL || finalPhotoURL;
           setPhotoURL(finalPhotoURL);
-          if (previewUrl && previewUrl.startsWith('blob:')) {
-            URL.revokeObjectURL(previewUrl);
+
+          // Preview blob DITAHAN sampai gambar dari server benar-benar termuat.
+          //
+          // Sebelumnya blob langsung di-revoke begitu URL server dipasang,
+          // sehingga di jeda pemuatan jaringan avatar berkedip ke inisial nama.
+          // Menunggu onload membuat pergantiannya mulus: blob baru dilepas
+          // setelah penggantinya siap digambar.
+          //
+          // Batas 3 detik mencegah modal menggantung bila gambar gagal dimuat;
+          // onerror juga menyelesaikan penantian karena preview yang tertinggal
+          // lebih baik daripada antarmuka yang membeku.
+          const blobLama = previewUrl;
+          await new Promise<void>((selesai) => {
+            const img = new Image();
+            const batas = setTimeout(selesai, 3000);
+            const rampung = () => { clearTimeout(batas); selesai(); };
+            img.onload = rampung;
+            img.onerror = rampung;
+            img.src = finalPhotoURL;
+          });
+
+          if (blobLama && blobLama.startsWith('blob:')) {
+            URL.revokeObjectURL(blobLama);
           }
           setPreviewUrl(null);
           setSelectedAvatar(null);

@@ -526,6 +526,24 @@ const router = express.Router();
       if (io) {
         io.emit("data_changed", { path: `/api/users/${id}`, method: "PUT" });
         io.emit("data_changed", { path: `/api/users`, method: "GET" });
+
+        // Dipancarkan juga bila avatar ikut berubah lewat jalur ini.
+        //
+        // Sebelumnya hanya endpoint unggah avatar yang memancarkan
+        // "user_avatar_updated", sehingga perubahan avatar lewat pembaruan
+        // profil tidak memicu listener khusus di klien — avatar di header baru
+        // ikut berganti setelah muat ulang daftar pengguna yang lebih lambat.
+        //
+        // Perbandingan dengan nilai lama mencegah pancaran sia-sia saat
+        // pengguna hanya mengubah nama atau nomor telepon.
+        const avatarLama = user.avatar_url || user.photoURL || user.avatarUrl || null;
+        if (finalAvatar && finalAvatar !== avatarLama) {
+          io.emit("user_avatar_updated", {
+            userId: id,
+            avatar_url: finalAvatar,
+            user: { ...user, avatar_url: finalAvatar, photoURL: finalAvatar, avatarUrl: finalAvatar },
+          });
+        }
       }
 
       connection.release();
