@@ -326,7 +326,7 @@ export const FlowchartNode: React.FC<FlowchartNodeProps> = ({
                             "w-full bg-transparent border-0 resize-none font-medium text-current focus:outline-none focus:ring-1 focus:ring-violet-300 rounded leading-tight text-center font-sans tracking-tight custom-scrollbar",
                             canvasTheme === "blueprint" && !isSticky && "text-white select-text",
                             node.fontStyle === "serif" && "sticky-handwriting font-medium",
-                            node.fontStyle === "mono" && "font-mono text-[10px]",
+                            node.fontStyle === "mono" && "font-mono text-xs sm:text-[10px]",
                             node.align === "left" && "text-left",
                             node.align === "right" && "text-right"
                           )}
@@ -345,7 +345,7 @@ export const FlowchartNode: React.FC<FlowchartNodeProps> = ({
                           <div className="mt-1 flex flex-col items-center gap-0.5 w-full">
                             <div 
                               className={cn(
-                                "flex items-center gap-1 text-[8.5px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded border shadow-sm cursor-pointer whitespace-nowrap",
+                                "flex items-center gap-1 text-xs sm:text-[10px] sm:text-[8.5px] font-medium uppercase tracking-wider px-1.5 py-0.5 rounded border shadow-soft cursor-pointer whitespace-nowrap",
                                 linkedTask.status === "Done" || linkedTask.status === "Selesai"
                                   ? "bg-emerald-100 text-emerald-800 border-emerald-300"
                                   : linkedTask.status === "In Progress" || linkedTask.status === "Dikerjakan"
@@ -416,7 +416,7 @@ export const FlowchartNode: React.FC<FlowchartNodeProps> = ({
                             setSelectedNodeId(nextNodeId);
                             toast.success("Otomatis menambahkan & menghubungkan alur langkah baru!");
                           }}
-                          className="absolute -right-11 top-1/2 -translate-y-1/2 w-7 h-7 bg-white hover:bg-violet-600 border border-slate-250 shadow-lg text-violet-600 hover:text-white rounded-full flex items-center justify-center font-medium text-base transition-all scale-90 hover:scale-110 z-30"
+                          className="absolute -right-11 top-1/2 -translate-y-1/2 w-7 h-7 bg-white hover:bg-violet-600 border border-slate-250 shadow-soft-lg text-violet-600 hover:text-white rounded-full flex items-center justify-center font-medium text-base transition-all scale-90 hover:scale-110 z-30"
                           title="Buat Alur Hubung Baru secara Instan"
                         >
                           <Plus className="w-4 h-4" />
@@ -446,7 +446,7 @@ export const FlowchartNode: React.FC<FlowchartNodeProps> = ({
                             setSelectedNodeId(nextNodeId);
                             toast.success("Otomatis menambahkan & menghubungkan alur ke bawah!");
                           }}
-                          className="absolute -bottom-11 left-1/2 -translate-x-1/2 w-7 h-7 bg-white hover:bg-indigo-600 border border-slate-250 shadow-lg text-indigo-600 hover:text-white rounded-full flex items-center justify-center font-medium text-base transition-all scale-90 hover:scale-110 z-30"
+                          className="absolute -bottom-11 left-1/2 -translate-x-1/2 w-7 h-7 bg-white hover:bg-indigo-600 border border-slate-250 shadow-soft-lg text-indigo-600 hover:text-white rounded-full flex items-center justify-center font-medium text-base transition-all scale-90 hover:scale-110 z-30"
                           title="Hubungkan Alir ke Bawah Baru secara Instan"
                         >
                           <Plus className="w-4 h-4" />

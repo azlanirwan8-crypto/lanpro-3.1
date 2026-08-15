@@ -101,8 +101,8 @@ export const PlanningView: React.FC<PlanningViewProps> = (props) => {
                 <div className="flex flex-col gap-1.5">
                   <div className="flex justify-between items-center">
                     <div className="flex gap-2 items-center">
-                      <span className="text-[11px] font-mono font-semibold text-primary bg-indigo-50/80 px-1.5 py-0.5 rounded-md border border-indigo-200/60">{task.key}</span>
-                      {task.priority && <span className={cn("text-[10px] font-medium uppercase tracking-wider", 
+                      <span className="text-xs sm:text-[11px] font-mono font-semibold text-primary bg-indigo-50/80 px-1.5 py-0.5 rounded-md border border-indigo-200/60">{task.key}</span>
+                      {task.priority && <span className={cn("text-xs sm:text-[10px] font-medium uppercase tracking-wider", 
                         task.priority === 'Highest' ? 'text-red-600' : 
                         task.priority === 'High' ? 'text-amber-600' : 
                         task.priority === 'Medium' ? 'text-yellow-600' : 'text-slate-500'
@@ -115,12 +115,12 @@ export const PlanningView: React.FC<PlanningViewProps> = (props) => {
                       <div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
                         {task.assigneeId ? 
                           <UserAvatar uid={task.assigneeId} members={projectMembers} className="w-5 h-5" /> : 
-                          <span className="text-[10px] font-medium text-slate-400">?</span>
+                          <span className="text-xs sm:text-[10px] font-medium text-slate-400">?</span>
                         }
                       </div>
                       {task.dueDate && (
                         <div className={cn(
-                          "flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-md",
+                          "flex items-center gap-1 text-xs sm:text-[10px] font-medium px-1.5 py-0.5 rounded-md",
                           ensureDate(task.dueDate) < new Date(new Date().setHours(0,0,0,0)) 
                             ? "bg-red-50 text-red-600 border border-red-100" 
                             : "bg-slate-50 text-slate-500 border border-slate-200/60"
@@ -130,7 +130,7 @@ export const PlanningView: React.FC<PlanningViewProps> = (props) => {
                         </div>
                       )}
                     </div>
-                    <span className="text-[10px] font-medium text-primary bg-indigo-50/80 px-2 py-0.5 rounded-md border border-indigo-200/60">
+                    <span className="text-xs sm:text-[10px] font-medium text-primary bg-indigo-50/80 px-2 py-0.5 rounded-md border border-indigo-200/60">
                       {task.status}
                     </span>
                   </div>
@@ -138,13 +138,13 @@ export const PlanningView: React.FC<PlanningViewProps> = (props) => {
               ) : (
                 <div className="flex items-center gap-3 w-full">
                   <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                    <span className="text-[11px] font-mono font-semibold text-primary bg-indigo-50/80 px-1.5 py-0.5 rounded-md border border-indigo-200/60 shrink-0">{task.key}</span>
+                    <span className="text-xs sm:text-[11px] font-mono font-semibold text-primary bg-indigo-50/80 px-1.5 py-0.5 rounded-md border border-indigo-200/60 shrink-0">{task.key}</span>
                     <h4 className="text-xs font-medium text-slate-800 truncate">{task.title}</h4>
                   </div>
                   <div className="flex items-center gap-2.5 shrink-0">
                     {task.dueDate && (
                       <div className={cn(
-                        "flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-md border",
+                        "flex items-center gap-1 text-xs sm:text-[10px] font-medium px-1.5 py-0.5 rounded-md border",
                         ensureDate(task.dueDate) < new Date(new Date().setHours(0,0,0,0)) 
                           ? "bg-red-50 text-red-600 border-red-100" 
                           : "bg-slate-50 text-slate-500 border-slate-200/60"
@@ -153,13 +153,13 @@ export const PlanningView: React.FC<PlanningViewProps> = (props) => {
                         {format(ensureDate(task.dueDate), 'MMM d')}
                       </div>
                     )}
-                    <span className="px-2 py-0.5 bg-slate-50 border border-slate-200/70 rounded-md text-[10px] font-medium text-slate-700">
+                    <span className="px-2 py-0.5 bg-slate-50 border border-slate-200/70 rounded-md text-xs sm:text-[10px] font-medium text-slate-700">
                       {task.status}
                     </span>
                     <div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center">
                       {task.assigneeId ? 
                         <UserAvatar uid={task.assigneeId} members={projectMembers} className="w-5 h-5" /> : 
-                        <span className="text-[10px] font-medium text-slate-400">?</span>
+                        <span className="text-xs sm:text-[10px] font-medium text-slate-400">?</span>
                       }
                     </div>
                   </div>

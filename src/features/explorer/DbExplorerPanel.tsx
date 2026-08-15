@@ -199,7 +199,7 @@ export const DbExplorerPanel: React.FC<any> = ({
         <div className="bg-surface p-4 md:p-5 rounded-lg border border-border-subtle/80 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-100/60">System Tools</span>
+              <span className="text-xs sm:text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-100/60">System Tools</span>
               <span className="text-xs text-content-subtle font-medium">• Enterprise Control Center</span>
             </div>
             <h1 className="text-base font-medium text-content-strong tracking-tight flex items-center gap-2">
@@ -272,7 +272,7 @@ export const DbExplorerPanel: React.FC<any> = ({
                  <span className="text-xs font-medium flex items-center gap-1.5">
                     Mode Database: <span className="underline font-medium">PostgreSQL (Neon Cloud)</span>
                  </span>
-                 <span className="text-[11px] opacity-75 hidden sm:inline">
+                 <span className="text-xs sm:text-[11px] opacity-75 hidden sm:inline">
                     (Primary Engine Active)
                  </span>
               </div>
@@ -294,7 +294,7 @@ export const DbExplorerPanel: React.FC<any> = ({
            <div className="flex-1 flex overflow-hidden">
               {/* Sidebar: Table List */}
            <div className="w-[240px] bg-surface-sunken/50 border-r border-border-subtle/80 flex flex-col overflow-y-auto shrink-0 custom-scrollbar">
-              <div className="px-3.5 py-2.5 text-[11px] font-medium text-content-muted uppercase tracking-wider sticky top-0 bg-surface-sunken border-b border-border-subtle/80 flex justify-between items-center z-10">
+              <div className="px-3.5 py-2.5 text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider sticky top-0 bg-surface-sunken border-b border-border-subtle/80 flex justify-between items-center z-10">
                  Tables
               </div>
               <div className="p-2 flex flex-col gap-1">
@@ -311,7 +311,7 @@ export const DbExplorerPanel: React.FC<any> = ({
                               <span className="truncate">{tableName}</span>
                            </div>
                            {stats && (
-                             <span className="text-[10px] text-content-subtle font-mono tracking-tighter shrink-0">
+                             <span className="text-xs sm:text-[10px] text-content-subtle font-mono tracking-tighter shrink-0">
                                {formatSize(stats.sizeBytes)}
                              </span>
                            )}

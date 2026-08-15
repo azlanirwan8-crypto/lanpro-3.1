@@ -44,13 +44,13 @@ export const AddSuiteModal: React.FC<AddSuiteModalProps> = ({
               <h3 className="text-sm font-medium text-slate-800 uppercase tracking-wider">
                 Tambah Dokumen Skrip
               </h3>
-              <p className="text-[11px] text-slate-400 font-medium">Buat modul skenario pengujian baru</p>
+              <p className="text-xs sm:text-[11px] text-slate-400 font-medium">Buat modul skenario pengujian baru</p>
             </div>
           </div>
 
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-[11px] text-slate-700 font-medium block">Nama Dokumen *</label>
+              <label className="text-xs sm:text-[11px] text-slate-700 font-medium block">Nama Dokumen *</label>
               <input
                 autoFocus
                 type="text"
@@ -63,7 +63,7 @@ export const AddSuiteModal: React.FC<AddSuiteModalProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[11px] text-slate-700 font-medium block">Fase Testing *</label>
+              <label className="text-xs sm:text-[11px] text-slate-700 font-medium block">Fase Testing *</label>
               <select
                 value={phase}
                 onChange={(e) => onPhaseChange(e.target.value as any)}

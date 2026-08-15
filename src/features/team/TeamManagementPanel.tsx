@@ -213,7 +213,7 @@ export const TeamManagementPanel = ({
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-[11px] font-medium text-content-subtle uppercase tracking-wider">Active Team</div>
+                <div className="text-xs sm:text-[11px] font-medium text-content-subtle uppercase tracking-wider">Active Team</div>
                 <div className="text-xl font-medium text-content-strong mt-0.5">{activeTeamCount}</div>
               </div>
             </div>
@@ -225,7 +225,7 @@ export const TeamManagementPanel = ({
                 <CheckCircle2 className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-[11px] font-medium text-content-subtle uppercase tracking-wider">Assigned Tasks</div>
+                <div className="text-xs sm:text-[11px] font-medium text-content-subtle uppercase tracking-wider">Assigned Tasks</div>
                 <div className="text-xl font-medium text-content-strong mt-0.5">{assignedTasksCount}</div>
               </div>
             </div>
@@ -237,7 +237,7 @@ export const TeamManagementPanel = ({
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-[11px] font-medium text-content-subtle uppercase tracking-wider">Pending Invites</div>
+                <div className="text-xs sm:text-[11px] font-medium text-content-subtle uppercase tracking-wider">Pending Invites</div>
                 <div className="text-xl font-medium text-content-strong mt-0.5">{pendingInvitesCount}</div>
               </div>
             </div>
@@ -249,7 +249,7 @@ export const TeamManagementPanel = ({
                 <Briefcase className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-[11px] font-medium text-content-subtle uppercase tracking-wider">Project Tasks</div>
+                <div className="text-xs sm:text-[11px] font-medium text-content-subtle uppercase tracking-wider">Project Tasks</div>
                 <div className="text-xl font-medium text-content-strong mt-0.5">{projectTasksCount}</div>
               </div>
             </div>
@@ -367,11 +367,11 @@ export const TeamManagementPanel = ({
                     <div className="border-t border-border-faint my-3 pt-3 grid grid-cols-2 gap-2 text-center">
                       <div className="bg-surface-sunken p-2 rounded-md border border-border-faint">
                         <span className="block font-medium text-content-strong text-sm">{userAssignedTasks.length}</span>
-                        <span className="text-[10px] text-content-subtle font-medium uppercase tracking-wider">Assigned</span>
+                        <span className="text-xs sm:text-[10px] text-content-subtle font-medium uppercase tracking-wider">Assigned</span>
                       </div>
                       <div className="bg-surface-sunken p-2 rounded-md border border-border-faint">
                         <span className="block font-medium text-content-strong text-sm">{completedTasks.length}</span>
-                        <span className="text-[10px] text-content-subtle font-medium uppercase tracking-wider">Done</span>
+                        <span className="text-xs sm:text-[10px] text-content-subtle font-medium uppercase tracking-wider">Done</span>
                       </div>
                     </div>
 
@@ -395,7 +395,7 @@ export const TeamManagementPanel = ({
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="bg-surface-sunken/80 border-b border-border-subtle/80 text-[11px] font-medium text-content-muted uppercase tracking-wider">
+                  <tr className="bg-surface-sunken/80 border-b border-border-subtle/80 text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider">
                     <th className="px-5 py-3">Member</th>
                     <th className="px-5 py-3">Role</th>
                     <th className="px-5 py-3 text-center">Assigned Tasks</th>
@@ -427,7 +427,7 @@ export const TeamManagementPanel = ({
                             </div>
                             <div>
                               <div className="font-medium text-content-strong text-xs">{name}</div>
-                              <div className="text-[11px] text-content-subtle font-medium">{person?.email || '@' + (person?.username || person.uid)}</div>
+                              <div className="text-xs sm:text-[11px] text-content-subtle font-medium">{person?.email || '@' + (person?.username || person.uid)}</div>
                             </div>
                           </div>
                         </td>
@@ -443,7 +443,7 @@ export const TeamManagementPanel = ({
                           {completedTasks.length}
                         </td>
                         <td className="px-5 py-3.5 text-center">
-                          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium ${
+                          <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs sm:text-[10px] font-medium ${
                             person.isPending ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                           }`}>
                             <div className={`w-1.5 h-1.5 rounded-full ${person.isPending ? 'bg-amber-500' : 'bg-emerald-500'}`} />
@@ -522,10 +522,10 @@ export const TeamManagementPanel = ({
                   {getUserTasks(selectedProfileUser).map(t => (
                     <div key={t.id} className="p-2 bg-surface rounded border border-border-subtle/80 text-xs flex items-center justify-between">
                       <div className="flex items-center gap-2 truncate">
-                        <span className="font-mono text-[10px] font-medium text-indigo-600 bg-indigo-50 px-1 rounded">{t.key}</span>
+                        <span className="font-mono text-xs sm:text-[10px] font-medium text-indigo-600 bg-indigo-50 px-1 rounded">{t.key}</span>
                         <span className="truncate text-content-body font-medium">{t.title}</span>
                       </div>
-                      <span className="text-[10px] font-medium px-1.5 py-0.5 bg-surface-muted text-content-secondary rounded shrink-0">{t.status}</span>
+                      <span className="text-xs sm:text-[10px] font-medium px-1.5 py-0.5 bg-surface-muted text-content-secondary rounded shrink-0">{t.status}</span>
                     </div>
                   ))}
                   {getUserTasks(selectedProfileUser).length === 0 && (

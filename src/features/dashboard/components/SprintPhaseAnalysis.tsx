@@ -21,7 +21,7 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
   COLORS,
 }) => {
   return (
-    <div className="w-full h-full bg-white p-6 rounded-xl border border-slate-200/80 shadow-sm flex flex-col justify-between overflow-y-auto no-scrollbar select-none">
+    <div className="w-full h-full bg-white p-6 rounded-xl border border-slate-200/80 shadow-soft flex flex-col justify-between overflow-y-auto no-scrollbar select-none">
       <div className="space-y-6">
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div>
@@ -29,12 +29,12 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
               <Zap className="w-4 h-4 text-indigo-500 animate-pulse" />
               SPRINT PHASE ANALYSIS: {activeSprint ? activeSprint.name : ""}
             </h3>
-            <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider mt-1">
+            <p className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-wider mt-1">
               Deep drill-down by status, workstream, and team
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md uppercase tracking-tighter">
+            <span className="text-xs sm:text-[10px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md uppercase tracking-tighter">
               {sprintTotalTasks} Total Tasks
             </span>
           </div>
@@ -43,7 +43,7 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left: Status Category */}
           <div>
-            <h4 className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
+            <h4 className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
               <LayoutGrid className="w-3 h-3" /> STATUS BY CATEGORY
             </h4>
             <div className="space-y-4">
@@ -69,11 +69,11 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
                   return (
                     <div key={idx} className="group/cat px-1">
                       <div className="flex justify-between items-center mb-1.5">
-                        <span className="text-[10px] font-medium text-slate-700 tracking-tight flex items-center gap-2 uppercase">
+                        <span className="text-xs sm:text-[10px] font-medium text-slate-700 tracking-tight flex items-center gap-2 uppercase">
                           <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
                           {catName}
                         </span>
-                        <span className="text-[10px] font-medium text-slate-400">
+                        <span className="text-xs sm:text-[10px] font-medium text-slate-400">
                           {done}/{total} Tasks
                         </span>
                       </div>
@@ -84,7 +84,7 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
                             style={{ width: `${progress}%`, backgroundColor: color }}
                           />
                         </div>
-                        <span className="text-[10px] font-medium text-slate-500 min-w-[30px]">{progress}%</span>
+                        <span className="text-xs sm:text-[10px] font-medium text-slate-500 min-w-[30px]">{progress}%</span>
                       </div>
                     </div>
                   );
@@ -95,7 +95,7 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
 
           {/* Right: Team Execution */}
           <div>
-            <h4 className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
+            <h4 className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
               <UserCircle className="w-3 h-3" /> EXECUTION BY MEMBER
             </h4>
             <div className="space-y-4">
@@ -121,12 +121,12 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
                     <div key={member.uid} className="group/user px-1">
                       <div className="flex justify-between items-center mb-1.5">
                         <div className="flex items-center gap-2 truncate">
-                          <UserAvatar user={member} className="w-5 h-5 text-[8px] border border-indigo-100 shrink-0" />
-                          <span className="text-[10px] font-medium text-slate-700 truncate uppercase tracking-tight">
+                          <UserAvatar user={member} className="w-5 h-5 text-xs sm:text-[10px] sm:text-[8px] border border-indigo-100 shrink-0" />
+                          <span className="text-xs sm:text-[10px] font-medium text-slate-700 truncate uppercase tracking-tight">
                             {member?.displayName || member?.username || "Unknown"}
                           </span>
                         </div>
-                        <span className="text-[10px] font-medium text-slate-400 shrink-0">
+                        <span className="text-xs sm:text-[10px] font-medium text-slate-400 shrink-0">
                           {done}/{total}
                         </span>
                       </div>
@@ -137,7 +137,7 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
                             style={{ width: `${progress}%` }}
                           />
                         </div>
-                        <span className="text-[10px] font-medium text-slate-500 min-w-[30px]">{progress}%</span>
+                        <span className="text-xs sm:text-[10px] font-medium text-slate-500 min-w-[30px]">{progress}%</span>
                       </div>
                     </div>
                   );
@@ -149,7 +149,7 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
       </div>
 
       <div className="pt-6 border-t border-slate-100">
-        <h4 className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-4 min-h-0 px-1">
+        <h4 className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-4 min-h-0 px-1">
           Phase Velocity Distribution
         </h4>
         <div className="h-44 min-h-[150px]">

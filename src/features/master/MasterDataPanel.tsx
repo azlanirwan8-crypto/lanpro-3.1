@@ -381,7 +381,7 @@ export const MasterDataPanel = ({
             <div className="p-3.5 border-b border-border-faint flex items-center justify-between bg-surface-sunken/50">
                 <div>
                     <h3 className="font-medium text-content-strong text-xs uppercase tracking-wider">Master Database</h3>
-                    <p className="text-[10px] font-medium text-content-subtle mt-0.5">System configuration</p>
+                    <p className="text-xs sm:text-[10px] font-medium text-content-subtle mt-0.5">System configuration</p>
                 </div>
                 <div className="w-7 h-7 rounded-md bg-indigo-50 flex items-center justify-center text-indigo-600">
                     <Settings className="w-3.5 h-3.5" />
@@ -407,7 +407,7 @@ export const MasterDataPanel = ({
                       {t.label}
                     </span>
                     <span className={cn(
-                        "text-[10px] font-medium px-2 py-0.5 rounded-md transition-all shrink-0", 
+                        "text-xs sm:text-[10px] font-medium px-2 py-0.5 rounded-md transition-all shrink-0", 
                         isActive ? "bg-indigo-100 text-indigo-700" : "bg-surface-muted text-content-muted group-hover:bg-slate-200"
                     )}>
                       {count}
@@ -424,7 +424,7 @@ export const MasterDataPanel = ({
             <div className="bg-surface p-4 md:p-5 rounded-lg border border-border-subtle/80 mb-4 flex justify-between items-center shadow-2xs shrink-0">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-100/60">System Master</span>
+                      <span className="text-xs sm:text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-100/60">System Master</span>
                       <span className="text-xs text-content-subtle font-medium">• Enterprise Control Center</span>
                     </div>
                     <h2 className="text-base font-medium text-content-strong tracking-tight">{masterDataTypes.find(t => t.type === selectedType)?.label}</h2>
@@ -482,11 +482,11 @@ export const MasterDataPanel = ({
                                             <div>
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-xs font-medium text-content-strong">{mod.namaModul}</span>
-                                                    <span className="text-[10px] bg-indigo-50 text-indigo-700 font-medium px-2 py-0.5 rounded-md border border-indigo-100">
+                                                    <span className="text-xs sm:text-[10px] bg-indigo-50 text-indigo-700 font-medium px-2 py-0.5 rounded-md border border-indigo-100">
                                                         {p ? p.name : mod.projectId}
                                                     </span>
                                                 </div>
-                                                <p className="text-[11px] text-content-subtle font-medium mt-0.5">
+                                                <p className="text-xs sm:text-[11px] text-content-subtle font-medium mt-0.5">
                                                     {mod.keterangan || <span className="text-slate-300 italic">Tidak ada keterangan</span>}
                                                 </p>
                                             </div>
@@ -534,7 +534,7 @@ export const MasterDataPanel = ({
                         <div className="bg-surface p-3 rounded-lg border border-border-subtle/80 mb-3 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shrink-0">
                             <div>
                                 <span className="text-xs font-medium text-content-body block">Scope Filter</span>
-                                <span className="text-[10px] text-content-subtle font-medium block">Filter berdasarkan jenis jangkauan peran</span>
+                                <span className="text-xs sm:text-[10px] text-content-subtle font-medium block">Filter berdasarkan jenis jangkauan peran</span>
                             </div>
                             <div className="flex bg-surface-muted p-0.5 rounded-md border border-border-subtle/80 shrink-0 self-start sm:self-auto overflow-x-auto max-w-full">
                                 <button
@@ -546,7 +546,7 @@ export const MasterDataPanel = ({
                                     )}
                                 >
                                     <span>All Roles</span>
-                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'ALL' ? "bg-surface-muted text-content-body" : "bg-slate-200/60 text-content-secondary")}>
+                                    <span className={cn("text-xs sm:text-[11px] sm:text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'ALL' ? "bg-surface-muted text-content-body" : "bg-slate-200/60 text-content-secondary")}>
                                         {localMasterData.filter(d => d.type === 'project_role').length}
                                     </span>
                                 </button>
@@ -559,7 +559,7 @@ export const MasterDataPanel = ({
                                     )}
                                 >
                                     <span>Project Roles</span>
-                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'PROJECT' ? "bg-blue-50 text-blue-700" : "bg-slate-200/60 text-content-secondary")}>
+                                    <span className={cn("text-xs sm:text-[11px] sm:text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'PROJECT' ? "bg-blue-50 text-blue-700" : "bg-slate-200/60 text-content-secondary")}>
                                         {localMasterData.filter(d => d.type === 'project_role' && (d.roleType === 'PROJECT' || d.role_type === 'PROJECT' || (!d.roleType && !d.role_type))).length}
                                     </span>
                                 </button>
@@ -572,7 +572,7 @@ export const MasterDataPanel = ({
                                     )}
                                 >
                                     <span>System Roles</span>
-                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'SYSTEM' ? "bg-purple-50 text-purple-700" : "bg-slate-200/60 text-content-secondary")}>
+                                    <span className={cn("text-xs sm:text-[11px] sm:text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'SYSTEM' ? "bg-purple-50 text-purple-700" : "bg-slate-200/60 text-content-secondary")}>
                                         {localMasterData.filter(d => d.type === 'project_role' && (d.roleType === 'SYSTEM' || d.role_type === 'SYSTEM')).length}
                                     </span>
                                 </button>
@@ -652,7 +652,7 @@ export const MasterDataPanel = ({
                                             {...provided.dragHandleProps}
                                             className={cn(
                                                 "flex justify-between items-center p-3 bg-surface border border-border-subtle/80 rounded-lg transition-all group hover:border-indigo-300 shadow-2xs",
-                                                snapshot.isDragging ? 'shadow-lg border-indigo-500 bg-indigo-50/50 cursor-grabbing z-50' : ''
+                                                snapshot.isDragging ? 'shadow-soft-lg border-indigo-500 bg-indigo-50/50 cursor-grabbing z-50' : ''
                                             )}
                                             >
                                                 <div className="flex items-center gap-3">
@@ -678,11 +678,11 @@ export const MasterDataPanel = ({
                                                                 return (
                                                                     <div className="flex items-center gap-1 shrink-0 select-none">
                                                                         {rType === 'PROJECT' ? (
-                                                                            <span className="text-[9px] font-medium px-2 py-0.2 rounded-md bg-blue-50 text-blue-700 border border-blue-200/50 uppercase">
+                                                                            <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium px-2 py-0.2 rounded-md bg-blue-50 text-blue-700 border border-blue-200/50 uppercase">
                                                                                 PROJECT ROLE
                                                                             </span>
                                                                         ) : (
-                                                                            <span className="text-[9px] font-medium px-2 py-0.2 rounded-md bg-purple-50 text-purple-700 border border-purple-200/50 uppercase">
+                                                                            <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium px-2 py-0.2 rounded-md bg-purple-50 text-purple-700 border border-purple-200/50 uppercase">
                                                                                 SYSTEM ROLE
                                                                             </span>
                                                                         )}
@@ -694,13 +694,13 @@ export const MasterDataPanel = ({
                                                             })()}
 
                                                             {usageCount > 0 && (
-                                                                <span className="text-[10px] font-medium px-2 py-0.2 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center gap-1">
+                                                                <span className="text-xs sm:text-[10px] font-medium px-2 py-0.2 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center gap-1">
                                                                     <Tag className="w-3 h-3" /> {usageCount} Task aktif
                                                                 </span>
                                                             )}
                                                         </div>
                                                         {item.description && (
-                                                            <span className="text-[11px] text-content-subtle font-medium mt-0.5">{item.description}</span>
+                                                            <span className="text-xs sm:text-[11px] text-content-subtle font-medium mt-0.5">{item.description}</span>
                                                         )}
                                                     </div>
                                                 </div>
@@ -753,7 +753,7 @@ export const MasterDataPanel = ({
         >
         <div className="space-y-6">
           {/* Live Preview Badge Component */}
-          <div className="p-4 bg-slate-900 text-white rounded-xl flex items-center justify-between shadow-lg border border-slate-800">
+          <div className="p-4 bg-slate-900 text-white rounded-xl flex items-center justify-between shadow-soft-lg border border-slate-800">
             <div className="flex items-center gap-3.5">
               <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-surface/10 shadow-inner" style={{ color: newMasterColor }}>
                 <RenderIcon iconName={newMasterIcon} className="w-6 h-6" />
@@ -761,7 +761,7 @@ export const MasterDataPanel = ({
               <div className="flex flex-col">
                 <span className="text-base font-medium text-white">{newMasterLabel || 'Label Master Data'}</span>
                 {selectedType === 'project_role' && (
-                  <span className="text-[9px] font-medium uppercase tracking-widest text-indigo-400 mt-0.5">
+                  <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase tracking-widest text-indigo-400 mt-0.5">
                     {newMasterRoleType === 'PROJECT' ? 'Project Role (Tim Proyek)' : 'System Role (Akses Platform)'}
                   </span>
                 )}
@@ -771,14 +771,14 @@ export const MasterDataPanel = ({
 
           {selectedType === 'project_role' && (
             <div className="space-y-2">
-              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest ml-1">TIPE ROLE / SCOPE</label>
+              <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest ml-1">TIPE ROLE / SCOPE</label>
               <div className="grid grid-cols-2 gap-2 p-1.5 bg-surface-muted rounded-xl border border-border-subtle">
                 <button
                   type="button"
                   onClick={() => setNewMasterRoleType('PROJECT')}
                   className={cn(
                     "py-2.5 px-3 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer",
-                    newMasterRoleType === 'PROJECT' ? "bg-surface text-indigo-600 shadow-sm border border-border-subtle/60" : "text-content-secondary hover:text-content"
+                    newMasterRoleType === 'PROJECT' ? "bg-surface text-indigo-600 shadow-soft border border-border-subtle/60" : "text-content-secondary hover:text-content"
                   )}
                 >
                   <span>Project Role</span>
@@ -788,13 +788,13 @@ export const MasterDataPanel = ({
                   onClick={() => setNewMasterRoleType('SYSTEM')}
                   className={cn(
                     "py-2.5 px-3 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer",
-                    newMasterRoleType === 'SYSTEM' ? "bg-surface text-indigo-600 shadow-sm border border-border-subtle/60" : "text-content-secondary hover:text-content"
+                    newMasterRoleType === 'SYSTEM' ? "bg-surface text-indigo-600 shadow-soft border border-border-subtle/60" : "text-content-secondary hover:text-content"
                   )}
                 >
                   <span>System Role</span>
                 </button>
               </div>
-              <p className="text-[10px] text-content-muted font-medium ml-1">
+              <p className="text-xs sm:text-[10px] text-content-muted font-medium ml-1">
                 {newMasterRoleType === 'PROJECT' ? 'Peran anggota dalam tim proyek (cth: BA, Lead, QA, Developer)' : 'Hak akses global level aplikasi (cth: Administrator, Auditor, Guest)'}
               </p>
             </div>
@@ -802,7 +802,7 @@ export const MasterDataPanel = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Label Name</label>
+              <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Label Name</label>
               <Input 
                 value={newMasterLabel} 
                 onChange={(e: any) => setNewMasterLabel(e.target.value)}
@@ -814,7 +814,7 @@ export const MasterDataPanel = ({
             {/* Dynamic Contextual Fields */}
             {selectedType === 'priority' && (
               <div>
-                <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Short Code</label>
+                <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Short Code</label>
                 <Input 
                   value={newMasterShortCode}
                   onChange={(e: any) => setNewMasterShortCode(e.target.value)}
@@ -826,7 +826,7 @@ export const MasterDataPanel = ({
 
             {selectedType === 'issue_type' && (
               <div>
-                <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Hierarchy Level</label>
+                <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Hierarchy Level</label>
                 <select
                   value={newMasterHierarchy}
                   onChange={(e) => setNewMasterHierarchy(e.target.value)}
@@ -841,7 +841,7 @@ export const MasterDataPanel = ({
 
             {selectedType === 'status' && (
               <div>
-                <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Status Group</label>
+                <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Status Group</label>
                 <select
                   value={newMasterStatusGroup}
                   onChange={(e) => setNewMasterStatusGroup(e.target.value)}
@@ -856,7 +856,7 @@ export const MasterDataPanel = ({
 
             {selectedType === 'environment' && (
               <div>
-                <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Endpoint / Base URL</label>
+                <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Endpoint / Base URL</label>
                 <Input 
                   value={newMasterBaseUrl}
                   onChange={(e: any) => setNewMasterBaseUrl(e.target.value)}
@@ -867,16 +867,16 @@ export const MasterDataPanel = ({
             )}
 
             <div>
-              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Warna / Color Accent</label>
+              <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Warna / Color Accent</label>
               <div className="flex gap-2">
-                <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-border-subtle shadow-sm shrink-0 bg-surface flex items-center justify-center">
+                <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-border-subtle shadow-soft shrink-0 bg-surface flex items-center justify-center">
                   <input 
                     type="color"
                     value={newMasterColor} 
                     onChange={(e: any) => setNewMasterColor(e.target.value)}
                     className="absolute inset-x-0 inset-y-0 w-[200%] h-[200%] -translate-x-1/4 -translate-y-1/4 cursor-pointer border-0 p-0 bg-transparent"
                   />
-                  <div className="w-6 h-6 rounded-md pointer-events-none shadow-sm" style={{ backgroundColor: newMasterColor }} />
+                  <div className="w-6 h-6 rounded-md pointer-events-none shadow-soft" style={{ backgroundColor: newMasterColor }} />
                 </div>
                 <div className="flex-1">
                   <input
@@ -899,7 +899,7 @@ export const MasterDataPanel = ({
           </div>
 
           <div>
-            <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Palet Warna</label>
+            <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Palet Warna</label>
             <div className="flex flex-wrap gap-2 p-2.5 bg-surface-sunken border border-border-subtle rounded-xl">
               {[
                 { hex: '#ef4444', label: 'Merah' },
@@ -931,7 +931,7 @@ export const MasterDataPanel = ({
           
           <div>
             <div className="flex items-center justify-between mb-1.5 ml-1">
-              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest">Pilih Ikon ({filteredNewIcons.length} tersedia)</label>
+              <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest">Pilih Ikon ({filteredNewIcons.length} tersedia)</label>
             </div>
 
             <div className="relative mb-2">
@@ -990,7 +990,7 @@ export const MasterDataPanel = ({
             {editingMaster && (
             <div className="space-y-6">
               {/* Live Preview Badge */}
-              <div className="p-4 bg-slate-900 text-white rounded-xl flex items-center justify-between shadow-lg border border-slate-800">
+              <div className="p-4 bg-slate-900 text-white rounded-xl flex items-center justify-between shadow-soft-lg border border-slate-800">
                 <div className="flex items-center gap-3.5">
                   <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-surface/10 shadow-inner" style={{ color: editingMaster.color || '#3b82f6' }}>
                     <RenderIcon iconName={editingMaster.icon || 'CircleDot'} className="w-6 h-6" />
@@ -1003,7 +1003,7 @@ export const MasterDataPanel = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Label Name</label>
+                  <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Label Name</label>
                   <Input 
                     value={editingMaster.label} 
                     onChange={(e: any) => setEditingMaster({...editingMaster, label: e.target.value})}
@@ -1011,16 +1011,16 @@ export const MasterDataPanel = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Warna / Color Accent</label>
+                  <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Warna / Color Accent</label>
                   <div className="flex gap-2">
-                    <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-border-subtle shadow-sm shrink-0 bg-surface flex items-center justify-center">
+                    <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-border-subtle shadow-soft shrink-0 bg-surface flex items-center justify-center">
                       <input 
                         type="color"
                         value={editingMaster.color || '#000000'} 
                         onChange={(e: any) => setEditingMaster({...editingMaster, color: e.target.value})}
                         className="absolute inset-x-0 inset-y-0 w-[200%] h-[200%] -translate-x-1/4 -translate-y-1/4 cursor-pointer border-0 p-0 bg-transparent"
                       />
-                      <div className="w-6 h-6 rounded-md pointer-events-none shadow-sm" style={{ backgroundColor: editingMaster.color || '#000000' }} />
+                      <div className="w-6 h-6 rounded-md pointer-events-none shadow-soft" style={{ backgroundColor: editingMaster.color || '#000000' }} />
                     </div>
                     <div className="flex-1">
                       <input
@@ -1043,7 +1043,7 @@ export const MasterDataPanel = ({
               </div>
 
               <div>
-                <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Palet Warna</label>
+                <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Palet Warna</label>
                 <div className="flex flex-wrap gap-2 p-2.5 bg-surface-sunken border border-border-subtle rounded-xl">
                   {[
                     { hex: '#ef4444', label: 'Merah' },
@@ -1075,7 +1075,7 @@ export const MasterDataPanel = ({
               
               <div>
                 <div className="flex items-center justify-between mb-1.5 ml-1">
-                  <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest">Ikon ({filteredEditIcons.length} tersedia)</label>
+                  <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest">Ikon ({filteredEditIcons.length} tersedia)</label>
                 </div>
 
                 <div className="relative mb-2">
@@ -1134,7 +1134,7 @@ export const MasterDataPanel = ({
         >
           <div className="space-y-4">
             <div>
-              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Project</label>
+              <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Project</label>
               <select
                 value={newModuleProjectId}
                 onChange={(e) => setNewModuleProjectId(e.target.value)}
@@ -1148,7 +1148,7 @@ export const MasterDataPanel = ({
             </div>
             
             <div>
-              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Modul / Aplikasi</label>
+              <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Modul / Aplikasi</label>
               <Input 
                 value={newModuleNamaModul} 
                 onChange={(e: any) => setNewModuleNamaModul(e.target.value)}
@@ -1158,7 +1158,7 @@ export const MasterDataPanel = ({
             </div>
 
             <div>
-              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Keterangan</label>
+              <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Keterangan</label>
               <textarea
                 value={newModuleKeterangan}
                 onChange={(e) => setNewModuleKeterangan(e.target.value)}
@@ -1188,7 +1188,7 @@ export const MasterDataPanel = ({
         >
           <div className="space-y-4">
             <div>
-              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Project</label>
+              <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Project</label>
               <select
                 value={editingModuleProjectId}
                 onChange={(e) => setEditingModuleProjectId(e.target.value)}
@@ -1202,7 +1202,7 @@ export const MasterDataPanel = ({
             </div>
             
             <div>
-              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Modul / Aplikasi</label>
+              <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Modul / Aplikasi</label>
               <Input 
                 value={editingModuleNamaModul} 
                 onChange={(e: any) => setEditingModuleNamaModul(e.target.value)}
@@ -1212,7 +1212,7 @@ export const MasterDataPanel = ({
             </div>
 
             <div>
-              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Keterangan</label>
+              <label className="block text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Keterangan</label>
               <textarea
                 value={editingModuleKeterangan}
                 onChange={(e) => setEditingModuleKeterangan(e.target.value)}

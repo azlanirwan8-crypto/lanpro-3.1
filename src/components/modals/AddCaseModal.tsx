@@ -72,7 +72,7 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
               </div>
               <div>
                 <h3 className="text-sm font-medium text-slate-800 uppercase tracking-wider">Tambah Test Case Baru</h3>
-                <p className="text-[11px] text-slate-400 font-medium">Input manual atau bulk upload Excel</p>
+                <p className="text-xs sm:text-[11px] text-slate-400 font-medium">Input manual atau bulk upload Excel</p>
               </div>
             </div>
             <button
@@ -115,7 +115,7 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
             <span className="font-medium text-primary">
               Modul Target: <strong>{activeSuite ? activeSuite.name : "Belum ada modul terpilih"}</strong>
             </span>
-            <span className="px-2.5 py-0.5 bg-primary text-white font-medium rounded-full text-[10px]">
+            <span className="px-2.5 py-0.5 bg-primary text-white font-medium rounded-full text-xs sm:text-[10px]">
               {activeSuite ? activeSuite.phase : "SIT"}
             </span>
           </div>
@@ -126,7 +126,7 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[calc(100vh-320px)] overflow-y-auto pr-1 custom-scrollbar">
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
+                    <label className="text-xs sm:text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
                       Judul Test Case *
                     </label>
                     <input
@@ -140,7 +140,7 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
+                    <label className="text-xs sm:text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
                       Tingkat Prioritas *
                     </label>
                     <select
@@ -158,7 +158,7 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
 
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
+                    <label className="text-xs sm:text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
                       Langkah Pengujian *
                     </label>
                     <textarea
@@ -172,7 +172,7 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
+                    <label className="text-xs sm:text-[10px] text-slate-500 font-medium uppercase tracking-wider block">
                       Hasil yang Diharapkan *
                     </label>
                     <textarea
@@ -210,7 +210,7 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
               <div className="flex items-center justify-between bg-indigo-50/60 border border-indigo-100 p-3 rounded-md">
                 <div>
                   <h4 className="text-xs font-medium text-primary">Butuh Berkas Template Excel?</h4>
-                  <p className="text-[10px] text-slate-500 font-medium">Unduh contoh struktur kolom resmi</p>
+                  <p className="text-xs sm:text-[10px] text-slate-500 font-medium">Unduh contoh struktur kolom resmi</p>
                 </div>
                 <button
                   type="button"
@@ -226,7 +226,7 @@ export const AddCaseModal: React.FC<AddCaseModalProps> = ({
                 <Upload className="w-10 h-10 text-primary mx-auto" />
                 <div>
                   <p className="text-xs font-medium text-slate-700">Unggah berkas Excel (.xlsx / .csv)</p>
-                  <p className="text-[10px] text-slate-400 mt-1">
+                  <p className="text-xs sm:text-[10px] text-slate-400 mt-1">
                     Format kolom: Judul, Deskripsi_Langkah, Hasil_Ekspektasi, Prioritas
                   </p>
                 </div>

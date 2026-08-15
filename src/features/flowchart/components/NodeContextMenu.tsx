@@ -84,9 +84,9 @@ export const NodeContextMenu: React.FC<NodeContextMenuProps> = ({
       onContextMenu={(e) => e.preventDefault()}
     >
       {/* Node Info Header */}
-      <div className="px-3 py-1.5 text-[9px] font-medium uppercase tracking-wider text-slate-450 text-slate-400 border-b border-slate-100 mb-1 flex items-center justify-between">
+      <div className="px-3 py-1.5 text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase tracking-wider text-slate-450 text-slate-400 border-b border-slate-100 mb-1 flex items-center justify-between">
         <span>Aksi Komponen</span>
-        <span className="text-violet-600 font-mono text-[8px]">ID: {nodeId.split("_")[1] || "Active"}</span>
+        <span className="text-violet-600 font-mono text-xs sm:text-[10px] sm:text-[8px]">ID: {nodeId.split("_")[1] || "Active"}</span>
       </div>
 
       {/* Edit Properties Button */}
@@ -116,7 +116,7 @@ export const NodeContextMenu: React.FC<NodeContextMenuProps> = ({
       <div className="h-px bg-slate-100 my-1" />
 
       {/* Change Color Palette Title */}
-      <div className="px-3 py-1 flex items-center gap-1.5 text-[9px] font-medium uppercase tracking-wider text-slate-400">
+      <div className="px-3 py-1 flex items-center gap-1.5 text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase tracking-wider text-slate-400">
         <Palette className="w-3 h-3 text-slate-400" />
         <span>Ubah Warna</span>
       </div>
@@ -133,7 +133,7 @@ export const NodeContextMenu: React.FC<NodeContextMenuProps> = ({
                 onClose();
               }}
               className={cn(
-                "w-7 h-7 rounded-lg transition-transform hover:scale-110 active:scale-95 flex items-center justify-center relative shadow-sm cursor-pointer border",
+                "w-7 h-7 rounded-lg transition-transform hover:scale-110 active:scale-95 flex items-center justify-center relative shadow-soft cursor-pointer border",
                 c.bg,
                 isSelected ? "ring-2 ring-violet-500 border-white scale-105" : "border-transparent"
               )}

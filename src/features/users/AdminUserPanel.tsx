@@ -465,7 +465,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
       <div className="flex-1 overflow-y-auto p-3 md:p-6 w-full animate-in fade-in duration-700">
         <div className="flex flex-col space-y-6 min-h-full">
           {/* Header & Controls */}
-          <div className="bg-surface rounded-lg shadow-sm border border-border-subtle/80 p-4 shrink-0">
+          <div className="bg-surface rounded-lg shadow-soft border border-border-subtle/80 p-4 shrink-0">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
                 <div className="flex items-center gap-3">
                     <div className="w-9 h-9 bg-blue-50/80 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center border border-blue-100/60 dark:border-blue-900/40 shrink-0">
@@ -473,7 +473,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                     </div>
                     <div>
                         <h3 className="text-base font-medium text-content-strong tracking-tight leading-none">User Management</h3>
-                        <p className="text-content-subtle font-medium text-[11px] mt-1">Manage user access, roles, and permissions.</p>
+                        <p className="text-content-subtle font-medium text-xs sm:text-[11px] mt-1">Manage user access, roles, and permissions.</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -485,7 +485,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                     </button>
                     <Button
                         onClick={() => setIsInviteModalOpen(true)}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-[0.98] shadow-sm h-8.5"
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-[0.98] shadow-soft h-8.5"
                     >
                         <UserPlus className="w-3.5 h-3.5" /> Add User
                     </Button>
@@ -535,7 +535,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                       <Users className="w-4.5 h-4.5" />
                   </div>
                   <div>
-                      <div className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Total User</div>
+                      <div className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider">Total User</div>
                       <div className="text-lg font-medium text-content-strong leading-none mt-1">{totalUsersCount}</div>
                   </div>
               </div>
@@ -544,7 +544,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                       <CheckCircle className="w-4.5 h-4.5" />
                   </div>
                   <div>
-                      <div className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Disetujui</div>
+                      <div className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider">Disetujui</div>
                       <div className="text-lg font-medium text-content-strong leading-none mt-1">{approvedUsersCount}</div>
                   </div>
               </div>
@@ -553,7 +553,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                       <Clock className="w-4.5 h-4.5" />
                   </div>
                   <div>
-                      <div className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Menunggu</div>
+                      <div className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider">Menunggu</div>
                       <div className="text-lg font-medium text-content-strong leading-none mt-1">{pendingUsersCount}</div>
                   </div>
               </div>
@@ -562,14 +562,14 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                       <Shield className="w-4.5 h-4.5" />
                   </div>
                   <div>
-                      <div className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Administrator</div>
+                      <div className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider">Administrator</div>
                       <div className="text-lg font-medium text-content-strong leading-none mt-1">{adminUsersCount}</div>
                   </div>
               </div>
           </div>
 
           {/* User List */}
-          <div className="bg-surface rounded-xl shadow-sm border border-border-subtle/50 overflow-hidden flex-1 flex flex-col">
+          <div className="bg-surface rounded-xl shadow-soft border border-border-subtle/50 overflow-hidden flex-1 flex flex-col">
             {selectedUserIds.length > 0 && (
             <div className="bg-indigo-50/80 border-b border-indigo-100 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 animate-in slide-in-from-top duration-300">
               <div className="flex items-center gap-2">
@@ -582,14 +582,14 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                 <button
                   onClick={() => handleBulkAction('approve')}
                   disabled={isBulkActionPending}
-                  className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg shadow-soft transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <CheckCircle className="w-3.5 h-3.5" /> Setujui
                 </button>
                 <button
                   onClick={() => handleBulkAction('reject')}
                   disabled={isBulkActionPending}
-                  className="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg shadow-soft transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <Clock className="w-3.5 h-3.5" /> Pending/Tolak
                 </button>
@@ -624,7 +624,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                     });
                   }}
                   disabled={isBulkActionPending}
-                  className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg shadow-soft transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" /> Hapus Massal
                 </button>
@@ -642,7 +642,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
           <div className="overflow-x-auto flex-1">
             <table className="w-full text-left border-collapse min-w-[900px]">
               <thead>
-                <tr className="bg-surface-sunken/80 border-b border-border-faint text-[11px] font-medium text-content-muted uppercase tracking-wider whitespace-nowrap">
+                <tr className="bg-surface-sunken/80 border-b border-border-faint text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider whitespace-nowrap">
                   <th className="py-3.5 px-4 text-center w-12">
                     <input
                       type="checkbox"
@@ -668,7 +668,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                   >
                     <div className="flex items-center gap-1.5">
                       <span>User</span>
-                      <span className="text-[10px] text-content-subtle group-hover:text-indigo-600">
+                      <span className="text-xs sm:text-[10px] text-content-subtle group-hover:text-indigo-600">
                         {sortField === 'name' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕'}
                       </span>
                     </div>
@@ -679,7 +679,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                   >
                     <div className="flex items-center gap-1.5">
                       <span>Department / Position</span>
-                      <span className="text-[10px] text-content-subtle group-hover:text-indigo-600">
+                      <span className="text-xs sm:text-[10px] text-content-subtle group-hover:text-indigo-600">
                         {sortField === 'department' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕'}
                       </span>
                     </div>
@@ -691,7 +691,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                   >
                     <div className="flex items-center gap-1.5">
                       <span>Role</span>
-                      <span className="text-[10px] text-content-subtle group-hover:text-indigo-600">
+                      <span className="text-xs sm:text-[10px] text-content-subtle group-hover:text-indigo-600">
                         {sortField === 'role' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕'}
                       </span>
                     </div>
@@ -702,7 +702,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                   >
                     <div className="flex items-center justify-center gap-1.5">
                       <span>Status</span>
-                      <span className="text-[10px] text-content-subtle group-hover:text-indigo-600">
+                      <span className="text-xs sm:text-[10px] text-content-subtle group-hover:text-indigo-600">
                         {sortField === 'status' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕'}
                       </span>
                     </div>
@@ -748,9 +748,9 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                             <div className="font-medium text-content-strong text-xs group-hover:text-indigo-600 transition-colors">
                               {user?.displayName || user?.username}
                             </div>
-                            <div className="text-[11px] text-content-muted">{user?.email || 'Email tidak tersedia'}</div>
+                            <div className="text-xs sm:text-[11px] text-content-muted">{user?.email || 'Email tidak tersedia'}</div>
                             {user.phone && (
-                              <div className="text-[10px] font-medium text-emerald-600 flex items-center gap-1 mt-0.5">
+                              <div className="text-xs sm:text-[10px] font-medium text-emerald-600 flex items-center gap-1 mt-0.5">
                                 <span>WA/HP:</span>
                                 <span>{user.phone}</span>
                               </div>
@@ -763,7 +763,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                               <span className="text-xs font-medium text-content-body">
                                   {user.department ? getDepartmentName(user.department) : '-'}
                               </span>
-                              <span className="text-[10px] text-content-muted uppercase tracking-widest">
+                              <span className="text-xs sm:text-[10px] text-content-muted uppercase tracking-widest">
                                   {user.position ? getPositionName(user.position) : '-'}
                               </span>
                           </div>
@@ -772,7 +772,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                         <div className="flex flex-col gap-1">
                           <div className="flex items-center gap-2">
                             <span className={cn(
-                              "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border transition-colors",
+                              "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs sm:text-[10px] font-medium border transition-colors",
                               userProjectsCount > 0
                                 ? "bg-indigo-50/65 text-indigo-700 border-indigo-100/70"
                                 : "bg-surface-sunken/50 text-content-subtle border-border-faint"
@@ -783,7 +783,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                           </div>
                           <div className="flex items-center gap-2">
                             <span className={cn(
-                              "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border transition-colors",
+                              "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs sm:text-[10px] font-medium border transition-colors",
                               userTasksCount > 0
                                 ? "bg-violet-50/65 text-violet-700 border-violet-100/70"
                                 : "bg-surface-sunken/50 text-content-subtle border-border-faint"
@@ -796,7 +796,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                       </td>
                       <td className="py-3.5 px-4">
                         <span className={cn(
-                          "inline-flex font-medium text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-md border",
+                          "inline-flex font-medium text-xs sm:text-[11px] sm:text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-md border",
                           user.role === 'admin' ? "bg-rose-50 text-rose-600 border-rose-200" :
                           user.role === 'head' ? "bg-purple-50 text-purple-600 border-purple-200" :
                           user.role === 'manager' ? "bg-blue-50 text-blue-600 border-blue-200" :
@@ -960,7 +960,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                  className={usernameError ? "border-rose-500 focus:ring-rose-500/10 focus:border-rose-500" : ""}
                />
                {usernameError && (
-                 <p className="text-[10px] font-medium text-rose-500 mt-1">{usernameError}</p>
+                 <p className="text-xs sm:text-[10px] font-medium text-rose-500 mt-1">{usernameError}</p>
                )}
              </div>
              <div>
@@ -980,7 +980,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                  className={emailError ? "border-rose-500 focus:ring-rose-500/10 focus:border-rose-500" : ""}
                />
                {emailError && (
-                 <p className="text-[10px] font-medium text-rose-500 mt-1">{emailError}</p>
+                 <p className="text-xs sm:text-[10px] font-medium text-rose-500 mt-1">{emailError}</p>
                )}
              </div>
              <div>
@@ -1010,7 +1010,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                      )} />
                    </div>
                    <p className={cn(
-                     "text-[10px] font-medium uppercase tracking-wider",
+                     "text-xs sm:text-[10px] font-medium uppercase tracking-wider",
                      passwordStrength === 'weak' ? "text-rose-500" :
                      passwordStrength === 'medium' ? "text-amber-500" :
                      "text-emerald-500"
@@ -1187,7 +1187,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
         >
           <div className="flex items-start gap-2 max-w-[210px]">
             <Info className="w-4 h-4 text-indigo-300 shrink-0 mt-0.5" />
-            <span className="leading-snug font-medium text-[11px] text-slate-255">{hoveredTooltip.text}</span>
+            <span className="leading-snug font-medium text-xs sm:text-[11px] text-slate-255">{hoveredTooltip.text}</span>
           </div>
         </div>
       )}

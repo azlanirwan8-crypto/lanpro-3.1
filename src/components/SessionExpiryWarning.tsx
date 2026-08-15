@@ -244,7 +244,7 @@ export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
                 </div>
                 
                 {/* Progress helper indicators */}
-                <div className="flex justify-between items-center mt-2 text-[10px] text-slate-400 font-medium">
+                <div className="flex justify-between items-center mt-2 text-xs sm:text-[10px] text-slate-400 font-medium">
                   <span>60 DETIK</span>
                   <span className={`${activeTimeLeft > 30 ? 'text-amber-500' : 'text-rose-500 animate-pulse'}`}>
                     {Math.round((activeTimeLeft / WARNING_THRESHOLD) * 100)}% SISA WAKTU
@@ -258,7 +258,7 @@ export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
                 <button
                   onClick={handleExtendSession}
                   disabled={isExtending}
-                  className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-sm font-medium tracking-wide shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-sm font-medium tracking-wide shadow-soft-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-[0.99] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   <RefreshCw className={`w-4 h-4 ${isExtending ? 'animate-spin' : ''}`} />
                   Perpanjang Sesi Aktif

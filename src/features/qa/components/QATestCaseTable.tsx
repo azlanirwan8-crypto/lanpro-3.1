@@ -141,12 +141,12 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 bg-primary text-white font-medium text-[9px] rounded-md uppercase tracking-wider">
+              <span className="px-2 py-0.5 bg-primary text-white font-medium text-xs sm:text-[11px] sm:text-[9px] rounded-md uppercase tracking-wider">
                 {activeSuite.phase}
               </span>
               <h2 className="text-base font-medium text-content-strong tracking-tight">{cleanSuiteName}</h2>
             </div>
-            <p className="text-[11px] text-content-subtle font-medium mt-0.5">
+            <p className="text-xs sm:text-[11px] text-content-subtle font-medium mt-0.5">
               Diupload oleh: {activeSuite.uploadedBy} • {new Date(activeSuite.uploadedAt).toLocaleDateString("id-ID")}
             </p>
           </div>
@@ -205,27 +205,27 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
         {/* Velzon Compact Micro Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
           <div className="bg-primary/5 border border-primary/10 p-2 rounded-md text-center">
-            <span className="text-[9px] text-primary font-medium uppercase tracking-wider block">Total Case</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-primary font-medium uppercase tracking-wider block">Total Case</span>
             <span className="text-base font-medium text-primary block mt-0.5">{totalCasesCount}</span>
           </div>
           <div className="bg-surface-sunken p-2 rounded-md border border-border-subtle/60 text-center">
-            <span className="text-[9px] text-content-muted font-medium uppercase tracking-wider block">Passed Rate</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-muted font-medium uppercase tracking-wider block">Passed Rate</span>
             <span className="text-base font-medium text-content-strong block mt-0.5">{passedPercent}%</span>
           </div>
           <div className="bg-emerald-50/50 p-2 rounded-md border border-emerald-100 text-center">
-            <span className="text-[9px] text-success font-medium uppercase tracking-wider block">PASSED</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-success font-medium uppercase tracking-wider block">PASSED</span>
             <span className="text-base font-medium text-success block mt-0.5">{passedCasesCount}</span>
           </div>
           <div className="bg-rose-50/50 p-2 rounded-md border border-rose-100 text-center">
-            <span className="text-[9px] text-danger font-medium uppercase tracking-wider block">FAILED</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-danger font-medium uppercase tracking-wider block">FAILED</span>
             <span className="text-base font-medium text-danger block mt-0.5">{failedCasesCount}</span>
           </div>
           <div className="bg-amber-50/50 p-2 rounded-md border border-amber-100 text-center">
-            <span className="text-[9px] text-warning font-medium uppercase tracking-wider block">BLOCKED</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-warning font-medium uppercase tracking-wider block">BLOCKED</span>
             <span className="text-base font-medium text-warning block mt-0.5">{blockedCasesCount}</span>
           </div>
           <div className="bg-surface-sunken p-2 rounded-md border border-border-subtle/60 text-center">
-            <span className="text-[9px] text-content-muted font-medium uppercase tracking-wider block">RETEST/PEND</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-muted font-medium uppercase tracking-wider block">RETEST/PEND</span>
             <span className="text-base font-medium text-content-body block mt-0.5">
               {retestCasesCount + pendingCasesCount}
             </span>
@@ -234,7 +234,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
 
         {/* ELEGANT TOP RIGHT SEARCH & FILTER BAR */}
         <div className="flex items-center justify-between gap-2.5 pt-2.5 border-t border-border-faint">
-          <div className="text-[11px] font-medium text-content-strong uppercase tracking-wider flex items-center gap-1.5">
+          <div className="text-xs sm:text-[11px] font-medium text-content-strong uppercase tracking-wider flex items-center gap-1.5">
             <FileSpreadsheet className="w-3.5 h-3.5 text-primary" />
             <span>Matriks Skenario Test Case ({searchedCases.length})</span>
           </div>
@@ -300,7 +300,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setIsBulkPicDropdownOpen(false)} />
                   <div className="absolute right-0 top-full mt-1.5 w-60 bg-surface text-content-strong rounded-md shadow-2xl border border-border-subtle py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-primary border-b border-border-faint mb-1">
+                    <div className="px-3.5 py-1.5 text-xs sm:text-[10px] font-medium uppercase tracking-wider text-primary border-b border-border-faint mb-1">
                       Tetapkan PIC ke {selectedCaseIds.length} Task
                     </div>
                     <button
@@ -386,7 +386,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-primary/5 border-b border-primary/15 text-[10px] font-medium uppercase tracking-wider text-primary">
+              <tr className="bg-primary/5 border-b border-primary/15 text-xs sm:text-[10px] font-medium uppercase tracking-wider text-primary">
                 {/* SELECT ALL CHECKBOX (For Admin / Users with edit access) */}
                 <th className="py-2.5 px-3 w-8 text-center" onClick={(e) => e.stopPropagation()}>
                   {(canUpdate || isAdminRole) && (
@@ -457,7 +457,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                             {tc.title}
                           </span>
                           {tc.linkedBugKey && (
-                            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 bg-rose-50 border border-rose-200/60 rounded text-[9px] font-medium text-danger shrink-0">
+                            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 bg-rose-50 border border-rose-200/60 rounded text-xs sm:text-[11px] sm:text-[9px] font-medium text-danger shrink-0">
                               <Bug className="w-2.5 h-2.5" />
                               {tc.linkedBugKey}
                             </span>
@@ -468,7 +468,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                       {/* Velzon Priority Compact Pill Badge */}
                       <td className="py-2.5 px-3 text-center">
                         <span
-                          className={`px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-wider inline-block ${
+                          className={`px-2 py-0.5 rounded text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase tracking-wider inline-block ${
                             tc.priority === "Critical" || tc.priority === "High"
                               ? "bg-rose-50 text-danger border border-rose-200/60"
                               : tc.priority === "Low"
@@ -487,7 +487,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                           <select
                             value={tc.status}
                             onChange={(e) => handleStatusChange(tc.id, e.target.value as any)}
-                            className={`py-1 px-2.5 rounded-md text-[10px] font-medium uppercase tracking-wider outline-none cursor-pointer transition-all border shadow-2xs ${
+                            className={`py-1 px-2.5 rounded-md text-xs sm:text-[10px] font-medium uppercase tracking-wider outline-none cursor-pointer transition-all border shadow-2xs ${
                               tc.status === "Passed"
                                 ? "bg-emerald-50 text-success border-emerald-200"
                                 : tc.status === "Failed"
@@ -546,7 +546,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                   }}
                                 />
                                 <div className="absolute right-0 top-full mt-1.5 w-56 bg-surface rounded-md shadow-2xl border border-border-subtle py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                                  <div className="px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-primary border-b border-border-faint mb-1">
+                                  <div className="px-3.5 py-1.5 text-xs sm:text-[10px] font-medium uppercase tracking-wider text-primary border-b border-border-faint mb-1">
                                     Assign PIC Task (Tim Proyek)
                                   </div>
                                   <button

@@ -111,7 +111,7 @@ export const AppRoutes: React.FC<AppRoutesProps> = (props) => {
   if (!selectedProject && !["master", "users", "activity", "connect", "enterprise-audit"].includes(currentView)) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center bg-slate-50/50 p-8 text-center">
-        <div className="w-16 h-16 rounded-xl bg-indigo-100/80 border border-indigo-200 flex items-center justify-center text-indigo-600 mb-4 shadow-sm">
+        <div className="w-16 h-16 rounded-xl bg-indigo-100/80 border border-indigo-200 flex items-center justify-center text-indigo-600 mb-4 shadow-soft">
           <FolderKanban className="w-8 h-8" />
         </div>
         <h3 className="text-xl font-medium text-slate-800 mb-2">Pilih atau Buat Proyek Baru</h3>

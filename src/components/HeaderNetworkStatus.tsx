@@ -20,16 +20,16 @@ export const HeaderNetworkStatus: React.FC<{
           {latencyText}
         </span>
         {latencyStatus === 'good' && (
-          <span className="text-[9px] bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded font-medium tracking-wider">Cepat</span>
+          <span className="text-xs sm:text-[11px] sm:text-[9px] bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded font-medium tracking-wider">Cepat</span>
         )}
         {latencyStatus === 'warning' && (
-          <span className="text-[9px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded font-medium tracking-wider">Sedang</span>
+          <span className="text-xs sm:text-[11px] sm:text-[9px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded font-medium tracking-wider">Sedang</span>
         )}
         {latencyStatus === 'poor' && (
-          <span className="text-[9px] bg-rose-50 text-rose-600 px-1.5 py-0.5 rounded font-medium tracking-wider">Lambat</span>
+          <span className="text-xs sm:text-[11px] sm:text-[9px] bg-rose-50 text-rose-600 px-1.5 py-0.5 rounded font-medium tracking-wider">Lambat</span>
         )}
         {latencyStatus === 'offline' && (
-          <span className="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-medium tracking-wider">Offline</span>
+          <span className="text-xs sm:text-[11px] sm:text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-medium tracking-wider">Offline</span>
         )}
       </div>
 
@@ -47,7 +47,7 @@ export const HeaderNetworkStatus: React.FC<{
           <span>Proyek: <strong className="text-slate-700">{selectedProjectKey}</strong></span>
         </div>
         <div className="h-3 w-px bg-slate-200" />
-        <span className="text-[9px] text-slate-400 font-medium">v1.6 Live Ready</span>
+        <span className="text-xs sm:text-[11px] sm:text-[9px] text-slate-400 font-medium">v1.6 Live Ready</span>
       </div>
     </>
   );

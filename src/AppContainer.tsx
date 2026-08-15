@@ -2819,7 +2819,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
               <Bug className="w-5 h-5 animate-bounce text-emerald-400" />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-medium text-emerald-400 uppercase tracking-widest flex items-center gap-1">
+              <p className="text-xs sm:text-[10px] font-medium text-emerald-400 uppercase tracking-widest flex items-center gap-1">
                 <span>🔔</span> QA Notification
               </p>
               <p className="text-xs font-medium text-slate-100 mt-0.5 leading-snug">
@@ -3826,7 +3826,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.15, ease: "easeOut" }}
-                    className="absolute right-0 mt-2 w-36 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg z-50 py-1.5 overflow-hidden origin-top-right"
+                    className="absolute right-0 mt-2 w-36 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-soft-lg z-50 py-1.5 overflow-hidden origin-top-right"
                   >
                     <button
                       onClick={() => { setTheme('light'); setIsThemeOpen(false); }}
@@ -3935,7 +3935,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
               >
               {currentView === "issueDetail" && (
                 <div className="w-full flex-1 flex flex-col p-3 md:p-4 min-h-0 overflow-hidden bg-[#f3f3f9] text-left">
-                  <div className="flex-1 flex flex-col min-h-0 bg-white border border-slate-200/80 rounded-lg shadow-sm overflow-hidden">
+                  <div className="flex-1 flex flex-col min-h-0 bg-white border border-slate-200/80 rounded-lg shadow-soft overflow-hidden">
                      {/* Velzon-style Action / Title Bar */}
                      <div className="px-4 py-3 md:px-6 md:py-3.5 border-b border-slate-200/80 bg-white flex items-center justify-between gap-4 shrink-0 shadow-2xs">
                         <div className="flex items-center gap-3">
@@ -4071,7 +4071,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
           </React.Fragment>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center bg-slate-50/50 p-8 text-center">
-            <div className="w-16 h-16 rounded-xl bg-indigo-100/80 border border-indigo-200 flex items-center justify-center text-indigo-600 mb-4 shadow-sm">
+            <div className="w-16 h-16 rounded-xl bg-indigo-100/80 border border-indigo-200 flex items-center justify-center text-indigo-600 mb-4 shadow-soft">
               <FolderKanban className="w-8 h-8" />
             </div>
             <h3 className="text-xl font-medium text-slate-800 mb-2">Pilih atau Buat Proyek Baru</h3>
@@ -4812,7 +4812,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
                 currentUserProfile?.permissions,
               ) && (
                 <div className="mt-6 pt-6 border-t border-red-50">
-                  <p className="text-[10px] font-medium text-red-400 uppercase tracking-widest mb-3">
+                  <p className="text-xs sm:text-[10px] font-medium text-red-400 uppercase tracking-widest mb-3">
                     Danger Zone
                   </p>
                   <Button

@@ -47,7 +47,7 @@ export const GlobalSkeleton = () => {
            </div>
            
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-               <div className="bg-white rounded-lg p-4 border border-slate-100 shadow-sm min-h-[500px]">
+               <div className="bg-white rounded-lg p-4 border border-slate-100 shadow-soft min-h-[500px]">
                   <div className="h-5 w-24 bg-slate-200 rounded animate-pulse mb-4" />
                   <div className="space-y-3">
                      <div className="h-24 w-full bg-slate-100 rounded-lg animate-pulse" />
@@ -55,14 +55,14 @@ export const GlobalSkeleton = () => {
                      <div className="h-24 w-full bg-slate-100 rounded-lg animate-pulse" />
                   </div>
                </div>
-               <div className="bg-white rounded-lg p-4 border border-slate-100 shadow-sm min-h-[500px]">
+               <div className="bg-white rounded-lg p-4 border border-slate-100 shadow-soft min-h-[500px]">
                   <div className="h-5 w-24 bg-slate-200 rounded animate-pulse mb-4" />
                   <div className="space-y-3">
                      <div className="h-24 w-full bg-slate-100 rounded-lg animate-pulse" />
                      <div className="h-24 w-full bg-slate-100 rounded-lg animate-pulse" />
                   </div>
                </div>
-               <div className="bg-white rounded-lg p-4 border border-slate-100 shadow-sm min-h-[500px]">
+               <div className="bg-white rounded-lg p-4 border border-slate-100 shadow-soft min-h-[500px]">
                   <div className="h-5 w-24 bg-slate-200 rounded animate-pulse mb-4" />
                   <div className="space-y-3">
                      <div className="h-24 w-full bg-slate-100 rounded-lg animate-pulse" />

@@ -59,7 +59,7 @@ export const SprintSection: React.FC<SprintSectionProps> = ({
                   <h3 className="font-bold text-slate-800 text-sm truncate min-w-0 flex-1">
                     {sprint.name?.trim() || "Fase Tanpa Judul"}
                   </h3>
-                  <span className={cn("text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border shrink-0 whitespace-nowrap", 
+                  <span className={cn("text-xs sm:text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border shrink-0 whitespace-nowrap", 
                     sprint.status === 'active' ? (isOverdue ? "bg-red-50 text-red-700 border-red-200" : "bg-emerald-50 text-emerald-700 border-emerald-200") : 
                     sprint.status === 'planned' ? "bg-slate-100 text-slate-600 border-slate-200/60" : "bg-blue-50 text-blue-700 border-blue-100"
                   )}>
@@ -86,16 +86,16 @@ export const SprintSection: React.FC<SprintSectionProps> = ({
                       style={{ width: `${completionPercentage}%` }}
                     />
                   </div>
-                  <span className="text-[11px] font-medium text-slate-600 shrink-0 w-9 text-right">{completionPercentage}%</span>
+                  <span className="text-xs sm:text-[11px] font-medium text-slate-600 shrink-0 w-9 text-right">{completionPercentage}%</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <div className="text-right hidden md:block">
-                    <span className="text-[10px] font-medium text-slate-400 block uppercase leading-none">Issues</span>
+                    <span className="text-xs sm:text-[10px] font-medium text-slate-400 block uppercase leading-none">Issues</span>
                     <span className="text-xs font-medium text-slate-700">{sprintTasks.length}</span>
                   </div>
                   <div className="text-right hidden md:block">
-                    <span className="text-[10px] font-medium text-slate-400 block uppercase leading-none">Points</span>
+                    <span className="text-xs sm:text-[10px] font-medium text-slate-400 block uppercase leading-none">Points</span>
                     <span className="text-xs font-medium text-primary">{sprintTasks.reduce((acc, t) => acc + (t.storyPoints || 0), 0)}</span>
                   </div>
 
@@ -174,9 +174,9 @@ export const SprintSection: React.FC<SprintSectionProps> = ({
                                       <div key={`sprint-header-${epic.id}`} className="flex items-center justify-between px-3 py-1.5 bg-purple-50/50 border border-purple-100 rounded-md mb-2 mt-2 first:mt-0">
                                         <div className="flex items-center gap-2">
                                           <Zap className="w-3.5 h-3.5 text-purple-600" />
-                                          <span className="text-[10px] font-medium text-purple-700 uppercase tracking-wider leading-none">{epic.title}</span>
+                                          <span className="text-xs sm:text-[10px] font-medium text-purple-700 uppercase tracking-wider leading-none">{epic.title}</span>
                                         </div>
-                                        <div className="text-[10px] font-medium text-purple-600 bg-white border border-purple-100 px-2 py-0.2 rounded-md">{items.length}</div>
+                                        <div className="text-xs sm:text-[10px] font-medium text-purple-600 bg-white border border-purple-100 px-2 py-0.2 rounded-md">{items.length}</div>
                                       </div>,
                                       ...items.map((task) => {
                                         const dndIndex = _draggablesRenderedCount++;
@@ -196,9 +196,9 @@ export const SprintSection: React.FC<SprintSectionProps> = ({
                                       <div key="sprint-header-standalone" className="flex items-center justify-between px-3 py-1.5 bg-slate-100/70 border border-slate-200/60 rounded-md mb-2 mt-2 first:mt-0">
                                         <div className="flex items-center gap-2">
                                           <Target className="w-3.5 h-3.5 text-slate-500" />
-                                          <span className="text-[10px] font-medium text-slate-600 uppercase tracking-wider leading-none">Standalone Tasks</span>
+                                          <span className="text-xs sm:text-[10px] font-medium text-slate-600 uppercase tracking-wider leading-none">Standalone Tasks</span>
                                         </div>
-                                        <div className="text-[10px] font-medium text-slate-600 bg-white border border-slate-200/60 px-2 py-0.2 rounded-md">{items.length}</div>
+                                        <div className="text-xs sm:text-[10px] font-medium text-slate-600 bg-white border border-slate-200/60 px-2 py-0.2 rounded-md">{items.length}</div>
                                       </div>,
                                       ...items.map((task) => {
                                         const dndIndex = _draggablesRenderedCount++;

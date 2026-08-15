@@ -253,7 +253,7 @@ export const RegisterScreen = ({
             )}
           />
           {fieldErrors.name && (
-            <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
+            <p className="text-xs sm:text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{fieldErrors.name}</span>
             </p>
@@ -277,7 +277,7 @@ export const RegisterScreen = ({
             )}
           />
           {fieldErrors.email && (
-            <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
+            <p className="text-xs sm:text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{fieldErrors.email}</span>
             </p>
@@ -287,7 +287,7 @@ export const RegisterScreen = ({
         {/* USERNAME INPUT */}
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-700 tracking-wide block">
-            Username <span className="text-rose-500">*</span> <span className="text-[11px] text-slate-400 font-normal">(Huruf saja, maks 10)</span>
+            Username <span className="text-rose-500">*</span> <span className="text-xs sm:text-[11px] text-slate-400 font-normal">(Huruf saja, maks 10)</span>
           </label>
           <input
             type="text"
@@ -302,7 +302,7 @@ export const RegisterScreen = ({
             )}
           />
           {fieldErrors.username && (
-            <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
+            <p className="text-xs sm:text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{fieldErrors.username}</span>
             </p>
@@ -339,7 +339,7 @@ export const RegisterScreen = ({
           {/* Password Strength Indicator Bar */}
           {password.length > 0 && (
             <div className="mt-2 space-y-1.5 p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg">
-              <div className="flex items-center justify-between text-[11px] font-medium">
+              <div className="flex items-center justify-between text-xs sm:text-[11px] font-medium">
                 <span className="text-slate-600">Password Strength:</span>
                 <span className={passStrength.color}>{passStrength.label}</span>
               </div>
@@ -351,7 +351,7 @@ export const RegisterScreen = ({
               </div>
 
               {/* Criteria Checklist */}
-              <div className="grid grid-cols-2 gap-1 text-[10px] font-medium mt-1.5 text-slate-500">
+              <div className="grid grid-cols-2 gap-1 text-xs sm:text-[10px] font-medium mt-1.5 text-slate-500">
                 <div className={cn("flex items-center gap-1", passStrength.criteria.minLength ? "text-emerald-600 font-medium" : "text-slate-400")}>
                   <span>{passStrength.criteria.minLength ? "[✓]" : "[ ]"}</span> Min 8 Karakter
                 </div>
@@ -369,7 +369,7 @@ export const RegisterScreen = ({
           )}
 
           {fieldErrors.password && (
-            <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
+            <p className="text-xs sm:text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
               <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{fieldErrors.password}</span>
             </p>
@@ -461,7 +461,7 @@ export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) =>
       {/* Velzon Center Animated Logo Icon */}
       <div className="relative inline-flex items-center justify-center pt-2">
         <motion.div 
-          className="w-16 h-16 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30 relative z-10"
+          className="w-16 h-16 rounded-2xl bg-primary text-white flex items-center justify-center shadow-soft-lg shadow-primary/30 relative z-10"
           animate={{ scale: [1, 1.05, 1] }}
           transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         >
@@ -629,7 +629,7 @@ export const LoginScreen = ({
                   )}
                 />
                 {fieldErrors.username && (
-                  <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
+                  <p className="text-xs sm:text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{fieldErrors.username}</span>
                   </p>
@@ -662,7 +662,7 @@ export const LoginScreen = ({
                   </button>
                 </div>
                 {fieldErrors.password && (
-                  <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
+                  <p className="text-xs sm:text-[11px] font-medium text-rose-500 flex items-center gap-1 mt-1">
                     <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                     <span>{fieldErrors.password}</span>
                   </p>

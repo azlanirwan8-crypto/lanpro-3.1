@@ -177,12 +177,12 @@ export const BroadcastMonitor: React.FC<BroadcastMonitorProps> = ({ emailTemplat
                   </div>
                   <div>
                     <div className="font-medium text-slate-800 dark:text-slate-100 text-xs">{item.name}</div>
-                    <div className="text-[11px] text-slate-400 font-normal">{item.time}</div>
+                    <div className="text-xs sm:text-[11px] text-slate-400 font-normal">{item.time}</div>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium transition-all ${
+                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs sm:text-[11px] font-medium transition-all ${
                     item.status === 'success' ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400' :
                     item.status === 'pending' ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400' :
                     'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400'
@@ -240,7 +240,7 @@ export const BroadcastMonitor: React.FC<BroadcastMonitorProps> = ({ emailTemplat
                   <div className="p-1 bg-blue-50 text-blue-500 rounded"><Mail size={14} /></div>
                   Email Preview
                 </div>
-                <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm font-mono text-slate-700 whitespace-pre-wrap shadow-sm">
+                <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm font-mono text-slate-700 whitespace-pre-wrap shadow-soft">
                   <div className="font-medium border-b border-slate-200 pb-3 mb-3 text-slate-800">
                     Subject: {replaceMockData(emailTemplate.subject)}
                   </div>
@@ -255,7 +255,7 @@ export const BroadcastMonitor: React.FC<BroadcastMonitorProps> = ({ emailTemplat
                   <div className="p-1 bg-emerald-50 text-emerald-500 rounded"><MessageSquare size={14} /></div>
                   WhatsApp Preview
                 </div>
-                <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-4 text-sm font-mono text-emerald-800 whitespace-pre-wrap leading-relaxed shadow-sm">
+                <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-4 text-sm font-mono text-emerald-800 whitespace-pre-wrap leading-relaxed shadow-soft">
                   {replaceMockData(waTemplate)}
                 </div>
               </div>

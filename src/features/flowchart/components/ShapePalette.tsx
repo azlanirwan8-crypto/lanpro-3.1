@@ -52,7 +52,7 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
                 title="Buka Koleksi Simbol"
               >
                 <Layers className="w-4 h-4" />
-                <span className="text-[7.5px] font-medium uppercase tracking-tight text-indigo-600 mt-0.5 flex items-center">Shapes <ChevronDown className="w-2 h-2 ml-0.5" /></span>
+                <span className="text-xs sm:text-[10px] sm:text-[7.5px] font-medium uppercase tracking-tight text-indigo-600 mt-0.5 flex items-center">Shapes <ChevronDown className="w-2 h-2 ml-0.5" /></span>
               </button>
 
               {isShapeDropdownOpen && (
@@ -75,7 +75,7 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
 
                   {/* Preset Colors Bar */}
                   <div className="px-3.5 py-2 border-b border-border-faint bg-surface-sunken/20 flex items-center justify-between shrink-0">
-                    <span className="text-[10px] font-medium text-content-subtle uppercase tracking-wide">Warna Default:</span>
+                    <span className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wide">Warna Default:</span>
                     <div className="flex items-center gap-1">
                       {["yellow", "blue", "green", "purple", "rose", "sky", "slate"].map(colName => {
                         const colorClassMap: Record<string, string> = {
@@ -115,12 +115,12 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
                         placeholder="Cari bentuk (e.g. DBA, flow...)"
                         value={shapeSearchQuery}
                         onChange={(e) => setShapeSearchQuery(e.target.value)}
-                        className="w-full text-[11px] bg-surface-sunken border border-border-subtle rounded-lg p-1.5 pl-7 text-content placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-violet-500 focus:bg-surface transition-all"
+                        className="w-full text-xs sm:text-[11px] bg-surface-sunken border border-border-subtle rounded-lg p-1.5 pl-7 text-content placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-violet-500 focus:bg-surface transition-all"
                       />
                       {shapeSearchQuery && (
                         <button
                           onClick={() => setShapeSearchQuery("")}
-                          className="absolute right-2.5 top-2.5 text-[10px] text-content-subtle hover:text-slate-650"
+                          className="absolute right-2.5 top-2.5 text-xs sm:text-[10px] text-content-subtle hover:text-slate-650"
                         >
                           Clear
                         </button>
@@ -149,11 +149,11 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
                             className="w-full flex items-center justify-between text-left py-1.5 hover:bg-surface-sunken/70 p-1 rounded-lg transition-colors group"
                           >
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[10px] font-medium text-content-strong uppercase tracking-widest font-mono">
+                              <span className="text-xs sm:text-[10px] font-medium text-content-strong uppercase tracking-widest font-mono">
                                 {group.title}
                               </span>
                               {(group.title === "AWS" || group.title === "UML" || group.title === "My Shapes") && (
-                                <span className="text-[7.5px] bg-indigo-50 text-indigo-600 font-medium px-1 py-[1px] rounded border border-indigo-100 flex items-center gap-0.5 leading-none">
+                                <span className="text-xs sm:text-[10px] sm:text-[7.5px] bg-indigo-50 text-indigo-600 font-medium px-1 py-[1px] rounded border border-indigo-100 flex items-center gap-0.5 leading-none">
                                   FREE
                                 </span>
                               )}
@@ -187,8 +187,8 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
                                     {renderMiniPreviewIcon(item.type)}
                                   </div>
                                   <div className="min-w-0 flex-1">
-                                    <p className="text-[10px] font-medium text-content-body leading-tight truncate group-hover:text-indigo-600 transition-colors">{item.name}</p>
-                                    <p className="text-[8.5px] text-slate-450 leading-none truncate mt-0.5">{item.desc}</p>
+                                    <p className="text-xs sm:text-[10px] font-medium text-content-body leading-tight truncate group-hover:text-indigo-600 transition-colors">{item.name}</p>
+                                    <p className="text-xs sm:text-[10px] sm:text-[8.5px] text-slate-450 leading-none truncate mt-0.5">{item.desc}</p>
                                   </div>
                                 </button>
                               ))}
@@ -204,7 +204,7 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
                         (item.desc && item.desc.toLowerCase().includes(shapeSearchQuery.toLowerCase()))
                       ).length === 0
                     ) && (
-                      <div className="text-center py-8 text-content-subtle text-[11px]">
+                      <div className="text-center py-8 text-content-subtle text-xs sm:text-[11px]">
                         Tidak menemukan bentuk dengan kata kunci tersebut.
                       </div>
                     )}

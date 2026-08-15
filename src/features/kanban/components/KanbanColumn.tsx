@@ -36,7 +36,7 @@ export const KanbanColumn = React.memo<KanbanColumnProps>(({ status, tasks, mArr
               )}
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-800 dark:text-slate-200">{status.label}</span>
            </div>
-           <span className="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-md text-[10px] font-semibold border border-slate-200/60">{tasks.length}</span>
+           <span className="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-md text-xs sm:text-[10px] font-semibold border border-slate-200/60">{tasks.length}</span>
         </div>
       )}
       
@@ -75,7 +75,7 @@ export const KanbanColumn = React.memo<KanbanColumnProps>(({ status, tasks, mArr
 
               {tasks.length === 0 && snapshot.isDraggingOver && (
                 <div className="flex items-center justify-center p-3 rounded-md border border-dashed border-primary bg-primary/10 min-h-[50px] select-none">
-                    <span className="text-[10px] font-semibold text-primary uppercase tracking-wider">Drop here</span>
+                    <span className="text-xs sm:text-[10px] font-semibold text-primary uppercase tracking-wider">Drop here</span>
                 </div>
               )}
             </div>

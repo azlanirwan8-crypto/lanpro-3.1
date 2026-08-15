@@ -331,7 +331,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                     <div className="p-3.5 bg-amber-50/80 border border-amber-200 rounded-lg flex items-start gap-2.5 shadow-2xs">
                       <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                       <div className="text-xs text-amber-900 space-y-0.5">
-                        <p className="font-medium uppercase tracking-wider text-amber-800 text-[11px]">Peringatan Jadwal Epic Timeline:</p>
+                        <p className="font-medium uppercase tracking-wider text-amber-800 text-xs sm:text-[11px]">Peringatan Jadwal Epic Timeline:</p>
                         <p className="font-normal text-content-body">Rentang tanggal Task berada di luar jadwal Epic induk "{parentEpic?.title}" ({parentEpic?.startDate ? format(ensureDate(parentEpic.startDate), 'yyyy-MM-dd') : '∞'} - {parentEpic?.endDate ? format(ensureDate(parentEpic.endDate), 'yyyy-MM-dd') : '∞'}). Penyimpanan akan ditolak oleh server jika melewati batas Epic.</p>
                       </div>
                     </div>
@@ -371,7 +371,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                       Link Issue
                     </Button>
                     <div className="ml-auto flex items-center gap-2">
-                       <div className="flex items-center gap-1.5 text-[11px] font-medium text-content-muted bg-surface-sunken/80 px-2.5 py-1 rounded-md border border-border-subtle/60">
+                       <div className="flex items-center gap-1.5 text-xs sm:text-[11px] font-medium text-content-muted bg-surface-sunken/80 px-2.5 py-1 rounded-md border border-border-subtle/60">
                           <Clock className="w-3.5 h-3.5 text-content-subtle" />
                           Updated {task.updatedAt ? formatDistanceToNow(ensureDate(task.updatedAt), { addSuffix: true }) : 'Never'}
                        </div>
@@ -424,7 +424,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   
                   <div className={cn("group relative", isUpdatingTask?.[task.id] && "opacity-50 pointer-events-none")}>
                     {task.acceptanceCriteria !== undefined && isEditingAcceptanceCriteria ? (
-                      <div className="border border-emerald-500/80 rounded-md overflow-hidden bg-surface shadow-sm ring-2 ring-emerald-500/10 transition-all">
+                      <div className="border border-emerald-500/80 rounded-md overflow-hidden bg-surface shadow-soft ring-2 ring-emerald-500/10 transition-all">
                         <UncontrolledTextarea
                           initialValue={task.acceptanceCriteria || ''}
                           onSave={(val: string) => {
@@ -437,7 +437,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                           rows={4}
                           className="w-full p-4 text-xs focus:outline-none resize-y leading-relaxed font-normal text-content-body"
                         />
-                        <div className="bg-surface-sunken border-t border-border-faint px-3 py-2 flex justify-between items-center text-[11px] font-medium text-content-subtle">
+                        <div className="bg-surface-sunken border-t border-border-faint px-3 py-2 flex justify-between items-center text-xs sm:text-[11px] font-medium text-content-subtle">
                           <span>Markdown fully supported. Press Ctrl+Enter to save, or Escape to cancel.</span>
                         </div>
                       </div>
@@ -468,7 +468,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                         <Figma className="w-4 h-4 text-purple-500" />
                         Design Specification
                       </h3>
-                      <a href={task.figmaUrl} target="_blank" rel="noreferrer" className="text-[10px] font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-lg hover:bg-purple-100 transition-all flex items-center gap-1">
+                      <a href={task.figmaUrl} target="_blank" rel="noreferrer" className="text-xs sm:text-[10px] font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-lg hover:bg-purple-100 transition-all flex items-center gap-1">
                         <ExternalLink className="w-3 h-3" />
                         Open Original
                       </a>
@@ -489,10 +489,10 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                 {/* Section: Attachments */}
                 <div className="space-y-4 pt-4 border-t border-border-faint">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-[10px] font-medium uppercase tracking-widest text-content-subtle">Resources</h4>
+                    <h4 className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">Resources</h4>
                     {isEditable && (
                       <div className="flex gap-4">
-                        <button onClick={() => setIsAddingLinkLocal(!isAddingLink)} className="text-[10px] font-medium text-indigo-600 hover:underline">
+                        <button onClick={() => setIsAddingLinkLocal(!isAddingLink)} className="text-xs sm:text-[10px] font-medium text-indigo-600 hover:underline">
                           + Add Link
                         </button>
                       </div>
@@ -501,7 +501,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   
                   <div className="space-y-2">
                      {task.attachments?.map((att, attIdx) => (
-                       <div key={att.id ? `${att.id}-${attIdx}` : `att-${attIdx}`} className="flex items-center gap-3 p-3 bg-surface hover:bg-surface-sunken border border-border-faint rounded-xl group transition-all shadow-sm">
+                       <div key={att.id ? `${att.id}-${attIdx}` : `att-${attIdx}`} className="flex items-center gap-3 p-3 bg-surface hover:bg-surface-sunken border border-border-faint rounded-xl group transition-all shadow-soft">
                          <a 
                            href={att.url} 
                            target="_blank" 
@@ -513,7 +513,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                             </div>
                             <div className="flex-1 min-w-0">
                                <p className="text-xs font-medium text-content truncate tracking-tight hover:underline">{att.name}</p>
-                               <p className="text-[9px] font-medium text-content-subtle uppercase tracking-widest">
+                               <p className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-content-subtle uppercase tracking-widest">
                                   {att.type} • {safeFormat(att.createdAt, 'MMM d')}
                                   {att.uploadedByName && ` • Uploaded by ${att.uploadedByName}`}
                                </p>
@@ -531,7 +531,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                        </div>
                      ))}
                      {task.attachments?.length === 0 && !isAddingLink && (
-                       <div className="py-4 text-center opacity-20 italic text-[10px] uppercase font-medium tracking-widest">No resources linked</div>
+                       <div className="py-4 text-center opacity-20 italic text-xs sm:text-[10px] uppercase font-medium tracking-widest">No resources linked</div>
                      )}
                   </div>
 
@@ -543,13 +543,13 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                     >
                        <input 
                          placeholder="Resource Title"
-                         className="w-full text-xs font-medium border-border-subtle rounded-xl bg-surface p-2 shadow-sm"
+                         className="w-full text-xs font-medium border-border-subtle rounded-xl bg-surface p-2 shadow-soft"
                          value={newLinkTitle}
                          onChange={(e) => setNewLinkTitle(e.target.value)}
                        />
                        <input 
                          placeholder="https://..."
-                         className="w-full text-xs font-medium border-border-subtle rounded-xl bg-surface p-2 shadow-sm"
+                         className="w-full text-xs font-medium border-border-subtle rounded-xl bg-surface p-2 shadow-soft"
                          value={newLinkUrl}
                          onChange={(e) => setNewLinkUrl(e.target.value)}
                        />
@@ -564,9 +564,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                 {/* Section: Linked Tasks */}
                 <div className="space-y-4 pt-4 border-t border-border-faint">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-[10px] font-medium uppercase tracking-widest text-content-subtle">Related Issues</h4>
+                    <h4 className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">Related Issues</h4>
                     {isEditable && (
-                      <button onClick={() => setIsAddingTaskLinkLocal(!isAddingTaskLinkLocal)} className="text-[10px] font-medium text-indigo-600 hover:underline">
+                      <button onClick={() => setIsAddingTaskLinkLocal(!isAddingTaskLinkLocal)} className="text-xs sm:text-[10px] font-medium text-indigo-600 hover:underline">
                         + Link
                       </button>
                     )}
@@ -577,9 +577,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                         const target = (tasks || []).find(t => t.id === link.targetTaskId);
                         if (!target) return null;
                         return (
-                          <div key={link.id ? `${link.id}-${linkIdx}` : `link-${linkIdx}`} className="p-3 bg-surface rounded-xl border border-border-faint shadow-sm space-y-2 group/link relative">
+                          <div key={link.id ? `${link.id}-${linkIdx}` : `link-${linkIdx}`} className="p-3 bg-surface rounded-xl border border-border-faint shadow-soft space-y-2 group/link relative">
                              <div className="flex items-center justify-between">
-                                <span className="text-[9px] font-medium uppercase text-indigo-500 bg-indigo-50 px-1.5 py-0.5 rounded tracking-widest">
+                                <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase text-indigo-500 bg-indigo-50 px-1.5 py-0.5 rounded tracking-widest">
                                    {link.relationType.replace(/_/g, ' ')}
                                 </span>
                                 <button 
@@ -590,7 +590,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                                 </button>
                              </div>
                              <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-mono font-medium text-content-subtle">{target.key}</span>
+                                <span className="text-xs sm:text-[10px] font-mono font-medium text-content-subtle">{target.key}</span>
                                 <span className="text-xs font-medium text-content-body truncate">{target.title}</span>
                              </div>
                           </div>
@@ -614,7 +614,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                          ]}
                          masterData={masterData}
                          className="w-full"
-                         buttonClassName="text-[13px] font-medium bg-surface border border-border-subtle rounded-xl px-4 py-2 shadow-sm"
+                         buttonClassName="text-[13px] font-medium bg-surface border border-border-subtle rounded-xl px-4 py-2 shadow-soft"
                        />
                       <StyledDropdown 
                         value={taskLinkTargetId}
@@ -628,7 +628,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                         ]}
                         masterData={masterData}
                         className="w-full"
-                        buttonClassName="text-[13px] font-medium bg-surface border border-border-subtle rounded-xl px-4 py-2 shadow-sm"
+                        buttonClassName="text-[13px] font-medium bg-surface border border-border-subtle rounded-xl px-4 py-2 shadow-soft"
                       />
                       <div className="flex gap-2 justify-end">
                          <Button size="sm" variant="secondary" onClick={() => setIsAddingTaskLinkLocal(false)}>Cancel</Button>
@@ -648,15 +648,15 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   </div>
                   <div className="space-y-3 p-4 bg-surface-sunken/50 rounded-lg border border-dashed border-border-subtle shadow-xs">
                     {tasks.filter(t => t.parentId === task.id).map((st, stIdx) => (
-                      <div key={st.id ? `${st.id}-${stIdx}` : `sub-${stIdx}`} className={cn("flex items-center gap-4 p-3 bg-surface hover:bg-indigo-50/30 rounded-xl group border border-border-faint transition-all shadow-sm", isUpdatingTask?.[st.id] ? "opacity-50 pointer-events-none" : "hover:border-indigo-100")}>
+                      <div key={st.id ? `${st.id}-${stIdx}` : `sub-${stIdx}`} className={cn("flex items-center gap-4 p-3 bg-surface hover:bg-indigo-50/30 rounded-xl group border border-border-faint transition-all shadow-soft", isUpdatingTask?.[st.id] ? "opacity-50 pointer-events-none" : "hover:border-indigo-100")}>
                         <input 
                           type="checkbox" 
-                          className="w-5 h-5 rounded-lg border-slate-300 text-indigo-600 focus:ring-indigo-500 transition-all cursor-pointer shadow-sm" 
+                          className="w-5 h-5 rounded-lg border-slate-300 text-indigo-600 focus:ring-indigo-500 transition-all cursor-pointer shadow-soft" 
                           checked={st.status === 'Done'}
                           onChange={() => updateTaskField(st.id, 'status', st.status === 'Done' ? 'To Do' : 'Done')}
                           disabled={!isEditable}
                         />
-                        <span className="text-[10px] font-mono font-medium text-content-subtle bg-surface-sunken px-1.5 py-0.5 rounded border border-border-subtle shrink-0 select-all uppercase tracking-tighter">
+                        <span className="text-xs sm:text-[10px] font-mono font-medium text-content-subtle bg-surface-sunken px-1.5 py-0.5 rounded border border-border-subtle shrink-0 select-all uppercase tracking-tighter">
                           {st.key}
                         </span>
                         <UncontrolledInput 
@@ -671,7 +671,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                           disabled={!isEditable}
                         />
                         <div className="flex items-center gap-3 shrink-0">
-                          <UserAvatar uid={st.assigneeId || ''} members={projectMembers} className="w-6 h-6 border border-white shadow-sm ring-1 ring-slate-100" />
+                          <UserAvatar uid={st.assigneeId || ''} members={projectMembers} className="w-6 h-6 border border-white shadow-soft ring-1 ring-slate-100" />
                           <div className="h-4 w-px bg-slate-200" />
                           <PriorityIcon priority={st.priority || 'Medium'} masterData={masterData} className="w-3.5 h-3.5" />
                           {isEditable && (
@@ -735,9 +735,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                        <div className="flex gap-4 p-2">
                           <UserAvatar uid={user?.uid || ''} members={projectMembers} className="w-9 h-9 border-2 border-white shadow-md shrink-0" />
                           <div className="flex-1 relative group">
-                            <div className="border border-border-subtle rounded-xl bg-surface overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-300 transition-all shadow-sm">
+                            <div className="border border-border-subtle rounded-xl bg-surface overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-300 transition-all shadow-soft">
                               <div className="flex items-center gap-1 p-1.5 border-b border-border-faint bg-surface-sunken/50 text-content-muted overflow-x-auto custom-scrollbar">
-                                 <button className="flex items-center gap-1.5 px-2 py-1 hover:bg-slate-200 rounded text-[11px] font-medium text-content-secondary transition-colors shrink-0">
+                                 <button className="flex items-center gap-1.5 px-2 py-1 hover:bg-slate-200 rounded text-xs sm:text-[11px] font-medium text-content-secondary transition-colors shrink-0">
                                    <Sparkles className="w-3 h-3 text-indigo-500" />
                                    Improve writing
                                  </button>
@@ -764,7 +764,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                             
                             {mentionState.active && (
                               <div className="absolute z-50 w-72 bg-surface rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border border-border-subtle overflow-hidden transform bottom-[110%] left-0 animate-in fade-in slide-in-from-bottom-2">
-                                <div className="p-3 bg-surface-sunken border-b border-border-faint text-[10px] font-medium text-content-subtle uppercase tracking-widest">Suggested People</div>
+                                <div className="p-3 bg-surface-sunken border-b border-border-faint text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest">Suggested People</div>
                                 <div className="max-h-60 overflow-y-auto py-1">
                                   {projectMembers
                                     .filter(m => m?.username && m?.username.toLowerCase().includes(mentionState.query.toLowerCase()))
@@ -777,7 +777,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                                         <UserAvatar uid={member.uid} members={projectMembers} className="w-7 h-7" />
                                         <div>
                                           <p className="text-[13px] font-medium text-content leading-none">{member?.displayName}</p>
-                                          <p className="text-[11px] text-content-subtle mt-0.5">@{member?.username}</p>
+                                          <p className="text-xs sm:text-[11px] text-content-subtle mt-0.5">@{member?.username}</p>
                                         </div>
                                       </button>
                                     ))}
@@ -785,7 +785,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                               </div>
                             )}
                             <div className="flex justify-end pt-3">
-                               <Button size="sm" onClick={wrapSubmit('addComment', handleAddComment)} disabled={isSubmitting['addComment'] || !newCommentText.trim() || !isLoggedIn} className="shadow-lg shadow-indigo-500/20 px-6 font-medium uppercase tracking-widest text-[10px]">
+                               <Button size="sm" onClick={wrapSubmit('addComment', handleAddComment)} disabled={isSubmitting['addComment'] || !newCommentText.trim() || !isLoggedIn} className="shadow-soft-lg shadow-indigo-500/20 px-6 font-medium uppercase tracking-widest text-xs sm:text-[10px]">
                                  Save
                                </Button>
                             </div>
@@ -809,7 +809,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                                      <div className="flex items-center gap-2">
                                         <span className="text-xs font-medium text-content-strong tracking-tight">{author?.displayName || 'Unknown User'}</span>
                                         <div className="w-1 h-1 bg-slate-300 rounded-full" />
-                                        <span className="text-[10px] font-medium text-content-subtle">
+                                        <span className="text-xs sm:text-[10px] font-medium text-content-subtle">
                                           {safeFormat(comment.createdAt, 'MMM d, h:mm a', 'Just now')}
                                         </span>
                                      </div>
@@ -845,7 +845,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                                <div className="space-y-0.5 py-0.5">
                                   <div className="flex items-center gap-2">
                                      <span className="text-xs font-medium text-content-strong">{actor?.displayName}</span>
-                                     <span className="text-[10px] font-medium text-content-subtle bg-surface border border-border-subtle/60 px-1.5 py-0.2 rounded uppercase tracking-tight">
+                                     <span className="text-xs sm:text-[10px] font-medium text-content-subtle bg-surface border border-border-subtle/60 px-1.5 py-0.2 rounded uppercase tracking-tight">
                                         {safeFormat(log.createdAt, 'MMM d, HH:mm')}
                                      </span>
                                   </div>
@@ -876,14 +876,14 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                     <Activity className="w-3.5 h-3.5 text-indigo-500" />
                     Issue Attributes
                   </h4>
-                  <span className="text-[10px] font-medium text-content-muted bg-slate-200/60 px-2 py-0.5 rounded-md">
+                  <span className="text-xs sm:text-[10px] font-medium text-content-muted bg-slate-200/60 px-2 py-0.5 rounded-md">
                     {task.key || 'ATTR'}
                   </span>
                 </div>
 
                 {/* Main Lifecycle Status Select */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                  <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                     <Activity className="w-3 h-3 text-content-subtle" />
                     Lifecycle Status
                   </label>
@@ -905,7 +905,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                 <div className="space-y-3.5">
                   {/* Assignee */}
                   <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                    <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                       <User className="w-3 h-3 text-content-subtle" />
                       Assignee
                     </label>
@@ -924,7 +924,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
                   {/* Reporter */}
                   <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                    <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                       <User className="w-3 h-3 text-content-subtle" />
                       Reporter
                     </label>
@@ -944,7 +944,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   {/* Priority & Points Grid */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                      <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                         <Zap className="w-3 h-3 text-content-subtle" />
                         Priority
                       </label>
@@ -961,11 +961,11 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                     </div>
                     <div className="space-y-1">
                       <div className="flex items-center justify-between mb-0.5">
-                        <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider">Points</label>
+                        <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider">Points</label>
                         {isEditable && (!isProjectMember || isReporter) && (
                            <button 
                              onClick={() => handleSuggestStoryPoints(task)}
-                             className="text-[10px] font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-0.5"
+                             className="text-xs sm:text-[10px] font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-0.5"
                            >
                              <Sparkles className="w-3 h-3" /> AI
                            </button>
@@ -984,7 +984,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
                   {/* Blocked Status */}
                   <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                    <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                       <ShieldAlert className="w-3 h-3 text-content-subtle" />
                       Blocked Status
                     </label>
@@ -1009,7 +1009,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
                   {/* Current Sprint */}
                   <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                    <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                       <Layers className="w-3 h-3 text-content-subtle" />
                       Current Sprint
                     </label>
@@ -1034,7 +1034,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
                   {/* Release / Milestone */}
                   <div className="space-y-1">
-                    <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                    <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                       <Tag className="w-3 h-3 text-content-subtle" />
                       Release / Milestone
                     </label>
@@ -1060,7 +1060,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   {/* Dates Grid */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                      <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                         <Calendar className="w-3 h-3 text-content-subtle" />
                         Start Date
                       </label>
@@ -1073,7 +1073,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                      <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                         <Calendar className="w-3 h-3 text-content-subtle" />
                         End Date
                       </label>
@@ -1089,7 +1089,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                      <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                         <Calendar className="w-3 h-3 text-content-subtle" />
                         Due Date
                       </label>
@@ -1102,7 +1102,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                      <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                         <Tag className="w-3 h-3 text-content-subtle" />
                         Labels
                       </label>
@@ -1119,7 +1119,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   {/* Time Tracking Grid */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                      <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                         <Clock className="w-3 h-3 text-content-subtle" />
                         Est. Hours
                       </label>
@@ -1135,7 +1135,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                      <label className="text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                         <LineChart className="w-3 h-3 text-indigo-500" />
                         Logged Hours
                       </label>
@@ -1157,11 +1157,11 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
                 {/* Footer Metadata */}
                 <div className="pt-2 space-y-2">
-                   <div className="flex items-center justify-between text-[11px] text-content-muted">
+                   <div className="flex items-center justify-between text-xs sm:text-[11px] text-content-muted">
                       <span>Created</span>
                       <span className="font-medium text-content-body">{safeFormat(task.createdAt, 'MMM d, yyyy HH:mm')}</span>
                    </div>
-                   <div className="flex items-center justify-between text-[11px] text-content-muted">
+                   <div className="flex items-center justify-between text-xs sm:text-[11px] text-content-muted">
                       <span>Updated</span>
                       <span className="font-medium text-content-body">{safeFormat(task.updatedAt, 'MMM d, yyyy HH:mm')}</span>
                    </div>

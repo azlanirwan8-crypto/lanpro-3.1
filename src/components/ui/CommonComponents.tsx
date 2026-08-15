@@ -148,8 +148,8 @@ export const StyledDropdown = ({ value, onChange, options, type, masterData, cla
           disabled={disabled}
           className={cn(
             "flex items-center gap-2 group/dd transition-all cursor-pointer w-full justify-between focus:ring-2 focus:ring-blue-100",
-            isStatus ? cn("px-3 py-1 border rounded-full font-medium text-[10px] tracking-wider uppercase shadow-sm transition-colors", getStatusClasses(selected?.label || value)) : 
-            isPriority ? cn("px-2.5 py-1.5 border rounded-md font-medium text-[10px] tracking-wider uppercase shadow-sm transition-colors", getPriorityClasses(selected?.label || value)) :
+            isStatus ? cn("px-3 py-1 border rounded-full font-medium text-xs sm:text-[10px] tracking-wider uppercase shadow-soft transition-colors", getStatusClasses(selected?.label || value)) : 
+            isPriority ? cn("px-2.5 py-1.5 border rounded-md font-medium text-xs sm:text-[10px] tracking-wider uppercase shadow-soft transition-colors", getPriorityClasses(selected?.label || value)) :
             "px-2 py-1 bg-white border border-transparent hover:border-slate-200 rounded",
             disabled && "opacity-50 cursor-not-allowed",
             buttonClassName
@@ -160,7 +160,7 @@ export const StyledDropdown = ({ value, onChange, options, type, masterData, cla
                <UserAvatar uid={selected.id} members={members} className="w-4 h-4 flex-shrink-0" />
             ) : type === 'member' && (!selected?.id || selected.id === 'Unassigned') ? (
                <div className="w-4 h-4 rounded-full bg-slate-100 border border-slate-200 border-dashed flex items-center justify-center flex-shrink-0">
-                 <span className="text-[8px] text-slate-400 font-medium">?</span>
+                 <span className="text-xs sm:text-[10px] sm:text-[8px] text-slate-400 font-medium">?</span>
                </div>
             ) : isStatus ? (
                selected?.icon ? <RenderIcon iconName={selected.icon} className="w-3.5 h-3.5 flex-shrink-0" style={{ color: selected?.color || '#cbd5e1' }} /> : <div className="w-2.5 h-2.5 rounded-full shrink-0 shadow-inner border border-black/10" style={{ backgroundColor: selected?.color || '#cbd5e1' }} />
@@ -172,8 +172,8 @@ export const StyledDropdown = ({ value, onChange, options, type, masterData, cla
             <span className={cn(
               "text-[12px] capitalize tracking-tight truncate",
               (!selected?.label && !value) ? "text-slate-400 font-medium opacity-80" : 
-              isStatus ? "font-medium text-[10px] text-inherit tracking-wider uppercase" : 
-              isPriority ? "font-medium text-[10px] text-inherit tracking-wider uppercase" :
+              isStatus ? "font-medium text-xs sm:text-[10px] text-inherit tracking-wider uppercase" : 
+              isPriority ? "font-medium text-xs sm:text-[10px] text-inherit tracking-wider uppercase" :
               "font-medium text-slate-600"
             )}>
               {selected?.label || value || 'Select...'}
@@ -212,7 +212,7 @@ export const StyledDropdown = ({ value, onChange, options, type, masterData, cla
                         <UserAvatar uid={opt.id} members={members} className="w-5 h-5 flex-shrink-0" />
                       ) : type === 'member' && (!opt.id || opt.id === 'Unassigned') ? (
                         <div className="w-5 h-5 rounded-full bg-slate-100 border border-slate-200 border-dashed flex items-center justify-center flex-shrink-0">
-                          <span className="text-[10px] text-slate-400 font-medium">?</span>
+                          <span className="text-xs sm:text-[10px] text-slate-400 font-medium">?</span>
                         </div>
                       ) : isStatus ? (
                          opt.icon ? <RenderIcon iconName={opt.icon} className="w-4 h-4 flex-shrink-0" style={{ color: opt.color || '#cbd5e1' }} /> : <div className="w-2.5 h-2.5 rounded-full shrink-0 shadow-inner border border-black/5" style={{ backgroundColor: opt.color || '#cbd5e1' }} />
@@ -221,7 +221,7 @@ export const StyledDropdown = ({ value, onChange, options, type, masterData, cla
                       ) : opt.icon ? (
                         <RenderIcon iconName={opt.icon} className="w-4 h-4 flex-shrink-0" style={{ color: opt.color }} />
                       ) : null}
-                      <span className="text-[11px] font-medium truncate uppercase tracking-tight">{opt.label}</span>
+                      <span className="text-xs sm:text-[11px] font-medium truncate uppercase tracking-tight">{opt.label}</span>
                     </div>
                     {isActive && <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />}
                   </button>
@@ -267,14 +267,14 @@ export const TableStatusBadge = ({ value, onChange, statuses }: { value: string;
       <button 
         ref={buttonRef}
         onClick={(e) => { e.stopPropagation(); setIsOpen(!isOpen); }}
-        className="flex items-center gap-1.5 px-1.5 py-0.5 bg-white hover:bg-slate-50 rounded border border-slate-200 transition-colors group shadow-sm"
+        className="flex items-center gap-1.5 px-1.5 py-0.5 bg-white hover:bg-slate-50 rounded border border-slate-200 transition-colors group shadow-soft"
       >
         {current?.icon ? (
           <RenderIcon iconName={current.icon} className="w-3 h-3" style={{ color: current.color }} />
         ) : (
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: current?.color || '#cbd5e1' }} />
         )}
-        <span className="text-[10px] font-medium uppercase text-slate-700 tracking-tight">{value}</span>
+        <span className="text-xs sm:text-[10px] font-medium uppercase text-slate-700 tracking-tight">{value}</span>
         <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-slate-600 transition-colors" />
       </button>
       {isOpen && createPortal(
@@ -297,7 +297,7 @@ export const TableStatusBadge = ({ value, onChange, statuses }: { value: string;
                   onChange(s.label);
                   setIsOpen(false);
                 }}
-                className="w-full flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-md transition-colors text-[10px] font-medium uppercase text-slate-700 text-left"
+                className="w-full flex items-center gap-2 px-3 py-2 hover:bg-slate-50 rounded-md transition-colors text-xs sm:text-[10px] font-medium uppercase text-slate-700 text-left"
               >
                 {s.icon ? (
                   <RenderIcon iconName={s.icon} className="w-3 h-3" style={{ color: s.color }} />

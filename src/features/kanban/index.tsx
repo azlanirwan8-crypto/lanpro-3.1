@@ -151,7 +151,7 @@ export const BoardView: React.FC<KanbanBoardProps> = (props) => {
                 <div className="text-xs font-medium text-slate-700 dark:text-slate-200 tracking-wider flex items-center justify-between w-full gap-2">
                     <div className="flex items-center gap-2">
                         <span className="font-medium text-xs text-slate-800 dark:text-slate-100">Swimlanes</span>
-                        <label className="flex items-center gap-1 cursor-pointer bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-[10px] font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-colors select-none">
+                        <label className="flex items-center gap-1 cursor-pointer bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-xs sm:text-[10px] font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-colors select-none">
                             <input type="checkbox" checked={showEmptySwimlanes} onChange={(e) => setShowEmptySwimlanes(e.target.checked)} className="accent-primary rounded-md cursor-pointer" />
                             <span>Empty</span>
                         </label>
@@ -160,7 +160,7 @@ export const BoardView: React.FC<KanbanBoardProps> = (props) => {
                         <select 
                           value={groupBy}
                           onChange={(e) => setGroupBy(e.target.value as any)}
-                          className="bg-indigo-50/80 dark:bg-indigo-950/60 text-primary dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800 rounded-md text-[11px] font-semibold px-2 py-1 cursor-pointer outline-none focus:ring-1 focus:ring-primary/30 max-w-[110px]"
+                          className="bg-indigo-50/80 dark:bg-indigo-950/60 text-primary dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800 rounded-md text-xs sm:text-[11px] font-semibold px-2 py-1 cursor-pointer outline-none focus:ring-1 focus:ring-primary/30 max-w-[110px]"
                         >
                           <option value="epic">By Epic</option>
                           <option value="assignee">By Assignee</option>
@@ -184,7 +184,7 @@ export const BoardView: React.FC<KanbanBoardProps> = (props) => {
                                  )}
                                  <span className="text-xs font-medium uppercase tracking-wider text-slate-800 dark:text-slate-100 truncate">{status.label}</span>
                               </div>
-                              <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700 shadow-2xs shrink-0">
+                              <span className="px-2 py-0.5 rounded-md text-xs sm:text-[10px] font-medium bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700 shadow-2xs shrink-0">
                                   {taskCount}
                               </span>
                            </div>
@@ -208,8 +208,8 @@ export const BoardView: React.FC<KanbanBoardProps> = (props) => {
                                 <div className="w-5 h-5 rounded bg-purple-50 dark:bg-purple-950/60 flex items-center justify-center text-purple-600 dark:text-purple-400 shrink-0">
                                     <Layers className="w-3 h-3" />
                                 </div>
-                                <span className="text-[10px] font-mono font-medium text-purple-600 bg-purple-50 px-1.5 py-0.2 rounded border border-purple-100">{epic.key || 'EPIC'}</span>
-                                <span className="ml-auto bg-purple-50 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 px-1.5 py-0.2 rounded text-[10px] font-medium border border-purple-100/60">
+                                <span className="text-xs sm:text-[10px] font-mono font-medium text-purple-600 bg-purple-50 px-1.5 py-0.2 rounded border border-purple-100">{epic.key || 'EPIC'}</span>
+                                <span className="ml-auto bg-purple-50 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 px-1.5 py-0.2 rounded text-xs sm:text-[10px] font-medium border border-purple-100/60">
                                   {boardStatuses.reduce((acc, status) => acc + (groupedTasks[`${epic.id}:${status.label}`]?.length || 0), 0)}
                                 </span>
                             </div>
@@ -243,7 +243,7 @@ export const BoardView: React.FC<KanbanBoardProps> = (props) => {
                       <div className="sticky left-0 z-50 bg-white dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 px-3.5 py-3 relative">
                           <div className={cn("bg-slate-50/70 dark:bg-slate-800/50 rounded-lg border border-dashed border-slate-300 dark:border-slate-700 h-fit p-3", isCompact ? "p-2.5" : "p-3")}>
                               <h3 className="font-medium text-slate-700 dark:text-slate-300 text-xs leading-snug">Other Tasks</h3>
-                              <p className="mt-0.5 text-[10px] font-medium text-slate-400 dark:text-slate-500">Tasks not assigned to any Epic</p>
+                              <p className="mt-0.5 text-xs sm:text-[10px] font-medium text-slate-400 dark:text-slate-500">Tasks not assigned to any Epic</p>
                           </div>
                       </div>
                       
@@ -288,16 +288,16 @@ export const BoardView: React.FC<KanbanBoardProps> = (props) => {
                         )}>
                           <div className="flex items-center gap-2 mb-1.5">
                             {isUnassigned ? (
-                              <div className="w-5 h-5 rounded-full flex items-center justify-center font-medium text-[10px] uppercase bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 shrink-0">
+                              <div className="w-5 h-5 rounded-full flex items-center justify-center font-medium text-xs sm:text-[10px] uppercase bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 shrink-0">
                                 ?
                               </div>
                             ) : (
-                              <UserAvatar user={member} className="w-5 h-5 text-[10px]" />
+                              <UserAvatar user={member} className="w-5 h-5 text-xs sm:text-[10px]" />
                             )}
-                            <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">
+                            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">
                               {isUnassigned ? 'Unassigned' : 'Assignee'}
                             </span>
-                            <span className="ml-auto bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.2 rounded text-[10px] font-medium shrink-0">
+                            <span className="ml-auto bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.2 rounded text-xs sm:text-[10px] font-medium shrink-0">
                               {totalIssueCount}
                             </span>
                           </div>

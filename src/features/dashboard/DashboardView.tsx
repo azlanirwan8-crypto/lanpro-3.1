@@ -244,7 +244,7 @@ export function DashboardView(props: DashboardViewProps) {
     if (id === "sidebar-widgets-stack") {
       return cn(
         heightClass,
-        "flex flex-col rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 shadow-sm p-6 transition-all duration-300 relative overflow-hidden"
+        "flex flex-col rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 shadow-soft p-6 transition-all duration-300 relative overflow-hidden"
       );
     }
     if (id === "sprint-banner") {
@@ -261,7 +261,7 @@ export function DashboardView(props: DashboardViewProps) {
     }
     return cn(
       heightClass,
-      "flex flex-col rounded-lg transition-all duration-300 relative border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-sm p-6 overflow-hidden"
+      "flex flex-col rounded-lg transition-all duration-300 relative border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 shadow-soft p-6 overflow-hidden"
     );
   };
 
@@ -613,7 +613,7 @@ export function DashboardView(props: DashboardViewProps) {
             {props.setIsNewTaskModalOpen && (
               <button
                 onClick={() => props.setIsNewTaskModalOpen?.(true)}
-                className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white px-3.5 py-2.5 min-h-11 rounded-lg text-xs font-medium shadow-sm transition-all cursor-pointer shrink-0"
+                className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white px-3.5 py-2.5 min-h-11 rounded-lg text-xs font-medium shadow-soft transition-all cursor-pointer shrink-0"
               >
                 <Plus className="w-4 h-4" />
                 <span>Task Baru</span>
@@ -633,7 +633,7 @@ export function DashboardView(props: DashboardViewProps) {
           <div className="bg-white dark:bg-slate-900 p-5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-2xs flex flex-col justify-between relative overflow-hidden">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">Total Tasks</span>
+                <span className="text-xs sm:text-[11px] font-medium uppercase tracking-wider text-slate-400">Total Tasks</span>
                 <h3 className="text-2xl font-medium text-slate-800 dark:text-slate-100 mt-1">{totalTasks}</h3>
               </div>
               <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600 border border-emerald-100">
@@ -644,7 +644,7 @@ export function DashboardView(props: DashboardViewProps) {
               <span className="flex items-center gap-1 font-medium text-emerald-600">
                 <ArrowUpRight className="w-3.5 h-3.5" /> {completionPercentage}% Completed
               </span>
-              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
+              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-xs sm:text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
                 View all tasks
               </button>
             </div>
@@ -654,7 +654,7 @@ export function DashboardView(props: DashboardViewProps) {
           <div className="bg-white dark:bg-slate-900 p-5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-2xs flex flex-col justify-between relative overflow-hidden">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">Pending / Active Tasks</span>
+                <span className="text-xs sm:text-[11px] font-medium uppercase tracking-wider text-slate-400">Pending / Active Tasks</span>
                 <h3 className="text-2xl font-medium text-slate-800 dark:text-slate-100 mt-1">{nonEpicTasks.filter(t => t.status !== 'Done' && t.status !== 'Selesai').length}</h3>
               </div>
               <div className="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center text-blue-600 border border-blue-100">
@@ -665,7 +665,7 @@ export function DashboardView(props: DashboardViewProps) {
               <span className="font-medium text-blue-600">
                 {inProgressTasks.length} In Progress
               </span>
-              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
+              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-xs sm:text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
                 View active board
               </button>
             </div>
@@ -675,7 +675,7 @@ export function DashboardView(props: DashboardViewProps) {
           <div className="bg-white dark:bg-slate-900 p-5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-2xs flex flex-col justify-between relative overflow-hidden">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">Done / Selesai Tasks</span>
+                <span className="text-xs sm:text-[11px] font-medium uppercase tracking-wider text-slate-400">Done / Selesai Tasks</span>
                 <h3 className="text-2xl font-medium text-slate-800 dark:text-slate-100 mt-1">{completedTasks.length}</h3>
               </div>
               <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 border border-indigo-100">
@@ -686,7 +686,7 @@ export function DashboardView(props: DashboardViewProps) {
               <span className="flex items-center gap-1 font-medium text-emerald-600">
                 <ArrowUpRight className="w-3.5 h-3.5" /> +{completionPercentage}% Rate
               </span>
-              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
+              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-xs sm:text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
                 View done list
               </button>
             </div>
@@ -696,7 +696,7 @@ export function DashboardView(props: DashboardViewProps) {
           <div className="bg-white dark:bg-slate-900 p-5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-2xs flex flex-col justify-between relative overflow-hidden">
             <div className="flex justify-between items-start">
               <div>
-                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">Blocked / Stoppers</span>
+                <span className="text-xs sm:text-[11px] font-medium uppercase tracking-wider text-slate-400">Blocked / Stoppers</span>
                 <h3 className="text-2xl font-medium text-rose-600 dark:text-rose-400 mt-1">{blockedTasks.length + overdueTasks.length}</h3>
               </div>
               <div className="w-10 h-10 rounded-lg bg-rose-50 dark:bg-rose-950/50 flex items-center justify-center text-rose-600 border border-rose-100">
@@ -707,7 +707,7 @@ export function DashboardView(props: DashboardViewProps) {
               <span className="font-medium text-rose-600">
                 {blockedTasks.length} Blocked • {overdueTasks.length} Overdue
               </span>
-              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
+              <button onClick={() => props.setCurrentView('kanban')} className="text-content-subtle hover:text-indigo-600 text-xs sm:text-[11px] font-medium underline transition inline-flex items-center min-h-11 py-2">
                 Resolve issues
               </button>
             </div>
@@ -734,7 +734,7 @@ export function DashboardView(props: DashboardViewProps) {
                       key={filter}
                       onClick={() => setRevenueFilter(filter)}
                       className={cn(
-                        "px-3 py-2.5 min-h-11 min-w-11 inline-flex items-center justify-center rounded text-[11px] font-medium transition cursor-pointer",
+                        "px-3 py-2.5 min-h-11 min-w-11 inline-flex items-center justify-center rounded text-xs sm:text-[11px] font-medium transition cursor-pointer",
                         revenueFilter === filter
                           ? "bg-indigo-600 text-white shadow-2xs"
                           : "text-slate-600 dark:text-slate-300 hover:text-slate-900"
@@ -749,19 +749,19 @@ export function DashboardView(props: DashboardViewProps) {
               {/* Active Sprint Sub-metrics Bar */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200/60 dark:border-slate-800">
                 <div>
-                  <span className="text-[11px] font-medium text-slate-400 uppercase">Active Sprint</span>
+                  <span className="text-xs sm:text-[11px] font-medium text-slate-400 uppercase">Active Sprint</span>
                   <p className="text-sm font-medium text-slate-800 dark:text-slate-100 mt-0.5 truncate">{activeSprint?.name || 'No Sprint'}</p>
                 </div>
                 <div>
-                  <span className="text-[11px] font-medium text-slate-400 uppercase">Sprint Progress</span>
+                  <span className="text-xs sm:text-[11px] font-medium text-slate-400 uppercase">Sprint Progress</span>
                   <p className="text-sm font-medium text-emerald-600 mt-0.5">{sprintProgress}% ({sprintCompletedTasks}/{sprintTotalTasks} tasks)</p>
                 </div>
                 <div>
-                  <span className="text-[11px] font-medium text-slate-400 uppercase">Weekly Velocity</span>
+                  <span className="text-xs sm:text-[11px] font-medium text-slate-400 uppercase">Weekly Velocity</span>
                   <p className="text-sm font-medium text-indigo-600 mt-0.5">{weeklyVelocity ? weeklyVelocity : '0.0'} pts/sprint</p>
                 </div>
                 <div>
-                  <span className="text-[11px] font-medium text-slate-400 uppercase">Days Left</span>
+                  <span className="text-xs sm:text-[11px] font-medium text-slate-400 uppercase">Days Left</span>
                   <p className="text-sm font-medium text-slate-800 dark:text-slate-100 mt-0.5">{sprintDaysLeft} days</p>
                 </div>
               </div>
@@ -794,7 +794,7 @@ export function DashboardView(props: DashboardViewProps) {
                     <LayoutGrid className="w-4 h-4 text-purple-500" />
                     Task Breakdown by Type
                   </h3>
-                  <span className="text-[11px] font-medium text-slate-400">{totalTasks} Total</span>
+                  <span className="text-xs sm:text-[11px] font-medium text-slate-400">{totalTasks} Total</span>
                 </div>
 
                 <div className="space-y-3">
@@ -807,7 +807,7 @@ export function DashboardView(props: DashboardViewProps) {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-800 dark:text-slate-100">{t.value}</span>
-                          <span className="text-[11px] text-slate-400">({t.pct}%)</span>
+                          <span className="text-xs sm:text-[11px] text-slate-400">({t.pct}%)</span>
                         </div>
                       </div>
                       <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -825,7 +825,7 @@ export function DashboardView(props: DashboardViewProps) {
                     <PieChartIcon className="w-4 h-4 text-emerald-500" />
                     Task Breakdown by Status
                   </h3>
-                  <span className="text-[11px] font-medium text-slate-400">{totalTasks} Total</span>
+                  <span className="text-xs sm:text-[11px] font-medium text-slate-400">{totalTasks} Total</span>
                 </div>
 
                 <div className="space-y-3">
@@ -838,7 +838,7 @@ export function DashboardView(props: DashboardViewProps) {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-slate-800 dark:text-slate-100">{s.value}</span>
-                          <span className="text-[11px] text-slate-400">({s.pct}%)</span>
+                          <span className="text-xs sm:text-[11px] text-slate-400">({s.pct}%)</span>
                         </div>
                       </div>
                       <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -858,7 +858,7 @@ export function DashboardView(props: DashboardViewProps) {
                     <Users className="w-4 h-4 text-indigo-500" />
                     Task Workload Distribution per User
                   </h3>
-                  <p className="text-[11px] text-slate-400 mt-0.5 font-medium">Alokasi & penyelesaian task tiap anggota tim dengan indikator beban kerja</p>
+                  <p className="text-xs sm:text-[11px] text-slate-400 mt-0.5 font-medium">Alokasi & penyelesaian task tiap anggota tim dengan indikator beban kerja</p>
                 </div>
                 <button onClick={() => props.setCurrentView('team')} className="text-xs font-medium text-indigo-600 hover:underline cursor-pointer inline-flex items-center min-h-11 py-2">
                   Manage Team
@@ -868,7 +868,7 @@ export function DashboardView(props: DashboardViewProps) {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-slate-100 dark:border-slate-800 text-[11px] font-medium uppercase tracking-wider text-slate-400">
+                    <tr className="border-b border-slate-100 dark:border-slate-800 text-xs sm:text-[11px] font-medium uppercase tracking-wider text-slate-400">
                       <th className="py-2.5 px-2">Team Member</th>
                       <th className="py-2.5 px-2">Active Tasks</th>
                       <th className="py-2.5 px-2">Done Tasks</th>
@@ -886,25 +886,25 @@ export function DashboardView(props: DashboardViewProps) {
                         let capacityBadge = null;
                         if (user.Active >= 5) {
                           capacityBadge = (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs sm:text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
                               ⚠️ Overload ({user.Active})
                             </span>
                           );
                         } else if (user.Active >= 3) {
                           capacityBadge = (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-100 text-amber-800 border border-amber-200">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs sm:text-[10px] font-medium bg-amber-100 text-amber-800 border border-amber-200">
                               ⚡ Heavy ({user.Active})
                             </span>
                           );
                         } else if (user.Active >= 1) {
                           capacityBadge = (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs sm:text-[10px] font-medium bg-emerald-100 text-emerald-800 border border-emerald-200">
                               ✅ Balanced ({user.Active})
                             </span>
                           );
                         } else {
                           capacityBadge = (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs sm:text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
                               💤 Available
                             </span>
                           );
@@ -926,7 +926,7 @@ export function DashboardView(props: DashboardViewProps) {
                             <td className="py-3 px-2">{capacityBadge}</td>
                             <td className="py-3 px-2 text-right">
                               <div className="flex items-center justify-end gap-2">
-                                <span className="text-[11px] font-medium text-slate-500 w-9">{pct}%</span>
+                                <span className="text-xs sm:text-[11px] font-medium text-slate-500 w-9">{pct}%</span>
                                 <div className="w-24 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                   <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${pct}%` }} />
                                 </div>
@@ -953,7 +953,7 @@ export function DashboardView(props: DashboardViewProps) {
                     <Target className="w-4 h-4 text-purple-500" />
                     Epic & Roadmap Milestone Delivery Status
                   </h3>
-                  <p className="text-[11px] text-slate-400 mt-0.5 font-medium">Progress pencapaian Epic & milestone utama proyek</p>
+                  <p className="text-xs sm:text-[11px] text-slate-400 mt-0.5 font-medium">Progress pencapaian Epic & milestone utama proyek</p>
                 </div>
                 <button onClick={() => props.setCurrentView('roadmap')} className="text-xs font-medium text-indigo-600 hover:underline inline-flex items-center min-h-11 py-2">
                   View Roadmap
@@ -966,10 +966,10 @@ export function DashboardView(props: DashboardViewProps) {
                     <div key={idx} className="p-3 bg-slate-50/70 dark:bg-slate-800/50 rounded-lg border border-slate-200/60 dark:border-slate-800 space-y-2">
                       <div className="flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2 min-w-0">
-                          <span className="text-[10px] font-mono font-medium text-purple-600 bg-purple-50 px-1.5 py-0.2 rounded border border-purple-100">{epic.key || 'EPIC'}</span>
+                          <span className="text-xs sm:text-[10px] font-mono font-medium text-purple-600 bg-purple-50 px-1.5 py-0.2 rounded border border-purple-100">{epic.key || 'EPIC'}</span>
                           <span className="font-medium text-slate-800 dark:text-slate-100 truncate">{epic.title}</span>
                         </div>
-                        <span className="text-[11px] font-medium text-slate-500 shrink-0">
+                        <span className="text-xs sm:text-[11px] font-medium text-slate-500 shrink-0">
                           {epic.childCompleted}/{epic.childTotal} Child Tasks ({epic.progress}%)
                         </span>
                       </div>
@@ -1000,24 +1000,24 @@ export function DashboardView(props: DashboardViewProps) {
                     <Clock className="w-4 h-4 text-blue-500" />
                     Time Tracking & Effort Estimation
                   </h3>
-                  <p className="text-[11px] text-slate-400 mt-0.5 font-medium">Perbandingan estimasi jam pengerjaan vs jam terpakai</p>
+                  <p className="text-xs sm:text-[11px] text-slate-400 mt-0.5 font-medium">Perbandingan estimasi jam pengerjaan vs jam terpakai</p>
                 </div>
-                <span className="text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+                <span className="text-xs sm:text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
                   {timeTrackingStats.accuracy}% Accuracy Rate
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200/60 dark:border-slate-800">
-                  <span className="text-[10px] font-medium text-slate-400 uppercase">Estimated Hours</span>
+                  <span className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase">Estimated Hours</span>
                   <p className="text-lg font-medium text-slate-800 dark:text-slate-100 mt-0.5">{timeTrackingStats.totalEst} Hours</p>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200/60 dark:border-slate-800">
-                  <span className="text-[10px] font-medium text-slate-400 uppercase">Logged Hours</span>
+                  <span className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase">Logged Hours</span>
                   <p className="text-lg font-medium text-indigo-600 mt-0.5">{timeTrackingStats.totalLog} Hours</p>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200/60 dark:border-slate-800">
-                  <span className="text-[10px] font-medium text-slate-400 uppercase">Remaining Variance</span>
+                  <span className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase">Remaining Variance</span>
                   <p className="text-lg font-medium text-emerald-600 mt-0.5">{timeTrackingStats.diff >= 0 ? `${timeTrackingStats.diff} Hours Left` : `${Math.abs(timeTrackingStats.diff)} Hours Over`}</p>
                 </div>
               </div>
@@ -1031,7 +1031,7 @@ export function DashboardView(props: DashboardViewProps) {
                     <Activity className="w-4 h-4 text-emerald-500" />
                     7-Day Activity & Task Completion Trend
                   </h3>
-                  <p className="text-[11px] text-slate-400 mt-0.5 font-medium">Tren pembuatan vs penyelesaian task 7 hari terakhir</p>
+                  <p className="text-xs sm:text-[11px] text-slate-400 mt-0.5 font-medium">Tren pembuatan vs penyelesaian task 7 hari terakhir</p>
                 </div>
               </div>
 
@@ -1102,7 +1102,7 @@ export function DashboardView(props: DashboardViewProps) {
                   <ShieldAlert className="w-4 h-4 text-rose-500" />
                   Blocked & Overdue Issues
                 </h3>
-                <span className="text-[10px] font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">
+                <span className="text-xs sm:text-[10px] font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">
                   {blockedTasks.length + overdueTasks.length} Need Action
                 </span>
               </div>
@@ -1119,8 +1119,8 @@ export function DashboardView(props: DashboardViewProps) {
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono font-medium text-slate-400 uppercase">{issue.key}</span>
-                        {issue.isBlocked && <span className="text-[9px] font-medium text-rose-600 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-100">BLOCKED</span>}
+                        <span className="text-xs sm:text-[10px] font-mono font-medium text-slate-400 uppercase">{issue.key}</span>
+                        {issue.isBlocked && <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-rose-600 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-100">BLOCKED</span>}
                       </div>
                       <p className="text-xs font-medium text-slate-800 dark:text-slate-100 truncate mt-0.5 group-hover:text-indigo-600 transition">{issue.title}</p>
                     </div>

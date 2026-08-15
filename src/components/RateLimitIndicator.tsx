@@ -67,12 +67,12 @@ export function RateLimitIndicator() {
             <h4 className="text-xs font-medium uppercase tracking-wider text-amber-50">
               Antrean Server (Rate Limit)
             </h4>
-            <p className="text-[11px] text-amber-100/90 leading-tight mt-0.5 font-medium">
+            <p className="text-xs sm:text-[11px] text-amber-100/90 leading-tight mt-0.5 font-medium">
               Koneksi tertunda, mencoba kembali dalam <span className="font-medium underline">{(maxLimit.backoff / 1000).toFixed(1)}s</span>...
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-medium uppercase tracking-wider bg-white/15 px-2 py-1 rounded-lg border border-white/5 whitespace-nowrap">
+            <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase tracking-wider bg-white/15 px-2 py-1 rounded-lg border border-white/5 whitespace-nowrap">
               Sisa: {maxLimit.retriesLeft}x
             </span>
             <Loader2 className="w-4 h-4 animate-spin text-white/80 shrink-0" />

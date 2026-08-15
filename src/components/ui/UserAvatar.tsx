@@ -82,14 +82,14 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   const colors = getUserAvatarColors(String(targetId));
 
   const sizeClasses: Record<string, string> = {
-    xs: 'w-5 h-5 text-[9px]',
-    sm: 'w-6 h-6 text-[10px]',
+    xs: 'w-5 h-5 text-xs sm:text-[11px] sm:text-[9px]',
+    sm: 'w-6 h-6 text-xs sm:text-[10px]',
     md: 'w-8 h-8 text-xs',
     lg: 'w-10 h-10 text-sm',
     xl: 'w-16 h-16 text-xl'
   };
 
-  const defaultSizeClass = size && sizeClasses[size] ? sizeClasses[size] : 'w-6 h-6 text-[10px]';
+  const defaultSizeClass = size && sizeClasses[size] ? sizeClasses[size] : 'w-6 h-6 text-xs sm:text-[10px]';
 
   return (
     <div

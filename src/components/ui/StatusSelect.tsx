@@ -38,7 +38,7 @@ export const StatusSelect = ({ value, onChange, statuses, disabled, className }:
         disabled={disabled}
         className={cn(
           "flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg transition-all w-full justify-between text-left",
-          disabled ? "bg-gray-50 border-gray-100 cursor-not-allowed opacity-75" : "hover:border-blue-400 cursor-pointer shadow-sm hover:shadow-md"
+          disabled ? "bg-gray-50 border-gray-100 cursor-not-allowed opacity-75" : "hover:border-blue-400 cursor-pointer shadow-soft hover:shadow-md"
         )}
       >
         <div className="flex items-center gap-2 truncate">

@@ -705,9 +705,9 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h4 className="text-sm font-medium tracking-tight text-white">Asisten Notulen Rapat Otomatis</h4>
-              <span className="px-2 py-0.5 bg-indigo-500/80 text-white text-[9px] font-medium rounded-md uppercase tracking-wider">PRO</span>
+              <span className="px-2 py-0.5 bg-indigo-500/80 text-white text-xs sm:text-[11px] sm:text-[9px] font-medium rounded-md uppercase tracking-wider">PRO</span>
             </div>
-            <p className="text-[11px] text-slate-200/80 mt-0.5">Analisis transkrip suara hasil Speech-to-Text rapat menjadi ringkasan & action items terstruktur.</p>
+            <p className="text-xs sm:text-[11px] text-slate-200/80 mt-0.5">Analisis transkrip suara hasil Speech-to-Text rapat menjadi ringkasan & action items terstruktur.</p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -781,7 +781,7 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
           >
             <ListChecks className="w-3.5 h-3.5 text-primary" /> Tindak Lanjut
             {activeMeetingData?.tab_tindak_lanjut?.length > 0 && (
-              <span className="ml-1 px-1.5 py-0.5 bg-primary text-white text-[9px] rounded-full font-medium min-w-[16px] text-center inline-block">
+              <span className="ml-1 px-1.5 py-0.5 bg-primary text-white text-xs sm:text-[11px] sm:text-[9px] rounded-full font-medium min-w-[16px] text-center inline-block">
                 {activeMeetingData.tab_tindak_lanjut.length}
               </span>
             )}
@@ -848,7 +848,7 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="md:col-span-2 p-5 bg-indigo-50/50 border border-indigo-100 rounded-xl flex flex-col justify-between">
                     <div>
-                      <span className="text-[10px] text-indigo-800 font-medium uppercase tracking-widest bg-indigo-100/70 px-2.5 py-1 rounded-md">Agenda Rapat Utama</span>
+                      <span className="text-xs sm:text-[10px] text-indigo-800 font-medium uppercase tracking-widest bg-indigo-100/70 px-2.5 py-1 rounded-md">Agenda Rapat Utama</span>
                       <h3 className="text-sm font-medium text-content-strong mt-2 flex items-center gap-2">
                         <Sparkles className="w-4.5 h-4.5 text-indigo-600 animate-pulse" />
                         {activeMeetingData.tab_ringkasan.topik_utama}
@@ -858,12 +858,12 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-surface p-4 rounded-xl border border-border-subtle/50 shadow-xs flex flex-col justify-between">
-                      <span className="text-[9px] text-content-subtle  uppercase tracking-wider block">Segmen Diskusi</span>
+                      <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle  uppercase tracking-wider block">Segmen Diskusi</span>
                       <p className="text-base font-medium text-indigo-950 mt-1">{(activeMeetingData.tab_kronologi_rapat || []).length} Topik</p>
                     </div>
 
                     <div className="bg-surface p-4 rounded-xl border border-border-subtle/50 shadow-xs flex flex-col justify-between">
-                      <span className="text-[9px] text-content-subtle  uppercase tracking-wider block">Action Items</span>
+                      <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle  uppercase tracking-wider block">Action Items</span>
                       <p className="text-base font-medium text-emerald-700 mt-1">{(activeMeetingData.tab_tindak_lanjut || []).length} Butir</p>
                     </div>
                   </div>
@@ -907,14 +907,14 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
             {activeTab === "transcript" && (
               <div className="space-y-8">
                 {activeMeetingData && (
-                  <div className="p-6 bg-surface border border-border-subtle/80 rounded-xl shadow-sm space-y-4">
+                  <div className="p-6 bg-surface border border-border-subtle/80 rounded-xl shadow-soft space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border-faint">
                       <div className="flex items-center gap-2">
                         <h4 className="text-xs font-medium text-content-strong uppercase tracking-widest flex items-center gap-2">
                           <FileText className="w-4 h-4 text-indigo-600" />
                           Hasil Speech-to-Text Mentah (Raw Transcript)
                         </h4>
-                        <span className="px-2.5 py-1 bg-indigo-50 border border-indigo-100 text-indigo-700 text-[10px] font-medium rounded-lg">
+                        <span className="px-2.5 py-1 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs sm:text-[10px] font-medium rounded-lg">
                           {transcript ? `${transcript.split(/\s+/).length} Kata` : "0 Kata"}
                         </span>
                       </div>
@@ -1018,12 +1018,12 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                           {/* Quick Search Chips and Match Count */}
                           <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                             <div className="flex flex-wrap items-center gap-1.5">
-                              <span className="text-[10px] font-medium text-content-subtle uppercase tracking-widest mr-1">Cari Cepat:</span>
+                              <span className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mr-1">Cari Cepat:</span>
                               {["Speaker", "API", "Rencana", "Database", "Error", "Sepakat", "Arsitektur"].map((chip) => (
                                 <button
                                   key={chip}
                                   onClick={() => setSearchTerm(chip)}
-                                  className={`px-2.5 py-1 text-[10px]  rounded-lg transition-all cursor-pointer border ${
+                                  className={`px-2.5 py-1 text-xs sm:text-[10px]  rounded-lg transition-all cursor-pointer border ${
                                     searchTerm === chip
                                       ? "bg-indigo-50 border-indigo-200 text-indigo-700 font-medium"
                                       : "bg-surface border-slate-150 text-content-muted hover:text-content-body hover:bg-surface-sunken"
@@ -1035,7 +1035,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                             </div>
 
                             {searchTerm.trim() && (
-                              <div className="text-[10px] font-medium uppercase tracking-wider px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg animate-pulse">
+                              <div className="text-xs sm:text-[10px] font-medium uppercase tracking-wider px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg animate-pulse">
                                 Ditemukan {getMatchCount()} kecocokan
                               </div>
                             )}
@@ -1065,17 +1065,17 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Section 1: Record Langsung */}
-                  <div className="space-y-4 p-6 bg-surface rounded-xl border border-border-faint shadow-sm">
+                  <div className="space-y-4 p-6 bg-surface rounded-xl border border-border-faint shadow-soft">
                     <div className="flex items-center gap-2 text-indigo-950 font-medium text-xs uppercase tracking-wider">
                       <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                       1. Record Langsung (Mikrofon)
                     </div>
-                    <p className="text-[11px] text-content-subtle">Merekam suara rapat melalui mikrofon perangkat Anda (catatan: hanya suara yang ditangkap mikrofon).</p>
+                    <p className="text-xs sm:text-[11px] text-content-subtle">Merekam suara rapat melalui mikrofon perangkat Anda (catatan: hanya suara yang ditangkap mikrofon).</p>
                     
                     <div className="flex flex-col items-center justify-center gap-3 w-full py-4">
                       <button
                         onClick={isRecording ? stopRecording : startRecording}
-                        className={`px-8 py-4 ${isRecording ? 'bg-slate-800' : 'bg-red-600'} hover:opacity-90 text-white rounded-xl text-sm font-medium shadow-lg shadow-red-150 flex items-center gap-3 cursor-pointer transition-transform hover:scale-[1.02]`}
+                        className={`px-8 py-4 ${isRecording ? 'bg-slate-800' : 'bg-red-600'} hover:opacity-90 text-white rounded-xl text-sm font-medium shadow-soft-lg shadow-red-150 flex items-center gap-3 cursor-pointer transition-transform hover:scale-[1.02]`}
                       >
                         <Brain className="w-5 h-5" /> {isRecording ? "Hentikan Rekaman" : "Mulai Merekam"}
                       </button>
@@ -1084,7 +1084,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                   </div>
 
                   {/* Section 2: Upload / Paste */}
-                  <div className="space-y-4 p-6 bg-surface rounded-xl border border-border-faint shadow-sm flex flex-col justify-between">
+                  <div className="space-y-4 p-6 bg-surface rounded-xl border border-border-faint shadow-soft flex flex-col justify-between">
                     <div className="flex items-center gap-2 text-indigo-950 font-medium text-xs uppercase tracking-wider">
                       <FileText className="w-4 h-4 text-indigo-600" />
                       2. Upload Rekaman Atau Transkrip
@@ -1092,7 +1092,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
 
                     {/* Media Platform Selector */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-medium text-content-subtle uppercase tracking-widest">
+                      <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest">
                         Platform Rekaman Rapat
                       </label>
                       <div className="grid grid-cols-3 gap-1.5 p-1 bg-surface-muted rounded-xl">
@@ -1102,9 +1102,9 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                             type="button"
                             disabled={uploadState !== "IDLE"}
                             onClick={() => setSelectedPlatform(p)}
-                            className={`py-1.5 text-[11px]  rounded-lg transition-all cursor-pointer ${
+                            className={`py-1.5 text-xs sm:text-[11px]  rounded-lg transition-all cursor-pointer ${
                               selectedPlatform === p
-                                ? "bg-surface text-indigo-700 shadow-sm border border-border-subtle/50"
+                                ? "bg-surface text-indigo-700 shadow-soft border border-border-subtle/50"
                                 : "text-content-muted hover:text-content-strong disabled:opacity-50"
                             }`}
                           >
@@ -1198,7 +1198,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                           </div>
 
                           {/* Detail of bytes / stage */}
-                          <div className="flex items-center justify-between text-[10px] text-content-muted ">
+                          <div className="flex items-center justify-between text-xs sm:text-[10px] text-content-muted ">
                             <span>
                               {subtext}
                             </span>
@@ -1230,14 +1230,14 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                         <p className="text-xs  text-center">
                           Unggah Rekaman ({selectedPlatform})
                         </p>
-                        <p className="text-[10px] text-content-subtle text-center">Video / Audio (MP4, AVI, MKV, MOV, MP3, WAV, etc.)</p>
+                        <p className="text-xs sm:text-[10px] text-content-subtle text-center">Video / Audio (MP4, AVI, MKV, MOV, MP3, WAV, etc.)</p>
                       </div>
                     )}
                   </div>
                 </div>
 
                 {/* Section 3: Paste Transcript */}
-                <div className="space-y-4 p-6 bg-surface rounded-xl border border-border-faint shadow-sm">
+                <div className="space-y-4 p-6 bg-surface rounded-xl border border-border-faint shadow-soft">
                   <div className="text-center text-xs  text-content-subtle uppercase tracking-wider py-2">ATAU TEMPEL LINK / TRANSKRIP</div>
                   
                   <input
@@ -1257,7 +1257,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                   <div className="flex justify-end">
                     <button
                       onClick={handleAnalyze}
-                      className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-medium shadow-lg shadow-indigo-150 flex items-center gap-2 cursor-pointer hover:scale-[1.01] transition-transform"
+                      className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-medium shadow-soft-lg shadow-indigo-150 flex items-center gap-2 cursor-pointer hover:scale-[1.01] transition-transform"
                     >
                       <Sparkles className="w-4 h-4 text-indigo-200" /> MULAI ANALISIS AI
                     </button>
@@ -1280,14 +1280,14 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                   <div className="relative border-l-2 border-indigo-100 pl-6 space-y-8 ml-3">
                     {activeMeetingData.tab_kronologi_rapat.map((item: any, index: number) => (
                       <div key={index} className="relative group">
-                        <span className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-indigo-500 border-4 border-white group-hover:scale-125 transition-transform shadow-sm" />
+                        <span className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-indigo-500 border-4 border-white group-hover:scale-125 transition-transform shadow-soft" />
                         
-                        <div className="bg-surface p-5 rounded-xl border border-border-subtle/50 shadow-sm hover:shadow-md transition-all space-y-4">
+                        <div className="bg-surface p-5 rounded-xl border border-border-subtle/50 shadow-soft hover:shadow-md transition-all space-y-4">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <div>
-                              <span className="text-[10px] text-indigo-600 font-medium uppercase tracking-widest block mb-1">Topik {index + 1}</span>
+                              <span className="text-xs sm:text-[10px] text-indigo-600 font-medium uppercase tracking-widest block mb-1">Topik {index + 1}</span>
                               <div className="flex items-center gap-1.5">
-                                <span className="px-2 py-0.5 bg-indigo-50 border border-indigo-100 text-indigo-700 font-mono text-[10px] font-medium rounded">
+                                <span className="px-2 py-0.5 bg-indigo-50 border border-indigo-100 text-indigo-700 font-mono text-xs sm:text-[10px] font-medium rounded">
                                   {item.timestamp}
                                 </span>
                                 <h4 className="text-sm font-medium text-content-strong tracking-tight leading-snug">Visual: {item.aktivitas_visual}</h4>
@@ -1296,7 +1296,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                           </div>
 
                           <div className="space-y-2">
-                            <h5 className="text-[10px] font-medium text-content-subtle uppercase tracking-widest">Isi Percakapan Inti & Hasil Diskusi</h5>
+                            <h5 className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest">Isi Percakapan Inti & Hasil Diskusi</h5>
                             <p className="text-xs text-content-secondary leading-relaxed  whitespace-pre-wrap">{item.isi_percakapan_inti}</p>
                           </div>
                         </div>
@@ -1320,7 +1320,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                 ) : (
                   <div className="grid grid-cols-1 gap-3">
                     {activeMeetingData.tab_kesimpulan.map((item: string, index: number) => (
-                      <div key={index} className="bg-surface p-4.5 rounded-xl border border-emerald-100/60 flex items-start gap-3 shadow-sm hover:border-emerald-200 transition-colors">
+                      <div key={index} className="bg-surface p-4.5 rounded-xl border border-emerald-100/60 flex items-start gap-3 shadow-soft hover:border-emerald-200 transition-colors">
                         <span className="w-5 h-5 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 text-xs font-medium mt-0.5 border border-emerald-100">
                           {index + 1}
                         </span>
@@ -1345,9 +1345,9 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                 ) : (
                   <div className="grid grid-cols-1 gap-3">
                     {activeMeetingData.tab_saran_dan_ide.map((item: any, index: number) => (
-                      <div key={index} className="bg-surface p-4.5 rounded-xl border border-amber-100/60 flex flex-col gap-2 shadow-sm hover:border-amber-200 transition-colors">
+                      <div key={index} className="bg-surface p-4.5 rounded-xl border border-amber-100/60 flex flex-col gap-2 shadow-soft hover:border-amber-200 transition-colors">
                         <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 bg-amber-50 text-amber-750 text-[9px] font-medium uppercase rounded border border-amber-100">
+                          <span className="px-2 py-0.5 bg-amber-50 text-amber-750 text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase rounded border border-amber-100">
                             Diusulkan Oleh: {item.diusulkan_oleh}
                           </span>
                         </div>
@@ -1372,7 +1372,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                     <button
                       onClick={handleImportAllActionItems}
                       disabled={importingIds.length > 0}
-                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-medium flex items-center gap-1.5 shadow-sm transition-colors cursor-pointer disabled:opacity-55"
+                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-medium flex items-center gap-1.5 shadow-soft transition-colors cursor-pointer disabled:opacity-55"
                     >
                       <Database className="w-3.5 h-3.5 text-indigo-200" /> Impor Semua ke Poin Diskusi
                     </button>
@@ -1392,10 +1392,10 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                         targetDate: "TBD"
                       };
                       return (
-                        <div key={index} className="bg-surface rounded-xl border border-border-subtle/80 p-5 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-5 hover:border-indigo-200 transition-all">
+                        <div key={index} className="bg-surface rounded-xl border border-border-subtle/80 p-5 shadow-soft flex flex-col md:flex-row justify-between items-start md:items-center gap-5 hover:border-indigo-200 transition-all">
                           <div className="flex-1 space-y-3 min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="px-2 py-0.5 bg-rose-50 text-rose-600 text-[9px] font-medium uppercase rounded border border-rose-100">
+                              <span className="px-2 py-0.5 bg-rose-50 text-rose-600 text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase rounded border border-rose-100">
                                 Concern Rapat {index + 1}
                               </span>
                             </div>
@@ -1406,7 +1406,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                             </div>
 
                             <div className="pl-3 border-l-2 border-emerald-400 bg-emerald-50/10 py-1.5 pr-2 rounded">
-                              <h4 className="text-[10px] font-medium text-emerald-600 uppercase tracking-wider mb-0.5">Solusi & Arahan yang Disepakati</h4>
+                              <h4 className="text-xs sm:text-[10px] font-medium text-emerald-600 uppercase tracking-wider mb-0.5">Solusi & Arahan yang Disepakati</h4>
                               <p className="text-xs  text-content-secondary leading-normal">{item.solusi_disepakati}</p>
                             </div>
                           </div>
@@ -1416,7 +1416,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                               onClick={() => handleConvertToTask(item, index)}
                               disabled={convertingTaskIds.includes(index)}
                               title="Buat sebagai Task Issue di Backlog"
-                              className="px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 disabled:opacity-50 text-xs font-medium rounded-xl transition-all flex items-center gap-1 cursor-pointer shadow-sm"
+                              className="px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 disabled:opacity-50 text-xs font-medium rounded-xl transition-all flex items-center gap-1 cursor-pointer shadow-soft"
                             >
                               {convertingTaskIds.includes(index) ? (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1464,15 +1464,15 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                   <div className="relative border-l-2 border-pink-100 pl-6 space-y-8 ml-3">
                     {activeMeetingData.tab_next_plan.map((item: any, index: number) => (
                       <div key={index} className="relative group">
-                        <span className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-pink-500 border-4 border-white group-hover:scale-125 transition-transform shadow-sm" />
+                        <span className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-pink-500 border-4 border-white group-hover:scale-125 transition-transform shadow-soft" />
                         
-                        <div className="bg-surface p-5 rounded-xl border border-border-subtle/50 shadow-sm hover:shadow-md transition-all">
+                        <div className="bg-surface p-5 rounded-xl border border-border-subtle/50 shadow-soft hover:shadow-md transition-all">
                           <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                            <span className="px-2 py-0.5 bg-pink-50 border border-pink-100 text-pink-700 text-[9px] font-medium uppercase rounded">
+                            <span className="px-2 py-0.5 bg-pink-50 border border-pink-100 text-pink-700 text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase rounded">
                               Rencana Aksi {index + 1}
                             </span>
                             {item.due_date && (
-                              <span className="px-2 py-0.5 bg-indigo-50 border border-indigo-100 text-indigo-700 text-[10px] font-medium rounded-full">
+                              <span className="px-2 py-0.5 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs sm:text-[10px] font-medium rounded-full">
                                 Target: {item.due_date}
                               </span>
                             )}
@@ -1480,7 +1480,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                           <div className="space-y-2">
                             <p className="text-xs text-content-strong leading-relaxed  whitespace-pre-wrap">{item.action_item}</p>
                             {item.pic && (
-                              <div className="text-[11px] text-content-muted font-medium flex items-center gap-1">
+                              <div className="text-xs sm:text-[11px] text-content-muted font-medium flex items-center gap-1">
                                 <UserCheck className="w-3.5 h-3.5 text-pink-500" /> Penanggung Jawab (PIC): <span className="text-pink-600 font-medium">{item.pic}</span>
                               </div>
                             )}
@@ -1504,8 +1504,8 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* As-Is Card */}
-                    <div className="bg-surface-sunken border border-border-subtle p-5 rounded-xl shadow-sm space-y-3">
-                      <div className="flex items-center gap-2 text-content-body font-medium text-[10px] uppercase tracking-widest">
+                    <div className="bg-surface-sunken border border-border-subtle p-5 rounded-xl shadow-soft space-y-3">
+                      <div className="flex items-center gap-2 text-content-body font-medium text-xs sm:text-[10px] uppercase tracking-widest">
                         <span className="w-2 h-2 rounded-full bg-slate-400" />
                         Kondisi Saat Ini (As-Is)
                       </div>
@@ -1515,8 +1515,8 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                     </div>
 
                     {/* To-Be Card */}
-                    <div className="bg-indigo-50/50 border border-indigo-100 p-5 rounded-xl shadow-sm space-y-3">
-                      <div className="flex items-center gap-2 text-indigo-700 font-medium text-[10px] uppercase tracking-widest">
+                    <div className="bg-indigo-50/50 border border-indigo-100 p-5 rounded-xl shadow-soft space-y-3">
+                      <div className="flex items-center gap-2 text-indigo-700 font-medium text-xs sm:text-[10px] uppercase tracking-widest">
                         <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
                         Target Masa Depan (To-Be)
                       </div>
@@ -1527,8 +1527,8 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                   </div>
 
                   {/* Transition Steps Card */}
-                  <div className="bg-surface border border-border-subtle p-5 rounded-xl shadow-sm space-y-4">
-                    <div className="flex items-center gap-2 text-content-body font-medium text-[10px] uppercase tracking-widest">
+                  <div className="bg-surface border border-border-subtle p-5 rounded-xl shadow-soft space-y-4">
+                    <div className="flex items-center gap-2 text-content-body font-medium text-xs sm:text-[10px] uppercase tracking-widest">
                       Langkah-Langkah Transisi Migrasi (Transition Roadmap)
                     </div>
 
@@ -1561,8 +1561,8 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Topic and platform detection */}
-                  <div className="bg-surface p-5 rounded-xl border border-border-subtle/50 shadow-sm space-y-3">
-                    <h5 className="text-[10px] font-medium text-indigo-600 uppercase tracking-widest">Detil Rapat</h5>
+                  <div className="bg-surface p-5 rounded-xl border border-border-subtle/50 shadow-soft space-y-3">
+                    <h5 className="text-xs sm:text-[10px] font-medium text-indigo-600 uppercase tracking-widest">Detil Rapat</h5>
                     <div className="space-y-2">
                       <div className="text-xs  text-content-secondary">
                         Host Rapat: <span className="text-content-strong font-medium">{activeMeetingData.tab_metadata.host_rapat || "TBD"}</span>
@@ -1582,15 +1582,15 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                   </div>
 
                   {/* Active Speakers / Participants */}
-                  <div className="bg-surface p-5 rounded-xl border border-border-subtle/50 shadow-sm space-y-3">
-                    <h5 className="text-[10px] font-medium text-indigo-600 uppercase tracking-widest">Seluruh Peserta Rapat (Terdeteksi)</h5>
+                  <div className="bg-surface p-5 rounded-xl border border-border-subtle/50 shadow-soft space-y-3">
+                    <h5 className="text-xs sm:text-[10px] font-medium text-indigo-600 uppercase tracking-widest">Seluruh Peserta Rapat (Terdeteksi)</h5>
                     
                     {!activeMeetingData.tab_metadata.peserta_rapat || activeMeetingData.tab_metadata.peserta_rapat.length === 0 ? (
                       <p className="text-xs text-content-subtle ">Tidak ada peserta yang terdeteksi.</p>
                     ) : (
                       <div className="flex flex-wrap gap-2 pt-1">
                         {activeMeetingData.tab_metadata.peserta_rapat.map((speaker: string, index: number) => (
-                          <span key={index} className="px-3 py-1.5 bg-surface-muted border border-border-subtle text-content-body text-xs font-medium rounded-lg flex items-center gap-1.5 shadow-sm/50">
+                          <span key={index} className="px-3 py-1.5 bg-surface-muted border border-border-subtle text-content-body text-xs font-medium rounded-lg flex items-center gap-1.5 shadow-soft/50">
                             <Users className="w-3.5 h-3.5 text-content-subtle" /> {speaker}
                           </span>
                         ))}
@@ -1605,7 +1605,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
       </div>
 
       {/* Info footer */}
-      <div className="bg-surface-sunken border-t border-slate-150 p-4 px-6 flex items-center gap-2 text-[11px] text-content-subtle ">
+      <div className="bg-surface-sunken border-t border-slate-150 p-4 px-6 flex items-center gap-2 text-xs sm:text-[11px] text-content-subtle ">
         <Info className="w-4 h-4 text-content-subtle shrink-0" />
         <span>Data di atas dianalisis secara aman menggunakan <strong>Gemini AI</strong>. Anda dapat mengimpor Butir Tindak Lanjut di atas untuk menjadikannya Poin Diskusi resmi team.</span>
       </div>
@@ -1622,7 +1622,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                 </div>
                 <div>
                   <h4 className="text-sm font-medium tracking-tight text-white">Continuous Learning Loop</h4>
-                  <p className="text-[10px] text-slate-300 ">Latih AI agar belajar dari kesalahan & kritik Anda</p>
+                  <p className="text-xs sm:text-[10px] text-slate-300 ">Latih AI agar belajar dari kesalahan & kritik Anda</p>
                 </div>
               </div>
               <button 
@@ -1639,7 +1639,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
                 <Info className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
                 <div className="space-y-1">
                   <h5 className="text-xs font-medium text-indigo-950">Bagaimana Cara Kerjanya?</h5>
-                  <p className="text-[11px] text-content-secondary leading-relaxed">
+                  <p className="text-xs sm:text-[11px] text-content-secondary leading-relaxed">
                     Masukan kritik, koreksi, atau instruksi detail spesifik Anda pada kolom di bawah. 
                     Sebelum melakukan analisis rapat berikutnya, AI kami akan secara dinamis menyuntikkan evaluasi ini ke dalam instruksi utamanya untuk memastikan kesalahan yang sama tidak terulang dan kualitas notulensi terus disesuaikan dengan ekspektasi Anda.
                   </p>
@@ -1671,7 +1671,7 @@ ${(activeMeetingData.tab_tindak_lanjut || []).map((item: any) => `- **Concern**:
               </button>
               <button
                 onClick={handleSubmitFeedback}
-                className="px-4 py-2.5 text-xs font-medium bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md hover:shadow-lg hover:shadow-indigo-100 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                className="px-4 py-2.5 text-xs font-medium bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md hover:shadow-soft-lg hover:shadow-indigo-100 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                 disabled={submittingFeedback || !feedbackText.trim()}
               >
                 {submittingFeedback ? (
