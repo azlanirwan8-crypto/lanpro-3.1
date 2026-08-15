@@ -67,6 +67,22 @@ import { VelzonSuccessIcon } from "./components/AuthToastContainer";
 import { SingleLoginCollisionModal } from "./components/SingleLoginCollisionModal";
 import { HeaderNetworkStatus } from "./components/HeaderNetworkStatus";
 import { apiRequest, ApiError, setAuthToken, clearAuthToken, getAuthToken, isNetworkOrAuthError } from "./lib/api";
+import { verifyAuth, fetchUsers, sendHeartbeat, createNotification, markNotificationRead } from "./services/userService";
+// Akhiran Api dipakai karena AppContainer sudah punya binding lokal bernama
+// sama (fetchTasks, fetchSprints, deleteProject) yang membungkus panggilan ini
+// beserta penanganan state-nya. Tanpa pembeda, import akan terbayangi binding
+// lokal dan pemanggilan mengenai fungsi yang salah.
+import { fetchSprints as fetchSprintsApi, createSprint, updateSprint, deleteSprint } from "./services/sprintService";
+import {
+  createProject, updateProject, deleteProject as deleteProjectApi, updateMemberRoles, addMember,
+  removeMember, inviteMember, fetchActivity, logActivity as logActivityApi,
+} from "./services/projectService";
+import {
+  fetchTasks as fetchTasksApi, createTask, updateTask, updateTaskAsUser, deleteTask as deleteTaskApi,
+  bulkDeleteTasks as bulkDeleteTasksApi,
+  fetchTaskComments, createTaskComment, createTaskLink, deleteTaskLink,
+} from "./services/taskService";
+import { fetchMasterDataAll, updateMasterDataOrder } from "./services/masterDataService";
 import { SessionExpiryWarning } from "./components/SessionExpiryWarning";
 import { GlobalSkeleton } from "./components/GlobalSkeleton";
 import { RateLimitIndicator } from "./components/RateLimitIndicator";
@@ -847,7 +863,7 @@ function AppContainer() {
         return;
       }
       try {
-        const data = await apiRequest("/api/auth/verify");
+        const data = await verifyAuth();
         if (data && data.status === "success") {
 
           const verifiedUser = data.user || data.data || localUser;
@@ -1255,7 +1271,7 @@ function AppContainer() {
   const fetchMasterData = async () => {
     if (!getAuthToken()) return;
     try {
-      const data = await apiRequest("/api/master-data");
+      const data = await fetchMasterDataAll();
       if (data.status === "success") {
         const result = data.data as MasterData[];
         const uniqueData = Array.from(
@@ -1308,7 +1324,7 @@ function AppContainer() {
     const effectiveUserId = currentUser?.uid || user?.uid;
 
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/tasks`);
+      const data = await fetchTasksApi(selectedProject.id);
       if (data.status === "success") {
         let allTasks = data.data as Task[];
         const uniqueAllTasks = Array.from(
@@ -1576,7 +1592,7 @@ function AppContainer() {
   useEffect(() => {
     if (!currentUser) return;
     if (!socketConnected) {
-      apiRequest('/api/users/heartbeat', { method: 'POST' }).catch(() => {});
+      sendHeartbeat().catch(() => {});
     }
   }, [socketConnected, currentUser]);
 
@@ -1603,7 +1619,7 @@ function AppContainer() {
     const fetchMembers = async () => {
       if (!isLoggedIn || !getAuthToken()) return;
       try {
-        const data = await apiRequest("/api/users");
+        const data = await fetchUsers();
         if (data.status === "success") {
           const allUsersList = data.data || [];
           if (selectedProject && Array.isArray(selectedProject.members) && selectedProject.members.length > 0) {
@@ -1636,7 +1652,7 @@ function AppContainer() {
     }
 
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/sprints`);
+      const data = await fetchSprintsApi(selectedProject.id);
       if (data.status === "success") {
          setSprints(data.data as Sprint[]);
       }
@@ -1685,7 +1701,7 @@ function AppContainer() {
       return;
     }
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/tasks/${selectedTaskForDetail.id}/comments`);
+      const data = await fetchTaskComments(selectedProject.id, selectedTaskForDetail.id);
       if (data.status === "success") {
         setComments(data.data as Comment[]);
       }
@@ -1713,7 +1729,7 @@ function AppContainer() {
       return;
     }
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/activity`);
+      const data = await fetchActivity(selectedProject.id);
       if (data.status === "success") {
         setActivityLogs(data.data as ActivityLog[]);
       }
@@ -1792,16 +1808,13 @@ function AppContainer() {
     }
 
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/sprints`, {
-        method: "POST",
-        body: {
+      const data = await createSprint(selectedProject.id, {
           name: finalSprintName,
           goal: newSprintGoal,
           startDate: newSprintStartDate,
           endDate: newSprintEndDate,
           status: "planned"
-        }
-      });
+        });
       
       const sprintId = data.data.id;
 
@@ -1811,10 +1824,7 @@ function AppContainer() {
       if (selectedSprintBacklog.size > 0) {
         const promises = Array.from(selectedSprintBacklog as Set<string>).map(
           (taskId) =>
-            apiRequest(`/api/projects/${selectedProject.id}/tasks/${taskId}`, {
-              method: "PUT",
-              body: { sprintId }
-            })
+            updateTask(selectedProject.id, taskId, { sprintId })
               .then(() => { /* task updated */ })
 .catch((err) => console.error("Failed to update task:", taskId, err))
         );
@@ -1858,16 +1868,13 @@ function AppContainer() {
     }
 
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/sprints/${editingSprint.id}`, {
-        method: "PUT",
-        body: {
+      const data = await updateSprint(selectedProject.id, editingSprint.id, {
           name: editingSprint.name,
           goal: editingSprint.goal,
           startDate: editingSprint.startDate,
           endDate: editingSprint.endDate,
           status: editingSprint.status,
-        }
-      });
+        });
       if (data.status !== "success") throw new Error(data.message);
       
       fetchSprints();
@@ -1896,10 +1903,7 @@ function AppContainer() {
     }
 
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/sprints/${sprintId}`, {
-        method: "PUT",
-        body: { status: "active" }
-      });
+      const data = await updateSprint(selectedProject.id, sprintId, { status: "active" });
       if (data.status === "success") {
         fetchSprints();
         toast.success("Sprint successfully started.");
@@ -1947,19 +1951,13 @@ function AppContainer() {
 
       if (undoneTasks.length > 0) {
         const promises = undoneTasks.map((t) =>
-          apiRequest(`/api/projects/${selectedProject.id}/tasks/${t.id}`, {
-            method: "PUT",
-            body: { sprintId: null }
-          })
+          updateTask(selectedProject.id, t.id, { sprintId: null })
         );
         await Promise.all(promises);
         await fetchTasks();
       }
 
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/sprints/${sprintId}`, {
-        method: "PUT",
-        body: { status: "completed" }
-      });
+      const data = await updateSprint(selectedProject.id, sprintId, { status: "completed" });
       
       if (data.status === "success") {
         fetchSprints();
@@ -1996,17 +1994,12 @@ function AppContainer() {
     try {
       // 1. Move tasks back to backlog
       const promises = sprintTasks.map((t) =>
-        apiRequest(`/api/projects/${selectedProject.id}/tasks/${t.id}`, {
-          method: "PUT",
-          body: { sprintId: null }
-        })
+        updateTask(selectedProject.id, t.id, { sprintId: null })
       );
       await Promise.all(promises);
 
       // 2. Delete the sprint
-      await apiRequest(`/api/projects/${selectedProject.id}/sprints/${sprintId}`, {
-        method: "DELETE"
-      });
+      await deleteSprint(selectedProject.id, sprintId);
 
       await fetchTasks();
       fetchSprints();
@@ -2113,10 +2106,7 @@ function AppContainer() {
     }
 
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/tasks/${taskId}`, {
-        method: "PUT",
-        body: { sprintId }
-      });
+      const data = await updateTask(selectedProject.id, taskId, { sprintId });
       if (data.status !== "success") throw new Error(data.message);
 
       // Update local state immediately
@@ -2201,10 +2191,7 @@ function AppContainer() {
 
     try {
       const promises = taskIds.map((taskId) =>
-        apiRequest(`/api/projects/${selectedProject.id}/tasks/${taskId}`, {
-          method: "PUT",
-          body: { sprintId }
-        })
+        updateTask(selectedProject.id, taskId, { sprintId })
       );
       await Promise.all(promises);
       await fetchTasks();
@@ -2223,16 +2210,13 @@ function AppContainer() {
       return;
     }
     try {
-      const data = await apiRequest("/api/projects", {
-        method: "POST",
-        body: {
+      const data = await createProject({
           name: newProjectName,
           projectKey: newProjectKey.toUpperCase(),
           description: newProjectDescription,
           ownerId: effectiveUserId,
           status: "Active",
-        }
-      });
+        });
 
       if (data.status === "success") {
         resetNewProjectForm();
@@ -2331,9 +2315,7 @@ function AppContainer() {
     try {
       const assigneeIsEmail = newTaskAssigneeId.includes("@");
 
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/tasks`, {
-        method: "POST",
-        body: {
+      const data = await createTask(selectedProject.id, {
           title: newTaskTitle,
           description: newTaskDescription,
           acceptanceCriteria: newTaskAcceptanceCriteria,
@@ -2348,8 +2330,7 @@ function AppContainer() {
           priority: newTaskPriority || "medium",
           startDate: newTaskStartDate || null,
           endDate: newTaskEndDate || null,
-        }
-      });
+        });
       
       const createdTaskKey = data.data.taskKey;
 
@@ -2391,17 +2372,14 @@ function AppContainer() {
     const activeUid = currentUser?.uid || user?.uid;
     if (!selectedProject || !title.trim() || !activeUid) return;
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/tasks`, {
-        method: "POST",
-        body: {
+      const data = await createTask(selectedProject.id, {
           title: title,
           status: "To Do",
           type: type,
           assigneeId: null,
           priority: "Medium",
           reporterId: activeUid,
-        }
-      });
+        });
 
       if (data.status === "success" && data.data) {
         const newTask = data.data;
@@ -2456,10 +2434,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
         // tidak pernah menyala karena modal edit task tak terjangkau, dan ikut
         // dihapus bersama modalnya.
         const effectiveUserId = currentUser?.uid || user?.uid || "guest";
-        await apiRequest(`/api/projects/${selectedProject!.id}/tasks/${task.id}`, {
-          method: "PUT",
-          body: { storyPoints: result.points }
-        });
+        await updateTask(selectedProject!.id, task.id, { storyPoints: result.points });
         await fetchTasks();
       } else {
         throw new Error("Invalid response from AI");
@@ -2515,10 +2490,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
     if (!selectedProject) return;
     try {
       const roles = { ...(selectedProject.memberRoles || {}), [userId]: role };
-      await apiRequest(`/api/projects/${selectedProject.id}/members`, {
-        method: "PUT",
-        body: { memberRoles: roles }
-      });
+      await updateMemberRoles(selectedProject.id, roles);
       fetchProjects();
     } catch (e: any) {
       console.error(e);
@@ -2529,9 +2501,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
   const removeProjectMember = async (userId: string) => {
     if (!selectedProject) return;
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/members/${userId}`, {
-        method: "DELETE"
-      });
+      const data = await removeMember(selectedProject.id, userId);
       if (data.status === "success") {
         toast.success("Member removed from project successfully");
         fetchProjects();
@@ -2569,10 +2539,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
           });
           return;
         }
-        await apiRequest(`/api/projects/${selectedProject.id}/invites`, {
-          method: "PUT",
-          body: { emailToInvite }
-        });
+        await inviteMember(selectedProject.id, emailToInvite);
         await logActivity(
           "user_invited",
           `Invited ${emailToInvite} to the project (pending registration)`,
@@ -2597,13 +2564,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
       }
 
       const effectiveUserId = currentUser?.uid || user?.uid || "guest";
-      await apiRequest(`/api/projects/${selectedProject.id}/members`, {
-        method: "PUT",
-        headers: { 
-          "x-user-id": effectiveUserId
-        },
-        body: { newMemberId: uid, newMemberRole: "member" }
-      });
+      await addMember(selectedProject.id, effectiveUserId, uid);
       await logActivity("user_added", `Added ${emailToInvite} to the project`);
 
       toast.success(`Added ${emailToInvite} to the project!`, { id: toastId });
@@ -2636,10 +2597,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
     const activeUid = currentUser?.uid || user?.uid;
     if (!selectedProject || !activeUid) return;
     try {
-      await apiRequest(`/api/projects/${selectedProject.id}/activity`, {
-        method: "POST",
-        body: { userId: activeUid, action, details, taskId: taskId || null }
-      });
+      await logActivityApi(selectedProject.id, { userId: activeUid, action, details, taskId: taskId || null });
       fetchActivityLogs();
     } catch (e) {
       console.error("Failed to log activity", e);
@@ -2649,14 +2607,11 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
   const handleUpdateProject = async () => {
     if (!editingProject) return;
     try {
-      const data = await apiRequest(`/api/projects/${editingProject.id}`, {
-        method: "PUT",
-        body: {
+      const data = await updateProject(editingProject.id, {
           name: editingProject.name,
           description: editingProject.description || "",
           status: editingProject.status || "Active",
-        }
-      });
+        });
 
       if (data.status === "success") {
         setIsEditProjectModalOpen(false);
@@ -2843,15 +2798,12 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
       try {
         const targetUserId = taskToUpdate.reporterId || user?.uid || currentUser?.uid;
         if (targetUserId) {
-          await apiRequest(`/api/users/${targetUserId}/notifications`, {
-            method: "POST",
-            body: {
+          await createNotification(targetUserId, {
               title: notifTitle,
               message: notifMessage,
               type: "bug_retest",
               relatedId: taskToUpdate.id
-            }
-          });
+            });
         }
       } catch (err) {
         console.error("Failed to persist notification:", err);
@@ -3085,10 +3037,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
       setIsUpdatingTask((prev) => ({ ...prev, [taskId]: true }));
       let data;
       try {
-        data = await apiRequest(`/api/projects/${selectedProject.id}/tasks/${taskId}`, {
-          method: "PUT",
-          body: updateData
-        });
+        data = await updateTask(selectedProject.id, taskId, updateData);
         if (data.status !== "success") throw new Error(data.message);
       } finally {
         setIsUpdatingTask((prev) => ({ ...prev, [taskId]: false }));
@@ -3213,15 +3162,9 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
         return;
       }
 
-      const data1 = await apiRequest(`/api/projects/${selectedProject.id}/tasks/${sourceId}/links`, {
-        method: "POST",
-        body: { targetTaskId: targetId, relationType: taskLinkRelation }
-      });
+      const data1 = await createTaskLink(selectedProject.id, sourceId, { targetTaskId: targetId, relationType: taskLinkRelation });
 
-      const data2 = await apiRequest(`/api/projects/${selectedProject.id}/tasks/${targetId}/links`, {
-        method: "POST",
-        body: { targetTaskId: sourceId, relationType: mapInverseRelation(taskLinkRelation) }
-      });
+      const data2 = await createTaskLink(selectedProject.id, targetId, { targetTaskId: sourceId, relationType: mapInverseRelation(taskLinkRelation) });
 
       await fetchTasks();
 
@@ -3270,9 +3213,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
     if (!isConfirmed) return;
 
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/tasks/${sourceId}/links/${linkIdToRemove}`, {
-        method: "DELETE"
-      });
+      const data = await deleteTaskLink(selectedProject.id, sourceId, linkIdToRemove);
       if (data.status !== "success") throw new Error(data.message);
 
       await fetchTasks();
@@ -3304,17 +3245,14 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
     const effectiveUserId = currentUser?.uid || user?.uid || "guest";
     if (!selectedProject || !activeUid) return;
     try {
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/tasks`, {
-        method: "POST",
-        body: {
+      const data = await createTask(selectedProject.id, {
           parentId: parentId,
           title: `New ${type}`,
           type: type,
           status: masterData.find((d) => d.type === "status")?.label || "To Do",
           priority: masterData.find((d) => d.type === "priority")?.label || "Medium",
           reporterId: activeUid,
-        }
-      });
+        });
       
       if (data.status === "success") {
         await await fetchTasks();
@@ -3366,13 +3304,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
         statusToSave = await triggerBugDoneFlow(taskToUpdate, newStatus);
       }
       const effectiveUserId = currentUser?.uid || user?.uid || "guest";
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/tasks/${taskId}`, {
-        method: "PUT",
-        headers: { 
-          "x-user-id": effectiveUserId
-        },
-        body: { status: statusToSave }
-      });
+      const data = await updateTaskAsUser(selectedProject.id, taskId, effectiveUserId, { status: statusToSave });
       if (data.status !== "success") throw new Error(data.message);
       await fetchTasks();
     } catch (e: any) {
@@ -3393,10 +3325,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
 
     try {
       const batch = items.map((item, index) => {
-        return apiRequest(`/api/master-data/${item.id}`, {
-          method: 'PUT',
-          body: { order: index }
-        });
+        return updateMasterDataOrder(item.id, index);
       });
       await Promise.all(batch);
       fetchMasterData();
@@ -3494,10 +3423,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
       setCurrentView("dashboard");
 
       // Hard delete project from MySQL (Cascades to tasks, sprints, etc)
-      const data = await apiRequest(`/api/projects/${project.id}`, { 
-        method: "DELETE",
-        headers: { 'x-user-id': effectiveUserId }
-      });
+      const data = await deleteProjectApi(project.id, effectiveUserId);
       if (data.status !== "success") throw new Error(data.message);
 
       // Optimistic update
@@ -3541,10 +3467,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
 
     try {
       const effectiveUserId = currentUser?.uid || user?.uid || "guest";
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/tasks/${taskId}`, { 
-        method: "DELETE",
-        headers: { 'x-user-id': effectiveUserId }
-      });
+      const data = await deleteTaskApi(selectedProject.id, taskId, effectiveUserId);
       if (data.status !== "success") throw new Error(data.message);
 
       setTasks((prev) => prev.filter((t) => t.id !== taskId));
@@ -3577,11 +3500,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
 
     try {
       const effectiveUserId = currentUser?.uid || user?.uid || "guest";
-      const data = await apiRequest(`/api/projects/${selectedProject.id}/tasks/bulk-delete`, {
-        method: "POST",
-        headers: { 'x-user-id': effectiveUserId },
-        body: JSON.stringify({ taskIds })
-      });
+      const data = await bulkDeleteTasksApi(selectedProject.id, effectiveUserId, taskIds);
 
       if (data.status !== "success") throw new Error(data.message);
 
@@ -3645,13 +3564,10 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
       return;
 
     try {
-      await apiRequest(`/api/projects/${selectedProject.id}/tasks/${selectedTaskForDetail.id}/comments`, {
-        method: "POST",
-        body: {
+      await createTaskComment(selectedProject.id, selectedTaskForDetail.id, {
           text: newCommentText.trim(),
           authorId: activeUid,
-        }
-      });
+        });
 
       // Parse mentions
       const mentionRegex = /@(\w+)/g;
@@ -3666,17 +3582,14 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
             m.uid !== activeUid,
         );
         for (const u of mentionedUsers) {
-          await apiRequest(`/api/users/${u.uid}/notifications`, {
-            method: "POST",
-            body: {
+          await createNotification(u.uid, {
               senderId: activeUid,
               title: "Anda di-mention",
               message: `${authorName} me-mention Anda di komentar tugas "${selectedTaskForDetail.title}"`,
               type: "mention",
               relatedId: selectedTaskForDetail.id,
               projectId: selectedProject.id
-            }
-          });
+            });
         }
       }
 
@@ -3979,10 +3892,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
                               (n) => !n.read,
                             );
                             for (const n of unread) {
-                              await apiRequest(`/api/users/${user?.uid || currentUser?.uid}/notifications/${n.id}`, {
-                                method: "PUT",
-                                body: {read: true}
-                              });
+                              await markNotificationRead(user?.uid || currentUser?.uid, n.id);
                             }
                             fetchNotifications();
                           } catch (e) {}
@@ -4036,10 +3946,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
                               onClick={async () => {
                                 try {
                                   if (!n.read) {
-                                    await apiRequest(`/api/users/${user?.uid || currentUser?.uid}/notifications/${n.id}`, {
-                                      method: "PUT",
-                                      body: {read: true}
-                                    });
+                                    await markNotificationRead(user?.uid || currentUser?.uid, n.id);
                                     fetchNotifications();
                                   }
                                 } catch (e) {
