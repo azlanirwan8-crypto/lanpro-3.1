@@ -13,7 +13,7 @@ dan utang teknis yang masih terbuka.
 > untuk kode baru** dari **utang yang masih ada di kode lama**, lengkap dengan
 > angkanya. Bila Anda memperbaiki salah satu utang itu, perbarui angkanya.
 
-Terakhir diverifikasi: **14 Agustus 2026** — 219 file, 66.302 baris.
+Terakhir diverifikasi: **15 Agustus 2026** — 303 file, 71.669 baris.
 
 ---
 
@@ -31,9 +31,9 @@ lanpro-3.1/
 │   ├── store/                  State global Zustand.
 │   └── types/                  Tipe global.
 ├── server/                     BACKEND
-│   ├── routes/                 Definisi rute.
-│   ├── controllers/            Logika penanganan request.
+│   ├── routes/                 Definisi rute. Satu berkas per domain.
 │   ├── middleware/             auth, rbac, errorHandler.
+│   ├── config/                 socket, metrics, uploads.
 │   ├── services/               Query DB dan operasi berat.
 │   └── migrations/             Migrasi schema.
 ├── scripts/
@@ -60,16 +60,20 @@ Fitur yang tumbuh besar dipecah menjadi lapisan terpisah. Folder
 
 ```text
 src/features/flowchart/
-├── index.tsx                     Barrel export.
-├── FlowchartContainer.tsx        Komponen: state + JSX.
+├── index.ts                      Barrel. HANYA re-export.
+├── FlowchartContainer.tsx        Komponen: state + penyusunan.
 ├── types.ts                      Tipe domain. Tanpa React.
 ├── constants.ts                  Data statis.
 ├── lib/
 │   ├── routing.ts                Logika murni. Tanpa React, DOM, jaringan.
+│   ├── importers.ts              Parser Draw.io & Miro. Teks masuk, data keluar.
+│   ├── nodeTheme.ts              Pemetaan node → kelas Tailwind.
 │   └── shapes.tsx                Presentasi murni: data masuk, markup keluar.
 ├── services/
 │   └── flowchart.service.ts      SATU-SATUNYA tempat bicara ke backend.
-└── components/                   Sub-komponen.
+└── components/                   FlowchartNode, FlowchartEdges, ShapePalette,
+                                  ImportDiagramModal, FlowchartDashboard,
+                                  CanvasToolbar, NodePropertiesOverlay, ...
 ```
 
 ### Aturan lapisan
@@ -208,43 +212,67 @@ Bagian ini sengaja jujur. Perbarui angkanya bila Anda memperbaikinya.
 
 ### 5.1 File yang melebihi batas 500 baris
 
-**15 file di atas 1.000 baris, 16 file di rentang 500–1.000.** Terbesar:
+**15 file di atas 1.000 baris, 18 file di rentang 500–1.000.** Terbesar:
 
 | Baris | File |
 |---:|---|
-| 5.616 | `src/AppContainer.tsx` |
-| 5.401 | `src/features/flowchart/FlowchartContainer.tsx` |
-| 2.244 | `server/routes/meetings.routes.ts` |
-| 2.104 | `src/features/users/index.tsx` |
-| 1.910 | `server/routes/task.routes.ts` |
+| 4.903 | `src/AppContainer.tsx` |
+| 3.420 | `src/features/flowchart/FlowchartContainer.tsx` |
+| 1.779 | `server/routes/task.routes.ts` |
+| 1.693 | `src/features/meeting-notes/AiMeetingCompanion.tsx` |
+| 1.591 | `src/features/timeline/TimelinePanel.tsx` |
+| 1.436 | `server/routes/qa.routes.ts` |
 
-`FlowchartContainer` sudah turun dari 6.795 baris; sisanya adalah komponen itu
-sendiri, yang butuh pembelahan JSX dan state.
+`FlowchartContainer` turun dari 6.795 ke 3.420 baris lewat tujuh komponen di
+`components/` dan empat modul di `lib/`. Sisanya adalah state dan handler yang
+saling terkait; menurunkannya lebih jauh berarti memindahkan handler ke hook,
+yang risikonya berbeda dari memindahkan JSX.
 
-### 5.1b `index.tsx` dipakai sebagai God Object, bukan barrel
+`AppContainer` turun dari 5.168 ke 4.903 baris. Angkanya masih besar karena
+isinya didominasi handler yang menyentuh state bersama, bukan blok tampilan
+yang bisa dipotong.
 
-```
-2.104  users/index.tsx        1.539  issues/index.tsx
-1.591  timeline/index.tsx     1.165  notebook-lm/index.tsx
-1.545  wiki/index.tsx         1.159  dashboard/index.tsx
-```
+### 5.1b ~~`index.tsx` dipakai sebagai God Object~~ SELESAI 15 Agu 2026
 
-Barrel file semestinya hanya melakukan re-export. Enam fitur menaruh seluruh
-implementasinya di sana, sehingga `import { X } from './features/users'`
-menarik 2.104 baris.
+Enam fitur dulu menaruh seluruh implementasinya di `index.tsx`, sehingga
+`import { X } from './features/users'` menarik ribuan baris lewat berkas yang
+namanya tidak menyebut apa pun. Kini tiap fitur punya berkas bernama
+(`AdminUserPanel.tsx`, `DashboardView.tsx`, `IssueListView.tsx`,
+`TimelinePanel.tsx`, `WikiView.tsx`, `NotebookLM.tsx`) dengan `index.ts` yang
+isinya semata re-export.
 
-### 5.1c Aturan lapisan services dilanggar 14 dari 21 fitur
+Ini sekaligus menutup cacat lama: `features/dashboard` dan `features/issues`
+sempat memuat `index.ts` DAN `index.tsx` sekaligus, dengan `index.ts`
+mengimpor `'./index.tsx'` memakai ekstensi eksplisit. Vite meresolusinya,
+TypeScript dengan program penuh tidak.
 
-Hanya `flowchart` yang memiliki pemisahan lengkap (`types` + `lib` +
-`services` + `components`). Empat belas fitur lain memanggil `apiRequest`
-atau `fetch` langsung dari komponen, melanggar aturan di bagian 2.
+### 5.1c ~~Aturan lapisan services dilanggar 14 dari 21 fitur~~ SELESAI 15 Agu 2026
 
-### 5.1d Lapisan `controllers/` praktis mati
+**16 dari 21 fitur memiliki folder `services/`.** Lima sisanya — `activity`,
+`auth`, `planning`, `sidebar`, `timeline` — tidak punya karena memang tidak
+pernah bicara ke backend; datanya datang lewat props dari `AppContainer`.
+Menambahkan folder kosong di sana hanya kerapian semu.
 
-**Nol dari 14 file di `server/routes/` yang meng-import dari `controllers/`.**
-Seluruh logika ditulis inline di dalam definisi rute — itulah sebabnya
-`meetings.routes.ts` mencapai 2.244 baris. Struktur direktorinya sudah benar,
-tetapi isinya menumpuk di tempat yang salah.
+`AppContainer` sendiri sempat memanggil `apiRequest` 44 kali secara langsung.
+Empat puluh tiga di antaranya kini lewat `src/services/`; satu yang tersisa
+adalah panggilan generik dengan URL yang dirakit saat runtime.
+
+### 5.1d ~~Lapisan `controllers/` praktis mati~~ SELESAI 15 Agu 2026
+
+Direktori `server/controllers/` **dihapus**. Isinya satu berkas sepanjang 5
+baris yang seluruhnya import tanpa satu pun fungsi, dan nol berkas rute yang
+mengimpornya — bukan lapisan mati yang perlu disambungkan, melainkan kerangka
+kosong yang tidak pernah terisi.
+
+**Pola resmi backend kini `routes/` + `services/`.** Rute mengurus request dan
+response; logika berat turun ke `server/services/`. Menambah lapisan ketiga
+hanya menambah tempat untuk salah menaruh logika.
+
+`meetings.routes.ts` yang dulu 2.264 baris dan menampung enam domain sekaligus
+kini 1.052 baris. Lima domain lain pindah ke berkas sendiri
+(`notebooklm`, `project-modules`, `documents`, `milestones`,
+`discussion-points`), dan `task.routes.ts` yang dulu di-mount dari dalamnya
+kini di-mount langsung dari `server.ts`.
 
 ### 5.2 ~~128 error TypeScript — CI merah~~ SELESAI 14 Agu 2026
 
@@ -289,11 +317,19 @@ Memperbaiki salah satu sisi saja tidak akan memulihkan fitur ini.
 Catatan tambahan: fitur ini memanggil `GET /api/projects/:id/wiki`, endpoint
 yang tidak pernah ada di backend (404 bahkan dengan token yang benar).
 
-### 5.3 Tidak ada test yang me-render komponen
+### 5.3 ~~Tidak ada test yang me-render komponen~~ SELESAI 15 Agu 2026
 
-28 test yang ada menguji util, hook terisolasi, dan middleware. **Tidak satu
-pun me-render `AppContainer`.** Selama ini belum berubah, sehingga kerusakan
-render masih bisa lolos tanpa terdeteksi.
+Jest kini terbagi dua proyek: `*.test.ts` berjalan di lingkungan node seperti
+sebelumnya, `*.test.tsx` di jsdom. **65 test, 9 suite.**
+
+Dua di antaranya me-render komponen sungguhan: `AppContainer` pada jalur belum
+login, dan `FlowchartView` pada kedua tampilannya (daftar dan kanvas editor).
+Keduanya memeriksa `console.error` untuk pesan "The above error occurred",
+karena React melaporkan kegagalan render lewat sana alih-alih melempar — tanpa
+pemeriksaan itu komponen yang crash tetap lolos.
+
+Yang masih terbuka: tidak ada test yang me-render `AppContainer` pada jalur
+SUDAH login, sehingga kerusakan di jalur itu masih bisa lolos.
 
 ### 5.4 Store yang menganggur
 
