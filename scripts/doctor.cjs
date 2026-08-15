@@ -243,8 +243,31 @@ try {
   warn('server.ts tidak terbaca, pemeriksaan konfigurasi dilewati');
 }
 
-// ── 6. Koneksi database sungguhan ─────────────────────────────────
-section('6. Uji koneksi database');
+// ── 6. Penyimpanan berkas ────────────────────────────────────────────────────
+section('6. Penyimpanan berkas unggahan');
+
+{
+  const driver = process.env.STORAGE_DRIVER || 'local';
+  if (driver === 's3') {
+    const kurang = ['STORAGE_BUCKET', 'STORAGE_ACCESS_KEY_ID', 'STORAGE_SECRET_ACCESS_KEY']
+      .filter((k) => !process.env[k]);
+    if (kurang.length) {
+      fail(`STORAGE_DRIVER=s3 tetapi belum lengkap: ${kurang.join(', ')}`,
+        'Isi variabel tersebut, atau kembalikan STORAGE_DRIVER=local untuk pengembangan');
+    } else {
+      ok('Object storage terkonfigurasi', `bucket ${process.env.STORAGE_BUCKET}`);
+      ok('Berkas unggahan akan bertahan antar deploy');
+    }
+  } else {
+    // Peringatan, bukan kegagalan: driver lokal memang benar untuk pengembangan.
+    warn('Penyimpanan memakai disk lokal (STORAGE_DRIVER=local)',
+      'Untuk PRODUKSI isi STORAGE_DRIVER=s3. Di platform serverless disk bersifat sementara — ' +
+      'setiap deploy menghapus seluruh berkas unggahan sementara baris database tetap menunjuknya');
+  }
+}
+
+// ── 7. Koneksi database sungguhan ─────────────────────────────────
+section('7. Uji koneksi database');
 
 (async () => {
   if (!process.env.DATABASE_URL) {
