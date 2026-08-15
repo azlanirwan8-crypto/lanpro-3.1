@@ -40,6 +40,7 @@ import { AiMeetingCompanion } from "./AiMeetingCompanion";
 import { Sparkles, Brain } from "lucide-react";
 import { hasPermission } from "../../lib/permissions";
 import { downloadMeetingFile, resolveUserId } from "./services/meeting.service";
+import { ResponsiveTable } from "../../components/ResponsiveTable";
 
 interface MeetingNotesProps {
   projectId: string;
@@ -433,7 +434,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
 
             {/* DataTable Container */}
             <div className="flex-1 overflow-x-auto overflow-y-auto m-4 md:m-6 bg-surface rounded-lg border border-border-subtle/80 shadow-2xs">
-              <table className="w-full text-left border-collapse min-w-[900px]">
+              <ResponsiveTable className="w-full text-left border-collapse min-w-[900px]">
                 <thead>
                   <tr className="bg-primary/5 border-b border-primary/15 text-xs sm:text-[11px] font-medium uppercase tracking-wider text-primary whitespace-nowrap">
                     <th className="py-3 px-4 w-14 text-center">No</th>
@@ -565,7 +566,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                     })
                   )}
                 </tbody>
-              </table>
+              </ResponsiveTable>
             </div>
 
             {/* Table Footer / Pagination */}

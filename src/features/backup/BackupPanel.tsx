@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { createBackup, restoreBackup } from './services/backup.service';
 import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
+import { ResponsiveTable } from "../../components/ResponsiveTable";
 
 interface ExportItem {
   id: string;
@@ -242,7 +243,7 @@ export const BackupPanel = ({
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
+          <ResponsiveTable className="w-full text-left border-collapse text-xs">
             <thead className="bg-slate-100/70 text-slate-700 border-b border-slate-200/80 font-medium uppercase tracking-wider text-xs sm:text-[11px]">
               <tr>
                 <th className="py-2.5 px-3.5">Waktu Export</th>
@@ -323,7 +324,7 @@ export const BackupPanel = ({
                 </tr>
               )}
             </tbody>
-          </table>
+          </ResponsiveTable>
         </div>
       </div>
 

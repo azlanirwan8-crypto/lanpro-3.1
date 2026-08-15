@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { toast } from 'sonner';
 import type { AppView } from '../store/useAppStore';
-import Swal from 'sweetalert2';
+import { showErrorAlert } from '../lib/sweetalert';
 import {
   UserProfile,
   AppRole,
@@ -382,12 +382,11 @@ export function useAuth(
         }
 
         const isRejected = cleanMsg.toLowerCase().includes('ditolak');
-        Swal.fire({
-          icon: isRejected ? 'error' : 'warning',
-          title: isRejected ? 'Pendaftaran Ditolak' : 'Akses Ditolak',
-          text: cleanMsg,
-          confirmButtonColor: '#405189',
-        });
+        showErrorAlert(
+          isRejected ? 'Pendaftaran Ditolak' : 'Akses Ditolak',
+          cleanMsg,
+          isRejected ? 'error' : 'warning'
+        );
       } else if (errStatus === 429 || (e.message && e.message.toLowerCase().includes('terblokir'))) {
         handleAuthApiResponse(429, { message: e.message });
       } else if (e.message && (e.message.toLowerCase().includes('salah') || e.message.toLowerCase().includes('credentials') || e.message.toLowerCase().includes('tidak ditemukan'))) {

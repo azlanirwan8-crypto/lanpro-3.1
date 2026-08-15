@@ -77,6 +77,7 @@ import { DashboardDonutChart } from "./components/DashboardCharts";
 import { SprintBanner } from "./components/SprintBanner";
 import { SprintPhaseAnalysis } from "./components/SprintPhaseAnalysis";
 import { SidebarWidgetsStack } from "./components/SidebarWidgetsStack";
+import { ResponsiveTable } from "../../components/ResponsiveTable";
 
 const defaultChartOrder = [
   "status-distribution",
@@ -866,7 +867,7 @@ export function DashboardView(props: DashboardViewProps) {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+                <ResponsiveTable className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-b border-slate-100 dark:border-slate-800 text-xs sm:text-[11px] font-medium uppercase tracking-wider text-slate-400">
                       <th className="py-2.5 px-2">Team Member</th>
@@ -941,7 +942,7 @@ export function DashboardView(props: DashboardViewProps) {
                       </tr>
                     )}
                   </tbody>
-                </table>
+                </ResponsiveTable>
               </div>
             </div>
 

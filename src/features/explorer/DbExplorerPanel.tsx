@@ -4,6 +4,7 @@ import { BackupPanel } from '../backup/BackupPanel';
 import { ConnectPanel } from '../connect/ConnectPanel';
 import { cn } from '../../lib/utils';
 import { toast } from 'sonner';
+import { ResponsiveTable } from "../../components/ResponsiveTable";
 import {
   runQuery,
   // Diberi alias: komponen sudah punya handler lokal deleteRow dan
@@ -370,7 +371,7 @@ export const DbExplorerPanel: React.FC<any> = ({
 
                   {!loading && result && Array.isArray(result) && (
                       <div className="border border-border-subtle rounded-lg overflow-x-auto">
-                          <table className="w-full text-left border-collapse text-sm">
+                          <ResponsiveTable className="w-full text-left border-collapse text-sm">
                               <thead className="bg-primary/5 text-primary font-medium uppercase tracking-wider">
                                   <tr>
                                       {result.length > 0 && <th className="p-3 border-b border-border-subtle font-medium w-32">Actions</th>}
@@ -437,7 +438,7 @@ export const DbExplorerPanel: React.FC<any> = ({
                                       </tr>
                                   )}
                               </tbody>
-                          </table>
+                          </ResponsiveTable>
                       </div>
                   )}
                   

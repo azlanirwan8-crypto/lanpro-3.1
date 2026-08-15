@@ -4,6 +4,7 @@ import {
 } from 'lucide-react';
 import { ActivityLog, UserProfile } from '../../types';
 import { UserAvatar } from '../../components/ui/UserAvatar';
+import { ResponsiveTable } from "../../components/ResponsiveTable";
 
 export const ActivityLogPanel = ({
   activityLogs: propLogs,
@@ -102,7 +103,7 @@ export const ActivityLogPanel = ({
           <div className="p-20 text-center text-content-subtle font-medium">No system events tracked yet. All events will appear here.</div>
         ) : (
           <div className="overflow-x-auto min-h-[500px]">
-            <table className="w-full text-left border-collapse min-w-[900px]">
+            <ResponsiveTable className="w-full text-left border-collapse min-w-[900px]">
               <thead className="bg-surface">
                 <tr>
                   <th className="px-8 py-5 text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-[0.2em] border-b border-border-subtle whitespace-nowrap">Timestamp</th>
@@ -182,7 +183,7 @@ export const ActivityLogPanel = ({
                     );
                 })}
               </tbody>
-            </table>
+            </ResponsiveTable>
           </div>
         )}
       </div>

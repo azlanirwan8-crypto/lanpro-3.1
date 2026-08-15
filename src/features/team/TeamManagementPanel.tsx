@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 // Diberi alias: komponen sudah punya fungsi lokal bernama fetchTeamTasks yang
 // membungkus state loading dan penanganan unmount.
 import { fetchTeamTasks as fetchTeamTasksApi } from './services/team.service';
+import { ResponsiveTable } from "../../components/ResponsiveTable";
 
 export const TeamManagementPanel = ({ 
   projectMembers: propMembers,
@@ -393,7 +394,7 @@ export const TeamManagementPanel = ({
         {viewMode === 'list' && (
           <div className="bg-surface rounded-lg border border-border-subtle/80 shadow-2xs overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <ResponsiveTable className="w-full text-left">
                 <thead>
                   <tr className="bg-surface-sunken/80 border-b border-border-subtle/80 text-xs sm:text-[11px] font-medium text-content-muted uppercase tracking-wider">
                     <th className="px-5 py-3">Member</th>
@@ -462,7 +463,7 @@ export const TeamManagementPanel = ({
                     );
                   })}
                 </tbody>
-              </table>
+              </ResponsiveTable>
             </div>
           </div>
         )}

@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { QATestCase, QATestSuite } from "../types";
 import { UserAvatar } from "../../../components/ui/UserAvatar";
+import { ResponsiveTable } from "../../../components/ResponsiveTable";
 
 interface QATestCaseTableProps {
   activeSuite: QATestSuite | undefined;
@@ -384,7 +385,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
       {/* ULTRA-SLEEK 5-COLUMN ENTERPRISE QA TABLE MATRIX */}
       <div className="bg-surface border border-border-subtle/80 rounded-md shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <ResponsiveTable className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-primary/15 text-xs sm:text-[10px] font-medium uppercase tracking-wider text-primary">
                 {/* SELECT ALL CHECKBOX (For Admin / Users with edit access) */}
@@ -646,7 +647,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                 })
               )}
             </tbody>
-          </table>
+          </ResponsiveTable>
         </div>
       </div>
     </div>

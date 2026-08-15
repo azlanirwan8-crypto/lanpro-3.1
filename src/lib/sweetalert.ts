@@ -94,3 +94,37 @@ export const showSuccessAlert = (
     timerProgressBar: true,
   });
 };
+
+/**
+ * Dialog peringatan / kesalahan.
+ *
+ * Ditambahkan karena useAuth.ts sebelumnya memanggil Swal.fire sendiri tanpa
+ * customClass dan tanpa buttonsStyling:false — ia memakai confirmButtonColor,
+ * yaitu styling inline bawaan SweetAlert2 yang justru digantikan oleh
+ * pendekatan customClass. Akibatnya satu dialog di aplikasi ini berbentuk
+ * berbeda dari dua lainnya.
+ */
+export const showErrorAlert = (
+  title: string = 'Terjadi Kesalahan',
+  text: string = '',
+  severity: 'error' | 'warning' = 'error'
+) => {
+  Swal.fire({
+    ...velzonPopupConfig,
+    html: buildVelzonHtml(
+      VELZON_ICONS.delete,
+      severity === 'error'
+        ? 'primary:#f06548,secondary:#f7b84b'
+        : 'primary:#f7b84b,secondary:#f06548',
+      100,
+      title,
+      text
+    ),
+    showConfirmButton: true,
+    confirmButtonText: 'Tutup',
+    customClass: {
+      ...velzonPopupConfig.customClass,
+      confirmButton: `${VELZON_BTN.primary} mb-1`,
+    },
+  });
+};
