@@ -25,29 +25,29 @@ export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({
           maxWidth="max-w-md"
         >
           <div className="space-y-4">
-            <p className="text-xs text-slate-500 font-medium">
+            <p className="text-xs text-content-muted font-medium">
               Use these global shortcuts to navigate and perform common actions more efficiently.
             </p>
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-border-faint">
               <div className="flex justify-between items-center py-2.5">
-                <span className="text-sm font-medium text-slate-700">Open Create Task Modal</span>
-                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-slate-100 text-slate-800 rounded border border-slate-200 shadow-sm">n</kbd>
+                <span className="text-sm font-medium text-content-body">Open Create Task Modal</span>
+                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-surface-muted text-content-strong rounded border border-border-subtle shadow-sm">n</kbd>
               </div>
               <div className="flex justify-between items-center py-2.5">
-                <span className="text-sm font-medium text-slate-700">Open Create Project Modal</span>
-                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-slate-100 text-slate-800 rounded border border-slate-200 shadow-sm">p</kbd>
+                <span className="text-sm font-medium text-content-body">Open Create Project Modal</span>
+                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-surface-muted text-content-strong rounded border border-border-subtle shadow-sm">p</kbd>
               </div>
               <div className="flex justify-between items-center py-2.5">
-                <span className="text-sm font-medium text-slate-700">Focus Search Bar</span>
-                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-slate-100 text-slate-800 rounded border border-slate-200 shadow-sm">/</kbd>
+                <span className="text-sm font-medium text-content-body">Focus Search Bar</span>
+                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-surface-muted text-content-strong rounded border border-border-subtle shadow-sm">/</kbd>
               </div>
               <div className="flex justify-between items-center py-2.5">
-                <span className="text-sm font-medium text-slate-700">Toggle Shortcuts Menu</span>
-                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-slate-100 text-slate-800 rounded border border-slate-200 shadow-sm">?</kbd>
+                <span className="text-sm font-medium text-content-body">Toggle Shortcuts Menu</span>
+                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-surface-muted text-content-strong rounded border border-border-subtle shadow-sm">?</kbd>
               </div>
               <div className="flex justify-between items-center py-2.5">
-                <span className="text-sm font-medium text-slate-700">Close Modals / Deselect</span>
-                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-slate-100 text-slate-800 rounded border border-slate-200 shadow-sm">Esc</kbd>
+                <span className="text-sm font-medium text-content-body">Close Modals / Deselect</span>
+                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-surface-muted text-content-strong rounded border border-border-subtle shadow-sm">Esc</kbd>
               </div>
             </div>
             <div className="pt-2 flex justify-end">

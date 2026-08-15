@@ -680,8 +680,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
         };
       default:
         return {
-          bg: 'bg-surface-sunken border-border-faint text-content-strong hover:bg-surface-muted/50',
-          badge: 'bg-surface-sunken text-content-strong border border-border-subtle text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block',
+          bg: 'bg-surface-sunken border-border-faint text-content-body hover:bg-surface-muted/50',
+          badge: 'bg-surface-sunken text-content-body border border-border-subtle text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block',
           accent: 'border-slate-500'
         };
     }
@@ -778,7 +778,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                     <th className="py-3 px-4 w-28 text-center">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border-faint text-xs font-medium text-content-strong">
+                <tbody className="divide-y divide-border-faint text-xs font-medium text-content-body">
                   {currentDocs.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="text-center py-16 text-content-subtle">
@@ -835,7 +835,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                               <span className="text-slate-300 italic text-xs">—</span>
                             )}
                           </td>
-                          <td className="py-2.5 px-4 text-content-strong font-medium whitespace-nowrap">
+                          <td className="py-2.5 px-4 text-content-body font-medium whitespace-nowrap">
                             <div className="flex items-center gap-2">
                               <UserAvatar
                                 uid={doc.createdBy}
@@ -900,17 +900,17 @@ export const WikiView: React.FC<WikiViewProps> = ({
                   <button
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="px-3 py-1.5 bg-surface border border-border-subtle text-content-muted hover:bg-surface-sunken rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
+                    className="px-3 py-1.5 bg-surface border border-border-subtle text-content-secondary hover:bg-surface-sunken rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
                   >
                     Previous
                   </button>
-                  <span className="text-xs font-medium px-2 text-content-muted">
+                  <span className="text-xs font-medium px-2 text-content-secondary">
                     Page {currentPage} of {totalPages}
                   </span>
                   <button
                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-1.5 bg-surface border border-border-subtle text-content-muted hover:bg-surface-sunken rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
+                    className="px-3 py-1.5 bg-surface border border-border-subtle text-content-secondary hover:bg-surface-sunken rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
                   >
                     Next
                   </button>
@@ -958,7 +958,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                           "flex items-center gap-1.5 px-3 py-1.5 font-medium text-xs border rounded-md transition-all cursor-pointer whitespace-nowrap shadow-2xs",
                           isFullscreenPreview 
                             ? "bg-slate-900 border-slate-900 text-white hover:bg-slate-800" 
-                            : "bg-surface border-border-subtle text-content-strong hover:bg-surface-sunken"
+                            : "bg-surface border-border-subtle text-content-body hover:bg-surface-sunken"
                         )}
                         title={isFullscreenPreview ? "Keluar Layar Penuh" : "Pratinjau Layar Penuh"}
                       >
@@ -1066,7 +1066,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
                             <button
                               onClick={() => handleDownload(activeDoc.id, activeDoc.fileName)}
-                              className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-surface-sunken text-content-strong font-medium text-[10px] uppercase tracking-wide border border-border-subtle rounded-md shadow-2xs transition-all cursor-pointer whitespace-nowrap"
+                              className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-surface-sunken text-content-body font-medium text-[10px] uppercase tracking-wide border border-border-subtle rounded-md shadow-2xs transition-all cursor-pointer whitespace-nowrap"
                             >
                               <Download className="w-3 h-3 text-primary" />
                               Unduh PDF
@@ -1157,7 +1157,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                 )}>
                   {/* Side Pane Header */}
                   <div className="px-4 py-3 bg-surface-sunken border-b border-border-subtle/80 flex items-center justify-between shrink-0 select-none">
-                    <span className="text-[11px] font-medium text-content-strong uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="text-[11px] font-medium text-content-body uppercase tracking-wider flex items-center gap-1.5">
                       <MessageSquare className="w-4 h-4 text-primary" />
                       Catatan & Komentar Diskusi
                     </span>
@@ -1335,7 +1335,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                     value={editDescription}
                     onChange={(e) => setEditDescription(e.target.value)}
                     placeholder="Tuliskan spesifikasi detail, instruksi instalasi, atau memo kerja di sini..."
-                    className="w-full bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 px-3 py-2 rounded-md text-xs font-medium text-content-strong outline-none transition-all placeholder:text-content-subtle min-h-[100px] resize-y font-sans shadow-2xs"
+                    className="w-full bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 px-3 py-2 rounded-md text-xs font-medium text-content-body outline-none transition-all placeholder:text-content-subtle min-h-[100px] resize-y font-sans shadow-2xs"
                   />
                 </div>
 
@@ -1351,7 +1351,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       <select 
                         value={editType}
                         onChange={(e) => setEditType(e.target.value)}
-                        className="w-full bg-surface border border-border-subtle pl-3 pr-8 py-2 rounded-md text-xs font-medium text-content-strong outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 appearance-none cursor-pointer transition-all shadow-2xs"
+                        className="w-full bg-surface border border-border-subtle pl-3 pr-8 py-2 rounded-md text-xs font-medium text-content-body outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 appearance-none cursor-pointer transition-all shadow-2xs"
                       >
                         {documentTypes.map(t => (
                           <option key={t.value} value={t.value}>{t.label}</option>
@@ -1371,7 +1371,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       value={editLink}
                       onChange={(e) => setEditLink(e.target.value)}
                       placeholder="https://docs.google.com/document/..."
-                      className="w-full bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 px-3 py-2 rounded-md text-xs font-medium text-content-strong outline-none transition-all placeholder:text-content-subtle font-mono shadow-2xs"
+                      className="w-full bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 px-3 py-2 rounded-md text-xs font-medium text-content-body outline-none transition-all placeholder:text-content-subtle font-mono shadow-2xs"
                     />
                   </div>
                 </div>
@@ -1411,7 +1411,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       <div className="space-y-1">
                         <div className="flex items-center gap-1.5 bg-surface-muted border border-border-subtle px-2.5 py-1 rounded-md justify-center w-max mx-auto">
                           <FileText className="w-3 h-3 text-content-muted" />
-                          <p className="text-[11px] font-medium text-content-strong max-w-[150px] truncate">
+                          <p className="text-[11px] font-medium text-content-body max-w-[150px] truncate">
                             {documents.find(d => d.id === editId)?.fileName}
                           </p>
                         </div>
@@ -1434,7 +1434,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       </div>
                     ) : (
                       <div className="space-y-0.5">
-                        <h4 className="text-xs font-medium text-content-strong group-hover:text-primary transition-colors">
+                        <h4 className="text-xs font-medium text-content-body group-hover:text-primary transition-colors">
                           Pilih berkas dari komputer Anda
                         </h4>
                         <p className="text-[9px] text-content-subtle font-medium leading-normal">
@@ -1475,7 +1475,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
               <div className="px-5 py-3.5 bg-surface-sunken border-t border-border-faint flex items-center justify-end gap-2.5 shrink-0 select-none rounded-b-lg">
                 <button 
                   onClick={() => setShowFormModal(false)}
-                  className="px-4 py-2 bg-surface hover:bg-surface-muted border border-border-subtle text-content-muted hover:text-content rounded-md text-xs font-medium transition-all cursor-pointer shadow-2xs"
+                  className="px-4 py-2 bg-surface hover:bg-surface-muted border border-border-subtle text-content-secondary hover:text-content rounded-md text-xs font-medium transition-all cursor-pointer shadow-2xs"
                 >
                   Batal
                 </button>

@@ -1092,7 +1092,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                 scrollToDate(earliest, 'smooth');
                 toast.success("Berhasil fokus ke Task Pertama Aktif");
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1 bg-surface hover:bg-surface-muted text-content-strong rounded-md text-xs font-medium shadow-2xs transition-all border border-border-subtle/80 cursor-pointer active:scale-95"
+              className="flex items-center gap-1.5 px-2.5 py-1 bg-surface hover:bg-surface-muted text-content-body rounded-md text-xs font-medium shadow-2xs transition-all border border-border-subtle/80 cursor-pointer active:scale-95"
               title="Focus First Task"
             >
               <Target className="w-3.5 h-3.5 text-primary" />
@@ -1104,7 +1104,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                 scrollToDate(new Date(), 'smooth');
                 toast.success("Berhasil melompat ke garis hari ini (Today)");
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1 bg-surface hover:bg-surface-muted text-content-strong rounded-md text-xs font-medium shadow-2xs transition-all border border-border-subtle/80 cursor-pointer active:scale-95"
+              className="flex items-center gap-1.5 px-2.5 py-1 bg-surface hover:bg-surface-muted text-content-body rounded-md text-xs font-medium shadow-2xs transition-all border border-border-subtle/80 cursor-pointer active:scale-95"
               title="Jump to Today"
             >
               <Calendar className="w-3.5 h-3.5 text-success" />
@@ -1165,14 +1165,14 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
               <div className="absolute right-0 mt-2 w-48 bg-surface rounded-md shadow-md border border-border-subtle/80 py-1.5 z-50">
                 <button 
                   onClick={exportTimelineToPdf}
-                  className="w-full text-left px-3.5 py-2 hover:bg-surface-sunken text-xs font-medium text-content-strong flex items-center gap-2 cursor-pointer transition-colors"
+                  className="w-full text-left px-3.5 py-2 hover:bg-surface-sunken text-xs font-medium text-content-body flex items-center gap-2 cursor-pointer transition-colors"
                 >
                   <FileText className="w-4 h-4 text-danger" />
                   <span>PDF Document</span>
                 </button>
                 <button 
                   onClick={exportTimelineToPng}
-                  className="w-full text-left px-3.5 py-2 hover:bg-surface-sunken text-xs font-medium text-content-strong flex items-center gap-2 cursor-pointer transition-colors"
+                  className="w-full text-left px-3.5 py-2 hover:bg-surface-sunken text-xs font-medium text-content-body flex items-center gap-2 cursor-pointer transition-colors"
                 >
                   <ImageIcon className="w-4 h-4 text-secondary" />
                   <span>PNG Image</span>
@@ -1246,7 +1246,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                         <button
                           type="button"
                           onClick={() => toggleEpic(task.id)}
-                          className="p-1 rounded hover:bg-surface-muted text-content-subtle hover:text-content-muted transition-all shrink-0 active:scale-95 z-20 bg-inherit"
+                          className="p-1 rounded hover:bg-surface-muted text-content-subtle hover:text-content-secondary transition-all shrink-0 active:scale-95 z-20 bg-inherit"
                         >
                           <ChevronRight 
                             className={cn(
@@ -1276,7 +1276,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                       <div className="flex flex-col min-w-0 flex-1">
                         <span className={cn(
                           "text-[11px] truncate leading-tight tracking-tight select-none",
-                          isChild ? "font-medium text-content-muted" : "font-medium text-content"
+                          isChild ? "font-medium text-content-secondary" : "font-medium text-content"
                         )}>
                           {task.title}
                         </span>

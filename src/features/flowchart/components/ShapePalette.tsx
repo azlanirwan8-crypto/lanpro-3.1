@@ -46,8 +46,8 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
               <button
                 onClick={() => setIsShapeDropdownOpen(!isShapeDropdownOpen)}
                 className={cn(
-                  "p-2 rounded-lg transition-all flex flex-col items-center w-10 border border-slate-100",
-                  isShapeDropdownOpen ? "bg-indigo-50 border-indigo-200 text-indigo-700" : "text-slate-650 hover:bg-slate-100"
+                  "p-2 rounded-lg transition-all flex flex-col items-center w-10 border border-border-faint",
+                  isShapeDropdownOpen ? "bg-indigo-50 border-indigo-200 text-indigo-700" : "text-slate-650 hover:bg-surface-muted"
                 )}
                 title="Buka Koleksi Simbol"
               >
@@ -56,26 +56,26 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
               </button>
 
               {isShapeDropdownOpen && (
-                <div className="absolute left-14 top-0 w-80 bg-white/85 backdrop-blur-lg border border-slate-200/40 shadow-[0_12px_40px_rgba(0,0,0,0.12)] rounded-xl z-40 flex flex-col h-[calc(100vh-160px)] max-h-[640px] overflow-hidden select-none">
+                <div className="absolute left-14 top-0 w-80 bg-surface/85 backdrop-blur-lg border border-border-subtle/40 shadow-[0_12px_40px_rgba(0,0,0,0.12)] rounded-xl z-40 flex flex-col h-[calc(100vh-160px)] max-h-[640px] overflow-hidden select-none">
                   {/* Panel Header */}
-                  <div className="p-3.5 border-b border-slate-100 flex items-center justify-between shrink-0 bg-slate-50/50">
+                  <div className="p-3.5 border-b border-border-faint flex items-center justify-between shrink-0 bg-surface-sunken/50">
                     <div className="flex items-center gap-2">
                       <div className="p-1 px-1.5 bg-indigo-100 rounded text-indigo-700">
                         <Layers className="w-3.5 h-3.5" />
                       </div>
-                      <span className="text-xs font-medium text-slate-800 uppercase tracking-tight">Diagramming shapes</span>
+                      <span className="text-xs font-medium text-content-strong uppercase tracking-tight">Diagramming shapes</span>
                     </div>
                     <button
                       onClick={() => setIsShapeDropdownOpen(false)}
-                      className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded"
+                      className="p-1 text-content-subtle hover:text-content-body hover:bg-surface-muted rounded"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
                   {/* Preset Colors Bar */}
-                  <div className="px-3.5 py-2 border-b border-slate-100 bg-slate-50/20 flex items-center justify-between shrink-0">
-                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wide">Warna Default:</span>
+                  <div className="px-3.5 py-2 border-b border-border-faint bg-surface-sunken/20 flex items-center justify-between shrink-0">
+                    <span className="text-[10px] font-medium text-content-subtle uppercase tracking-wide">Warna Default:</span>
                     <div className="flex items-center gap-1">
                       {["yellow", "blue", "green", "purple", "rose", "sky", "slate"].map(colName => {
                         const colorClassMap: Record<string, string> = {
@@ -107,20 +107,20 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
                   </div>
 
                   {/* Search Bar */}
-                  <div className="p-3 border-b border-slate-100 shrink-0">
+                  <div className="p-3 border-b border-border-faint shrink-0">
                     <div className="relative font-sans">
-                      <Search className="w-3 h-3 text-slate-400 absolute left-2.5 top-2.5" />
+                      <Search className="w-3 h-3 text-content-subtle absolute left-2.5 top-2.5" />
                       <input
                         type="text"
                         placeholder="Cari bentuk (e.g. DBA, flow...)"
                         value={shapeSearchQuery}
                         onChange={(e) => setShapeSearchQuery(e.target.value)}
-                        className="w-full text-[11px] bg-slate-50 border border-slate-200 rounded-lg p-1.5 pl-7 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-violet-500 focus:bg-white transition-all"
+                        className="w-full text-[11px] bg-surface-sunken border border-border-subtle rounded-lg p-1.5 pl-7 text-content placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-violet-500 focus:bg-surface transition-all"
                       />
                       {shapeSearchQuery && (
                         <button
                           onClick={() => setShapeSearchQuery("")}
-                          className="absolute right-2.5 top-2.5 text-[10px] text-slate-400 hover:text-slate-650"
+                          className="absolute right-2.5 top-2.5 text-[10px] text-content-subtle hover:text-slate-650"
                         >
                           Clear
                         </button>
@@ -141,15 +141,15 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
                       const isExpanded = shapeSearchQuery.trim() !== "" ? true : !!expandedGroups[group.title];
 
                       return (
-                        <div key={groupIdx} className="border-b border-slate-100/65 pb-2.5 last:border-b-0 space-y-1 fallback-accordion">
+                        <div key={groupIdx} className="border-b border-border-faint/65 pb-2.5 last:border-b-0 space-y-1 fallback-accordion">
                           {/* Collapsible Accordion Header */}
                           <button
                             onClick={() => toggleGroupExpanded(group.title)}
                             disabled={shapeSearchQuery.trim() !== ""}
-                            className="w-full flex items-center justify-between text-left py-1.5 hover:bg-slate-50/70 p-1 rounded-lg transition-colors group"
+                            className="w-full flex items-center justify-between text-left py-1.5 hover:bg-surface-sunken/70 p-1 rounded-lg transition-colors group"
                           >
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[10px] font-medium text-slate-800 uppercase tracking-widest font-mono">
+                              <span className="text-[10px] font-medium text-content-strong uppercase tracking-widest font-mono">
                                 {group.title}
                               </span>
                               {(group.title === "AWS" || group.title === "UML" || group.title === "My Shapes") && (
@@ -161,7 +161,7 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
 
                             {/* Collapse/Expand indicator */}
                             {shapeSearchQuery.trim() === "" && (
-                              <div className="p-0.5 rounded text-slate-400 group-hover:text-slate-600 group-hover:bg-slate-100 transition-colors">
+                              <div className="p-0.5 rounded text-content-subtle group-hover:text-content-secondary group-hover:bg-surface-muted transition-colors">
                                 {isExpanded ? (
                                   <ChevronDown className="w-3.5 h-3.5" />
                                 ) : (
@@ -180,14 +180,14 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
                                 <button
                                   key={item.type}
                                   onClick={() => handleAddNewNode(item.type as FlowNode["type"], selectedAddColor)}
-                                  className="flex items-center gap-2 p-1.5 bg-white hover:bg-indigo-50/5 border border-slate-100 hover:border-indigo-200 hover:shadow-[0_2px_8px_rgba(99,102,241,0.06)] text-left rounded-xl transition-all group pointer-events-auto w-full"
+                                  className="flex items-center gap-2 p-1.5 bg-surface hover:bg-indigo-50/5 border border-border-faint hover:border-indigo-200 hover:shadow-[0_2px_8px_rgba(99,102,241,0.06)] text-left rounded-xl transition-all group pointer-events-auto w-full"
                                   title={`Tambahkan ${item.name} ke canvas`}
                                 >
-                                  <div className="w-8 h-8 flex items-center justify-center shrink-0 border border-slate-100 rounded-lg bg-slate-50/30 group-hover:bg-indigo-50/30 group-hover:border-indigo-300/40 transition-all duration-150">
+                                  <div className="w-8 h-8 flex items-center justify-center shrink-0 border border-border-faint rounded-lg bg-surface-sunken/30 group-hover:bg-indigo-50/30 group-hover:border-indigo-300/40 transition-all duration-150">
                                     {renderMiniPreviewIcon(item.type)}
                                   </div>
                                   <div className="min-w-0 flex-1">
-                                    <p className="text-[10px] font-medium text-slate-700 leading-tight truncate group-hover:text-indigo-600 transition-colors">{item.name}</p>
+                                    <p className="text-[10px] font-medium text-content-body leading-tight truncate group-hover:text-indigo-600 transition-colors">{item.name}</p>
                                     <p className="text-[8.5px] text-slate-450 leading-none truncate mt-0.5">{item.desc}</p>
                                   </div>
                                 </button>
@@ -204,7 +204,7 @@ export const ShapePalette: React.FC<ShapePaletteProps> = ({
                         (item.desc && item.desc.toLowerCase().includes(shapeSearchQuery.toLowerCase()))
                       ).length === 0
                     ) && (
-                      <div className="text-center py-8 text-slate-400 text-[11px]">
+                      <div className="text-center py-8 text-content-subtle text-[11px]">
                         Tidak menemukan bentuk dengan kata kunci tersebut.
                       </div>
                     )}

@@ -196,26 +196,26 @@ export const DbExplorerPanel: React.FC<any> = ({
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-[#f3f3f9] p-4 md:p-5 gap-4 text-left animate-in fade-in duration-300">
         {/* Header & Tabs */}
-        <div className="bg-white p-4 md:p-5 rounded-lg border border-slate-200/80 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
+        <div className="bg-surface p-4 md:p-5 rounded-lg border border-border-subtle/80 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-100/60">System Tools</span>
-              <span className="text-xs text-slate-400 font-medium">• Enterprise Control Center</span>
+              <span className="text-xs text-content-subtle font-medium">• Enterprise Control Center</span>
             </div>
-            <h1 className="text-base font-medium text-slate-800 tracking-tight flex items-center gap-2">
+            <h1 className="text-base font-medium text-content-strong tracking-tight flex items-center gap-2">
                Database Tools
             </h1>
-            <p className="text-xs text-slate-500 font-medium mt-0.5">
+            <p className="text-xs text-content-muted font-medium mt-0.5">
                Manage Database Explorer, Connection, and Backups.
             </p>
           </div>
 
-          <div className="flex bg-slate-100 p-0.5 rounded-md border border-slate-200/80 shrink-0">
+          <div className="flex bg-surface-muted p-0.5 rounded-md border border-border-subtle/80 shrink-0">
              <button
                onClick={() => setActiveTab('backup')}
                className={cn(
                   "px-3 py-1.5 text-xs font-medium transition-all rounded flex items-center gap-1.5 cursor-pointer",
-                  activeTab === 'backup' ? "bg-white text-indigo-700 font-medium shadow-2xs" : "text-slate-500 hover:text-slate-800"
+                  activeTab === 'backup' ? "bg-surface text-indigo-700 font-medium shadow-2xs" : "text-content-muted hover:text-content-strong"
                )}
              >
                 <HardDrive className="w-3.5 h-3.5" />
@@ -225,7 +225,7 @@ export const DbExplorerPanel: React.FC<any> = ({
                onClick={() => setActiveTab('connect')}
                className={cn(
                   "px-3 py-1.5 text-xs font-medium transition-all rounded flex items-center gap-1.5 cursor-pointer",
-                  activeTab === 'connect' ? "bg-white text-indigo-700 font-medium shadow-2xs" : "text-slate-500 hover:text-slate-800"
+                  activeTab === 'connect' ? "bg-surface text-indigo-700 font-medium shadow-2xs" : "text-content-muted hover:text-content-strong"
                )}
              >
                 <Wifi className="w-3.5 h-3.5" />
@@ -235,7 +235,7 @@ export const DbExplorerPanel: React.FC<any> = ({
                onClick={() => setActiveTab('explorer')}
                className={cn(
                   "px-3 py-1.5 text-xs font-medium transition-all rounded flex items-center gap-1.5 cursor-pointer",
-                  activeTab === 'explorer' ? "bg-white text-indigo-700 font-medium shadow-2xs" : "text-slate-500 hover:text-slate-800"
+                  activeTab === 'explorer' ? "bg-surface text-indigo-700 font-medium shadow-2xs" : "text-content-muted hover:text-content-strong"
                )}
              >
                 <Code className="w-3.5 h-3.5" />
@@ -264,9 +264,9 @@ export const DbExplorerPanel: React.FC<any> = ({
         )}
 
         {activeTab === 'explorer' && (
-        <div className="flex-1 bg-white rounded-lg border border-slate-200/80 shadow-2xs overflow-hidden flex flex-col min-h-0 relative z-10">
+        <div className="flex-1 bg-surface rounded-lg border border-border-subtle/80 shadow-2xs overflow-hidden flex flex-col min-h-0 relative z-10">
            {/* Database Mode Banner */}
-           <div className="px-4 py-2.5 border-b border-slate-200/80 flex flex-wrap items-center justify-between gap-4 shrink-0 bg-emerald-50/80 text-emerald-800">
+           <div className="px-4 py-2.5 border-b border-border-subtle/80 flex flex-wrap items-center justify-between gap-4 shrink-0 bg-emerald-50/80 text-emerald-800">
               <div className="flex items-center gap-2">
                  <div className="w-2 h-2 rounded-full animate-pulse bg-emerald-500" />
                  <span className="text-xs font-medium flex items-center gap-1.5">
@@ -281,7 +281,7 @@ export const DbExplorerPanel: React.FC<any> = ({
                  <button
                     onClick={fetchSchema}
                     title="Refresh Table Schema"
-                    className="p-1 hover:bg-black/5 rounded transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1 text-xs font-medium cursor-pointer"
+                    className="p-1 hover:bg-black/5 rounded transition-all text-content-secondary hover:text-content flex items-center gap-1 text-xs font-medium cursor-pointer"
                  >
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 4.75L18 8" />
@@ -293,8 +293,8 @@ export const DbExplorerPanel: React.FC<any> = ({
 
            <div className="flex-1 flex overflow-hidden">
               {/* Sidebar: Table List */}
-           <div className="w-[240px] bg-slate-50/50 border-r border-slate-200/80 flex flex-col overflow-y-auto shrink-0 custom-scrollbar">
-              <div className="px-3.5 py-2.5 text-[11px] font-medium text-slate-500 uppercase tracking-wider sticky top-0 bg-slate-50 border-b border-slate-200/80 flex justify-between items-center z-10">
+           <div className="w-[240px] bg-surface-sunken/50 border-r border-border-subtle/80 flex flex-col overflow-y-auto shrink-0 custom-scrollbar">
+              <div className="px-3.5 py-2.5 text-[11px] font-medium text-content-muted uppercase tracking-wider sticky top-0 bg-surface-sunken border-b border-border-subtle/80 flex justify-between items-center z-10">
                  Tables
               </div>
               <div className="p-2 flex flex-col gap-1">
@@ -304,14 +304,14 @@ export const DbExplorerPanel: React.FC<any> = ({
                         <button 
                            key={tableName}
                            onClick={() => loadTable(tableName)}
-                           className={`flex items-center justify-between gap-2 px-3 py-1.5 text-xs rounded-md transition-colors cursor-pointer ${activeTable === tableName ? 'bg-indigo-50 text-indigo-700 font-medium border border-indigo-100' : 'text-slate-600 hover:bg-slate-100 font-medium'}`}
+                           className={`flex items-center justify-between gap-2 px-3 py-1.5 text-xs rounded-md transition-colors cursor-pointer ${activeTable === tableName ? 'bg-indigo-50 text-indigo-700 font-medium border border-indigo-100' : 'text-content-secondary hover:bg-surface-muted font-medium'}`}
                         >
                            <div className="flex items-center gap-2 truncate">
-                              <TableIcon className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+                              <TableIcon className="w-3.5 h-3.5 shrink-0 text-content-subtle" />
                               <span className="truncate">{tableName}</span>
                            </div>
                            {stats && (
-                             <span className="text-[10px] text-slate-400 font-mono tracking-tighter shrink-0">
+                             <span className="text-[10px] text-content-subtle font-mono tracking-tighter shrink-0">
                                {formatSize(stats.sizeBytes)}
                              </span>
                            )}
@@ -319,7 +319,7 @@ export const DbExplorerPanel: React.FC<any> = ({
                     )
                 })}
                 {!schema && (
-                  <div className="text-xs text-slate-400 px-3 py-2 font-medium">Loading tables...</div>
+                  <div className="text-xs text-content-subtle px-3 py-2 font-medium">Loading tables...</div>
                 )}
               </div>
            </div>
@@ -327,13 +327,13 @@ export const DbExplorerPanel: React.FC<any> = ({
            {/* Main Content: Query Editor and Results */}
            <div className="flex-1 flex flex-col min-w-0">
                {/* Query Editor */}
-               <div className="p-3.5 border-b border-slate-200/80 bg-slate-50/50 shrink-0">
+               <div className="p-3.5 border-b border-border-subtle/80 bg-surface-sunken/50 shrink-0">
                   <div className="relative">
                       <textarea 
                          value={query}
                          onChange={(e) => setQuery(e.target.value)}
                          placeholder="SELECT * FROM Users;"
-                         className="w-full text-slate-800 bg-white border border-slate-200 rounded-md p-3 font-mono text-xs min-h-[90px] focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none resize-y"
+                         className="w-full text-content-strong bg-surface border border-border-subtle rounded-md p-3 font-mono text-xs min-h-[90px] focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none resize-y"
                       />
                       <button 
                          onClick={() => handleRunQuery(query)}
@@ -347,16 +347,16 @@ export const DbExplorerPanel: React.FC<any> = ({
                </div>
 
                {/* Results Area */}
-               <div className="flex-1 overflow-auto bg-white p-4">
+               <div className="flex-1 overflow-auto bg-surface p-4">
                   {!loading && !result && !error && (
-                      <div className="h-full flex flex-col items-center justify-center text-slate-400">
+                      <div className="h-full flex flex-col items-center justify-center text-content-subtle">
                           <Database className="w-12 h-12 mb-4 opacity-20" />
                           <p>Select a table or run a query to view data.</p>
                       </div>
                   )}
 
                   {loading && (
-                      <div className="flex items-center gap-3 text-slate-500 mt-4 ml-4">
+                      <div className="flex items-center gap-3 text-content-muted mt-4 ml-4">
                          <div className="w-4 h-4 rounded-full border-2 border-indigo-600 top-border-transparent animate-spin" />
                          Executing query...
                       </div>
@@ -369,38 +369,38 @@ export const DbExplorerPanel: React.FC<any> = ({
                   )}
 
                   {!loading && result && Array.isArray(result) && (
-                      <div className="border border-slate-200 rounded-lg overflow-x-auto">
+                      <div className="border border-border-subtle rounded-lg overflow-x-auto">
                           <table className="w-full text-left border-collapse text-sm">
                               <thead className="bg-primary/5 text-primary font-medium uppercase tracking-wider">
                                   <tr>
-                                      {result.length > 0 && <th className="p-3 border-b border-slate-200 font-medium w-32">Actions</th>}
+                                      {result.length > 0 && <th className="p-3 border-b border-border-subtle font-medium w-32">Actions</th>}
                                       {result.length > 0 ? Object.keys(result[0]).map(key => (
-                                          <th key={key} className="p-3 border-b border-slate-200 font-medium truncate max-w-[200px]">{key}</th>
+                                          <th key={key} className="p-3 border-b border-border-subtle font-medium truncate max-w-[200px]">{key}</th>
                                       )) : (
-                                          <th className="p-3 border-b border-slate-200 font-medium text-slate-400">Result (0 rows)</th>
+                                          <th className="p-3 border-b border-border-subtle font-medium text-content-subtle">Result (0 rows)</th>
                                       )}
                                   </tr>
                               </thead>
-                              <tbody className="divide-y divide-slate-100">
+                              <tbody className="divide-y divide-border-faint">
                                   {result.length > 0 ? result.map((row: any, i: number) => {
                                       const isEditing = editingRow === i;
                                       const pkField = Object.keys(row)[0];
                                       const hasId = pkField !== undefined;
                                       return (
-                                        <tr key={i} className="hover:bg-slate-50">
+                                        <tr key={i} className="hover:bg-surface-sunken">
                                             <td className="p-3">
                                                 {hasId && activeTable && (
                                                     <div className="flex items-center gap-2">
                                                         {isEditing ? (
                                                             <>
                                                                 <button onClick={() => saveRowEdit(pkField, row[pkField], i)} className="text-emerald-600 hover:text-emerald-700 font-medium">Save</button>
-                                                                <button onClick={() => setEditingRow(null)} className="text-slate-500 hover:text-slate-700 font-medium">Cancel</button>
+                                                                <button onClick={() => setEditingRow(null)} className="text-content-muted hover:text-content-body font-medium">Cancel</button>
                                                             </>
                                                         ) : confirmDelete === i ? (
                                                             <>
                                                                 <span className="text-xs text-red-500 mr-1">Yakin?</span>
                                                                 <button onClick={() => { deleteRow(pkField, row[pkField]); setConfirmDelete(null); }} className="text-red-600 hover:text-red-700 font-medium">Ya</button>
-                                                                <button onClick={() => setConfirmDelete(null)} className="text-slate-500 hover:text-slate-700 font-medium">Batal</button>
+                                                                <button onClick={() => setConfirmDelete(null)} className="text-content-muted hover:text-content-body font-medium">Batal</button>
                                                             </>
                                                         ) : (
                                                             <>
@@ -418,11 +418,11 @@ export const DbExplorerPanel: React.FC<any> = ({
                                                             type="text" 
                                                             value={editValues[key] !== null ? editValues[key] : ''} 
                                                             onChange={(e) => setEditValues({...editValues, [key]: e.target.value})}
-                                                            className="w-full border border-slate-300 rounded px-2 py-1 text-sm bg-white"
+                                                            className="w-full border border-slate-300 rounded px-2 py-1 text-sm bg-surface"
                                                             disabled={key === pkField}
                                                         />
                                                     ) : (
-                                                        <div className="truncate w-full text-slate-600">
+                                                        <div className="truncate w-full text-content-secondary">
                                                             {row[key] === null ? <span className="text-slate-300 italic">null</span> : 
                                                              typeof row[key] === 'object' ? JSON.stringify(row[key]) : String(row[key])}
                                                         </div>
@@ -433,7 +433,7 @@ export const DbExplorerPanel: React.FC<any> = ({
                                       )
                                   }) : (
                                       <tr>
-                                          <td className="p-4 text-center text-slate-400 italic">No rows found.</td>
+                                          <td className="p-4 text-center text-content-subtle italic">No rows found.</td>
                                       </tr>
                                   )}
                               </tbody>
@@ -442,7 +442,7 @@ export const DbExplorerPanel: React.FC<any> = ({
                   )}
                   
                   {!loading && result && !Array.isArray(result) && (
-                     <div className="bg-slate-50 border border-slate-200 text-slate-700 p-4 rounded-lg font-mono text-sm break-words">
+                     <div className="bg-surface-sunken border border-border-subtle text-content-body p-4 rounded-lg font-mono text-sm break-words">
                         Query OK. <br />
                         {JSON.stringify(result, null, 2)}
                      </div>

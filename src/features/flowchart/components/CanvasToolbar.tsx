@@ -42,20 +42,20 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
                   <div className="absolute top-4 left-4 right-4 z-30 flex items-center justify-between pointer-events-none">
                     <div className="flex items-center gap-3 pointer-events-auto">
                       {/* Active Diagram Name Indicator */}
-                      <div className="flex items-center gap-2 bg-white/70 hover:bg-white/85 backdrop-blur-md border border-slate-200/40 px-4 py-1.5 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] pointer-events-auto transition-all duration-300">
+                      <div className="flex items-center gap-2 bg-surface/70 hover:bg-surface/85 backdrop-blur-md border border-border-subtle/40 px-4 py-1.5 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] pointer-events-auto transition-all duration-300">
                         <div className="p-1.5 bg-violet-50 rounded-lg text-violet-700">
                           <Workflow className="w-3.5 h-3.5 text-violet-600" />
                         </div>
                         <div className="text-left font-sans">
-                          <p className="text-[8px] font-medium text-slate-400 uppercase tracking-widest leading-none mb-0.5">Diagram Alur</p>
-                          <span className="text-[11px] font-medium text-slate-800 truncate max-w-[150px] block leading-tight">
+                          <p className="text-[8px] font-medium text-content-subtle uppercase tracking-widest leading-none mb-0.5">Diagram Alur</p>
+                          <span className="text-[11px] font-medium text-content-strong truncate max-w-[150px] block leading-tight">
                             {currentFlowMetadata?.name || "Untitled Workspace"}
                           </span>
                         </div>
                       </div>
 
                       {/* INTEGRATIVE CANVAS SETTINGS CONTROLS (THEME & SNAPPING) */}
-                      <div className="flex items-center gap-2 bg-white/70 hover:bg-white/85 backdrop-blur-md border border-slate-200/40 p-1.5 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-300">
+                      <div className="flex items-center gap-2 bg-surface/70 hover:bg-surface/85 backdrop-blur-md border border-border-subtle/40 p-1.5 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-300">
                         {/* Canvas Theme Toggle */}
                         <button
                           onClick={() => {
@@ -66,7 +66,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
                           className={cn(
                             "p-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer",
                             canvasTheme === "miro"
-                              ? "bg-slate-100 hover:bg-slate-200 text-slate-700"
+                              ? "bg-surface-muted hover:bg-slate-200 text-content-body"
                               : "bg-blue-950/40 hover:bg-blue-900/40 text-blue-400"
                           )}
                           title={`Ubah Tema Kanvas (Saat ini: ${canvasTheme === "miro" ? "Miro Terang" : "Blueprint Gelap"})`}
@@ -97,11 +97,11 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
                             "p-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer",
                             isSnapToGrid
                               ? "bg-violet-50 text-violet-700 hover:bg-violet-100 border border-violet-100"
-                              : "text-slate-400 hover:bg-slate-100"
+                              : "text-content-subtle hover:bg-surface-muted"
                           )}
                           title={`Snap to Grid (Saat ini: ${isSnapToGrid ? "Aktif" : "Mati"})`}
                         >
-                          <LayoutGrid className={cn("w-3.5 h-3.5", isSnapToGrid ? "text-violet-600" : "text-slate-400")} />
+                          <LayoutGrid className={cn("w-3.5 h-3.5", isSnapToGrid ? "text-violet-600" : "text-content-subtle")} />
                           <span className="text-[9px] font-medium uppercase tracking-wider hidden sm:inline px-0.5">
                             {isSnapToGrid ? "Snap Grid" : "Free Move"}
                           </span>
@@ -111,7 +111,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
 
                     {/* RIGHT SIDE EXPORT & SIDEBAR TOGGLE BUTTONS */}
                     <div className="flex items-center gap-2 pointer-events-auto">
-                      <div className="bg-white/70 hover:bg-white/85 backdrop-blur-md border border-slate-200/40 p-1 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] flex items-center gap-1.5 transition-all duration-300">
+                      <div className="bg-surface/70 hover:bg-surface/85 backdrop-blur-md border border-border-subtle/40 p-1 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] flex items-center gap-1.5 transition-all duration-300">
                         <button
                           onClick={handleExportJPG}
                           className="flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-[10px] font-medium transition-all cursor-pointer"
@@ -129,8 +129,8 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
                       <button
                         onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
                         className={cn(
-                          "p-2 bg-white/70 hover:bg-white/85 backdrop-blur-md border border-slate-200/40 shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-xl transition-all duration-300 cursor-pointer",
-                          isRightSidebarOpen ? "bg-violet-600 text-white border-violet-600" : "text-slate-600 hover:text-violet-600"
+                          "p-2 bg-surface/70 hover:bg-surface/85 backdrop-blur-md border border-border-subtle/40 shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-xl transition-all duration-300 cursor-pointer",
+                          isRightSidebarOpen ? "bg-violet-600 text-white border-violet-600" : "text-content-secondary hover:text-violet-600"
                         )}
                         title="Toggle Panel Konfigurasi"
                       >

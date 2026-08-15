@@ -314,7 +314,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
           {canReorder && (
              <td className="w-8 px-1 text-center border-r border-border-faint/50 bg-surface">
                 {depth === 0 && dragHandleProps ? (
-                   <div {...dragHandleProps} className="cursor-grab active:cursor-grabbing text-content-subtle hover:text-content-muted flex justify-center py-1 outline-none">
+                   <div {...dragHandleProps} className="cursor-grab active:cursor-grabbing text-content-subtle hover:text-content-secondary flex justify-center py-1 outline-none">
                       <LayoutGrid className="w-3.5 h-3.5" />
                    </div>
                 ) : null}
@@ -373,7 +373,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                          setIsTaskDetailModalOpen(false); 
                          setCurrentView('issueDetail' as any); 
                        }}
-                       className="text-[13px] font-medium text-content-strong hover:text-blue-600 transition-colors cursor-pointer truncate max-w-[320px] block"
+                       className="text-[13px] font-medium text-content-body hover:text-blue-600 transition-colors cursor-pointer truncate max-w-[320px] block"
                        title="Klik untuk membuka halaman detail issue"
                     >
                       {task.title || (task as any).summary || (task as any).name || ''}
@@ -424,7 +424,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                 content = (
                   <div className="flex items-center gap-2">
                     <UserAvatar uid={task.reporterId || ''} user={reporterObj} members={projectMembers} className="w-5 h-5 border border-white shadow-sm ring-1 ring-slate-100" />
-                    <span className={cn("text-[11px] font-medium truncate max-w-[120px]", reporterObj ? "text-content-strong" : "text-content-subtle")}>
+                    <span className={cn("text-[11px] font-medium truncate max-w-[120px]", reporterObj ? "text-content-body" : "text-content-subtle")}>
                       {reporterName}
                     </span>
                   </div>
@@ -548,7 +548,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                     disabled={!isEditable}
                     initialValue={task.storyPoints || ''}
                     onSave={(val: any) => updateTaskField(task.id, 'storyPoints', val ? Number(val) : null)}
-                    className="bg-transparent border border-transparent hover:border-border-subtle focus:border-indigo-500 rounded px-2 py-1 text-[11px] font-medium text-content-strong w-full outline-none transition-colors"
+                    className="bg-transparent border border-transparent hover:border-border-subtle focus:border-indigo-500 rounded px-2 py-1 text-[11px] font-medium text-content-body w-full outline-none transition-colors"
                     placeholder="-"
                   />
                 );
@@ -578,7 +578,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                 content = (
                   <div className="flex gap-1 overflow-hidden max-w-[150px]">
                     {task.labels?.length ? task.labels.map((L, lIdx) => (
-                      <span key={`${L}-${lIdx}`} className="text-[9px] font-medium rounded bg-surface-muted text-content-muted px-1.5 py-0.5 truncate max-w-[60px]">{L}</span>
+                      <span key={`${L}-${lIdx}`} className="text-[9px] font-medium rounded bg-surface-muted text-content-secondary px-1.5 py-0.5 truncate max-w-[60px]">{L}</span>
                     )) : <span className="text-[10px] text-slate-300">-</span>}
                   </div>
                 );
@@ -657,7 +657,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                         e.stopPropagation();
                         setActiveContextMenuTaskId(activeContextMenuTaskId === task.id ? null : task.id);
                       }}
-                      className="p-1 bg-surface-muted hover:bg-indigo-600 text-content-muted hover:text-white border border-border-subtle rounded-lg transition-all cursor-pointer shadow-xs font-medium"
+                      className="p-1 bg-surface-muted hover:bg-indigo-600 text-content-secondary hover:text-white border border-border-subtle rounded-lg transition-all cursor-pointer shadow-xs font-medium"
                       title="Menu Aksi"
                     >
                       <MoreVertical className="w-3.5 h-3.5 shrink-0" />
@@ -676,7 +676,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                               setCurrentView('issueDetail');
                               setActiveContextMenuTaskId(null);
                             }}
-                            className="w-full text-left px-3 py-1.5 text-[11px] font-medium text-content-muted hover:bg-surface-sunken flex items-center gap-2 cursor-pointer"
+                            className="w-full text-left px-3 py-1.5 text-[11px] font-medium text-content-secondary hover:bg-surface-sunken flex items-center gap-2 cursor-pointer"
                           >
                              <Eye className="w-3.5 h-3.5 text-content-subtle" />
                              <span>View Details</span>
@@ -718,7 +718,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                           <div className="relative">
                             <button 
                                onClick={() => setIsInlineTypeOpen(isInlineTypeOpen === 'inline' ? null : 'inline')} 
-                               className="flex items-center gap-1.5 p-1 bg-surface-sunken border border-border-subtle rounded text-content-muted hover:border-blue-300 hover:bg-blue-50 transition-all font-medium text-[10px]"
+                               className="flex items-center gap-1.5 p-1 bg-surface-sunken border border-border-subtle rounded text-content-secondary hover:border-blue-300 hover:bg-blue-50 transition-all font-medium text-[10px]"
                             >
                                {(() => {
                                  const typeData = mArr.find(m => m.type === 'issue_type' && m.label?.toLowerCase() === inlineAddType?.toLowerCase());
@@ -733,7 +733,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                                     <button 
                                       key={t.id}
                                       onClick={() => { setInlineAddType(t.label); setIsInlineTypeOpen(null); }}
-                                      className="w-full text-left px-3 py-2 text-[11px] font-medium text-content-muted hover:bg-surface-sunken flex items-center gap-2"
+                                      className="w-full text-left px-3 py-2 text-[11px] font-medium text-content-secondary hover:bg-surface-sunken flex items-center gap-2"
                                     >
                                       {t.icon ? <RenderIcon iconName={t.icon} className="w-3.5 h-3.5" style={{ color: t.color }} /> : <Zap className="w-3.5 h-3.5" style={{ color: t.color }} />}
                                       <span>{t.label}</span>
@@ -847,7 +847,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                type="button"
                onClick={() => setIsFiltersPanelOpen(prev => !prev)}
                className={cn(
-                  "flex items-center justify-center gap-1.5 px-3 py-2 sm:px-3.5 bg-surface border border-border-subtle/80 rounded-md text-content-strong hover:text-primary hover:border-primary/40 transition-all text-xs font-medium shadow-xs select-none shrink-0 cursor-pointer",
+                  "flex items-center justify-center gap-1.5 px-3 py-2 sm:px-3.5 bg-surface border border-border-subtle/80 rounded-md text-content-body hover:text-primary hover:border-primary/40 transition-all text-xs font-medium shadow-xs select-none shrink-0 cursor-pointer",
                   isFiltersPanelOpen && "bg-primary/10 border-primary/30 text-primary hover:bg-primary/15"
                )}
                title="Toggle Advanced Filtering Panel"
@@ -901,7 +901,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  </span>
                )}
                {listFilterSprint !== 'All' && (
-                 <span className="text-[11px] font-medium text-content-muted bg-surface-muted px-2.5 py-1 rounded-full border border-border-subtle flex items-center gap-1 shadow-sm">
+                 <span className="text-[11px] font-medium text-content-secondary bg-surface-muted px-2.5 py-1 rounded-full border border-border-subtle flex items-center gap-1 shadow-sm">
                     Sprint: {listFilterSprint === 'Backlog' ? 'Backlog' : (props.sprints?.find(s => s.id === listFilterSprint)?.name || listFilterSprint)}
                     <button type="button" onClick={() => setListFilterSprint('All')} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-0.5" /></button>
                  </span>
@@ -960,7 +960,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
             >
                <Settings2 className="w-4 h-4" />
             </button>
-            <button className="p-2 bg-surface border border-border-subtle rounded-lg text-content-muted hover:text-content-strong transition-all shadow-sm">
+            <button className="p-2 bg-surface border border-border-subtle rounded-lg text-content-muted hover:text-content-body transition-all shadow-sm">
                <MoreHorizontal className="w-4 h-4" />
             </button>
          </div>
@@ -985,7 +985,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  <select
                     value={listFilterStatus}
                     onChange={(e) => setListFilterStatus(e.target.value)}
-                    className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
+                    className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
                  >
                     <option value="All">All Statuses</option>
                     {mArr.filter(m => m.type === 'status').map((m, idx) => (
@@ -1000,7 +1000,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  <select
                     value={listFilterPriority}
                     onChange={(e) => setListFilterPriority(e.target.value)}
-                    className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
+                    className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
                  >
                     <option value="All">All Priorities</option>
                     {mArr.filter(m => m.type === 'priority').map((m, idx) => (
@@ -1017,7 +1017,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  <select
                     value={listFilterSprint}
                     onChange={(e) => setListFilterSprint(e.target.value)}
-                    className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
+                    className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
                  >
                     <option value="All">All Sprints</option>
                     <option value="Backlog">Backlog</option>
@@ -1033,7 +1033,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  <select
                      value={listFilterLabel}
                      onChange={(e) => setListFilterLabel(e.target.value)}
-                     className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
+                     className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
                  >
                      <option value="All">All Labels</option>
                      {allLabels.map(l => (
@@ -1051,7 +1051,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  <select
                     value={listFilterCategory}
                     onChange={(e) => setListFilterCategory(e.target.value)}
-                    className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
+                    className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
                  >
                     <option value="All">All Categories</option>
                     {mArr.filter(m => m.type === 'category').map(m => (
@@ -1066,7 +1066,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  <select
                     value={listFilterEnvironment}
                     onChange={(e) => setListFilterEnvironment(e.target.value)}
-                    className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
+                    className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
                  >
                     <option value="All">All Environments</option>
                     {allEnvironments.map(env => (
@@ -1081,7 +1081,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  <select
                     value={listFilterProjectRisk}
                     onChange={(e) => setListFilterProjectRisk(e.target.value)}
-                    className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
+                    className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
                  >
                     <option value="All">All Risks</option>
                     {allProjectRisks.map(risk => (
@@ -1096,7 +1096,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  <select
                     value={listFilterRelease}
                     onChange={(e) => setListFilterRelease(e.target.value)}
-                    className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
+                    className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
                  >
                     <option value="All">All Releases</option>
                     {allReleases.map(rel => (
@@ -1111,7 +1111,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  <select
                     value={listFilterResolution}
                     onChange={(e) => setListFilterResolution(e.target.value)}
-                    className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
+                    className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none"
                  >
                     <option value="All">All Resolutions</option>
                     {allResolutions.map(res => (
@@ -1129,7 +1129,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  <select
                     value={listFilterDateType}
                     onChange={(e) => setListFilterDateType(e.target.value)}
-                    className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none text-left"
+                    className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none text-left"
                  >
                     <option value="dueDate">Due Date</option>
                     <option value="startDate">Start Date</option>
@@ -1146,7 +1146,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                     type="date"
                     value={listFilterStartDate}
                     onChange={(e) => setListFilterStartDate(e.target.value)}
-                    className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none h-[34px]"
+                    className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none h-[34px]"
                  />
               </div>
 
@@ -1158,7 +1158,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                        type="date"
                        value={listFilterEndDate}
                        onChange={(e) => setListFilterEndDate(e.target.value)}
-                       className="w-full text-xs font-medium text-content-strong bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none h-[34px]"
+                       className="w-full text-xs font-medium text-content-body bg-surface-sunken border border-border-subtle rounded-xl px-2.5 py-1.5 focus:border-indigo-500 outline-none h-[34px]"
                     />
                  </div>
                  
@@ -1178,7 +1178,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                        setListFilterStartDate('');
                        setListFilterEndDate('');
                     }}
-                    className="px-4 h-[34px] bg-surface-muted hover:bg-slate-200 text-content-muted rounded-xl text-xs font-medium transition-all shrink-0 flex items-center justify-center gap-1.5 select-none"
+                    className="px-4 h-[34px] bg-surface-muted hover:bg-slate-200 text-content-secondary rounded-xl text-xs font-medium transition-all shrink-0 flex items-center justify-center gap-1.5 select-none"
                     title="Clear all fields"
                  >
                     <X className="w-3.5 h-3.5" />
@@ -1286,7 +1286,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                <div className="relative pl-1 shrink-0">
                   <button 
                      onClick={() => setIsInlineTypeOpen(isInlineTypeOpen === 'global' ? null : 'global')} 
-                     className="flex items-center justify-center p-1.5 hover:bg-slate-200 rounded transition-colors text-content-muted outline-none"
+                     className="flex items-center justify-center p-1.5 hover:bg-slate-200 rounded transition-colors text-content-secondary outline-none"
                   >
                      {(() => {
                        const typeData = mArr.find(m => m.type === 'issue_type' && m.label?.toLowerCase() === inlineAddType?.toLowerCase());
@@ -1301,7 +1301,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                           <button 
                             key={t.id}
                             onClick={() => { setInlineAddType(t.label); setIsInlineTypeOpen(null); }}
-                            className="w-full text-left px-3 py-2 text-[11px] font-medium text-content-muted hover:bg-surface-sunken flex items-center gap-2"
+                            className="w-full text-left px-3 py-2 text-[11px] font-medium text-content-secondary hover:bg-surface-sunken flex items-center gap-2"
                           >
                             {t.icon ? <RenderIcon iconName={t.icon} className="w-3.5 h-3.5" style={{ color: t.color }} /> : <Zap className="w-3.5 h-3.5" style={{ color: t.color }} />}
                             <span>{t.label}</span>
@@ -1317,7 +1317,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                   onChange={(e) => setQuickCreateTitle(e.target.value)}
                   placeholder="What needs to be done? Type and press Enter to save..."
                   onKeyDown={(e) => e.key === 'Enter' && createGlobalIssue()}
-                  className="flex-1 min-w-0 bg-transparent border-none text-[12px] font-medium text-content-strong placeholder:text-content-subtle focus:ring-0 outline-none px-2"
+                  className="flex-1 min-w-0 bg-transparent border-none text-[12px] font-medium text-content-body placeholder:text-content-subtle focus:ring-0 outline-none px-2"
                />
             </div>
 
@@ -1375,7 +1375,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                      setItemsPerPage(Number(e.target.value));
                      setListPage(1);
                   }}
-                  className="text-[10px] font-medium bg-surface border border-border-subtle rounded-lg px-2 py-0.5 text-content-strong outline-none focus:border-indigo-500 cursor-pointer shadow-sm"
+                  className="text-[10px] font-medium bg-surface border border-border-subtle rounded-lg px-2 py-0.5 text-content-body outline-none focus:border-indigo-500 cursor-pointer shadow-sm"
                >
                   <option value={10}>10</option>
                   <option value={20}>20</option>
@@ -1391,7 +1391,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
             <button 
                onClick={() => setListPage(p => Math.max(1, p - 1))}
                disabled={listPage === 1}
-               className="px-2.5 py-1 text-[10px] font-medium text-content-muted bg-surface border border-border-subtle rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-sunken transition-all active:scale-95 cursor-pointer shadow-sm"
+               className="px-2.5 py-1 text-[10px] font-medium text-content-secondary bg-surface border border-border-subtle rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-sunken transition-all active:scale-95 cursor-pointer shadow-sm"
             >
                Prev
             </button>
@@ -1412,7 +1412,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
             <button 
                onClick={() => setListPage(p => Math.min(Math.ceil(displayRoots.length / itemsPerPage), p + 1))}
                disabled={listPage >= Math.ceil(displayRoots.length / itemsPerPage)}
-               className="px-2.5 py-1 text-[10px] font-medium text-content-muted bg-surface border border-border-subtle rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-sunken transition-all active:scale-95 cursor-pointer shadow-sm"
+               className="px-2.5 py-1 text-[10px] font-medium text-content-secondary bg-surface border border-border-subtle rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-sunken transition-all active:scale-95 cursor-pointer shadow-sm"
             >
                Next
             </button>

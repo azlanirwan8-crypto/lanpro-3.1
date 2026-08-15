@@ -159,7 +159,7 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
       case 'CREATE': return 'text-emerald-700 bg-emerald-50 border-emerald-100 dark:bg-emerald-500/10 dark:border-emerald-500/20';
       case 'UPDATE': return 'text-amber-700 bg-amber-50 border-amber-100 dark:bg-amber-500/10 dark:border-amber-500/20';
       case 'DELETE': return 'text-rose-700 bg-rose-50 border-rose-100 dark:bg-rose-500/10 dark:border-rose-500/20';
-      default: return 'text-slate-600 bg-slate-50 border-slate-100';
+      default: return 'text-content-secondary bg-surface-sunken border-border-faint';
     }
   };
 
@@ -191,25 +191,25 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-[#f3f3f9] p-4 md:p-5 gap-4 text-left animate-in fade-in duration-300">
       {/* 1. Header & Summary Section */}
-      <div className="bg-white p-4 md:p-5 rounded-lg border border-slate-200/80 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
+      <div className="bg-surface p-4 md:p-5 rounded-lg border border-border-subtle/80 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-100/60">System Audit</span>
-            <span className="text-xs text-slate-400 font-medium">• Enterprise Control Center</span>
+            <span className="text-xs text-content-subtle font-medium">• Enterprise Control Center</span>
           </div>
-          <h1 className="text-base font-medium text-slate-800 tracking-tight">Dashboard Audit Enterprise</h1>
-          <p className="text-xs text-slate-500 font-medium mt-0.5">Riwayat aktivitas infrastruktur LanPro (Real-time & Immutable)</p>
+          <h1 className="text-base font-medium text-content-strong tracking-tight">Dashboard Audit Enterprise</h1>
+          <p className="text-xs text-content-muted font-medium mt-0.5">Riwayat aktivitas infrastruktur LanPro (Real-time & Immutable)</p>
         </div>
 
         <div className="flex items-center gap-3">
-           <div className="flex bg-slate-50 rounded-md p-2 border border-slate-200/80 items-center gap-4 text-xs">
+           <div className="flex bg-surface-sunken rounded-md p-2 border border-border-subtle/80 items-center gap-4 text-xs">
               <div className="flex items-center gap-1.5">
-                 <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Total Log:</span>
-                 <span className="font-medium text-slate-800">{logs.length}</span>
+                 <span className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Total Log:</span>
+                 <span className="font-medium text-content-strong">{logs.length}</span>
               </div>
               <div className="h-4 w-px bg-slate-200" />
               <div className="flex items-center gap-1.5">
-                 <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Status:</span>
+                 <span className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Status:</span>
                  <div className="flex items-center gap-1 text-emerald-600 font-medium">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span>Live</span>
@@ -219,7 +219,7 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
            <button 
               onClick={() => { setIsRefreshing(true); fetchLogs(); }}
               disabled={isRefreshing}
-              className="h-8 w-8 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-md text-slate-600 flex items-center justify-center shadow-2xs transition-all cursor-pointer disabled:opacity-50"
+              className="h-8 w-8 bg-surface hover:bg-surface-sunken border border-border-subtle/80 rounded-md text-content-secondary flex items-center justify-center shadow-2xs transition-all cursor-pointer disabled:opacity-50"
               title="Refresh Audit Logs"
            >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
@@ -228,37 +228,37 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
       </div>
 
       {/* 2. Advanced Filtering Control Bar */}
-      <div className="bg-white p-3.5 rounded-lg border border-slate-200/80 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-3 shrink-0">
+      <div className="bg-surface p-3.5 rounded-lg border border-border-subtle/80 shadow-2xs flex flex-col md:flex-row items-center justify-between gap-3 shrink-0">
         <div className="relative flex-1 w-full">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-content-subtle" />
           <input 
             type="text"
             placeholder="Cari berdasarkan User, Entity ID, atau Kata Kunci..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
+            className="w-full pl-9 pr-4 py-1.5 bg-surface-sunken border border-border-subtle rounded-md text-xs font-medium focus:bg-surface focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
           />
         </div>
 
         <div className="flex items-center gap-2 w-full md:w-auto flex-wrap justify-end">
-          <div className="flex bg-slate-100 p-0.5 rounded-md border border-slate-200/80">
+          <div className="flex bg-surface-muted p-0.5 rounded-md border border-border-subtle/80">
             {['All', 'Tasks', 'Sprints', 'Wiki', 'Milestones'].map(ent => (
               <button
                 key={ent}
                 onClick={() => setEntityFilter(ent)}
-                className={`px-3 py-1 text-xs font-medium rounded transition-all ${entityFilter === ent ? 'bg-white text-indigo-700 shadow-2xs font-medium' : 'text-slate-500 hover:text-slate-800'}`}
+                className={`px-3 py-1 text-xs font-medium rounded transition-all ${entityFilter === ent ? 'bg-surface text-indigo-700 shadow-2xs font-medium' : 'text-content-muted hover:text-content-strong'}`}
               >
                 {ent === 'All' ? 'Semua Entitas' : ent}
               </button>
             ))}
           </div>
 
-          <div className="flex bg-slate-100 p-0.5 rounded-md border border-slate-200/80">
+          <div className="flex bg-surface-muted p-0.5 rounded-md border border-border-subtle/80">
             {['All', 'CREATE', 'UPDATE', 'DELETE'].map(act => (
               <button
                 key={act}
                 onClick={() => setActionFilter(act)}
-                className={`px-3 py-1 text-xs font-medium rounded transition-all ${actionFilter === act ? 'bg-white text-indigo-700 shadow-2xs font-medium' : 'text-slate-500 hover:text-slate-800'}`}
+                className={`px-3 py-1 text-xs font-medium rounded transition-all ${actionFilter === act ? 'bg-surface text-indigo-700 shadow-2xs font-medium' : 'text-content-muted hover:text-content-strong'}`}
               >
                  {act === 'All' ? 'Semua Akses' : act}
               </button>
@@ -268,7 +268,7 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
       </div>
 
       {/* 3. Activity Timeline Body */}
-      <div className="flex-1 bg-white rounded-lg border border-slate-200/80 shadow-2xs overflow-hidden flex flex-col min-h-0 relative">
+      <div className="flex-1 bg-surface rounded-lg border border-border-subtle/80 shadow-2xs overflow-hidden flex flex-col min-h-0 relative">
         <AnimatePresence>
           {newActivityIncoming && (
             <motion.div 
@@ -290,18 +290,18 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
 
         <div ref={scrollContainerRef} className="flex-1 overflow-y-auto p-4 space-y-2.5 custom-scrollbar">
           {loading ? (
-            <div className="flex flex-col items-center justify-center h-64 text-slate-400">
+            <div className="flex flex-col items-center justify-center h-64 text-content-subtle">
                <div className="relative mb-4">
                   <div className="w-12 h-12 border-3 border-indigo-100 rounded-full animate-pulse" />
                   <div className="absolute inset-0 w-12 h-12 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin" />
                </div>
-               <p className="text-xs font-medium animate-pulse uppercase tracking-wider text-slate-600">Menyinkronkan Gudang Data</p>
+               <p className="text-xs font-medium animate-pulse uppercase tracking-wider text-content-secondary">Menyinkronkan Gudang Data</p>
             </div>
           ) : filteredLogs.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+            <div className="flex flex-col items-center justify-center py-20 text-content-subtle">
                <Activity className="w-12 h-12 mb-3 opacity-20" />
-               <p className="text-sm font-medium text-slate-700">Data Log Kosong</p>
-               <p className="text-xs text-slate-400">Belum ada aktivitas yang tercatat untuk proyek/filter ini.</p>
+               <p className="text-sm font-medium text-content-body">Data Log Kosong</p>
+               <p className="text-xs text-content-subtle">Belum ada aktivitas yang tercatat untuk proyek/filter ini.</p>
             </div>
           ) : (
             <div className="space-y-2.5">
@@ -315,7 +315,7 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                 >
                   {/* Log Unified Row Card */}
                   <div 
-                    className="p-3.5 bg-white border border-slate-200/80 rounded-lg hover:border-indigo-300 shadow-2xs transition-all cursor-pointer group flex items-start gap-3.5"
+                    className="p-3.5 bg-surface border border-border-subtle/80 rounded-lg hover:border-indigo-300 shadow-2xs transition-all cursor-pointer group flex items-start gap-3.5"
                     onClick={() => setSelectedLog(log)}
                   >
                      {/* Action Type Icon Badge */}
@@ -336,19 +336,19 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                               <div className="w-5 h-5 bg-indigo-50 rounded flex items-center justify-center text-indigo-600 shrink-0">
                                 <UserIcon className="w-3 h-3" />
                               </div>
-                              <span className="text-xs font-medium text-slate-800 truncate">{log.userName}</span>
+                              <span className="text-xs font-medium text-content-strong truncate">{log.userName}</span>
                               <span className="text-[10px] bg-indigo-50 text-indigo-700 font-medium px-2 py-0.2 rounded border border-indigo-100 uppercase flex items-center gap-1">
                                  {getEntityIcon(log.entityName)}
                                  {log.entityName}
                               </span>
                            </div>
-                           <div className="text-[11px] font-medium text-slate-400 flex items-center gap-1 shrink-0">
+                           <div className="text-[11px] font-medium text-content-subtle flex items-center gap-1 shrink-0">
                              <Clock className="w-3 h-3 text-slate-300" />
                              {formatDate(log.createdAt)}
                            </div>
                         </div>
 
-                        <div className="flex items-center gap-2 text-xs text-slate-600 font-medium flex-wrap">
+                        <div className="flex items-center gap-2 text-xs text-content-secondary font-medium flex-wrap">
                            <span>
                              Melakukan aksis <span className={cn(
                                "font-medium uppercase px-1.5 py-0.2 rounded text-[10px]",
@@ -362,7 +362,7 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                            </span>
                         </div>
 
-                        <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-slate-100">
+                        <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-border-faint">
                            <div className="flex items-center gap-2">
                               {log.oldValues && Object.keys(log.oldValues).length > 0 && (
                                 <span className="px-1.5 py-0.2 bg-rose-50 border border-rose-100 rounded text-[9px] font-medium text-rose-600 uppercase">Sebelum: {Object.keys(log.oldValues).length} keys</span>
@@ -400,46 +400,46 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                initial={{ opacity: 0, scale: 0.95, y: 20 }}
                animate={{ opacity: 1, scale: 1, y: 0 }}
                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-               className="relative bg-white w-full max-w-3xl rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] border border-white/20"
+               className="relative bg-surface w-full max-w-3xl rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] border border-white/20"
              >
                 {/* Modal Header */}
-                <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                <div className="p-8 border-b border-border-faint flex items-center justify-between bg-surface-sunken/50">
                    <div className="flex items-center gap-5">
                       <div className={`p-4 rounded-xl border shadow-lg ${getActionStyles(selectedLog.actionType)}`}>
                          {getEntityIcon(selectedLog.entityName)}
                       </div>
                       <div>
-                         <h3 className="text-2xl font-medium text-slate-800 tracking-tight">Detail Perubahan Audit</h3>
+                         <h3 className="text-2xl font-medium text-content-strong tracking-tight">Detail Perubahan Audit</h3>
                          <div className="flex items-center gap-3 mt-1">
-                            <span className="text-xs font-medium text-slate-500 uppercase tracking-widest">{selectedLog.entityName}</span>
+                            <span className="text-xs font-medium text-content-muted uppercase tracking-widest">{selectedLog.entityName}</span>
                             <span className="text-slate-300">•</span>
-                            <code className="text-[10px] font-medium bg-slate-200/50 text-slate-600 px-2 py-0.5 rounded">{selectedLog.entityId}</code>
+                            <code className="text-[10px] font-medium bg-slate-200/50 text-content-secondary px-2 py-0.5 rounded">{selectedLog.entityId}</code>
                          </div>
                       </div>
                    </div>
                    <button 
                      onClick={() => setSelectedLog(null)}
-                     className="p-3 bg-white rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-all border border-slate-200"
+                     className="p-3 bg-surface rounded-xl text-content-subtle hover:text-rose-500 hover:bg-rose-50 transition-all border border-border-subtle"
                    >
                      <X className="w-6 h-6" />
                    </button>
                 </div>                {/* Modal Info Stats */}
-                <div className="grid grid-cols-2 bg-slate-50/30 border-b border-slate-100">
-                    <div className="p-6 border-r border-slate-100">
-                       <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-2">Aktivitas Penulis</p>
+                <div className="grid grid-cols-2 bg-surface-sunken/30 border-b border-border-faint">
+                    <div className="p-6 border-r border-border-faint">
+                       <p className="text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-2">Aktivitas Penulis</p>
                        <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-medium">
                              {(selectedLog.userName || "U")[0]}
                           </div>
                           <div>
-                             <p className="text-sm font-medium text-slate-800">{selectedLog.userName || "Unknown User"}</p>
-                             <p className="text-[10px] font-medium text-slate-500 uppercase tracking-tighter">Akses Auditor Sistem</p>
+                             <p className="text-sm font-medium text-content-strong">{selectedLog.userName || "Unknown User"}</p>
+                             <p className="text-[10px] font-medium text-content-muted uppercase tracking-tighter">Akses Auditor Sistem</p>
                           </div>
                        </div>
                     </div>
                     <div className="p-6">
-                       <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-2">Tanda Waktu (WIB)</p>
-                       <div className="flex items-center gap-3 text-slate-800 font-medium">
+                       <p className="text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-2">Tanda Waktu (WIB)</p>
+                       <div className="flex items-center gap-3 text-content-strong font-medium">
                           <Calendar className="w-5 h-5 text-indigo-500" />
                           <span className="text-sm">{new Date(selectedLog.createdAt).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'medium'})}</span>
                        </div>
@@ -447,10 +447,10 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                 </div>
 
                 {/* Diff Engine */}
-                <div className="flex-1 overflow-y-auto p-8 bg-white custom-scrollbar">
+                <div className="flex-1 overflow-y-auto p-8 bg-surface custom-scrollbar">
                    <div className="mb-6 flex items-center gap-2">
                       <div className="h-5 w-1 bg-indigo-500 rounded-full" />
-                      <h4 className="text-xs font-medium text-slate-900 uppercase tracking-widest">Komparasi Perubahan Objek</h4>
+                      <h4 className="text-xs font-medium text-content uppercase tracking-widest">Komparasi Perubahan Objek</h4>
                    </div>
                    <DiffViewer 
                      oldValues={selectedLog.oldValues} 
@@ -459,7 +459,7 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                    
                    {/* Raw JSON fallback (Optional for high technical audit) */}
                    <details className="mt-12 group">
-                      <summary className="text-[10px] font-medium text-slate-400 cursor-pointer uppercase hover:text-slate-600 transition-colors">
+                      <summary className="text-[10px] font-medium text-content-subtle cursor-pointer uppercase hover:text-content-secondary transition-colors">
                         Tampilkan Raw Technical Trace (JSON)
                       </summary>
                       <div className="mt-4 p-4 rounded-xl bg-slate-900 text-indigo-400 font-mono text-[10px] overflow-x-auto border border-slate-800">
@@ -469,8 +469,8 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                 </div>
 
                 {/* Footer */}
-                <div className="p-8 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
-                   <p className="text-[10px] font-medium text-slate-400 italic">ID_JEJAK: {selectedLog.id}</p>
+                <div className="p-8 bg-surface-sunken border-t border-border-faint flex justify-between items-center">
+                   <p className="text-[10px] font-medium text-content-subtle italic">ID_JEJAK: {selectedLog.id}</p>
                    <button 
                      onClick={() => setSelectedLog(null)}
                      className="px-8 py-3 bg-slate-900 text-white text-xs font-medium rounded-xl hover:bg-slate-800 transition-all shadow-xl hover:shadow-2xl shadow-slate-200 active:scale-95"

@@ -42,10 +42,10 @@ const Button = ({ children, onClick, variant = 'primary', className = '', disabl
   const baseStyle = "inline-flex items-center justify-center font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed outline-none";
   let variantStyle = "";
   if (variant === 'primary') variantStyle = "bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 shadow-md shadow-indigo-600/20";
-  if (variant === 'secondary') variantStyle = "bg-surface-muted text-content-strong hover:bg-slate-200 active:scale-95";
-  if (variant === 'outline') variantStyle = "border-2 border-border-subtle text-content-strong hover:border-slate-300 hover:bg-surface-sunken active:scale-95";
+  if (variant === 'secondary') variantStyle = "bg-surface-muted text-content-body hover:bg-slate-200 active:scale-95";
+  if (variant === 'outline') variantStyle = "border-2 border-border-subtle text-content-body hover:border-slate-300 hover:bg-surface-sunken active:scale-95";
   if (variant === 'danger') variantStyle = "bg-rose-500 text-white hover:bg-rose-600 active:scale-95 shadow-md shadow-rose-500/20";
-  if (variant === 'ghost') variantStyle = "bg-transparent text-content-muted hover:bg-surface-muted hover:text-content active:scale-95";
+  if (variant === 'ghost') variantStyle = "bg-transparent text-content-secondary hover:bg-surface-muted hover:text-content active:scale-95";
   
   let sizeStyle = "";
   if (size === 'sm') sizeStyle = "px-3 py-1.5 text-xs rounded-lg";
@@ -399,7 +399,7 @@ export const MasterDataPanel = ({
                       "w-full text-left px-3 py-2 rounded-md text-xs transition-all flex items-center justify-between group relative cursor-pointer select-none",
                       isActive 
                         ? "bg-indigo-50/90 text-indigo-700 font-medium border-l-3 border-l-indigo-600 shadow-2xs" 
-                        : "text-content-muted hover:bg-surface-sunken hover:text-content font-medium"
+                        : "text-content-secondary hover:bg-surface-sunken hover:text-content font-medium"
                     )}
                   >
                     <span className="flex items-center gap-2 truncate">
@@ -466,7 +466,7 @@ export const MasterDataPanel = ({
                     ) : projectModules.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-20 text-content-subtle">
                             <Layers className="w-12 h-12 mb-3 text-slate-300 animate-pulse" />
-                            <p className="text-xs font-medium text-content-strong">Belum ada modul / aplikasi</p>
+                            <p className="text-xs font-medium text-content-body">Belum ada modul / aplikasi</p>
                             <p className="text-xs mt-1 text-content-subtle">Klik tombol 'Add Modul / Aplikasi' di atas untuk membuat modul master pertama.</p>
                         </div>
                     ) : (
@@ -533,7 +533,7 @@ export const MasterDataPanel = ({
                     {selectedType === 'project_role' && (
                         <div className="bg-surface p-3 rounded-lg border border-border-subtle/80 mb-3 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shrink-0">
                             <div>
-                                <span className="text-xs font-medium text-content-strong block">Scope Filter</span>
+                                <span className="text-xs font-medium text-content-body block">Scope Filter</span>
                                 <span className="text-[10px] text-content-subtle font-medium block">Filter berdasarkan jenis jangkauan peran</span>
                             </div>
                             <div className="flex bg-surface-muted p-0.5 rounded-md border border-border-subtle/80 shrink-0 self-start sm:self-auto overflow-x-auto max-w-full">
@@ -546,7 +546,7 @@ export const MasterDataPanel = ({
                                     )}
                                 >
                                     <span>All Roles</span>
-                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'ALL' ? "bg-surface-muted text-content-strong" : "bg-slate-200/60 text-content-muted")}>
+                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'ALL' ? "bg-surface-muted text-content-body" : "bg-slate-200/60 text-content-secondary")}>
                                         {localMasterData.filter(d => d.type === 'project_role').length}
                                     </span>
                                 </button>
@@ -559,7 +559,7 @@ export const MasterDataPanel = ({
                                     )}
                                 >
                                     <span>Project Roles</span>
-                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'PROJECT' ? "bg-blue-50 text-blue-700" : "bg-slate-200/60 text-content-muted")}>
+                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'PROJECT' ? "bg-blue-50 text-blue-700" : "bg-slate-200/60 text-content-secondary")}>
                                         {localMasterData.filter(d => d.type === 'project_role' && (d.roleType === 'PROJECT' || d.role_type === 'PROJECT' || (!d.roleType && !d.role_type))).length}
                                     </span>
                                 </button>
@@ -572,7 +572,7 @@ export const MasterDataPanel = ({
                                     )}
                                 >
                                     <span>System Roles</span>
-                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'SYSTEM' ? "bg-purple-50 text-purple-700" : "bg-slate-200/60 text-content-muted")}>
+                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'SYSTEM' ? "bg-purple-50 text-purple-700" : "bg-slate-200/60 text-content-secondary")}>
                                         {localMasterData.filter(d => d.type === 'project_role' && (d.roleType === 'SYSTEM' || d.role_type === 'SYSTEM')).length}
                                     </span>
                                 </button>
@@ -778,7 +778,7 @@ export const MasterDataPanel = ({
                   onClick={() => setNewMasterRoleType('PROJECT')}
                   className={cn(
                     "py-2.5 px-3 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer",
-                    newMasterRoleType === 'PROJECT' ? "bg-surface text-indigo-600 shadow-sm border border-border-subtle/60" : "text-content-muted hover:text-content"
+                    newMasterRoleType === 'PROJECT' ? "bg-surface text-indigo-600 shadow-sm border border-border-subtle/60" : "text-content-secondary hover:text-content"
                   )}
                 >
                   <span>Project Role</span>
@@ -788,7 +788,7 @@ export const MasterDataPanel = ({
                   onClick={() => setNewMasterRoleType('SYSTEM')}
                   className={cn(
                     "py-2.5 px-3 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer",
-                    newMasterRoleType === 'SYSTEM' ? "bg-surface text-indigo-600 shadow-sm border border-border-subtle/60" : "text-content-muted hover:text-content"
+                    newMasterRoleType === 'SYSTEM' ? "bg-surface text-indigo-600 shadow-sm border border-border-subtle/60" : "text-content-secondary hover:text-content"
                   )}
                 >
                   <span>System Role</span>
@@ -890,7 +890,7 @@ export const MasterDataPanel = ({
                         setNewMasterColor('#' + val);
                       }
                     }}
-                    className="w-full h-12 px-3 bg-surface border border-border-subtle rounded-xl text-xs font-mono font-medium text-content-strong outline-none focus:border-indigo-500 transition-all uppercase"
+                    className="w-full h-12 px-3 bg-surface border border-border-subtle rounded-xl text-xs font-mono font-medium text-content-body outline-none focus:border-indigo-500 transition-all uppercase"
                     placeholder="#3b82f6"
                   />
                 </div>
@@ -940,7 +940,7 @@ export const MasterDataPanel = ({
                 placeholder="Cari ikon... (cth: bug, target, timer, check, activity, file, user, db, lock)"
                 value={iconSearch}
                 onChange={(e) => setIconSearch(e.target.value)}
-                className="w-full px-10 py-2.5 bg-surface border border-border-subtle rounded-xl text-xs font-medium text-content-strong placeholder:text-content-subtle focus:outline-none focus:border-indigo-500 transition-all pl-10"
+                className="w-full px-10 py-2.5 bg-surface border border-border-subtle rounded-xl text-xs font-medium text-content-body placeholder:text-content-subtle focus:outline-none focus:border-indigo-500 transition-all pl-10"
               />
               <Search className="w-4 h-4 text-content-subtle absolute left-3.5 top-1/2 -translate-y-1/2" />
             </div>
@@ -1034,7 +1034,7 @@ export const MasterDataPanel = ({
                             setEditingMaster({...editingMaster, color: '#' + val});
                           }
                         }}
-                        className="w-full h-12 px-3 bg-surface border border-border-subtle rounded-xl text-xs font-mono font-medium text-content-strong outline-none focus:border-indigo-500 transition-all uppercase"
+                        className="w-full h-12 px-3 bg-surface border border-border-subtle rounded-xl text-xs font-mono font-medium text-content-body outline-none focus:border-indigo-500 transition-all uppercase"
                         placeholder="#3b82f6"
                       />
                     </div>
@@ -1084,7 +1084,7 @@ export const MasterDataPanel = ({
                     placeholder="Cari ikon... (cth: bug, target, timer, check, activity, file, user, db, lock)"
                     value={editIconSearch}
                     onChange={(e) => setEditIconSearch(e.target.value)}
-                    className="w-full px-10 py-2.5 bg-surface border border-border-subtle rounded-xl text-xs font-medium text-content-strong placeholder:text-content-subtle focus:outline-none focus:border-indigo-500 transition-all pl-10"
+                    className="w-full px-10 py-2.5 bg-surface border border-border-subtle rounded-xl text-xs font-medium text-content-body placeholder:text-content-subtle focus:outline-none focus:border-indigo-500 transition-all pl-10"
                   />
                   <Search className="w-4 h-4 text-content-subtle absolute left-3.5 top-1/2 -translate-y-1/2" />
                 </div>
