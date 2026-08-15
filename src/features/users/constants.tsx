@@ -105,8 +105,8 @@ export const ROLE_DESCRIPTIONS: Record<AppRole, { label: string; badgeColor: str
   },
   viewer: {
     label: "Observer",
-    badgeColor: "bg-slate-100 border-slate-300 text-slate-700",
-    icon: <Eye className="w-4 h-4 text-slate-600 shrink-0" />,
+    badgeColor: "bg-surface-muted border-slate-300 text-content-body",
+    icon: <Eye className="w-4 h-4 text-content-secondary shrink-0" />,
     desc: "Read-only workspace access. Best suited for clients, corporate stakeholders, or general auditors who need high visibility into work items."
   }
 };

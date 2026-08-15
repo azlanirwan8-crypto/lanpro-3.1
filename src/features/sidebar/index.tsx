@@ -208,7 +208,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                         "w-full flex items-center gap-3 px-3 py-2.5 min-h-11 rounded-md transition-all text-xs relative overflow-hidden group",
                         isActive 
                           ? 'bg-[#364574] text-white font-medium border-l-3 border-amber-400 shadow-soft' 
-                          : 'text-[#abb9e8] hover:bg-white/5 hover:text-white'
+                          : 'text-[#abb9e8] hover:bg-surface/5 hover:text-white'
                       )}
                       title={isSidebarCollapsed ? item.label : undefined}
                     >
@@ -220,7 +220,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                           {hasChildren && (
                             <div 
                               onClick={(e) => toggleExpand(item.id, e)}
-                              className="p-2 min-w-9 min-h-9 flex items-center justify-center rounded hover:bg-white/10 text-slate-300 hover:text-white transition-colors ml-1"
+                              className="p-2 min-w-9 min-h-9 flex items-center justify-center rounded hover:bg-surface/10 text-slate-300 hover:text-white transition-colors ml-1"
                             >
                               {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
                             </div>
@@ -246,11 +246,11 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                               className={cn(
                                 "w-full flex items-center gap-2 py-2 px-2 min-h-11 rounded text-xs transition-colors text-left",
                                 isSubActive 
-                                  ? 'text-white font-medium bg-white/10' 
-                                  : 'text-[#878a99] hover:text-white hover:bg-white/5'
+                                  ? 'text-white font-medium bg-surface/10' 
+                                  : 'text-[#878a99] hover:text-white hover:bg-surface/5'
                               )}
                             >
-                              <span className="text-slate-400 text-xs sm:text-[10px]">—</span>
+                              <span className="text-content-subtle text-xs sm:text-[10px]">—</span>
                               <span className="truncate">{subItem.label}</span>
                             </button>
                           );
@@ -274,7 +274,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                 setIsUserMenuOpen(false);
                 if (onOpenProfile) onOpenProfile();
               }}
-              className="w-full text-left px-4 py-3 min-h-11 text-xs font-medium hover:bg-white/10 flex items-center gap-2.5 transition-colors text-slate-200 hover:text-white cursor-pointer"
+              className="w-full text-left px-4 py-3 min-h-11 text-xs font-medium hover:bg-surface/10 flex items-center gap-2.5 transition-colors text-slate-200 hover:text-white cursor-pointer"
             >
               <User className="w-4 h-4 text-amber-400" />
               <span>Profil Anda</span>
@@ -297,7 +297,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
            whileHover={{ scale: 1.01 }}
            onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
            className={cn(
-             "flex items-center p-2 rounded-lg hover:bg-white/10 transition-all cursor-pointer group",
+             "flex items-center p-2 rounded-lg hover:bg-surface/10 transition-all cursor-pointer group",
              isSidebarCollapsed ? 'justify-center' : 'gap-3'
            )}
            title="Klik untuk opsi profil & keluar"
@@ -309,7 +309,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                 <div className="text-xs font-medium text-white truncate">{user?.displayName || currentUser?.displayName || currentUser?.username || 'User'}</div>
                 <div className="text-xs sm:text-[10px] text-[#878a99] truncate font-mono">{currentUser?.username || 'admin'}</div>
               </div>
-              <ChevronDown className={cn("w-4 h-4 text-slate-400 transition-transform duration-200", isUserMenuOpen && "rotate-180")} />
+              <ChevronDown className={cn("w-4 h-4 text-content-subtle transition-transform duration-200", isUserMenuOpen && "rotate-180")} />
             </>
           )}
         </motion.div>

@@ -63,15 +63,15 @@ export const TimelineDatePills = ({
     <>
       <div className="absolute -left-1 transform -translate-x-full pr-2 top-1/2 -translate-y-1/2 whitespace-nowrap z-50 pointer-events-none">
         <div className="bg-slate-900/90 text-xs sm:text-[10px] font-medium text-white px-2 py-1 rounded shadow-soft-lg backdrop-blur-sm border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in slide-in-from-right-1">
-          <Calendar className="w-2.5 h-2.5 text-slate-400" />
+          <Calendar className="w-2.5 h-2.5 text-content-subtle" />
           {format(start, "MMM d, yyyy")}
         </div>
       </div>
       <div className="absolute -right-1 transform translate-x-full pl-2 top-1/2 -translate-y-1/2 whitespace-nowrap z-50 pointer-events-none">
         <div className="bg-slate-900/90 text-xs sm:text-[10px] font-medium text-white px-2 py-1 rounded shadow-soft-lg backdrop-blur-sm border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in slide-in-from-left-1">
-          <Calendar className="w-2.5 h-2.5 text-slate-400" />
+          <Calendar className="w-2.5 h-2.5 text-content-subtle" />
           {format(end, "MMM d, yyyy")}
-          <span className="text-slate-400 font-normal">
+          <span className="text-content-subtle font-normal">
             ({duration} {duration === 1 ? "day" : "days"})
           </span>
         </div>
@@ -223,7 +223,7 @@ export const VelzonFloatingParticles = () => {
       {particles.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute rounded-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.9)]"
+          className="absolute rounded-full bg-surface shadow-[0_0_12px_rgba(255,255,255,0.9)]"
           style={{
             width: p.size,
             height: p.size,

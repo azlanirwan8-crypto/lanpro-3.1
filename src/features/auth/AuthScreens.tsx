@@ -219,17 +219,17 @@ export const RegisterScreen = ({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.25 }}
-      className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100/90 p-8 sm:p-10 relative z-10 font-sans mx-auto"
+      className="w-full max-w-md bg-surface rounded-2xl shadow-2xl border border-border-faint/90 p-8 sm:p-10 relative z-10 font-sans mx-auto"
     >
       {/* Velzon Header */}
       <div className="text-center space-y-1.5 mb-6">
         <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-primary text-white shadow-md shadow-primary/25 mb-1">
           <UserPlus className="w-6 h-6 text-amber-400" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
+        <h2 className="text-2xl font-bold text-content-strong tracking-tight">
           Create New Account
         </h2>
-        <p className="text-xs font-medium text-slate-500">
+        <p className="text-xs font-medium text-content-muted">
           Join LanPro to manage projects and workflows
         </p>
       </div>
@@ -237,7 +237,7 @@ export const RegisterScreen = ({
       <form className="space-y-4" onSubmit={handleRegisterSubmit}>
         {/* FULL NAME INPUT */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700 tracking-wide block">
+          <label className="text-xs font-semibold text-content-body tracking-wide block">
             Full Name <span className="text-rose-500">*</span>
           </label>
           <input
@@ -248,8 +248,8 @@ export const RegisterScreen = ({
             onChange={(e) => handleNameChange(e.target.value)}
             placeholder="John Doe"
             className={cn(
-              "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-              fieldErrors.name ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
+              "w-full px-4 py-3 bg-surface-sunken border rounded-lg focus:bg-surface focus:ring-2 transition-all outline-none text-sm font-medium text-content placeholder:text-content-subtle",
+              fieldErrors.name ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-border-subtle focus:ring-primary/20 focus:border-primary"
             )}
           />
           {fieldErrors.name && (
@@ -262,7 +262,7 @@ export const RegisterScreen = ({
 
         {/* EMAIL ADDRESS INPUT */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700 tracking-wide block">
+          <label className="text-xs font-semibold text-content-body tracking-wide block">
             Email Address <span className="text-rose-500">*</span>
           </label>
           <input
@@ -272,8 +272,8 @@ export const RegisterScreen = ({
             onChange={(e) => handleEmailChange(e.target.value)}
             placeholder="john.doe@company.com"
             className={cn(
-              "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-              fieldErrors.email ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
+              "w-full px-4 py-3 bg-surface-sunken border rounded-lg focus:bg-surface focus:ring-2 transition-all outline-none text-sm font-medium text-content placeholder:text-content-subtle",
+              fieldErrors.email ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-border-subtle focus:ring-primary/20 focus:border-primary"
             )}
           />
           {fieldErrors.email && (
@@ -286,8 +286,8 @@ export const RegisterScreen = ({
 
         {/* USERNAME INPUT */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700 tracking-wide block">
-            Username <span className="text-rose-500">*</span> <span className="text-xs sm:text-[11px] text-slate-400 font-normal">(Huruf saja, maks 10)</span>
+          <label className="text-xs font-semibold text-content-body tracking-wide block">
+            Username <span className="text-rose-500">*</span> <span className="text-xs sm:text-[11px] text-content-subtle font-normal">(Huruf saja, maks 10)</span>
           </label>
           <input
             type="text"
@@ -297,8 +297,8 @@ export const RegisterScreen = ({
             onChange={handleUsernameChange}
             placeholder="johndoe"
             className={cn(
-              "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-              fieldErrors.username ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
+              "w-full px-4 py-3 bg-surface-sunken border rounded-lg focus:bg-surface focus:ring-2 transition-all outline-none text-sm font-medium text-content placeholder:text-content-subtle",
+              fieldErrors.username ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-border-subtle focus:ring-primary/20 focus:border-primary"
             )}
           />
           {fieldErrors.username && (
@@ -311,7 +311,7 @@ export const RegisterScreen = ({
 
         {/* PASSWORD INPUT & STRENGTH METER */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700 tracking-wide block">
+          <label className="text-xs font-semibold text-content-body tracking-wide block">
             Password <span className="text-rose-500">*</span>
           </label>
           <div className="relative">
@@ -322,14 +322,14 @@ export const RegisterScreen = ({
               onChange={(e) => handlePasswordChange(e.target.value)}
               placeholder="••••••••"
               className={cn(
-                "w-full pl-4 pr-11 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-                fieldErrors.password ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
+                "w-full pl-4 pr-11 py-3 bg-surface-sunken border rounded-lg focus:bg-surface focus:ring-2 transition-all outline-none text-sm font-medium text-content placeholder:text-content-subtle",
+                fieldErrors.password ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-border-subtle focus:ring-primary/20 focus:border-primary"
               )}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-primary focus:outline-none cursor-pointer transition-colors"
+              className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-content-subtle hover:text-primary focus:outline-none cursor-pointer transition-colors"
               title={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -338,9 +338,9 @@ export const RegisterScreen = ({
 
           {/* Password Strength Indicator Bar */}
           {password.length > 0 && (
-            <div className="mt-2 space-y-1.5 p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg">
+            <div className="mt-2 space-y-1.5 p-2.5 bg-surface-sunken border border-border-subtle/80 rounded-lg">
               <div className="flex items-center justify-between text-xs sm:text-[11px] font-medium">
-                <span className="text-slate-600">Password Strength:</span>
+                <span className="text-content-secondary">Password Strength:</span>
                 <span className={passStrength.color}>{passStrength.label}</span>
               </div>
               <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
@@ -351,17 +351,17 @@ export const RegisterScreen = ({
               </div>
 
               {/* Criteria Checklist */}
-              <div className="grid grid-cols-2 gap-1 text-xs sm:text-[10px] font-medium mt-1.5 text-slate-500">
-                <div className={cn("flex items-center gap-1", passStrength.criteria.minLength ? "text-emerald-600 font-medium" : "text-slate-400")}>
+              <div className="grid grid-cols-2 gap-1 text-xs sm:text-[10px] font-medium mt-1.5 text-content-muted">
+                <div className={cn("flex items-center gap-1", passStrength.criteria.minLength ? "text-emerald-600 font-medium" : "text-content-subtle")}>
                   <span>{passStrength.criteria.minLength ? "[✓]" : "[ ]"}</span> Min 8 Karakter
                 </div>
-                <div className={cn("flex items-center gap-1", passStrength.criteria.upper ? "text-emerald-600 font-medium" : "text-slate-400")}>
+                <div className={cn("flex items-center gap-1", passStrength.criteria.upper ? "text-emerald-600 font-medium" : "text-content-subtle")}>
                   <span>{passStrength.criteria.upper ? "[✓]" : "[ ]"}</span> Huruf Besar (A-Z)
                 </div>
-                <div className={cn("flex items-center gap-1", passStrength.criteria.digit ? "text-emerald-600 font-medium" : "text-slate-400")}>
+                <div className={cn("flex items-center gap-1", passStrength.criteria.digit ? "text-emerald-600 font-medium" : "text-content-subtle")}>
                   <span>{passStrength.criteria.digit ? "[✓]" : "[ ]"}</span> Angka (0-9)
                 </div>
-                <div className={cn("flex items-center gap-1", passStrength.criteria.special ? "text-emerald-600 font-medium" : "text-slate-400")}>
+                <div className={cn("flex items-center gap-1", passStrength.criteria.special ? "text-emerald-600 font-medium" : "text-content-subtle")}>
                   <span>{passStrength.criteria.special ? "[✓]" : "[ ]"}</span> Simbol (@$!%*?&)
                 </div>
               </div>
@@ -395,7 +395,7 @@ export const RegisterScreen = ({
         </button>
       </form>
 
-      <p className="text-center text-xs font-medium text-slate-500 pt-5 mt-4 border-t border-slate-100">
+      <p className="text-center text-xs font-medium text-content-muted pt-5 mt-4 border-t border-border-faint">
         Already have an account?{" "}
         <button
           type="button"
@@ -412,11 +412,11 @@ export const RegisterScreen = ({
           <motion.div
             initial={{ scale: 0.85, opacity: 0, y: 15 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            className="bg-white rounded-xl p-8 max-w-md w-full shadow-2xl border border-slate-100 text-center relative overflow-hidden space-y-4"
+            className="bg-surface rounded-xl p-8 max-w-md w-full shadow-2xl border border-border-faint text-center relative overflow-hidden space-y-4"
           >
             <button 
               onClick={handleSuccessModalConfirm}
-              className="absolute top-4 right-4 text-slate-300 hover:text-slate-600 transition-colors p-1 rounded-md"
+              className="absolute top-4 right-4 text-slate-300 hover:text-content-secondary transition-colors p-1 rounded-md"
               title="Close"
             >
               <X className="w-5 h-5" />
@@ -426,10 +426,10 @@ export const RegisterScreen = ({
             <VelzonSuccessIcon />
 
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-slate-800 tracking-tight">
+              <h3 className="text-xl font-bold text-content-strong tracking-tight">
                 Registrasi berhasil!
               </h3>
-              <p className="text-sm text-slate-500 font-normal leading-relaxed px-2">
+              <p className="text-sm text-content-muted font-normal leading-relaxed px-2">
                 Silakan tunggu Administrator menyetujui akun Anda sebelum bisa Login.
               </p>
             </div>
@@ -456,7 +456,7 @@ export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) =>
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.25 }}
-      className="w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-slate-100/90 p-8 sm:p-10 relative z-10 font-sans mx-auto text-center space-y-6"
+      className="w-full max-w-sm bg-surface rounded-2xl shadow-2xl border border-border-faint/90 p-8 sm:p-10 relative z-10 font-sans mx-auto text-center space-y-6"
     >
       {/* Velzon Center Animated Logo Icon */}
       <div className="relative inline-flex items-center justify-center pt-2">
@@ -477,7 +477,7 @@ export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) =>
 
       {/* Loading Status & Message */}
       <div className="space-y-1.5">
-        <h3 className="text-base font-semibold text-slate-800 tracking-tight flex items-center justify-center gap-1.5">
+        <h3 className="text-base font-semibold text-content-strong tracking-tight flex items-center justify-center gap-1.5">
           <span>{loadingText || "Authenticating..."}</span>
           <span className="flex space-x-1">
             <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
@@ -485,13 +485,13 @@ export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) =>
             <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.4s]" />
           </span>
         </h3>
-        <p className="text-xs text-slate-400 font-medium">
+        <p className="text-xs text-content-subtle font-medium">
           Memverifikasi sesi workspace Anda...
         </p>
       </div>
 
       {/* Velzon Smooth Gradient Progress Bar */}
-      <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden relative">
+      <div className="w-full bg-surface-muted rounded-full h-1.5 overflow-hidden relative">
         <motion.div 
           className="bg-gradient-to-r from-amber-400 via-info to-cyan-400 h-full rounded-full"
           animate={{ width: ["10%", "90%", "35%", "95%"] }}
@@ -594,17 +594,17 @@ export const LoginScreen = ({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.25 }}
-            className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100/90 p-8 sm:p-10 relative z-10 font-sans mx-auto"
+            className="w-full max-w-md bg-surface rounded-2xl shadow-2xl border border-border-faint/90 p-8 sm:p-10 relative z-10 font-sans mx-auto"
           >
             {/* Velzon Card Header */}
             <div className="text-center space-y-1.5 mb-6">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-primary text-white shadow-md shadow-primary/25 mb-1">
                 <ShieldCheck className="w-6 h-6 text-amber-400" />
               </div>
-              <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
+              <h2 className="text-2xl font-bold text-content-strong tracking-tight">
                 Sign In
               </h2>
-              <p className="text-xs font-medium text-slate-500">
+              <p className="text-xs font-medium text-content-muted">
                 Sign in to continue to LanPro Workspace
               </p>
             </div>
@@ -615,7 +615,7 @@ export const LoginScreen = ({
             >
               {/* USERNAME FIELD */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700 tracking-wide block">
+                <label className="text-xs font-semibold text-content-body tracking-wide block">
                   Username <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -624,8 +624,8 @@ export const LoginScreen = ({
                   value={username}
                   onChange={(e) => handleUsernameChange(e.target.value)}
                   className={cn(
-                    "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-                    fieldErrors.username ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
+                    "w-full px-4 py-3 bg-surface-sunken border rounded-lg focus:bg-surface focus:ring-2 transition-all outline-none text-sm font-medium text-content placeholder:text-content-subtle",
+                    fieldErrors.username ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-border-subtle focus:ring-primary/20 focus:border-primary"
                   )}
                 />
                 {fieldErrors.username && (
@@ -638,7 +638,7 @@ export const LoginScreen = ({
 
               {/* PASSWORD FIELD */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700 tracking-wide block">
+                <label className="text-xs font-semibold text-content-body tracking-wide block">
                   Password <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
@@ -648,14 +648,14 @@ export const LoginScreen = ({
                     value={password}
                     onChange={(e) => handlePasswordChange(e.target.value)}
                     className={cn(
-                      "w-full pl-4 pr-11 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-                      fieldErrors.password ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
+                      "w-full pl-4 pr-11 py-3 bg-surface-sunken border rounded-lg focus:bg-surface focus:ring-2 transition-all outline-none text-sm font-medium text-content placeholder:text-content-subtle",
+                      fieldErrors.password ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-border-subtle focus:ring-primary/20 focus:border-primary"
                     )}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-primary focus:outline-none cursor-pointer transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-content-subtle hover:text-primary focus:outline-none cursor-pointer transition-colors"
                     title={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -678,7 +678,7 @@ export const LoginScreen = ({
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
                   />
-                  <span className="text-xs font-medium text-slate-600">
+                  <span className="text-xs font-medium text-content-secondary">
                     Remember Me
                   </span>
                 </label>
@@ -695,7 +695,7 @@ export const LoginScreen = ({
               </button>
             </form>
 
-            <p className="text-center text-xs font-medium text-slate-500 pt-5 mt-4 border-t border-slate-100">
+            <p className="text-center text-xs font-medium text-content-muted pt-5 mt-4 border-t border-border-faint">
               Don't have an account?{" "}
               <button
                 type="button"

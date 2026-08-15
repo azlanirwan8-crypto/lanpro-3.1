@@ -45,11 +45,11 @@ export const UserBadge = ({ authorId, users = [], className, showRole = false, s
       />
       {showName && (
         <div className="flex flex-col min-w-0">
-          <span className="truncate text-xs font-medium text-slate-700 leading-tight">
+          <span className="truncate text-xs font-medium text-content-body leading-tight">
             {name}
           </span>
           {showRole && role && (
-            <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-slate-400 uppercase tracking-wider leading-none mt-0.5">
+            <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-content-subtle uppercase tracking-wider leading-none mt-0.5">
               {role}
             </span>
           )}

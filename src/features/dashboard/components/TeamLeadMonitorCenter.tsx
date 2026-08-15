@@ -80,12 +80,12 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs sm:text-[10px] font-medium uppercase tracking-widest">
               <Radio className="w-3 h-3 animate-pulse" /> Live Team Lead Control
             </span>
-            <span className="text-slate-400 text-xs font-medium">• Pantauan Real-Time Tim & Kinerja</span>
+            <span className="text-content-subtle text-xs font-medium">• Pantauan Real-Time Tim & Kinerja</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-medium tracking-tight text-white flex items-center gap-3">
             Dashboard Pemantauan Tim Lead
           </h2>
-          <p className="text-xs text-slate-400 font-medium mt-1 max-w-2xl leading-relaxed">
+          <p className="text-xs text-content-subtle font-medium mt-1 max-w-2xl leading-relaxed">
             Pusat kendali operasional untuk memantau beban kerja anggota, mendeteksi hambatan (blocker) secara dini, mengawasi progress sprint aktif, dan mengevaluasi kedisiplinan tim secara real-time.
           </p>
         </div>
@@ -112,7 +112,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-slate-400">Total Anggota Aktif</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">Total Anggota Aktif</span>
             <div className="text-2xl font-medium text-white mt-1">{projectMembers.length} Personil</div>
             <span className="text-xs sm:text-[10px] text-emerald-400 font-medium mt-1 inline-block">● {projectMembers.filter(m => m?.status === 'online' || true).length} Siap Tugas</span>
           </div>
@@ -123,7 +123,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-slate-400">Tugas Terhambat (Blockers)</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">Tugas Terhambat (Blockers)</span>
             <div className="text-2xl font-medium text-rose-400 mt-1">{blockedTasks.length} Kendala</div>
             <span className="text-xs sm:text-[10px] text-rose-400/80 font-medium mt-1 inline-block">⚠️ Perlu Intervensi Lead</span>
           </div>
@@ -134,7 +134,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-slate-400">Tugas Terlambat (Overdue)</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">Tugas Terlambat (Overdue)</span>
             <div className="text-2xl font-medium text-amber-400 mt-1">{overdueTasks.length} Tugas</div>
             <span className="text-xs sm:text-[10px] text-amber-400/80 font-medium mt-1 inline-block">⏰ Melewati Deadline</span>
           </div>
@@ -145,11 +145,11 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-slate-400">Sprint Aktif</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">Sprint Aktif</span>
             <div className="text-2xl font-medium text-emerald-400 mt-1 truncate max-w-[140px]">
               {activeSprint ? activeSprint.name : 'Tidak Ada Sprint'}
             </div>
-            <span className="text-xs sm:text-[10px] text-slate-400 font-medium mt-1 inline-block">
+            <span className="text-xs sm:text-[10px] text-content-subtle font-medium mt-1 inline-block">
               {activeSprint ? `${activeSprint.progress || 0}% Selesai` : 'Mulai sprint baru'}
             </span>
           </div>
@@ -167,7 +167,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2",
             selectedTab === 'workload'
               ? "bg-indigo-600 text-white shadow-soft-lg shadow-indigo-600/30"
-              : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
+              : "bg-slate-800 text-content-subtle hover:text-white hover:bg-slate-700"
           )}
         >
           <Users className="w-4 h-4" />
@@ -180,13 +180,13 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2 relative",
             selectedTab === 'blockers'
               ? "bg-rose-600 text-white shadow-soft-lg shadow-rose-600/30"
-              : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
+              : "bg-slate-800 text-content-subtle hover:text-white hover:bg-slate-700"
           )}
         >
           <AlertTriangle className="w-4 h-4" />
           Blocker & Resiko Kritis
           {blockedTasks.length > 0 && (
-            <span className="px-1.5 py-0.5 rounded-full bg-white text-rose-600 text-xs sm:text-[10px] font-medium ml-1">
+            <span className="px-1.5 py-0.5 rounded-full bg-surface text-rose-600 text-xs sm:text-[10px] font-medium ml-1">
               {blockedTasks.length}
             </span>
           )}
@@ -198,7 +198,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2",
             selectedTab === 'sprint'
               ? "bg-emerald-600 text-white shadow-soft-lg shadow-emerald-600/30"
-              : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
+              : "bg-slate-800 text-content-subtle hover:text-white hover:bg-slate-700"
           )}
         >
           <Zap className="w-4 h-4" />
@@ -211,7 +211,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2",
             selectedTab === 'activity'
               ? "bg-violet-600 text-white shadow-soft-lg shadow-violet-600/30"
-              : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
+              : "bg-slate-800 text-content-subtle hover:text-white hover:bg-slate-700"
           )}
         >
           <Activity className="w-4 h-4" />
@@ -224,7 +224,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
         <div className="space-y-4 relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-800/40 p-4 rounded-xl border border-slate-800">
             <div className="flex items-center gap-2 w-full sm:w-72 relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3" />
+              <Search className="w-4 h-4 text-content-subtle absolute left-3" />
               <input
                 type="text"
                 placeholder="Cari anggota tim..."
@@ -234,12 +234,12 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
               />
             </div>
             <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-              <span className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase">Departemen:</span>
+              <span className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase">Departemen:</span>
               <button
                 onClick={() => setSelectedDepartment('all')}
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
-                  selectedDepartment === 'all' ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"
+                  selectedDepartment === 'all' ? "bg-indigo-600 text-white" : "bg-slate-800 text-content-subtle hover:text-white"
                 )}
               >
                 Semua
@@ -250,7 +250,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                   onClick={() => setSelectedDepartment(dept)}
                   className={cn(
                     "px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap",
-                    selectedDepartment === dept ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"
+                    selectedDepartment === dept ? "bg-indigo-600 text-white" : "bg-slate-800 text-content-subtle hover:text-white"
                   )}
                 >
                   {dept}
@@ -292,21 +292,21 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
                     <div className="grid grid-cols-3 gap-2 py-3 border-y border-slate-700/60 my-3 text-center">
                       <div>
-                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-slate-400 uppercase tracking-widest font-medium block">Total</span>
+                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle uppercase tracking-widest font-medium block">Total</span>
                         <span className="text-sm font-medium text-white">{totalAssigned}</span>
                       </div>
                       <div>
-                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-slate-400 uppercase tracking-widest font-medium block">Aktif</span>
+                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle uppercase tracking-widest font-medium block">Aktif</span>
                         <span className="text-sm font-medium text-sky-400">{activeCount}</span>
                       </div>
                       <div>
-                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-slate-400 uppercase tracking-widest font-medium block">Selesai</span>
+                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle uppercase tracking-widest font-medium block">Selesai</span>
                         <span className="text-sm font-medium text-emerald-400">{doneCount}</span>
                       </div>
                     </div>
 
                     <div className="space-y-1.5">
-                      <div className="flex justify-between text-xs sm:text-[10px] font-medium text-slate-400">
+                      <div className="flex justify-between text-xs sm:text-[10px] font-medium text-content-subtle">
                         <span>Rasio Penyelesaian</span>
                         <span>{workloadPercentage}%</span>
                       </div>
@@ -319,7 +319,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs text-slate-400 font-medium">
+                  <div className="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs text-content-subtle font-medium">
                     <span>Role: <strong className="text-slate-200">{member.role || 'Member'}</strong></span>
                     <button
                       onClick={() => {
@@ -353,7 +353,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
               <div className="text-center py-12 bg-slate-800/40 rounded-xl border border-slate-800">
                 <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
                 <h4 className="text-base font-medium text-white">Tidak Ada Kendala Kritis!</h4>
-                <p className="text-xs text-slate-400 mt-1">Semua tugas berjalan lancar tanpa blocker maupun overdue yang tertunda.</p>
+                <p className="text-xs text-content-subtle mt-1">Semua tugas berjalan lancar tanpa blocker maupun overdue yang tertunda.</p>
               </div>
             ) : (
               [...blockedTasks, ...overdueTasks].map((task, idx) => {
@@ -370,15 +370,15 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                         ) : (
                           <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-xs sm:text-[10px] font-medium">Overdue</span>
                         )}
-                        <span className="text-xs sm:text-[10px] text-slate-400 font-medium">• Prioritas: <strong className="text-slate-200">{task.priority}</strong></span>
+                        <span className="text-xs sm:text-[10px] text-content-subtle font-medium">• Prioritas: <strong className="text-slate-200">{task.priority}</strong></span>
                       </div>
                       <h4 className="text-sm font-medium text-white">{task.title}</h4>
-                      <p className="text-xs text-slate-400 line-clamp-1">{task.description || 'Tidak ada deskripsi tambahan.'}</p>
+                      <p className="text-xs text-content-subtle line-clamp-1">{task.description || 'Tidak ada deskripsi tambahan.'}</p>
                     </div>
 
                     <div className="flex items-center gap-3 shrink-0">
                       <div className="text-right hidden sm:block">
-                        <span className="text-xs sm:text-[10px] text-slate-400 font-medium block">Deadline</span>
+                        <span className="text-xs sm:text-[10px] text-content-subtle font-medium block">Deadline</span>
                         <span className="text-xs text-rose-400 font-medium">
                           {task.endDate ? format(ensureDate(task.endDate), 'dd MMM yyyy') : 'Tidak ditentukan'}
                         </span>
@@ -414,7 +414,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                   <div key={idx} className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between">
                     <div>
                       <h4 className="text-xs font-medium text-white">{team.name}</h4>
-                      <span className="text-xs sm:text-[10px] text-slate-400">Selesai: {team.Done} | Aktif: {team.Active}</span>
+                      <span className="text-xs sm:text-[10px] text-content-subtle">Selesai: {team.Done} | Aktif: {team.Active}</span>
                     </div>
                     <div className="text-right">
                       <span className="text-sm font-medium text-emerald-400">{team.Done + team.Active} Tugas</span>
@@ -435,9 +435,9 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                       <span className="text-xs font-medium text-white">{activeSprint.name}</span>
                       <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-xs sm:text-[10px] font-medium">Aktif</span>
                     </div>
-                    <p className="text-xs text-slate-400">{activeSprint.goal || 'Tidak ada goal sprint yang ditentukan.'}</p>
+                    <p className="text-xs text-content-subtle">{activeSprint.goal || 'Tidak ada goal sprint yang ditentukan.'}</p>
                     <div className="pt-2">
-                      <div className="flex justify-between text-xs sm:text-[10px] font-medium text-slate-400 mb-1">
+                      <div className="flex justify-between text-xs sm:text-[10px] font-medium text-content-subtle mb-1">
                         <span>Progress Sprint</span>
                         <span>{activeSprint.progress || 0}%</span>
                       </div>
@@ -455,7 +455,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-xs text-slate-400 italic">Belum ada sprint aktif saat ini.</p>
+                  <p className="text-xs text-content-subtle italic">Belum ada sprint aktif saat ini.</p>
                   <button
                     onClick={() => setCurrentView('planning')}
                     className="mt-3 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition-all"
@@ -477,7 +477,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
           </h3>
           <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
             {activityLogs.length === 0 ? (
-              <div className="text-center py-12 text-slate-500 text-xs italic">Belum ada log aktivitas tercatat.</div>
+              <div className="text-center py-12 text-content-muted text-xs italic">Belum ada log aktivitas tercatat.</div>
             ) : (
               activityLogs.slice(0, 15).map((log, idx) => (
                 <div key={log.id || idx} className="bg-slate-800/60 border border-slate-700/60 p-3.5 rounded-xl flex items-center justify-between gap-4">
@@ -487,12 +487,12 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                       <p className="text-xs text-white font-medium">
                         <strong className="text-indigo-300">{log.userName || log.userEmail || 'Anggota Tim'}</strong> {humanizeActivityAction(log.action || log.description)}
                       </p>
-                      <span className="text-xs sm:text-[10px] text-slate-400 font-mono">
+                      <span className="text-xs sm:text-[10px] text-content-subtle font-mono">
                         {log.timestamp ? format(ensureDate(log.timestamp), 'dd MMM yyyy, HH:mm') : 'Baru saja'}
                       </span>
                     </div>
                   </div>
-                  <span className="px-2 py-1 rounded bg-slate-900 text-slate-400 text-xs sm:text-[10px] font-mono">
+                  <span className="px-2 py-1 rounded bg-slate-900 text-content-subtle text-xs sm:text-[10px] font-mono">
                     {log.targetType || 'Aktivitas'}
                   </span>
                 </div>

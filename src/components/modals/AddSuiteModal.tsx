@@ -34,40 +34,40 @@ export const AddSuiteModal: React.FC<AddSuiteModalProps> = ({
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className="bg-white border border-slate-200/80 rounded-md p-6 max-w-md w-full shadow-2xl space-y-5"
+          className="bg-surface border border-border-subtle/80 rounded-md p-6 max-w-md w-full shadow-2xl space-y-5"
         >
-          <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <div className="flex items-center gap-3 border-b border-border-faint pb-3">
             <div className="w-10 h-10 rounded-md bg-primary/10 text-primary flex items-center justify-center font-medium">
               <Plus className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-medium text-slate-800 uppercase tracking-wider">
+              <h3 className="text-sm font-medium text-content-strong uppercase tracking-wider">
                 Tambah Dokumen Skrip
               </h3>
-              <p className="text-xs sm:text-[11px] text-slate-400 font-medium">Buat modul skenario pengujian baru</p>
+              <p className="text-xs sm:text-[11px] text-content-subtle font-medium">Buat modul skenario pengujian baru</p>
             </div>
           </div>
 
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs sm:text-[11px] text-slate-700 font-medium block">Nama Dokumen *</label>
+              <label className="text-xs sm:text-[11px] text-content-body font-medium block">Nama Dokumen *</label>
               <input
                 autoFocus
                 type="text"
                 required
                 value={suiteName}
                 onChange={(e) => onNameChange(e.target.value)}
-                className="w-full text-xs p-3 bg-slate-50/80 border border-slate-200 rounded-md focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none font-medium text-slate-800"
+                className="w-full text-xs p-3 bg-surface-sunken/80 border border-border-subtle rounded-md focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none font-medium text-content-strong"
                 placeholder="Masukkan nama dokumen..."
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs sm:text-[11px] text-slate-700 font-medium block">Fase Testing *</label>
+              <label className="text-xs sm:text-[11px] text-content-body font-medium block">Fase Testing *</label>
               <select
                 value={phase}
                 onChange={(e) => onPhaseChange(e.target.value as any)}
-                className="w-full text-xs p-3 bg-slate-50/80 border border-slate-200 rounded-md focus:border-primary focus:outline-none font-medium text-primary cursor-pointer"
+                className="w-full text-xs p-3 bg-surface-sunken/80 border border-border-subtle rounded-md focus:border-primary focus:outline-none font-medium text-primary cursor-pointer"
               >
                 <option value="SIT">Fase SIT (System Integration Test)</option>
                 <option value="UAT">Fase UAT (User Acceptance Test)</option>
@@ -79,7 +79,7 @@ export const AddSuiteModal: React.FC<AddSuiteModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium uppercase tracking-wider rounded-md transition-all cursor-pointer"
+                className="px-4 py-2.5 bg-surface-muted hover:bg-slate-200 text-content-body text-xs font-medium uppercase tracking-wider rounded-md transition-all cursor-pointer"
               >
                 Batal
               </button>

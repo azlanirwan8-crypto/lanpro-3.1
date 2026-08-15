@@ -83,7 +83,7 @@ export const HeaderAvatarGroup: React.FC<HeaderAvatarGroupProps> = ({ allUsers, 
       })}
       
       {displayUsers.length > 5 && (
-        <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-50 flex items-center justify-center text-xs sm:text-[10px] font-medium text-slate-500 shadow-soft ring-1 ring-slate-200 z-0 relative hover:z-10 hover:bg-slate-100 transition-all cursor-default shrink-0">
+        <div className="w-8 h-8 rounded-full border-2 border-white bg-surface-sunken flex items-center justify-center text-xs sm:text-[10px] font-medium text-content-muted shadow-soft ring-1 ring-slate-200 z-0 relative hover:z-10 hover:bg-surface-muted transition-all cursor-default shrink-0">
           +{displayUsers.length - 5}
         </div>
       )}

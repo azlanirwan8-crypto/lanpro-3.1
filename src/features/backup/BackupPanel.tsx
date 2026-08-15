@@ -170,23 +170,23 @@ export const BackupPanel = ({
   };
 
   return (
-    <div className="flex-1 overflow-auto p-4 md:p-5 bg-slate-50/60 animate-in fade-in duration-300 custom-scrollbar w-full space-y-4">
+    <div className="flex-1 overflow-auto p-4 md:p-5 bg-surface-sunken/60 animate-in fade-in duration-300 custom-scrollbar w-full space-y-4">
       {/* Top Cards: Export & Restore */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Export Box */}
-        <div className="bg-white border border-slate-200/80 rounded-lg p-5 flex flex-col justify-between shadow-2xs">
+        <div className="bg-surface border border-border-subtle/80 rounded-lg p-5 flex flex-col justify-between shadow-2xs">
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-9 h-9 bg-blue-50 text-blue-600 rounded-md flex items-center justify-center shrink-0">
                 <Download className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-xs font-medium text-slate-800 uppercase tracking-wide">Export Database Backup</h2>
-                <p className="text-xs text-slate-500 mt-0.5">Unduh snapshot lengkap seluruh tabel database dalam format JSON.</p>
+                <h2 className="text-xs font-medium text-content-strong uppercase tracking-wide">Export Database Backup</h2>
+                <p className="text-xs text-content-muted mt-0.5">Unduh snapshot lengkap seluruh tabel database dalam format JSON.</p>
               </div>
             </div>
           </div>
-          <div className="mt-4 pt-3 border-t border-slate-100 flex justify-end">
+          <div className="mt-4 pt-3 border-t border-border-faint flex justify-end">
             <button 
               onClick={exportProjectBackup}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-xs transition-all shadow-2xs active:scale-95 flex items-center gap-1.5 cursor-pointer"
@@ -198,22 +198,22 @@ export const BackupPanel = ({
         </div>
 
         {/* Restore Box */}
-        <div className="bg-white border border-slate-200/80 rounded-lg p-5 flex flex-col justify-between shadow-2xs">
+        <div className="bg-surface border border-border-subtle/80 rounded-lg p-5 flex flex-col justify-between shadow-2xs">
           <div>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-9 h-9 bg-rose-50 text-rose-600 rounded-md flex items-center justify-center shrink-0">
                 <Upload className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-xs font-medium text-slate-800 uppercase tracking-wide">Restore Database Backup</h2>
-                <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                <h2 className="text-xs font-medium text-content-strong uppercase tracking-wide">Restore Database Backup</h2>
+                <p className="text-xs text-content-muted flex items-center gap-1 mt-0.5">
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                   <span>Timpa data sistem dengan file backup JSON.</span>
                 </p>
               </div>
             </div>
           </div>
-          <div className="mt-4 pt-3 border-t border-slate-100 flex justify-end">
+          <div className="mt-4 pt-3 border-t border-border-faint flex justify-end">
             <button 
                onClick={() => fileInputRef.current?.click()}
                className="px-4 py-2 bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 rounded-md font-medium text-xs transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
@@ -233,18 +233,18 @@ export const BackupPanel = ({
       </div>
 
       {/* Export History DataTable */}
-      <div className="bg-white border border-slate-200/80 rounded-lg shadow-2xs overflow-hidden">
-        <div className="px-4 py-3 bg-slate-50/80 border-b border-slate-200/80 flex items-center justify-between">
+      <div className="bg-surface border border-border-subtle/80 rounded-lg shadow-2xs overflow-hidden">
+        <div className="px-4 py-3 bg-surface-sunken/80 border-b border-border-subtle/80 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FileText className="w-4 h-4 text-slate-500" />
-            <h3 className="text-xs font-medium text-slate-700 uppercase tracking-wider">Hasil Export Database (DataTable)</h3>
+            <FileText className="w-4 h-4 text-content-muted" />
+            <h3 className="text-xs font-medium text-content-body uppercase tracking-wider">Hasil Export Database (DataTable)</h3>
           </div>
-          <span className="text-xs sm:text-[11px] text-slate-500 font-medium">Total: {exportHistory.length} file</span>
+          <span className="text-xs sm:text-[11px] text-content-muted font-medium">Total: {exportHistory.length} file</span>
         </div>
 
         <div className="overflow-x-auto">
           <ResponsiveTable className="w-full text-left border-collapse text-xs">
-            <thead className="bg-slate-100/70 text-slate-700 border-b border-slate-200/80 font-medium uppercase tracking-wider text-xs sm:text-[11px]">
+            <thead className="bg-surface-muted/70 text-content-body border-b border-border-subtle/80 font-medium uppercase tracking-wider text-xs sm:text-[11px]">
               <tr>
                 <th className="py-2.5 px-3.5">Waktu Export</th>
                 <th className="py-2.5 px-3.5">Nama File Backup</th>
@@ -253,16 +253,16 @@ export const BackupPanel = ({
                 <th className="py-2.5 px-3.5 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 font-medium">
+            <tbody className="divide-y divide-border-faint font-medium">
               {exportHistory.length > 0 ? (
                 exportHistory.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-2.5 px-3.5 text-slate-600 flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-slate-400" />
+                  <tr key={item.id} className="hover:bg-surface-sunken/80 transition-colors">
+                    <td className="py-2.5 px-3.5 text-content-secondary flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-content-subtle" />
                       {format(item.createdAt, 'dd MMM yyyy, HH:mm:ss')}
                     </td>
-                    <td className="py-2.5 px-3.5 font-mono text-slate-700 font-medium">{item.filename}</td>
-                    <td className="py-2.5 px-3.5 text-slate-600 font-mono">{item.status === 'completed' ? formatSize(item.sizeBytes) : '-'}</td>
+                    <td className="py-2.5 px-3.5 font-mono text-content-body font-medium">{item.filename}</td>
+                    <td className="py-2.5 px-3.5 text-content-secondary font-mono">{item.status === 'completed' ? formatSize(item.sizeBytes) : '-'}</td>
                     <td className="py-2.5 px-3.5">
                       {item.status === 'processing' && (
                         <div className="space-y-1 w-48">
@@ -318,8 +318,8 @@ export const BackupPanel = ({
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-slate-400 italic text-xs">
-                    Belum ada riwayat export backup. Klik tombol <strong className="font-medium text-slate-600">"Export Project Backup"</strong> di atas untuk membuat backup baru.
+                  <td colSpan={5} className="py-8 text-center text-content-subtle italic text-xs">
+                    Belum ada riwayat export backup. Klik tombol <strong className="font-medium text-content-secondary">"Export Project Backup"</strong> di atas untuk membuat backup baru.
                   </td>
                 </tr>
               )}

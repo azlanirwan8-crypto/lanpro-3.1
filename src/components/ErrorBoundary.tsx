@@ -34,14 +34,14 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-[400px] flex items-center justify-center p-8">
           <div className="bg-rose-50 rounded-xl p-8 max-w-md w-full text-center border border-rose-100 shadow-soft">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-soft">
+            <div className="w-16 h-16 bg-surface rounded-full flex items-center justify-center mx-auto mb-6 shadow-soft">
               <AlertTriangle className="w-8 h-8 text-rose-500" />
             </div>
-            <h2 className="text-lg font-medium text-slate-800 mb-2">Terjadi Kesalahan Sistem</h2>
-            <p className="text-sm text-slate-500 mb-6">
+            <h2 className="text-lg font-medium text-content-strong mb-2">Terjadi Kesalahan Sistem</h2>
+            <p className="text-sm text-content-muted mb-6">
               Maaf, widget atau komponen ini mengalami gangguan (Crash). Silakan muat ulang halaman.
             </p>
-            <div className="bg-white p-3 rounded text-left mb-6 overflow-auto max-h-32 border border-slate-100">
+            <div className="bg-surface p-3 rounded text-left mb-6 overflow-auto max-h-32 border border-border-faint">
               <code className="text-xs sm:text-[10px] text-rose-500 font-mono">
                 {this.state.error?.toString()}
               </code>

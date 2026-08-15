@@ -35,11 +35,11 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
 
   return (
     <>
-      <div className="p-4 border-b border-slate-200/80 flex flex-col gap-3 shrink-0 bg-white shadow-2xs">
+      <div className="p-4 border-b border-border-subtle/80 flex flex-col gap-3 shrink-0 bg-surface shadow-2xs">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <LayoutGrid className="w-4 h-4 text-slate-500" />
-            <h3 className="font-medium text-slate-800 text-sm tracking-tight">Backlog Tasks</h3>
+            <LayoutGrid className="w-4 h-4 text-content-muted" />
+            <h3 className="font-medium text-content-strong text-sm tracking-tight">Backlog Tasks</h3>
           </div>
           <div className="px-2 py-0.5 bg-indigo-50/80 border border-indigo-200/80 rounded-md text-xs font-semibold text-primary">
             {filteredBacklogTasks.length} Issues
@@ -48,17 +48,17 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
         
         <div className="flex flex-col gap-2.5">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-content-subtle" />
             <input 
               placeholder="Search backlog tasks..." 
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 h-[38px] bg-slate-50/70 border border-slate-200/80 rounded-md text-xs font-medium outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 focus:bg-white transition-all shadow-2xs" 
+              className="w-full pl-8 pr-3 h-[38px] bg-surface-sunken/70 border border-border-subtle/80 rounded-md text-xs font-medium outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 focus:bg-surface transition-all shadow-2xs" 
             />
           </div>
           
           <div className="flex items-center gap-2">
-            <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <Filter className="w-3.5 h-3.5 text-content-subtle shrink-0" />
             <div className="flex-1">
               <StyledDropdown 
                 value={priorityFilter}
@@ -70,14 +70,14 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
                 type="priority"
                 masterData={masterData}
                 className="w-full"
-                buttonClassName="h-[38px] bg-white rounded-md border border-slate-200/80 hover:border-slate-300 shadow-2xs px-3 text-xs font-medium"
+                buttonClassName="h-[38px] bg-surface rounded-md border border-border-subtle/80 hover:border-slate-300 shadow-2xs px-3 text-xs font-medium"
               />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3.5 bg-slate-50/40 min-h-0 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto p-3.5 bg-surface-sunken/40 min-h-0 custom-scrollbar">
         {epics.flatMap(epic => {
           const items = getTasksForParent(epic.id);
           if (items.length === 0) return [];
@@ -103,9 +103,9 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
           if (items.length === 0) return [];
           return [
             <div key="header-standalone" className="flex items-center gap-2 px-1 mt-3 mb-2">
-              <Target className="w-3.5 h-3.5 text-slate-500" />
-              <span className="text-xs sm:text-[10px] font-medium text-slate-600 uppercase tracking-wider leading-none">Standalone Backlog</span>
-              <div className="ml-auto text-xs sm:text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.2 rounded-md border border-slate-200/60">{items.length}</div>
+              <Target className="w-3.5 h-3.5 text-content-muted" />
+              <span className="text-xs sm:text-[10px] font-medium text-content-secondary uppercase tracking-wider leading-none">Standalone Backlog</span>
+              <div className="ml-auto text-xs sm:text-[10px] font-medium text-content-secondary bg-surface-muted px-2 py-0.2 rounded-md border border-border-subtle/60">{items.length}</div>
             </div>,
             ...items.map(task => {
               const dndIndex = _draggablesRenderedCount++;
@@ -119,7 +119,7 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
         })()}
 
         {filteredBacklogTasks.length === 0 && (
-          <div className="py-12 text-center text-xs font-medium text-slate-400 italic">
+          <div className="py-12 text-center text-xs font-medium text-content-subtle italic">
             Belum ada task di Backlog. Buat task baru atau sesuaikan filter.
           </div>
         )}

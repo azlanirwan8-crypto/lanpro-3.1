@@ -19,7 +19,7 @@ export function SuccessModal({ isOpen, onClose, title = "Berhasil!", message }: 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden"
+            className="bg-surface rounded-lg shadow-xl w-full max-w-sm overflow-hidden"
           >
             <div className="p-4 flex justify-end">
               <button

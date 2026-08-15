@@ -179,7 +179,7 @@ export const FlowchartNode: React.FC<FlowchartNodeProps> = ({
                       <div className="absolute inset-0 pointer-events-none z-30">
                         {/* TOP PORT */}
                         <div 
-                          className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
+                          className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-surface border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
                           onMouseDown={(e) => {
                             e.stopPropagation();
                             handleConnectPortClick(node.id, "top");
@@ -191,7 +191,7 @@ export const FlowchartNode: React.FC<FlowchartNodeProps> = ({
 
                         {/* RIGHT PORT */}
                         <div 
-                          className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
+                          className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-surface border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
                           onMouseDown={(e) => {
                             e.stopPropagation();
                             handleConnectPortClick(node.id, "right");
@@ -203,7 +203,7 @@ export const FlowchartNode: React.FC<FlowchartNodeProps> = ({
 
                         {/* BOTTOM PORT */}
                         <div 
-                          className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
+                          className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full bg-surface border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
                           onMouseDown={(e) => {
                             e.stopPropagation();
                             handleConnectPortClick(node.id, "bottom");
@@ -215,7 +215,7 @@ export const FlowchartNode: React.FC<FlowchartNodeProps> = ({
 
                         {/* LEFT PORT */}
                         <div 
-                          className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
+                          className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-surface border-2 border-violet-500 shadow-md flex items-center justify-center hover:scale-130 hover:bg-violet-50 transition-all active:scale-95 cursor-crosshair pointer-events-auto"
                           onMouseDown={(e) => {
                             e.stopPropagation();
                             handleConnectPortClick(node.id, "left");
@@ -350,7 +350,7 @@ export const FlowchartNode: React.FC<FlowchartNodeProps> = ({
                                   ? "bg-emerald-100 text-emerald-800 border-emerald-300"
                                   : linkedTask.status === "In Progress" || linkedTask.status === "Dikerjakan"
                                   ? "bg-indigo-150 text-indigo-800 border-indigo-300"
-                                  : "bg-slate-100 text-slate-800 border-slate-350"
+                                  : "bg-surface-muted text-content-strong border-slate-350"
                               )}
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -416,7 +416,7 @@ export const FlowchartNode: React.FC<FlowchartNodeProps> = ({
                             setSelectedNodeId(nextNodeId);
                             toast.success("Otomatis menambahkan & menghubungkan alur langkah baru!");
                           }}
-                          className="absolute -right-11 top-1/2 -translate-y-1/2 w-7 h-7 bg-white hover:bg-violet-600 border border-slate-250 shadow-soft-lg text-violet-600 hover:text-white rounded-full flex items-center justify-center font-medium text-base transition-all scale-90 hover:scale-110 z-30"
+                          className="absolute -right-11 top-1/2 -translate-y-1/2 w-7 h-7 bg-surface hover:bg-violet-600 border border-slate-250 shadow-soft-lg text-violet-600 hover:text-white rounded-full flex items-center justify-center font-medium text-base transition-all scale-90 hover:scale-110 z-30"
                           title="Buat Alur Hubung Baru secara Instan"
                         >
                           <Plus className="w-4 h-4" />
@@ -446,7 +446,7 @@ export const FlowchartNode: React.FC<FlowchartNodeProps> = ({
                             setSelectedNodeId(nextNodeId);
                             toast.success("Otomatis menambahkan & menghubungkan alur ke bawah!");
                           }}
-                          className="absolute -bottom-11 left-1/2 -translate-x-1/2 w-7 h-7 bg-white hover:bg-indigo-600 border border-slate-250 shadow-soft-lg text-indigo-600 hover:text-white rounded-full flex items-center justify-center font-medium text-base transition-all scale-90 hover:scale-110 z-30"
+                          className="absolute -bottom-11 left-1/2 -translate-x-1/2 w-7 h-7 bg-surface hover:bg-indigo-600 border border-slate-250 shadow-soft-lg text-indigo-600 hover:text-white rounded-full flex items-center justify-center font-medium text-base transition-all scale-90 hover:scale-110 z-30"
                           title="Hubungkan Alir ke Bawah Baru secara Instan"
                         >
                           <Plus className="w-4 h-4" />

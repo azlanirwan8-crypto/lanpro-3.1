@@ -28,14 +28,14 @@ export const ConfigureColumnsModal: React.FC<ConfigureColumnsModalProps> = ({
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
-          className="bg-white rounded-xl w-full max-w-lg shadow-xl relative my-auto overflow-hidden flex flex-col border border-slate-200"
+          className="bg-surface rounded-xl w-full max-w-lg shadow-xl relative my-auto overflow-hidden flex flex-col border border-border-subtle"
           onClick={e => e.stopPropagation()}
         >
-          <div className="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
-            <h2 className="text-sm font-semibold text-slate-900">Configure Columns</h2>
+          <div className="px-5 py-4 border-b border-border-subtle flex items-center justify-between bg-surface">
+            <h2 className="text-sm font-semibold text-content">Configure Columns</h2>
             <button 
               onClick={onClose}
-              className="p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+              className="p-1 rounded-md text-content-subtle hover:text-content-secondary hover:bg-surface-muted transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -43,7 +43,7 @@ export const ConfigureColumnsModal: React.FC<ConfigureColumnsModalProps> = ({
           
           <div className="p-5 flex-1 overflow-y-auto max-h-[60vh] text-xs">
             <div className="space-y-3">
-              <p className="text-xs text-slate-500 font-medium">Drag to reorder and toggle visibility of columns.</p>
+              <p className="text-xs text-content-muted font-medium">Drag to reorder and toggle visibility of columns.</p>
               <DragDropContext onDragEnd={handleReorderColumns}>
                 <Droppable droppableId="columns">
                   {(provided) => (
@@ -59,12 +59,12 @@ export const ConfigureColumnsModal: React.FC<ConfigureColumnsModalProps> = ({
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               className={cn(
-                                "flex items-center justify-between p-2.5 bg-slate-50/80 rounded-md hover:bg-slate-100/80 transition-colors group border border-slate-200/60",
-                                snapshot.isDragging ? "shadow-md bg-white border-primary/40 z-[70]" : ""
+                                "flex items-center justify-between p-2.5 bg-surface-sunken/80 rounded-md hover:bg-surface-muted/80 transition-colors group border border-border-subtle/60",
+                                snapshot.isDragging ? "shadow-md bg-surface border-primary/40 z-[70]" : ""
                               )}
                             >
                               <div className="flex items-center gap-3">
-                                <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-600">
+                                <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing text-content-subtle hover:text-content-secondary">
                                    <Grid className="w-4 h-4" />
                                 </div>
                                 <label className="flex items-center gap-2.5 cursor-pointer select-none">
@@ -74,12 +74,12 @@ export const ConfigureColumnsModal: React.FC<ConfigureColumnsModalProps> = ({
                                     }}
                                     className={cn(
                                       "w-4 h-4 rounded-md border flex items-center justify-center transition-all cursor-pointer",
-                                      col.visible ? "bg-primary border-primary" : "bg-white border-slate-300"
+                                      col.visible ? "bg-primary border-primary" : "bg-surface border-slate-300"
                                     )}
                                   >
                                     {col.visible && <Check className="w-3 h-3 text-white" />}
                                   </div>
-                                  <span className="text-xs font-medium text-slate-800">{col.label}</span>
+                                  <span className="text-xs font-medium text-content-strong">{col.label}</span>
                                 </label>
                               </div>
                             </div>
@@ -94,7 +94,7 @@ export const ConfigureColumnsModal: React.FC<ConfigureColumnsModalProps> = ({
             </div>
           </div>
           
-          <div className="px-5 py-3.5 border-t border-slate-100 flex justify-end items-center gap-2 bg-slate-50/50">
+          <div className="px-5 py-3.5 border-t border-border-faint flex justify-end items-center gap-2 bg-surface-sunken/50">
             <button 
               onClick={onClose}
               className="px-4 py-2 font-medium bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md transition-all text-xs shadow-xs cursor-pointer"

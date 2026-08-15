@@ -29,7 +29,7 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
           <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
           <span className="font-medium text-slate-200 text-xs tracking-wider uppercase">SDLC Waterfall Governance</span>
         </div>
-        <GripVertical className="w-4 h-4 text-slate-500 hover:text-slate-300 cursor-move custom-drag-grip shrink-0" />
+        <GripVertical className="w-4 h-4 text-content-muted hover:text-slate-300 cursor-move custom-drag-grip shrink-0" />
       </div>
 
       {/* Horizontal Phase Timeline */}
@@ -76,11 +76,11 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
               </div>
 
               <div className="text-xs font-medium truncate text-white">{phase.label}</div>
-              <div className="text-xs sm:text-[10px] text-slate-400 truncate mt-0.5 leading-tight">{phase.desc}</div>
+              <div className="text-xs sm:text-[10px] text-content-subtle truncate mt-0.5 leading-tight">{phase.desc}</div>
 
               {/* Mini task progress */}
               <div className="mt-4 w-full select-none">
-                <div className="flex justify-between items-center text-xs sm:text-[11px] sm:text-[9px] text-slate-400 mb-1 leading-none">
+                <div className="flex justify-between items-center text-xs sm:text-[11px] sm:text-[9px] text-content-subtle mb-1 leading-none">
                   <span>Done: {taskStat.done}/{taskStat.total}</span>
                   <span>{progressVal}%</span>
                 </div>
@@ -191,7 +191,7 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
                     "w-full lg:w-auto px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-2 border cursor-pointer",
                     phaseGateStatus?.approved
                       ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/30"
-                      : "bg-amber-400 text-slate-900 border-amber-500 hover:bg-amber-300"
+                      : "bg-amber-400 text-content border-amber-500 hover:bg-amber-300"
                   )}
                 >
                   {phaseGateStatus?.approved ? (
@@ -210,7 +210,7 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
               {/* Mandatori Deliverables list */}
               <div>
-                <h5 className="text-xs sm:text-[10px] font-medium uppercase text-slate-400 tracking-wider mb-2 flex items-center gap-1.5 leading-none">
+                <h5 className="text-xs sm:text-[10px] font-medium uppercase text-content-subtle tracking-wider mb-2 flex items-center gap-1.5 leading-none">
                   <FileText className="w-4 h-4 text-amber-400" /> Mandatori Deliverables BNI SDLC
                 </h5>
                 <ul className="space-y-1.5">
@@ -226,7 +226,7 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
               {/* Signoff metadata */}
               <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 flex flex-col justify-between">
                 <div>
-                  <div className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-slate-500 uppercase tracking-widest leading-none mb-1">
+                  <div className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-content-muted uppercase tracking-widest leading-none mb-1">
                     Status Gate-Approval
                   </div>
                   <div className="text-xs font-medium">
@@ -242,7 +242,7 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
                   </div>
                 </div>
 
-                <div className="text-xs sm:text-[10px] text-slate-400 mt-4 border-t border-white/5 pt-2 flex flex-col gap-0.5">
+                <div className="text-xs sm:text-[10px] text-content-subtle mt-4 border-t border-white/5 pt-2 flex flex-col gap-0.5">
                   {phaseGateStatus?.approved ? (
                     <>
                       <div>
@@ -254,7 +254,7 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
                       </div>
                     </>
                   ) : (
-                    <span className="italic text-slate-500">
+                    <span className="italic text-content-muted">
                       Gunakan tombol Signoff di kanan atas untuk menyetujui kriteria phase ini.
                     </span>
                   )}

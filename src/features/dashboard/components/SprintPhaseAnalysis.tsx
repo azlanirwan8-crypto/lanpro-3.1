@@ -21,15 +21,15 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
   COLORS,
 }) => {
   return (
-    <div className="w-full h-full bg-white p-6 rounded-xl border border-slate-200/80 shadow-soft flex flex-col justify-between overflow-y-auto no-scrollbar select-none">
+    <div className="w-full h-full bg-surface p-6 rounded-xl border border-border-subtle/80 shadow-soft flex flex-col justify-between overflow-y-auto no-scrollbar select-none">
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div className="flex items-center justify-between border-b border-border-faint pb-4">
           <div>
-            <h3 className="font-medium text-slate-800 text-sm tracking-tight flex items-center gap-2 uppercase">
+            <h3 className="font-medium text-content-strong text-sm tracking-tight flex items-center gap-2 uppercase">
               <Zap className="w-4 h-4 text-indigo-500 animate-pulse" />
               SPRINT PHASE ANALYSIS: {activeSprint ? activeSprint.name : ""}
             </h3>
-            <p className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-wider mt-1">
+            <p className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider mt-1">
               Deep drill-down by status, workstream, and team
             </p>
           </div>
@@ -43,12 +43,12 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left: Status Category */}
           <div>
-            <h4 className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
+            <h4 className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
               <LayoutGrid className="w-3 h-3" /> STATUS BY CATEGORY
             </h4>
             <div className="space-y-4">
               {sprintTotalTasks === 0 ? (
-                <div className="text-xs text-slate-400 italic">No categories in active sprint.</div>
+                <div className="text-xs text-content-subtle italic">No categories in active sprint.</div>
               ) : (
                 Array.from(
                   new Set(
@@ -69,22 +69,22 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
                   return (
                     <div key={idx} className="group/cat px-1">
                       <div className="flex justify-between items-center mb-1.5">
-                        <span className="text-xs sm:text-[10px] font-medium text-slate-700 tracking-tight flex items-center gap-2 uppercase">
+                        <span className="text-xs sm:text-[10px] font-medium text-content-body tracking-tight flex items-center gap-2 uppercase">
                           <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
                           {catName}
                         </span>
-                        <span className="text-xs sm:text-[10px] font-medium text-slate-400">
+                        <span className="text-xs sm:text-[10px] font-medium text-content-subtle">
                           {done}/{total} Tasks
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className="flex-1 h-1.5 bg-slate-50 rounded-full overflow-hidden">
+                        <div className="flex-1 h-1.5 bg-surface-sunken rounded-full overflow-hidden">
                           <div
                             className="h-full transition-all duration-1000"
                             style={{ width: `${progress}%`, backgroundColor: color }}
                           />
                         </div>
-                        <span className="text-xs sm:text-[10px] font-medium text-slate-500 min-w-[30px]">{progress}%</span>
+                        <span className="text-xs sm:text-[10px] font-medium text-content-muted min-w-[30px]">{progress}%</span>
                       </div>
                     </div>
                   );
@@ -95,14 +95,14 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
 
           {/* Right: Team Execution */}
           <div>
-            <h4 className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
+            <h4 className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
               <UserCircle className="w-3 h-3" /> EXECUTION BY MEMBER
             </h4>
             <div className="space-y-4">
               {projectMembers.filter((m) =>
                 m && tasks.some((t) => t.sprintId === activeSprint?.id && t.assigneeId === m.uid)
               ).length === 0 ? (
-                <div className="text-xs text-slate-400 italic">
+                <div className="text-xs text-content-subtle italic">
                   No member contributions in current active sprint.
                 </div>
               ) : (
@@ -122,22 +122,22 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
                       <div className="flex justify-between items-center mb-1.5">
                         <div className="flex items-center gap-2 truncate">
                           <UserAvatar user={member} className="w-5 h-5 text-xs sm:text-[10px] sm:text-[8px] border border-indigo-100 shrink-0" />
-                          <span className="text-xs sm:text-[10px] font-medium text-slate-700 truncate uppercase tracking-tight">
+                          <span className="text-xs sm:text-[10px] font-medium text-content-body truncate uppercase tracking-tight">
                             {member?.displayName || member?.username || "Unknown"}
                           </span>
                         </div>
-                        <span className="text-xs sm:text-[10px] font-medium text-slate-400 shrink-0">
+                        <span className="text-xs sm:text-[10px] font-medium text-content-subtle shrink-0">
                           {done}/{total}
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className="flex-1 h-1.5 bg-slate-50 rounded-full overflow-hidden">
+                        <div className="flex-1 h-1.5 bg-surface-sunken rounded-full overflow-hidden">
                           <div
                             className="h-full transition-all duration-1000 bg-indigo-500"
                             style={{ width: `${progress}%` }}
                           />
                         </div>
-                        <span className="text-xs sm:text-[10px] font-medium text-slate-500 min-w-[30px]">{progress}%</span>
+                        <span className="text-xs sm:text-[10px] font-medium text-content-muted min-w-[30px]">{progress}%</span>
                       </div>
                     </div>
                   );
@@ -148,13 +148,13 @@ export const SprintPhaseAnalysis: React.FC<SprintPhaseAnalysisProps> = ({
         </div>
       </div>
 
-      <div className="pt-6 border-t border-slate-100">
-        <h4 className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-4 min-h-0 px-1">
+      <div className="pt-6 border-t border-border-faint">
+        <h4 className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-4 min-h-0 px-1">
           Phase Velocity Distribution
         </h4>
         <div className="h-44 min-h-[150px]">
           {statusData.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-slate-400 italic text-xs">No status data found.</div>
+            <div className="flex items-center justify-center h-full text-content-subtle italic text-xs">No status data found.</div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={statusData}>
