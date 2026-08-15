@@ -9,6 +9,10 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { validateFileClient } from "../lib/fileSecurity";
+// UTANG LAPISAN: komponen ini memanggil backend langsung (9 panggilan chat).
+// Dijadwalkan pindah ke services/ pada fase L4. Ditandai eksplisit agar
+// terlihat sebagai utang yang diketahui, bukan lolos diam-diam.
+// eslint-disable-next-line no-restricted-imports
 import { apiRequest } from "../lib/api";
 import { UserProfile } from "../types";
 import { UserAvatar } from "./ui/UserAvatar";

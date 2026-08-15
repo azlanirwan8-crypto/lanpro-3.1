@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Clock, ShieldAlert, LogOut, RefreshCw, ChevronUp, ChevronDown, CheckCircle2, Play } from 'lucide-react';
 import { toast } from 'sonner';
+// UTANG LAPISAN: komponen ini memanggil backend langsung (1 panggilan refresh token).
+// Dijadwalkan pindah ke services/ pada fase L4. Ditandai eksplisit agar
+// terlihat sebagai utang yang diketahui, bukan lolos diam-diam.
+// eslint-disable-next-line no-restricted-imports
 import { apiRequest, setAuthToken, getAuthToken } from '../lib/api';
 
 interface SessionExpiryWarningProps {

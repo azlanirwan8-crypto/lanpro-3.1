@@ -44,7 +44,7 @@ const router = Router();
       const allSprintIds = new Set<string>();
       milestoneSprintMap.forEach(sprints => sprints.forEach(s => allSprintIds.add(s)));
 
-      let sprintStatsMap = new Map<string, any>();
+      const sprintStatsMap = new Map<string, any>();
       if (allSprintIds.size > 0) {
         const [stats]: any = await connection.query(`
           SELECT

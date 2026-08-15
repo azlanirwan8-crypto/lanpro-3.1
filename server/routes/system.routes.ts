@@ -71,7 +71,7 @@ router.post("/api/migrate-db", verifyGlobalAdmin, async (req, res) => {
     const schemaPath = path.join(process.cwd(), 'database', 'schema.sql');
     const schemaSql = fs.readFileSync(schemaPath, 'utf8');
 
-    let cleanSql = schemaSql
+    const cleanSql = schemaSql
       .replace(/CREATE DATABASE IF NOT EXISTS.*?;/i, '')
       .replace(/USE .*?;/i, '');
 

@@ -173,8 +173,8 @@ export const sendProjectActivityNotification = async (
     
     let title = "";
     let message = "";
-    let type = "project_activity";
-    let relatedId = payload.taskId || null;
+    const type = "project_activity";
+    const relatedId = payload.taskId || null;
     
     let taskInfo = "";
     if (payload.taskId) {

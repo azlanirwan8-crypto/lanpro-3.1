@@ -40,11 +40,34 @@ jobs:
       - name: Validasi Kode (Lint & Type Check)
         run: npm run lint
 
-      - name: Menjalankan Stress Test Concurrency (Jest)
-        run: npm test src/tests/concurrency.test.ts
+      # Laporan ESLint dijalankan sebagai INFORMASI, belum sebagai penghalang.
+      #
+      # Codebase ini baru pertama kali di-lint dan menyisakan 32 error serta
+      # 1.253 peringatan warisan. Menjadikannya penghalang hari ini membuat
+      # pipeline merah total, dan sinyal yang selalu merah akan diabaikan orang
+      # — persis nasib aturan tertulis di ARCHITECTURE.md selama ini.
+      #
+      # Penegakan untuk kode BARU sudah berjalan lewat lint-staged di pre-commit
+      # hook, yang hanya memeriksa berkas yang benar-benar diubah. Ambang di
+      # sini akan diturunkan bertahap seiring utangnya dilunasi (fase L3).
+      - name: Laporan ESLint (belum memblokir)
+        run: npm run lint:eslint || true
+        continue-on-error: true
+
+      # Menjalankan SELURUH suite, bukan satu berkas.
+      #
+      # Sebelumnya tahap ini hanya menjalankan src/tests/concurrency.test.ts,
+      # sehingga 9 dari 10 suite tidak pernah dieksekusi di pipeline —
+      # termasuk seluruh test render komponen dan test rute. Perubahan yang
+      # merusak 72 dari 73 test akan lolos begitu saja ke main.
+      - name: Menjalankan Seluruh Test Suite (Jest)
+        run: npm test
         env:
           # Secret dipanggil hanya saat dibutuhkan oleh test runner
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      - name: Verifikasi Build Produksi
+        run: npm run build
 
       - name: Pemindaian Rahasia (Gitleaks)
         uses: gitleaks/gitleaks-action@v2

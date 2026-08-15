@@ -282,7 +282,7 @@ const router = express.Router();
       const [rows] = await connection.query("SELECT id, uid, username, nama_lengkap, email, displayName, role, status, permissions, phone, department, position, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar_url, COALESCE(avatar_url, photoURL, avatarUrl) AS photoURL, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar, createdAt, lastSeen FROM Users WHERE id = ? OR uid = ?", [id, id]);
       connection.release();
       if ((rows as any[]).length > 0) {
-        let user = (rows as any[])[0];
+        const user = (rows as any[])[0];
         try { if (user.permissions) user.permissions = JSON.parse(user.permissions); } catch (e) {}
         res.json({ status: "success", data: user });
       } else {

@@ -146,7 +146,7 @@ export const parseDrawIoXML = (xmlText: string): ParsedDiagram => {
 
       if (sourceId && targetId) {
         const edgeId = `drawio-edge-${id}`;
-        let labelText = decodeHtmlEntity(valueAttr)
+        const labelText = decodeHtmlEntity(valueAttr)
           .replace(/<br\s*\/?>/gi, "\n")
           .replace(/<\/p>/gi, "\n")
           .replace(/<[^>]*>/g, "")
@@ -228,10 +228,10 @@ export const parseMiroContent = (fileContent: string, isCsv: boolean): ParsedDia
           label: row.label || row.text || row.value || undefined,
         });
       } else {
-        let x = parseFloat(row.x || row.left || "150") || (idx * 60 + 100);
-        let y = parseFloat(row.y || row.top || "150") || (idx * 40 + 120);
-        let width = parseFloat(row.width || "120") || 120;
-        let height = parseFloat(row.height || "80") || 80;
+        const x = parseFloat(row.x || row.left || "150") || (idx * 60 + 100);
+        const y = parseFloat(row.y || row.top || "150") || (idx * 40 + 120);
+        const width = parseFloat(row.width || "120") || 120;
+        const height = parseFloat(row.height || "80") || 80;
 
         let labelText = row.text || row.label || row.content || row.title || `Komponen Miro ${idx + 1}`;
         labelText = decodeHtmlEntity(labelText).replace(/<[^>]*>/g, "").trim();

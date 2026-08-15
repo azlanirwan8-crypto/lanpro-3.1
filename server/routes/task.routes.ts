@@ -1419,7 +1419,7 @@ const router = express.Router();
         [userId, userId]
       );
 
-      let allRows = [...rows];
+      const allRows = [...rows];
       if (groupRows && groupRows.length > 0) {
         allRows.push({
           ...groupRows[0],
