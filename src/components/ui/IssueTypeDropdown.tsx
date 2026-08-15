@@ -1,9 +1,7 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { ChevronDown, Zap } from 'lucide-react';
-import { RenderIcon } from '../RenderIcon';
-import { Portal } from './Portal';
-import { cn } from '../../lib/utils';
-
+import React, { useRef, useEffect, useState } from "react";
+import { ChevronDown, Zap } from "lucide-react";
+import { RenderIcon } from "../RenderIcon";
+import { Portal } from "./Portal";
 interface IssueTypeDropdownProps {
   isOpen: boolean;
   onToggle: () => void;
@@ -12,7 +10,13 @@ interface IssueTypeDropdownProps {
   masterData: any[]; // Adjust type as needed
 }
 
-export const IssueTypeDropdown = ({ isOpen, onToggle, selectedType, onSelect, masterData }: IssueTypeDropdownProps) => {
+export const IssueTypeDropdown = ({
+  isOpen,
+  onToggle,
+  selectedType,
+  onSelect,
+  masterData,
+}: IssueTypeDropdownProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
 
@@ -22,39 +26,56 @@ export const IssueTypeDropdown = ({ isOpen, onToggle, selectedType, onSelect, ma
       setDropdownPosition({
         top: rect.bottom + window.scrollY,
         left: rect.left + window.scrollX,
-        width: 192 // w-48
+        width: 192, // w-48
       });
     }
   }, [isOpen]);
 
-  const typeData = masterData.find(d => d.type === 'issue_type' && d.label?.toLowerCase() === selectedType?.toLowerCase());
-
-
+  const typeData = masterData.find(
+    (d) => d.type === "issue_type" && d.label?.toLowerCase() === selectedType?.toLowerCase()
+  );
 
   return (
     <div className="relative">
-      <button 
+      <button
         ref={buttonRef}
-        onClick={(e) => { e.stopPropagation(); onToggle(); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggle();
+        }}
         className="flex items-center gap-1 p-1 hover:bg-surface-muted rounded transition-colors"
       >
-        {typeData?.icon ? <RenderIcon iconName={typeData.icon} className="w-3.5 h-3.5" style={{ color: typeData.color }} /> : <Zap className="w-3.5 h-3.5 text-blue-600" />}
+        {typeData?.icon ? (
+          <RenderIcon
+            iconName={typeData.icon}
+            className="w-3.5 h-3.5"
+            style={{ color: typeData.color }}
+          />
+        ) : (
+          <Zap className="w-3.5 h-3.5 text-blue-600" />
+        )}
         <ChevronDown className="w-3 h-3 text-content-subtle" />
       </button>
-      
+
       {isOpen && (
         <Portal>
-          <div className="fixed inset-0 z-[500]" onClick={(e) => { e.stopPropagation(); onToggle(); }} />
-          <div 
+          <div
+            className="fixed inset-0 z-[500]"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggle();
+            }}
+          />
+          <div
             className="fixed z-[501] bg-surface border border-border-subtle rounded-xl shadow-xl p-2 animate-in fade-in zoom-in duration-200"
-            style={{ 
-              top: `${dropdownPosition.top + 4}px`, 
+            style={{
+              top: `${dropdownPosition.top + 4}px`,
               left: `${dropdownPosition.left}px`,
-              width: `${dropdownPosition.width}px` 
+              width: `${dropdownPosition.width}px`,
             }}
           >
             {masterData
-              .filter(d => d.type === 'issue_type')
+              .filter((d) => d.type === "issue_type")
               .map((type: any, index: number) => (
                 <button
                   key={type.id ? `${type.id}-${index}` : `${type.label}-${index}`}
@@ -65,7 +86,11 @@ export const IssueTypeDropdown = ({ isOpen, onToggle, selectedType, onSelect, ma
                   }}
                   className="w-full flex items-center gap-2 p-2 hover:bg-surface-sunken rounded-lg text-sm text-content-body"
                 >
-                  <RenderIcon iconName={type.icon} className="w-4 h-4" style={{ color: type.color }} />
+                  <RenderIcon
+                    iconName={type.icon}
+                    className="w-4 h-4"
+                    style={{ color: type.color }}
+                  />
                   {type.label}
                 </button>
               ))}

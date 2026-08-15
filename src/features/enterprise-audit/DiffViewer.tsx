@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { ArrowRight, Minus, Plus } from 'lucide-react';
+import React from "react";
+import { motion } from "motion/react";
+import { ArrowRight, Minus } from "lucide-react";
 
 interface DiffViewerProps {
   oldValues: any;
@@ -12,12 +12,13 @@ interface DiffViewerProps {
  * Membandingkan state sebelum dan sesudah secara elegan untuk auditor.
  */
 export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) => {
-  const allKeys = Array.from(new Set([
-    ...Object.keys(oldValues || {}),
-    ...Object.keys(newValues || {})
-  ])).filter(key => {
+  const allKeys = Array.from(
+    new Set([...Object.keys(oldValues || {}), ...Object.keys(newValues || {})])
+  ).filter((key) => {
     // Abaikan field metadata teknis
-    return !['id', 'updatedAt', 'createdAt', 'projectId', 'taskCounter', 'projectKey'].includes(key);
+    return !["id", "updatedAt", "createdAt", "projectId", "taskCounter", "projectKey"].includes(
+      key
+    );
   });
 
   if (allKeys.length === 0) {
@@ -30,9 +31,10 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) 
   }
 
   const formatValue = (val: any) => {
-    if (val === null || val === undefined) return <span className="text-slate-300 font-normal italic">kosong</span>;
-    if (typeof val === 'boolean') return val ? 'Ya' : 'Tidak';
-    if (typeof val === 'object') return JSON.stringify(val);
+    if (val === null || val === undefined)
+      return <span className="text-slate-300 font-normal italic">kosong</span>;
+    if (typeof val === "boolean") return val ? "Ya" : "Tidak";
+    if (typeof val === "object") return JSON.stringify(val);
     return String(val);
   };
 
@@ -43,9 +45,9 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) 
         <div className="col-span-4 px-2 border-l border-border-subtle">Nilai Lama</div>
         <div className="col-span-4 px-2 border-l border-border-subtle">Nilai Baru</div>
       </div>
-      
+
       <div className="divide-y divide-border-faint max-h-[500px] overflow-y-auto custom-scrollbar">
-        {allKeys.map(key => {
+        {allKeys.map((key) => {
           const oldVal = oldValues?.[key];
           const newVal = newValues?.[key];
           const isDifferent = JSON.stringify(oldVal) !== JSON.stringify(newVal);
@@ -54,16 +56,18 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) 
           if (!isDifferent && oldVal !== undefined) return null;
 
           return (
-            <motion.div 
-              key={key} 
+            <motion.div
+              key={key}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className={`grid grid-cols-12 gap-0 py-3 px-3 items-center transition-colors hover:bg-surface-sunken/50 ${isDifferent ? 'bg-indigo-50/10' : ''}`}
+              className={`grid grid-cols-12 gap-0 py-3 px-3 items-center transition-colors hover:bg-surface-sunken/50 ${isDifferent ? "bg-indigo-50/10" : ""}`}
             >
               <div className="col-span-4 px-2">
-                <span className="text-xs font-medium text-content-body bg-surface-muted px-2 py-1 rounded-md break-all">{key}</span>
+                <span className="text-xs font-medium text-content-body bg-surface-muted px-2 py-1 rounded-md break-all">
+                  {key}
+                </span>
               </div>
-              
+
               <div className="col-span-4 px-2 border-l border-border-faint min-h-[1.5rem] flex items-center">
                 {oldVal === undefined || oldVal === null ? (
                   <span className="text-xs sm:text-[10px] font-medium text-content-subtle italic flex items-center gap-1">
@@ -78,10 +82,14 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) 
 
               <div className="col-span-4 px-2 border-l border-border-faint min-h-[1.5rem] flex items-center">
                 {newVal === undefined || newVal === null ? (
-                   <span className="text-xs sm:text-[10px] font-medium text-rose-400 italic">Dihapus</span>
+                  <span className="text-xs sm:text-[10px] font-medium text-rose-400 italic">
+                    Dihapus
+                  </span>
                 ) : (
                   <div className="flex items-center gap-2 w-full">
-                    {isDifferent && <ArrowRight className="w-3 h-3 text-indigo-300 flex-shrink-0" />}
+                    {isDifferent && (
+                      <ArrowRight className="w-3 h-3 text-indigo-300 flex-shrink-0" />
+                    )}
                     <span className="text-xs text-emerald-600 font-medium break-words">
                       {formatValue(newVal)}
                     </span>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TestTube, Loader2, Save, X, FileEdit } from "lucide-react";
+import { TestTube, Loader2, Save, FileEdit } from "lucide-react";
 import { toast } from "sonner";
 import { PasswordInput } from "./PasswordInput";
 import { TemplateEditorModal } from "./TemplateEditorModal";

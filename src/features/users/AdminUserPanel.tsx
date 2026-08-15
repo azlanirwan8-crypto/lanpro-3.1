@@ -3,40 +3,28 @@ import {
   Users,
   UserPlus,
   Search,
-  Edit2,
   Trash2,
   CheckCircle,
   XCircle,
   Clock,
-  Save,
-  ShieldAlert,
-  Server,
   ChevronLeft,
   ChevronRight,
   Layout,
   ChevronDown,
   Copy,
-  ShieldCheck,
-  Award,
   UserCog,
-  Eye,
   Info,
-  HelpCircle,
-  Lock,
   Shield,
   Download,
-  Key,
 } from "lucide-react";
-import { AnimatePresence } from "motion/react";
 import { cn } from "../../lib/utils";
-import { AppRole, UserPermissions } from "../../types";
-import { AdminUserPanelProps, DEFAULT_PERMISSIONS } from "./types";
-import { DEFAULT_PERMISSIONS as ROLE_DEFAULT_PERMISSIONS } from "../../lib/permissions";
+import { AppRole } from "../../types";
+import { AdminUserPanelProps } from "./types";
 import { useAdminUsers } from "./hooks";
 import { Button, Modal, UserAvatar } from "./styles";
 import { toast } from "sonner";
 import { ResponsiveTable } from "../../components/ResponsiveTable";
-import { MODULE_DESCRIPTIONS, ROLE_DESCRIPTIONS, ACTION_DESCRIPTIONS } from "./constants";
+import { DEFAULT_PERMISSIONS as ROLE_DEFAULT_PERMISSIONS } from "../../lib/permissions";
 import {
   assignUserToProject,
   removeUserFromProject,

@@ -11,29 +11,22 @@ import {
   Trash2,
   ArrowRight,
   Save,
-  RotateCcw,
   Sparkles,
   Eye,
-  Check,
   Workflow,
-  Database as DbIcon,
   Circle as CircleIcon,
   Layers,
   MousePointer,
   Hand,
   StickyNote,
   Type,
-  Copy,
   ZoomIn,
   ZoomOut,
-  Cloud,
   BookOpen,
   Edit3,
   X,
   FileText,
   HelpCircle,
-  Info,
-  Folder,
   User,
   Undo,
   Redo,
@@ -42,10 +35,7 @@ import {
   RefreshCw,
   Upload,
   Image as ImageIcon,
-  Undo2,
-  Redo2,
   Database,
-  Activity,
   Minus,
   LayoutTemplate,
   Users,
@@ -68,7 +58,7 @@ import { FlowchartEdges } from "./components/FlowchartEdges";
 import { FlowchartMinimap } from "./components/FlowchartMinimap";
 import { NodeContextMenu } from "./components/NodeContextMenu";
 import { CanvasContextMenu } from "./components/CanvasContextMenu";
-import type { FlowNode, FlowEdge, FlowchartDocument, FlowchartData, Point } from "./types";
+import type { FlowNode, FlowEdge, FlowchartDocument, FlowchartData } from "./types";
 import { parseDrawIoXML, parseMiroContent } from "./lib/importers";
 import { colorPalettes } from "./constants";
 // Diberi akhiran Api karena useFlowchartList() juga mengekspos updateFlowchart

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { motion } from "motion/react";
-import { Trash2, Edit3, Palette, Copy, Sparkles, Check } from "lucide-react";
+import { Trash2, Edit3, Palette, Copy, Check } from "lucide-react";
 import { cn } from "../../../lib/utils";
 
 interface NodeContextMenuProps {
@@ -62,7 +62,7 @@ export const NodeContextMenu: React.FC<NodeContextMenuProps> = ({
     // Use capturing phase to prevent triggering actions on the same click
     document.addEventListener("mousedown", handleOutsideClick, true);
     document.addEventListener("keydown", handleKeyDown);
-    
+
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick, true);
       document.removeEventListener("keydown", handleKeyDown);
@@ -86,7 +86,9 @@ export const NodeContextMenu: React.FC<NodeContextMenuProps> = ({
       {/* Node Info Header */}
       <div className="px-3 py-1.5 text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase tracking-wider text-slate-450 text-content-subtle border-b border-border-faint mb-1 flex items-center justify-between">
         <span>Aksi Komponen</span>
-        <span className="text-violet-600 font-mono text-xs sm:text-[10px] sm:text-[8px]">ID: {nodeId.split("_")[1] || "Active"}</span>
+        <span className="text-violet-600 font-mono text-xs sm:text-[10px] sm:text-[8px]">
+          ID: {nodeId.split("_")[1] || "Active"}
+        </span>
       </div>
 
       {/* Edit Properties Button */}
@@ -139,7 +141,9 @@ export const NodeContextMenu: React.FC<NodeContextMenuProps> = ({
               )}
               title={c.name.toUpperCase()}
             >
-              {isSelected && <Check className="w-3.5 h-3.5 text-white stroke-[3.5px] drop-shadow-sm" />}
+              {isSelected && (
+                <Check className="w-3.5 h-3.5 text-white stroke-[3.5px] drop-shadow-sm" />
+              )}
             </button>
           );
         })}

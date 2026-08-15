@@ -1,4 +1,4 @@
-import { safeLocalStorage, safeSessionStorage, safeJsonParse } from "./lib/safeStorage";
+import { safeLocalStorage, safeSessionStorage } from "./lib/safeStorage";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import React, { useState, useEffect, useRef, useMemo } from "react";
@@ -8,20 +8,15 @@ import {
   Project,
   Task,
   Sprint,
-  UserProfile,
   MasterData,
   Comment,
   Attachment,
   ActivityLog,
   LinkedTask,
-  AppRole,
-  UserPermissions,
-  ModulePermission,
   AppNotification,
 } from "./types";
-import { getUserPermissions, hasPermission, DEFAULT_PERMISSIONS } from "./lib/permissions";
+import { hasPermission } from "./lib/permissions";
 import { validateFileClient } from "./lib/fileSecurity";
-import { registrationSchema, evaluatePasswordStrength } from "./lib/registrationSchema";
 import { confirmDeleteAlert, showSuccessAlert } from "./lib/sweetalert";
 import { useAppStore } from "./store/useAppStore";
 import { CacheManager } from "./lib/cache";
@@ -38,38 +33,16 @@ import { useNewSprintForm } from "./hooks/useNewSprintForm";
 import { useNewProjectForm } from "./hooks/useNewProjectForm";
 import { useTaskSelection } from "./hooks/useTaskSelection";
 import { useAppSync } from "./hooks/useAppSync";
-import { MeetingNotes } from "./features/meeting-notes/MeetingNotes";
-import { WikiView } from "./features/wiki";
-import { NotebookLM } from "./features/notebook-lm";
-import { DashboardView } from "./features/dashboard";
-import { IssueListView, TaskDetailModal } from "./features/issues";
+import { TaskDetailModal } from "./features/issues";
 import { UserDetailView } from "./features/users/UserDetailView";
-import { PlanningView } from "./features/planning";
-import { BoardView } from "./features/kanban";
 import { Sidebar } from "./features/sidebar";
-import { TimelinePanel } from "./features/timeline/index";
 import { AdminUserPanel } from "./features/users";
 import { MasterDataPanel } from "./features/master/MasterDataPanel";
-import { TeamManagementPanel } from "./features/team/TeamManagementPanel";
-import { ActivityLogPanel } from "./features/activity/ActivityLogPanel";
-import { DbExplorerPanel } from "./features/explorer/DbExplorerPanel";
-import { FlowchartView } from "./features/flowchart";
-import { TestQAPanel } from "./features/qa/TestQAPanel";
-import { SettingsPage } from "./features/settings/SettingsPage";
 import { LiveChatWidget } from "./components/LiveChatWidget";
 import { PresenceProvider } from "./contexts/PresenceContext";
 import { HeaderAvatarGroup } from "./components/HeaderAvatarGroup";
-import { VelzonSuccessIcon } from "./components/AuthToastContainer";
 import { SingleLoginCollisionModal } from "./components/SingleLoginCollisionModal";
-import { HeaderNetworkStatus } from "./components/HeaderNetworkStatus";
-import {
-  apiRequest,
-  ApiError,
-  setAuthToken,
-  clearAuthToken,
-  getAuthToken,
-  isNetworkOrAuthError,
-} from "./lib/api";
+import { apiRequest, getAuthToken, isNetworkOrAuthError } from "./lib/api";
 import {
   verifyAuth,
   fetchUsers,
@@ -116,59 +89,12 @@ import { GlobalSkeleton } from "./components/GlobalSkeleton";
 import { NotificationsDropdown } from "./components/NotificationsDropdown";
 import { KeyboardShortcutsModal } from "./components/KeyboardShortcutsModal";
 import { RateLimitIndicator } from "./components/RateLimitIndicator";
-import { EnterpriseAuditDashboard } from "./features/enterprise-audit/EnterpriseAuditDashboard";
 import { AppRoutes } from "./routes/AppRoutes";
-import { StatusSelect, PrioritySelect } from "./components/ui/StatusSelect";
-import { IssueTypeDropdown } from "./components/ui/IssueTypeDropdown";
-import { UserAvatar, getUserAvatarColors } from "./components/ui/UserAvatar";
-import { RenderIcon, AVAILABLE_ICONS } from "./components/RenderIcon";
-import {
-  PriorityIcon,
-  TypeIcon,
-  StyledDropdown,
-  UserBadge,
-} from "./components/ui/CommonComponents";
+import { StyledDropdown } from "./components/ui/CommonComponents";
 
 import {
-  ChevronRight,
-  ChevronLeft,
-  MoreVertical,
   Trash2,
-  Edit2,
-  Calendar,
-  X,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
-  AlertTriangle,
-  LayoutDashboard,
   FolderKanban,
-  Eye,
-  EyeOff,
-  Edit3,
-  Layers,
-  ListTree,
-  ShieldAlert,
-  ExternalLink,
-  Database,
-  Zap,
-  ChevronDown,
-  Share2,
-  Filter,
-  UserCircle,
-  CircleDot,
-  Target,
-  Copy,
-  Mail,
-  Check,
-  ArrowRight,
-  ArrowUpDown,
-  History,
-  MessageSquare,
-  Paperclip,
-  UserPlus,
-  Equal,
-  ChevronsUp,
   ChevronUp,
   ChevronsDown,
   MinusCircle,
@@ -178,7 +104,6 @@ import {
   MapPin,
   LayoutGrid,
   List,
-  PieChart as PieChartIcon,
   BarChart3,
   MoreHorizontal,
   Layout,
@@ -535,36 +460,10 @@ import {
 import { Toaster, toast } from "sonner";
 import { useAuthNotification } from "./components/AuthToastContainer";
 import { motion, AnimatePresence } from "motion/react";
-import {
-  format,
-  isSameDay,
-  isToday,
-  differenceInDays,
-  addDays,
-  subDays,
-  eachDayOfInterval,
-  startOfMonth,
-  endOfMonth,
-  isSameMonth,
-  eachMonthOfInterval,
-  formatDistanceToNow,
-  startOfWeek,
-  endOfWeek,
-  eachWeekOfInterval,
-  startOfYear,
-  endOfYear,
-  eachYearOfInterval,
-} from "date-fns";
-import { id } from "date-fns/locale";
-import {
-  DragDropContext,
-  Droppable as _Droppable,
-  Draggable as _Draggable,
-} from "@hello-pangea/dnd";
+import { format } from "date-fns";
+import { Droppable as _Droppable, Draggable as _Draggable } from "@hello-pangea/dnd";
 import { Modal } from "./components/ui/Modal";
 import { ConfirmationModal } from "./components/ui/ConfirmationModal";
-import { formatNotification } from "./utils/notificationFormatter";
-
 const Droppable = _Droppable as any;
 const Draggable = _Draggable as any;
 
@@ -578,39 +477,11 @@ const chunkArray = <T,>(arr: T[], size: number): T[][] => {
 };
 
 // --- Recharts ---
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  PieChart,
-  Pie,
-  Cell,
-  AreaChart,
-  Area,
-  LineChart,
-  Line,
-} from "recharts";
-
-import {
-  cn,
-  ensureDate,
-  safeFormat,
-  TimelineDatePills,
-  Button,
-  Input,
-  Textarea,
-  VelzonFloatingParticles,
-} from "./components/ui/CoreUI";
+import { ensureDate, safeFormat, Button, Input, Textarea } from "./components/ui/CoreUI";
 import {
   AuthHeroPanel,
   AuthWatermarkPattern,
   RegisterScreen,
-  LoginSkeletonState,
   LoginScreen,
 } from "./features/auth/AuthScreens";
 import { ProfileEditModal } from "./features/users/ProfileEditModal";

@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Map, ChevronDown, ChevronUp, Compass, Move } from 'lucide-react';
-import { cn } from '../../../lib/utils';
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Map, ChevronDown, ChevronUp, Move } from "lucide-react";
+import { cn } from "../../../lib/utils";
 
 // Using exact types from Flowchart editor for native compatibility
 interface FlowNode {
@@ -28,7 +28,7 @@ interface FlowchartMinimapProps {
   zoomLevel: number;
   setPanOffset: (offset: { x: number; y: number }) => void;
   canvasContainerRef: React.RefObject<HTMLDivElement | null>;
-  canvasTheme: 'miro' | 'blueprint';
+  canvasTheme: "miro" | "blueprint";
 }
 
 export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
@@ -79,10 +79,10 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
     });
     observer.observe(canvasContainerRef.current);
 
-    window.addEventListener('resize', updateSize);
+    window.addEventListener("resize", updateSize);
     return () => {
       observer.disconnect();
-      window.removeEventListener('resize', updateSize);
+      window.removeEventListener("resize", updateSize);
     };
   }, [canvasContainerRef]);
 
@@ -138,16 +138,16 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
       setIsDragging(false);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isDragging, zoomLevel, containerSize]);
 
   // Color theme helpers
-  const isMiro = canvasTheme === 'miro';
+  const isMiro = canvasTheme === "miro";
 
   return (
     <div className="absolute bottom-4 left-4 z-30 flex flex-col items-start select-none">
@@ -160,16 +160,18 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
             transition={{ type: "spring", stiffness: 350, damping: 25 }}
             className={cn(
               "p-2 rounded-xl border mb-2 shadow-[0_8px_32px_rgba(0,0,0,0.12)] transition-all duration-300 relative overflow-hidden",
-              isMiro 
-                ? "bg-surface/80 border-border-subtle/40 backdrop-blur-md text-content-strong" 
+              isMiro
+                ? "bg-surface/80 border-border-subtle/40 backdrop-blur-md text-content-strong"
                 : "bg-slate-950/80 border-slate-880/60 backdrop-blur-md text-slate-100"
             )}
           >
             {/* Ambient Background Glow matching selected theme */}
-            <div className={cn(
-              "absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl pointer-events-none opacity-30",
-              isMiro ? "bg-indigo-300" : "bg-blue-500"
-            )} />
+            <div
+              className={cn(
+                "absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl pointer-events-none opacity-30",
+                isMiro ? "bg-indigo-300" : "bg-blue-500"
+              )}
+            />
 
             {/* Minimap Inner Box Container */}
             <div
@@ -181,19 +183,19 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
               }}
               className={cn(
                 "relative rounded-xl overflow-hidden cursor-crosshair border transition-colors duration-300",
-                isMiro 
-                  ? "bg-surface-sunken/70 border-border-subtle/50" 
+                isMiro
+                  ? "bg-surface-sunken/70 border-border-subtle/50"
                   : "bg-slate-900/50 border-slate-850"
               )}
             >
               {/* Grid Dots / Grid Mesh in Minimap */}
-              <div 
-                className="absolute inset-0 opacity-15 pointer-events-none" 
+              <div
+                className="absolute inset-0 opacity-15 pointer-events-none"
                 style={{
                   backgroundImage: isMiro
-                    ? 'radial-gradient(circle, #94a3b8 1px, transparent 1px)'
-                    : 'linear-gradient(to right, #1e3a8a 1px, transparent 1px), linear-gradient(to bottom, #1e3a8a 1px, transparent 1px)',
-                  backgroundSize: isMiro ? '8px 8px' : '12px 12px'
+                    ? "radial-gradient(circle, #94a3b8 1px, transparent 1px)"
+                    : "linear-gradient(to right, #1e3a8a 1px, transparent 1px), linear-gradient(to bottom, #1e3a8a 1px, transparent 1px)",
+                  backgroundSize: isMiro ? "8px 8px" : "12px 12px",
                 }}
               />
 
@@ -208,12 +210,12 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
 
                 // Color mapping for node types
                 let bgClass = "bg-slate-400";
-                if (node.type === 'start') bgClass = "bg-emerald-500";
-                else if (node.type === 'end') bgClass = "bg-rose-500";
-                else if (node.type === 'decision') bgClass = "bg-amber-500";
-                else if (node.type === 'process') bgClass = "bg-indigo-500";
-                else if (node.type === 'sticky') bgClass = "bg-yellow-450 bg-yellow-400";
-                else if (node.type === 'card' || node.type === 'doc') bgClass = "bg-sky-500";
+                if (node.type === "start") bgClass = "bg-emerald-500";
+                else if (node.type === "end") bgClass = "bg-rose-500";
+                else if (node.type === "decision") bgClass = "bg-amber-500";
+                else if (node.type === "process") bgClass = "bg-indigo-500";
+                else if (node.type === "sticky") bgClass = "bg-yellow-450 bg-yellow-400";
+                else if (node.type === "card" || node.type === "doc") bgClass = "bg-sky-500";
 
                 return (
                   <div
@@ -221,7 +223,7 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
                     className={cn(
                       "absolute rounded-[2px] transition-all duration-300",
                       bgClass,
-                      node.type === 'decision' ? "rotate-45" : ""
+                      node.type === "decision" ? "rotate-45" : ""
                     )}
                     style={{
                       left: `${miniX}px`,
@@ -229,9 +231,9 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
                       width: `${Math.max(3, miniW)}px`,
                       height: `${Math.max(3, miniH)}px`,
                       opacity: 0.85,
-                      boxShadow: '0 0.5px 1px rgba(0,0,0,0.1)'
+                      boxShadow: "0 0.5px 1px rgba(0,0,0,0.1)",
                     }}
-                    title={node.label || 'Node'}
+                    title={node.label || "Node"}
                   />
                 );
               })}
@@ -240,8 +242,8 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
               <div
                 className={cn(
                   "absolute border-[1.5px] rounded-md pointer-events-none transition-shadow duration-300",
-                  isMiro 
-                    ? "border-indigo-650 border-indigo-600 bg-indigo-500/10 shadow-[0_0_8px_rgba(99,102,241,0.2)]" 
+                  isMiro
+                    ? "border-indigo-650 border-indigo-600 bg-indigo-500/10 shadow-[0_0_8px_rgba(99,102,241,0.2)]"
                     : "border-blue-500 bg-blue-500/15 shadow-[0_0_12px_rgba(59,130,246,0.3)]"
                 )}
                 style={{
@@ -270,12 +272,17 @@ export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "flex items-center gap-2 px-3 py-1.5 rounded-xl border font-medium text-xs sm:text-[11px] sm:text-[9px] uppercase tracking-wider transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.04)] cursor-pointer active:scale-95",
-          isMiro 
-            ? "bg-surface/80 hover:bg-surface/95 border-border-subtle/40 text-slate-650 hover:text-indigo-600" 
+          isMiro
+            ? "bg-surface/80 hover:bg-surface/95 border-border-subtle/40 text-slate-650 hover:text-indigo-600"
             : "bg-slate-900/80 hover:bg-slate-850/95 border-slate-800/60 text-slate-350 hover:text-blue-400"
         )}
       >
-        <Map className={cn("w-3.5 h-3.5", isOpen ? "text-indigo-500 animate-pulse" : "text-content-subtle")} />
+        <Map
+          className={cn(
+            "w-3.5 h-3.5",
+            isOpen ? "text-indigo-500 animate-pulse" : "text-content-subtle"
+          )}
+        />
         <span>Minimap</span>
         {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
       </button>

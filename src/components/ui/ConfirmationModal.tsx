@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
-import { cn } from "../../lib/utils";
 import { Portal } from "./Portal";
 
 declare global {

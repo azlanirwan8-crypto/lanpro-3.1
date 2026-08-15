@@ -1,26 +1,19 @@
 import React, { useState } from "react";
 import { UserAvatar } from "../../../components/ui/UserAvatar";
 import { format } from "date-fns";
-import { 
-  ShieldCheck, 
-  Users, 
-  AlertTriangle, 
-  TrendingUp, 
-  CheckCircle2, 
-  Clock, 
-  Activity, 
-  Zap, 
-  ArrowRight, 
-  UserCheck, 
+import {
+  Users,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  Activity,
+  Zap,
+  ArrowRight,
   Flame,
-  Filter,
   Search,
-  ExternalLink,
   ChevronRight,
   Radio,
-  FileSpreadsheet
 } from "lucide-react";
-import { motion } from "motion/react";
 import { ensureDate, humanizeActivityAction } from "../../../lib/utils";
 import { cn } from "../../../lib/utils";
 
@@ -53,17 +46,22 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
   setIsTaskDetailModalOpen,
   setCurrentView,
 }) => {
-  const [selectedTab, setSelectedTab] = useState<'workload' | 'blockers' | 'sprint' | 'activity'>('workload');
+  const [selectedTab, setSelectedTab] = useState<"workload" | "blockers" | "sprint" | "activity">(
+    "workload"
+  );
   const [searchMember, setSearchMember] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("all");
 
   // Departments list
-  const departments = Array.from(new Set(projectMembers.map(m => m?.department || 'General')));
+  const departments = Array.from(new Set(projectMembers.map((m) => m?.department || "General")));
 
-  const filteredMembers = projectMembers.filter(m => {
+  const filteredMembers = projectMembers.filter((m) => {
     if (!m) return false;
-    const matchesSearch = (m.displayName || m.email || '').toLowerCase().includes(searchMember.toLowerCase());
-    const matchesDept = selectedDepartment === 'all' || (m.department || 'General') === selectedDepartment;
+    const matchesSearch = (m.displayName || m.email || "")
+      .toLowerCase()
+      .includes(searchMember.toLowerCase());
+    const matchesDept =
+      selectedDepartment === "all" || (m.department || "General") === selectedDepartment;
     return matchesSearch && matchesDept;
   });
 
@@ -80,26 +78,30 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs sm:text-[10px] font-medium uppercase tracking-widest">
               <Radio className="w-3 h-3 animate-pulse" /> Live Team Lead Control
             </span>
-            <span className="text-content-subtle text-xs font-medium">• Pantauan Real-Time Tim & Kinerja</span>
+            <span className="text-content-subtle text-xs font-medium">
+              • Pantauan Real-Time Tim & Kinerja
+            </span>
           </div>
           <h2 className="text-2xl md:text-3xl font-medium tracking-tight text-white flex items-center gap-3">
             Dashboard Pemantauan Tim Lead
           </h2>
           <p className="text-xs text-content-subtle font-medium mt-1 max-w-2xl leading-relaxed">
-            Pusat kendali operasional untuk memantau beban kerja anggota, mendeteksi hambatan (blocker) secara dini, mengawasi progress sprint aktif, dan mengevaluasi kedisiplinan tim secara real-time.
+            Pusat kendali operasional untuk memantau beban kerja anggota, mendeteksi hambatan
+            (blocker) secara dini, mengawasi progress sprint aktif, dan mengevaluasi kedisiplinan
+            tim secara real-time.
           </p>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
           <button
-            onClick={() => setCurrentView('team')}
+            onClick={() => setCurrentView("team")}
             className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-all border border-slate-700 flex items-center gap-2 shadow-soft"
           >
             <Users className="w-4 h-4 text-indigo-400" />
             Kelola Anggota Tim
           </button>
           <button
-            onClick={() => setCurrentView('planning')}
+            onClick={() => setCurrentView("planning")}
             className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-all flex items-center gap-2 shadow-soft-lg shadow-indigo-600/25"
           >
             <Zap className="w-4 h-4" />
@@ -112,9 +114,15 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">Total Anggota Aktif</span>
-            <div className="text-2xl font-medium text-white mt-1">{projectMembers.length} Personil</div>
-            <span className="text-xs sm:text-[10px] text-emerald-400 font-medium mt-1 inline-block">● {projectMembers.filter(m => m?.status === 'online' || true).length} Siap Tugas</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">
+              Total Anggota Aktif
+            </span>
+            <div className="text-2xl font-medium text-white mt-1">
+              {projectMembers.length} Personil
+            </div>
+            <span className="text-xs sm:text-[10px] text-emerald-400 font-medium mt-1 inline-block">
+              ● {projectMembers.filter((m) => m?.status === "online" || true).length} Siap Tugas
+            </span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center">
             <Users className="w-6 h-6" />
@@ -123,9 +131,15 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">Tugas Terhambat (Blockers)</span>
-            <div className="text-2xl font-medium text-rose-400 mt-1">{blockedTasks.length} Kendala</div>
-            <span className="text-xs sm:text-[10px] text-rose-400/80 font-medium mt-1 inline-block">⚠️ Perlu Intervensi Lead</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">
+              Tugas Terhambat (Blockers)
+            </span>
+            <div className="text-2xl font-medium text-rose-400 mt-1">
+              {blockedTasks.length} Kendala
+            </div>
+            <span className="text-xs sm:text-[10px] text-rose-400/80 font-medium mt-1 inline-block">
+              ⚠️ Perlu Intervensi Lead
+            </span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-400 flex items-center justify-center">
             <AlertTriangle className="w-6 h-6" />
@@ -134,9 +148,15 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">Tugas Terlambat (Overdue)</span>
-            <div className="text-2xl font-medium text-amber-400 mt-1">{overdueTasks.length} Tugas</div>
-            <span className="text-xs sm:text-[10px] text-amber-400/80 font-medium mt-1 inline-block">⏰ Melewati Deadline</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">
+              Tugas Terlambat (Overdue)
+            </span>
+            <div className="text-2xl font-medium text-amber-400 mt-1">
+              {overdueTasks.length} Tugas
+            </div>
+            <span className="text-xs sm:text-[10px] text-amber-400/80 font-medium mt-1 inline-block">
+              ⏰ Melewati Deadline
+            </span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center">
             <Clock className="w-6 h-6" />
@@ -145,12 +165,14 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">Sprint Aktif</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-subtle">
+              Sprint Aktif
+            </span>
             <div className="text-2xl font-medium text-emerald-400 mt-1 truncate max-w-[140px]">
-              {activeSprint ? activeSprint.name : 'Tidak Ada Sprint'}
+              {activeSprint ? activeSprint.name : "Tidak Ada Sprint"}
             </div>
             <span className="text-xs sm:text-[10px] text-content-subtle font-medium mt-1 inline-block">
-              {activeSprint ? `${activeSprint.progress || 0}% Selesai` : 'Mulai sprint baru'}
+              {activeSprint ? `${activeSprint.progress || 0}% Selesai` : "Mulai sprint baru"}
             </span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
@@ -162,10 +184,10 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
       {/* Navigation Tabs for Monitor */}
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-800 pb-4 relative z-10">
         <button
-          onClick={() => setSelectedTab('workload')}
+          onClick={() => setSelectedTab("workload")}
           className={cn(
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2",
-            selectedTab === 'workload'
+            selectedTab === "workload"
               ? "bg-indigo-600 text-white shadow-soft-lg shadow-indigo-600/30"
               : "bg-slate-800 text-content-subtle hover:text-white hover:bg-slate-700"
           )}
@@ -175,10 +197,10 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
         </button>
 
         <button
-          onClick={() => setSelectedTab('blockers')}
+          onClick={() => setSelectedTab("blockers")}
           className={cn(
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2 relative",
-            selectedTab === 'blockers'
+            selectedTab === "blockers"
               ? "bg-rose-600 text-white shadow-soft-lg shadow-rose-600/30"
               : "bg-slate-800 text-content-subtle hover:text-white hover:bg-slate-700"
           )}
@@ -193,10 +215,10 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
         </button>
 
         <button
-          onClick={() => setSelectedTab('sprint')}
+          onClick={() => setSelectedTab("sprint")}
           className={cn(
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2",
-            selectedTab === 'sprint'
+            selectedTab === "sprint"
               ? "bg-emerald-600 text-white shadow-soft-lg shadow-emerald-600/30"
               : "bg-slate-800 text-content-subtle hover:text-white hover:bg-slate-700"
           )}
@@ -206,10 +228,10 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
         </button>
 
         <button
-          onClick={() => setSelectedTab('activity')}
+          onClick={() => setSelectedTab("activity")}
           className={cn(
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2",
-            selectedTab === 'activity'
+            selectedTab === "activity"
               ? "bg-violet-600 text-white shadow-soft-lg shadow-violet-600/30"
               : "bg-slate-800 text-content-subtle hover:text-white hover:bg-slate-700"
           )}
@@ -220,7 +242,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
       </div>
 
       {/* Tab 1: Workload & Capacity */}
-      {selectedTab === 'workload' && (
+      {selectedTab === "workload" && (
         <div className="space-y-4 relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-800/40 p-4 rounded-xl border border-slate-800">
             <div className="flex items-center gap-2 w-full sm:w-72 relative">
@@ -229,28 +251,34 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                 type="text"
                 placeholder="Cari anggota tim..."
                 value={searchMember}
-                onChange={e => setSearchMember(e.target.value)}
+                onChange={(e) => setSearchMember(e.target.value)}
                 className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
               />
             </div>
             <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-              <span className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase">Departemen:</span>
+              <span className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase">
+                Departemen:
+              </span>
               <button
-                onClick={() => setSelectedDepartment('all')}
+                onClick={() => setSelectedDepartment("all")}
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
-                  selectedDepartment === 'all' ? "bg-indigo-600 text-white" : "bg-slate-800 text-content-subtle hover:text-white"
+                  selectedDepartment === "all"
+                    ? "bg-indigo-600 text-white"
+                    : "bg-slate-800 text-content-subtle hover:text-white"
                 )}
               >
                 Semua
               </button>
-              {departments.map(dept => (
+              {departments.map((dept) => (
                 <button
                   key={dept}
                   onClick={() => setSelectedDepartment(dept)}
                   className={cn(
                     "px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap",
-                    selectedDepartment === dept ? "bg-indigo-600 text-white" : "bg-slate-800 text-content-subtle hover:text-white"
+                    selectedDepartment === dept
+                      ? "bg-indigo-600 text-white"
+                      : "bg-slate-800 text-content-subtle hover:text-white"
                   )}
                 >
                   {dept}
@@ -261,22 +289,39 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredMembers.map((member, idx) => {
-              const memberTasks = tasks.filter(t => t.assigneeId === member.uid || t.assigneeEmail === member.email);
-              const doneCount = memberTasks.filter(t => t.status === 'Done' || t.status === 'Selesai').length;
-              const activeCount = memberTasks.filter(t => t.status !== 'Done' && t.status !== 'Selesai' && t.status !== 'Backlog').length;
+              const memberTasks = tasks.filter(
+                (t) => t.assigneeId === member.uid || t.assigneeEmail === member.email
+              );
+              const doneCount = memberTasks.filter(
+                (t) => t.status === "Done" || t.status === "Selesai"
+              ).length;
+              const activeCount = memberTasks.filter(
+                (t) => t.status !== "Done" && t.status !== "Selesai" && t.status !== "Backlog"
+              ).length;
               const totalAssigned = memberTasks.length;
-              const workloadPercentage = totalAssigned > 0 ? Math.round((doneCount / totalAssigned) * 100) : 0;
+              const workloadPercentage =
+                totalAssigned > 0 ? Math.round((doneCount / totalAssigned) * 100) : 0;
               const isOverloaded = activeCount >= 6;
 
               return (
-                <div key={member.uid || idx} className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-5 hover:border-indigo-500/50 transition-all flex flex-col justify-between shadow-soft">
+                <div
+                  key={member.uid || idx}
+                  className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-5 hover:border-indigo-500/50 transition-all flex flex-col justify-between shadow-soft"
+                >
                   <div>
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div className="flex items-center gap-3">
-                        <UserAvatar user={member} className="w-10 h-10 text-sm shadow-md rounded-xl shrink-0" />
+                        <UserAvatar
+                          user={member}
+                          className="w-10 h-10 text-sm shadow-md rounded-xl shrink-0"
+                        />
                         <div>
-                          <h4 className="font-medium text-white text-sm tracking-tight">{member.displayName || member.email}</h4>
-                          <span className="text-xs sm:text-[10px] text-indigo-400 font-medium">{member.department || 'Anggota Tim'}</span>
+                          <h4 className="font-medium text-white text-sm tracking-tight">
+                            {member.displayName || member.email}
+                          </h4>
+                          <span className="text-xs sm:text-[10px] text-indigo-400 font-medium">
+                            {member.department || "Anggota Tim"}
+                          </span>
                         </div>
                       </div>
                       {isOverloaded ? (
@@ -292,15 +337,21 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
                     <div className="grid grid-cols-3 gap-2 py-3 border-y border-slate-700/60 my-3 text-center">
                       <div>
-                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle uppercase tracking-widest font-medium block">Total</span>
+                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle uppercase tracking-widest font-medium block">
+                          Total
+                        </span>
                         <span className="text-sm font-medium text-white">{totalAssigned}</span>
                       </div>
                       <div>
-                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle uppercase tracking-widest font-medium block">Aktif</span>
+                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle uppercase tracking-widest font-medium block">
+                          Aktif
+                        </span>
                         <span className="text-sm font-medium text-sky-400">{activeCount}</span>
                       </div>
                       <div>
-                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle uppercase tracking-widest font-medium block">Selesai</span>
+                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle uppercase tracking-widest font-medium block">
+                          Selesai
+                        </span>
                         <span className="text-sm font-medium text-emerald-400">{doneCount}</span>
                       </div>
                     </div>
@@ -311,8 +362,15 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                         <span>{workloadPercentage}%</span>
                       </div>
                       <div className="w-full h-2 rounded-full bg-slate-900 overflow-hidden">
-                        <div 
-                          className={cn("h-full rounded-full transition-all duration-500", workloadPercentage > 70 ? "bg-emerald-500" : workloadPercentage > 40 ? "bg-indigo-500" : "bg-amber-500")}
+                        <div
+                          className={cn(
+                            "h-full rounded-full transition-all duration-500",
+                            workloadPercentage > 70
+                              ? "bg-emerald-500"
+                              : workloadPercentage > 40
+                                ? "bg-indigo-500"
+                                : "bg-amber-500"
+                          )}
                           style={{ width: `${workloadPercentage}%` }}
                         />
                       </div>
@@ -320,11 +378,13 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs text-content-subtle font-medium">
-                    <span>Role: <strong className="text-slate-200">{member.role || 'Member'}</strong></span>
+                    <span>
+                      Role: <strong className="text-slate-200">{member.role || "Member"}</strong>
+                    </span>
                     <button
                       onClick={() => {
                         // View tasks assigned to this member or open details
-                        setCurrentView('issues');
+                        setCurrentView("issues");
                       }}
                       className="text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1 text-xs sm:text-[11px]"
                     >
@@ -339,12 +399,13 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
       )}
 
       {/* Tab 2: Blockers & Risk */}
-      {selectedTab === 'blockers' && (
+      {selectedTab === "blockers" && (
         <div className="space-y-4 relative z-10">
           <div className="bg-rose-500/10 border border-rose-500/20 p-4 rounded-xl flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
             <p className="text-xs text-rose-200 leading-relaxed font-medium">
-              Daftar tugas berikut mengalami hambatan (blocker) atau telah melewati tenggat waktu (overdue) yang memerlukan perhatian segera dari Team Lead.
+              Daftar tugas berikut mengalami hambatan (blocker) atau telah melewati tenggat waktu
+              (overdue) yang memerlukan perhatian segera dari Team Lead.
             </p>
           </div>
 
@@ -353,34 +414,52 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
               <div className="text-center py-12 bg-slate-800/40 rounded-xl border border-slate-800">
                 <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
                 <h4 className="text-base font-medium text-white">Tidak Ada Kendala Kritis!</h4>
-                <p className="text-xs text-content-subtle mt-1">Semua tugas berjalan lancar tanpa blocker maupun overdue yang tertunda.</p>
+                <p className="text-xs text-content-subtle mt-1">
+                  Semua tugas berjalan lancar tanpa blocker maupun overdue yang tertunda.
+                </p>
               </div>
             ) : (
               [...blockedTasks, ...overdueTasks].map((task, idx) => {
-                const isBlocked = task.isBlocked || task.labels?.some((l: string) => l.toLowerCase() === 'blocked');
+                const isBlocked =
+                  task.isBlocked || task.labels?.some((l: string) => l.toLowerCase() === "blocked");
                 return (
-                  <div key={task.id || idx} className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-rose-500/40 transition-all">
+                  <div
+                    key={task.id || idx}
+                    className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-rose-500/40 transition-all"
+                  >
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-300 text-xs sm:text-[10px] font-medium uppercase font-mono">
                           {task.taskNumber || `TSK-${idx + 1}`}
                         </span>
                         {isBlocked ? (
-                          <span className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 text-xs sm:text-[10px] font-medium">Blocked</span>
+                          <span className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 text-xs sm:text-[10px] font-medium">
+                            Blocked
+                          </span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-xs sm:text-[10px] font-medium">Overdue</span>
+                          <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-xs sm:text-[10px] font-medium">
+                            Overdue
+                          </span>
                         )}
-                        <span className="text-xs sm:text-[10px] text-content-subtle font-medium">• Prioritas: <strong className="text-slate-200">{task.priority}</strong></span>
+                        <span className="text-xs sm:text-[10px] text-content-subtle font-medium">
+                          • Prioritas: <strong className="text-slate-200">{task.priority}</strong>
+                        </span>
                       </div>
                       <h4 className="text-sm font-medium text-white">{task.title}</h4>
-                      <p className="text-xs text-content-subtle line-clamp-1">{task.description || 'Tidak ada deskripsi tambahan.'}</p>
+                      <p className="text-xs text-content-subtle line-clamp-1">
+                        {task.description || "Tidak ada deskripsi tambahan."}
+                      </p>
                     </div>
 
                     <div className="flex items-center gap-3 shrink-0">
                       <div className="text-right hidden sm:block">
-                        <span className="text-xs sm:text-[10px] text-content-subtle font-medium block">Deadline</span>
+                        <span className="text-xs sm:text-[10px] text-content-subtle font-medium block">
+                          Deadline
+                        </span>
                         <span className="text-xs text-rose-400 font-medium">
-                          {task.endDate ? format(ensureDate(task.endDate), 'dd MMM yyyy') : 'Tidak ditentukan'}
+                          {task.endDate
+                            ? format(ensureDate(task.endDate), "dd MMM yyyy")
+                            : "Tidak ditentukan"}
                         </span>
                       </div>
                       <button
@@ -402,7 +481,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
       )}
 
       {/* Tab 3: Sprint & Department Workload */}
-      {selectedTab === 'sprint' && (
+      {selectedTab === "sprint" && (
         <div className="space-y-6 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-5 space-y-4">
@@ -411,13 +490,20 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
               </h3>
               <div className="space-y-3">
                 {teamWorkloadData.map((team, idx) => (
-                  <div key={idx} className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                  <div
+                    key={idx}
+                    className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between"
+                  >
                     <div>
                       <h4 className="text-xs font-medium text-white">{team.name}</h4>
-                      <span className="text-xs sm:text-[10px] text-content-subtle">Selesai: {team.Done} | Aktif: {team.Active}</span>
+                      <span className="text-xs sm:text-[10px] text-content-subtle">
+                        Selesai: {team.Done} | Aktif: {team.Active}
+                      </span>
                     </div>
                     <div className="text-right">
-                      <span className="text-sm font-medium text-emerald-400">{team.Done + team.Active} Tugas</span>
+                      <span className="text-sm font-medium text-emerald-400">
+                        {team.Done + team.Active} Tugas
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -433,21 +519,28 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                   <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-xs font-medium text-white">{activeSprint.name}</span>
-                      <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-xs sm:text-[10px] font-medium">Aktif</span>
+                      <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-xs sm:text-[10px] font-medium">
+                        Aktif
+                      </span>
                     </div>
-                    <p className="text-xs text-content-subtle">{activeSprint.goal || 'Tidak ada goal sprint yang ditentukan.'}</p>
+                    <p className="text-xs text-content-subtle">
+                      {activeSprint.goal || "Tidak ada goal sprint yang ditentukan."}
+                    </p>
                     <div className="pt-2">
                       <div className="flex justify-between text-xs sm:text-[10px] font-medium text-content-subtle mb-1">
                         <span>Progress Sprint</span>
                         <span>{activeSprint.progress || 0}%</span>
                       </div>
                       <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-                        <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${activeSprint.progress || 0}%` }} />
+                        <div
+                          className="h-full bg-emerald-500 rounded-full"
+                          style={{ width: `${activeSprint.progress || 0}%` }}
+                        />
                       </div>
                     </div>
                   </div>
                   <button
-                    onClick={() => setCurrentView('planning')}
+                    onClick={() => setCurrentView("planning")}
                     className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-all border border-slate-700 text-center"
                   >
                     Buka Panel Perencanaan Sprint Lengkap
@@ -455,9 +548,11 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-xs text-content-subtle italic">Belum ada sprint aktif saat ini.</p>
+                  <p className="text-xs text-content-subtle italic">
+                    Belum ada sprint aktif saat ini.
+                  </p>
                   <button
-                    onClick={() => setCurrentView('planning')}
+                    onClick={() => setCurrentView("planning")}
                     className="mt-3 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition-all"
                   >
                     Buat Sprint Baru
@@ -470,30 +565,45 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
       )}
 
       {/* Tab 4: Activity Log */}
-      {selectedTab === 'activity' && (
+      {selectedTab === "activity" && (
         <div className="space-y-4 relative z-10">
           <h3 className="text-sm font-medium uppercase tracking-wider text-slate-300 flex items-center gap-2">
             <Activity className="w-4 h-4 text-violet-400" /> Log Aktivitas & Perubahan Terakhir Tim
           </h3>
           <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
             {activityLogs.length === 0 ? (
-              <div className="text-center py-12 text-content-muted text-xs italic">Belum ada log aktivitas tercatat.</div>
+              <div className="text-center py-12 text-content-muted text-xs italic">
+                Belum ada log aktivitas tercatat.
+              </div>
             ) : (
               activityLogs.slice(0, 15).map((log, idx) => (
-                <div key={log.id || idx} className="bg-slate-800/60 border border-slate-700/60 p-3.5 rounded-xl flex items-center justify-between gap-4">
+                <div
+                  key={log.id || idx}
+                  className="bg-slate-800/60 border border-slate-700/60 p-3.5 rounded-xl flex items-center justify-between gap-4"
+                >
                   <div className="flex items-center gap-3">
-                    <UserAvatar uid={log.userId} members={projectMembers} name={log.userName || log.userEmail} className="w-8 h-8 text-xs rounded-lg shrink-0" />
+                    <UserAvatar
+                      uid={log.userId}
+                      members={projectMembers}
+                      name={log.userName || log.userEmail}
+                      className="w-8 h-8 text-xs rounded-lg shrink-0"
+                    />
                     <div>
                       <p className="text-xs text-white font-medium">
-                        <strong className="text-indigo-300">{log.userName || log.userEmail || 'Anggota Tim'}</strong> {humanizeActivityAction(log.action || log.description)}
+                        <strong className="text-indigo-300">
+                          {log.userName || log.userEmail || "Anggota Tim"}
+                        </strong>{" "}
+                        {humanizeActivityAction(log.action || log.description)}
                       </p>
                       <span className="text-xs sm:text-[10px] text-content-subtle font-mono">
-                        {log.timestamp ? format(ensureDate(log.timestamp), 'dd MMM yyyy, HH:mm') : 'Baru saja'}
+                        {log.timestamp
+                          ? format(ensureDate(log.timestamp), "dd MMM yyyy, HH:mm")
+                          : "Baru saja"}
                       </span>
                     </div>
                   </div>
                   <span className="px-2 py-1 rounded bg-slate-900 text-content-subtle text-xs sm:text-[10px] font-mono">
-                    {log.targetType || 'Aktivitas'}
+                    {log.targetType || "Aktivitas"}
                   </span>
                 </div>
               ))

@@ -1,62 +1,32 @@
-import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
+import { safeLocalStorage } from "../../lib/safeStorage";
 import React, { useEffect, useState, useMemo } from "react";
 import { toast } from "sonner";
-import { format, formatDistanceToNow, isSameDay } from "date-fns";
-import { id } from "date-fns/locale";
+import { format, isSameDay } from "date-fns";
 import {
   CheckCircle2,
   Activity,
-  AlertCircle,
   Zap,
   PackageOpen,
   Clock,
   TrendingUp,
-  TrendingDown,
   LayoutGrid,
   PieChartIcon,
   Users,
-  Globe,
-  ArrowRight,
   ArrowUpRight,
-  ArrowDownRight,
-  Video,
-  FileText,
-  GripHorizontal,
-  GripVertical,
-  Sparkles,
   ShieldAlert,
-  Send,
-  Check,
-  HelpCircle,
-  ChevronDown,
-  BookOpen,
   Target,
-  Calendar,
-  UserCircle,
-  FolderKanban,
-  Database,
-  Save,
-  ShoppingBag,
-  DollarSign,
-  Wallet,
-  Download,
   Plus,
   Filter,
 } from "lucide-react";
 import {
   ResponsiveContainer,
-  LineChart,
   CartesianGrid,
   XAxis,
   YAxis,
   Tooltip,
   Legend,
-  Line,
   BarChart,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
   AreaChart,
   Area,
 } from "recharts";
@@ -65,16 +35,7 @@ import { useDashboard, COLORS } from "./hooks";
 import { styles } from "./styles";
 import { ensureDate } from "../../lib/utils";
 import { cn } from "../../lib/utils";
-import { fetchMeetings, fetchDocuments, resolveUserId } from "./services/dashboard.service";
-import { motion } from "motion/react";
-
-import { SdlcBoard } from "./components/SdlcBoard";
-import { KpiMetricsRow } from "./components/KpiMetricsRow";
-import { MetricCard } from "./components/MetricCard";
-import { TodayTaskSummary } from "./components/TodayTaskSummary";
-import { DashboardDonutChart } from "./components/DashboardCharts";
-import { SprintBanner } from "./components/SprintBanner";
-import { SprintPhaseAnalysis } from "./components/SprintPhaseAnalysis";
+import { fetchMeetings, fetchDocuments } from "./services/dashboard.service";
 import { SidebarWidgetsStack } from "./components/SidebarWidgetsStack";
 import { ResponsiveTable } from "../../components/ResponsiveTable";
 

@@ -2,7 +2,6 @@ import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { UserAvatar } from "../../components/ui/UserAvatar";
 import {
-  Book,
   Plus,
   Edit2,
   Trash2,
@@ -16,7 +15,6 @@ import {
   X,
   Calendar,
   User,
-  Filter,
   Eye,
   FileCheck,
   FileSpreadsheet,
@@ -25,11 +23,7 @@ import {
   ExternalLink,
   BookOpen,
   Paperclip,
-  CheckCircle,
-  Clock,
-  Sparkles,
   Info,
-  AlertTriangle,
   Maximize2,
   Minimize2,
   MessageSquare,
@@ -41,8 +35,6 @@ import { validateFileClient } from "../../lib/fileSecurity";
 import Markdown from "react-markdown";
 import { cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
-import { WikiEmptyState } from "./components/WikiEmptyState";
-import { hasPermission } from "../../lib/permissions";
 import { confirmDeleteAlert, showSuccessAlert } from "../../lib/sweetalert";
 
 import type { DocumentModel, WikiViewProps } from "./types";

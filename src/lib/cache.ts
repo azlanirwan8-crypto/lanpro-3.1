@@ -1,4 +1,4 @@
-import { safeLocalStorage, safeSessionStorage } from "../lib/safeStorage";
+import { safeLocalStorage } from "../lib/safeStorage";
 /**
  * LanPro - Client-Side Cache Helper (SWR Caching System)
  * Stores local state snapshot to localStorage for instantaneous loading (Stale-While-Revalidate).

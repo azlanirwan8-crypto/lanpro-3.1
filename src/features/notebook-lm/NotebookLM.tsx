@@ -1,4 +1,3 @@
-import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect, useRef } from "react";
 import {
   Sparkles,
@@ -11,21 +10,16 @@ import {
   Bot,
   User,
   Volume2,
-  VolumeX,
   Play,
   Pause,
   Bookmark,
-  Download,
   Copy,
   RefreshCw,
   Layers,
   BookOpen,
   Video,
-  Check,
   FileCode,
-  Search,
   HelpCircle,
-  FileCheck,
   Upload,
   FileUp,
 } from "lucide-react";

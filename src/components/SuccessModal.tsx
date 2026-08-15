@@ -1,8 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import { PartyPopper } from "lucide-react";
-
 interface SuccessModalProps {
   isOpen: boolean;
   onClose: () => void;

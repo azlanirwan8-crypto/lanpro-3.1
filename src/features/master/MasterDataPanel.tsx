@@ -1,18 +1,5 @@
 import React from "react";
-import {
-  Settings,
-  Plus,
-  Trash2,
-  Edit,
-  Search,
-  Layers,
-  GripVertical,
-  CheckCircle2,
-  ShieldAlert,
-  Sparkles,
-  Tag,
-} from "lucide-react";
-import { motion } from "motion/react";
+import { Settings, Plus, Trash2, Edit, Search, Layers, GripVertical, Tag } from "lucide-react";
 import {
   DragDropContext,
   Droppable as _Droppable,

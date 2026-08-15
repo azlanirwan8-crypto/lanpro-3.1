@@ -4,7 +4,7 @@ import {
   Droppable as _Droppable,
   Draggable as _Draggable,
 } from "@hello-pangea/dnd";
-import { History, Target, Plus, Upload, ShieldAlert, Clock } from "lucide-react";
+import { Plus, Clock } from "lucide-react";
 import { format } from "date-fns";
 
 const Droppable = _Droppable as any;
@@ -16,7 +16,6 @@ import { UserAvatar } from "../../components/ui/UserAvatar";
 import { PlanningViewProps } from "./types";
 import { usePlanning } from "./hooks";
 import { useAppStore } from "../../store/useAppStore";
-import { toast } from "sonner";
 import { BacklogSection } from "./BacklogSection";
 import { SprintSection } from "./SprintSection";
 

@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Play,
-  Database,
-  Server,
-  Table as TableIcon,
-  CloudUpload,
-  HardDrive,
-  Wifi,
-  Code,
-} from "lucide-react";
+import { Play, Database, Table as TableIcon, HardDrive, Wifi, Code } from "lucide-react";
 import { BackupPanel } from "../backup/BackupPanel";
 import { ConnectPanel } from "../connect/ConnectPanel";
 import { cn } from "../../lib/utils";

@@ -4,15 +4,8 @@ import fs from "fs";
 import path from "path";
 import multer from "multer";
 import db from "../../src/lib/db";
-import { authenticateJWT, activeUserSessions, verifyGlobalAdmin } from "../middleware/auth";
-import { verifyProjectAccess } from "../middleware/rbac";
+import { authenticateJWT, verifyGlobalAdmin } from "../middleware/auth";
 import { hashPassword, verifyPassword } from "../helpers/hash";
-import { createAuditLog } from "../services/audit.service";
-import {
-  broadcastProjectNotification,
-  sendProjectActivityNotification,
-  checkUpcomingDueDates,
-} from "../services/notification.service";
 import jwt from "jsonwebtoken";
 import { getJwtSecret } from "../middleware/auth";
 import { validateFileBuffer } from "../../src/lib/fileSecurity";

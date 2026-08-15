@@ -1,4 +1,4 @@
-import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
+import { safeLocalStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect, useRef } from "react";
 import { ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
