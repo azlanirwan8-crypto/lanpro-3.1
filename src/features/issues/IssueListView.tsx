@@ -10,20 +10,8 @@ import {
   CheckCircle2,
   X,
   Calendar,
-  Settings,
-  Bell,
-  BellRing,
-  FileText,
-  Image,
   Filter,
-  LayoutList,
-  ArrowUpDown,
   MoreVertical,
-  MessageSquare,
-  Paperclip,
-  Clock,
-  Hash,
-  UserPlus,
   Zap,
   CircleDot,
   Layout,
@@ -39,15 +27,8 @@ import { cn, ensureDate } from "../../lib/utils";
 import { reorderTasks } from "./services/issues.service";
 import { toast } from "sonner";
 import { format, formatDistanceToNow } from "date-fns";
-import { id } from "date-fns/locale";
 import { UserAvatar } from "../../components/ui/UserAvatar";
-import {
-  PriorityIcon,
-  TypeIcon,
-  StyledDropdown,
-  TableStatusBadge,
-  UncontrolledInput,
-} from "../../components/ui/CommonComponents";
+import { StyledDropdown, UncontrolledInput } from "../../components/ui/CommonComponents";
 import { RenderIcon } from "../../components/RenderIcon";
 import { Task } from "../../types";
 import { useAppStore } from "../../store/useAppStore";

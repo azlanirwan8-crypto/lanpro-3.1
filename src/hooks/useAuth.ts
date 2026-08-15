@@ -1,38 +1,29 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
-import { toast } from 'sonner';
-import type { AppView } from '../store/useAppStore';
-import { showErrorAlert } from '../lib/sweetalert';
-import {
-  UserProfile,
-  AppRole,
-} from '../types';
-import {
-  apiRequest,
-  ApiError,
-  setAuthToken,
-  clearAuthToken,
-  getAuthToken,
-} from '../lib/api';
-import {
-  safeLocalStorage,
-  safeSessionStorage,
-} from '../lib/safeStorage';
+import { useState, useEffect, useMemo } from "react";
+import { toast } from "sonner";
+import type { AppView } from "../store/useAppStore";
+import { showErrorAlert } from "../lib/sweetalert";
+import { UserProfile, AppRole } from "../types";
+import { apiRequest, ApiError, setAuthToken, clearAuthToken, getAuthToken } from "../lib/api";
+import { safeLocalStorage, safeSessionStorage } from "../lib/safeStorage";
 
 // Browser session ID for collision detection
-const BROWSER_SESSION_ID = typeof window !== 'undefined' ? window.sessionStorage.getItem('browserSessionId') ||
-  (() => {
-    const id = Math.random().toString(36).slice(2);
-    window.sessionStorage.setItem('browserSessionId', id);
-    return id;
-  })() : '';
+const BROWSER_SESSION_ID =
+  typeof window !== "undefined"
+    ? window.sessionStorage.getItem("browserSessionId") ||
+      (() => {
+        const id = Math.random().toString(36).slice(2);
+        window.sessionStorage.setItem("browserSessionId", id);
+        return id;
+      })()
+    : "";
 
 interface UseAuthReturn {
   isLoggedIn: boolean;
   currentUser: UserProfile | null;
   userRole: AppRole | null;
   currentUserProfile: UserProfile | null;
-  authView: 'login' | 'register';
-  setAuthView: (view: 'login' | 'register') => void;
+  authView: "login" | "register";
+  setAuthView: (view: "login" | "register") => void;
   socket: any;
   setSocket: (socket: any) => void;
   showCollisionModal: boolean;
@@ -44,8 +35,18 @@ interface UseAuthReturn {
   effectiveRole: AppRole;
   handleLogout: (silent?: boolean) => Promise<void>;
   handleLogoutRequest: () => void;
-  handleManualLogin: (username: string, password: string, remember: boolean, force?: boolean) => Promise<void>;
-  handleRegister: (username: string, password: string, name: string, email: string) => Promise<{ success: boolean; message?: string }>;
+  handleManualLogin: (
+    username: string,
+    password: string,
+    remember: boolean,
+    force?: boolean
+  ) => Promise<void>;
+  handleRegister: (
+    username: string,
+    password: string,
+    name: string,
+    email: string
+  ) => Promise<{ success: boolean; message?: string }>;
 
   // State auth dimiliki hook ini. Setter-setter di bawah diekspos karena
   // AppContainer memakainya langsung (mis. saat update profil dan penanganan
@@ -71,15 +72,15 @@ export function useAuth(
   setNewTaskStatus?: (status: string) => void,
   setNewTaskPriority?: (priority: string) => void,
   setMasterData?: (data: any[]) => void,
-  setConfirmAction?: (action: any) => void,
+  setConfirmAction?: (action: any) => void
 ): UseAuthReturn {
   const handleAuthApiResponse = (status: number, data: any) => {
     if (status === 429) {
-      toast.error('Terlalu banyak percobaan. Silakan tunggu beberapa menit.');
+      toast.error("Terlalu banyak percobaan. Silakan tunggu beberapa menit.");
     } else if (status === 401) {
-      toast.error(data?.message || 'Username atau password salah.');
+      toast.error(data?.message || "Username atau password salah.");
     } else {
-      toast.error(data?.message || 'Terjadi kesalahan saat login.');
+      toast.error(data?.message || "Terjadi kesalahan saat login.");
     }
   };
 
@@ -88,13 +89,13 @@ export function useAuth(
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [userRole, setUserRole] = useState<AppRole | null>(null);
   const [currentUserProfile, setCurrentUserProfile] = useState<UserProfile | null>(null);
-  const [authView, setAuthView] = useState<'login' | 'register'>('login');
+  const [authView, setAuthView] = useState<"login" | "register">("login");
   const [socket, setSocket] = useState<any>(null);
   const [showCollisionModal, setShowCollisionModal] = useState(false);
   const [activeSessionData, setActiveSessionData] = useState<any>(null);
   const [pendingLoginCredentials, setPendingLoginCredentials] = useState<any>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(false);
-  const [loginStatusText, setLoginStatusText] = useState<string>('Authenticating...');
+  const [loginStatusText, setLoginStatusText] = useState<string>("Authenticating...");
 
   // Effective role calculation
   const user: any = currentUser;
@@ -103,47 +104,54 @@ export function useAuth(
       currentUser?.username ||
       currentUserProfile?.username ||
       user?.username ||
-      ''
+      ""
     )
       .toLowerCase()
       .trim();
-    const roleLower = (userRole || currentUser?.role || currentUserProfile?.role || '')
+    const roleLower = (userRole || currentUser?.role || currentUserProfile?.role || "")
       .toLowerCase()
       .trim();
 
     if (
-      usernameLower === 'admin' ||
-      roleLower === 'admin' ||
-      roleLower === 'administrator' ||
-      roleLower === 'superadmin'
+      usernameLower === "admin" ||
+      roleLower === "admin" ||
+      roleLower === "administrator" ||
+      roleLower === "superadmin"
     )
-      return 'admin';
+      return "admin";
 
-    return (userRole || 'user') as AppRole;
-  }, [userRole, currentUser?.uid, currentUser?.role, currentUser?.username, currentUserProfile?.username]);
+    return (userRole || "user") as AppRole;
+  }, [
+    userRole,
+    currentUser?.uid,
+    currentUser?.role,
+    currentUser?.username,
+    currentUserProfile?.username,
+  ]);
 
   // Fetch all users
   const fetchAllUsers = async () => {
     if (!isLoggedIn || !getAuthToken()) return;
     try {
-      const data = await apiRequest('/api/users');
-      if (data.status === 'success') {
+      const data = await apiRequest("/api/users");
+      if (data.status === "success") {
         setAllUsers(data.data as UserProfile[]);
       }
     } catch (error) {
-      console.warn('Silent failure fetching all users:', error);
+      console.warn("Silent failure fetching all users:", error);
     }
   };
 
   // Logout handler
   const handleLogout = async (silent = false) => {
-    const wasLoggedIn = isLoggedIn || !!currentUser || !!safeLocalStorage.getItem('lanpro_jwt_token');
+    const wasLoggedIn =
+      isLoggedIn || !!currentUser || !!safeLocalStorage.getItem("lanpro_jwt_token");
     const activeUserId = currentUser?.id || currentUser?.uid;
 
     if (activeUserId) {
       try {
-        await apiRequest('/api/auth/logout', {
-          method: 'POST',
+        await apiRequest("/api/auth/logout", {
+          method: "POST",
           body: { userId: activeUserId },
         }).catch(() => {
           // Ignore network or API errors on logout to allow local session clearance
@@ -153,13 +161,13 @@ export function useAuth(
       }
     }
 
-    safeLocalStorage.removeItem('isAdminMode');
-    safeLocalStorage.removeItem('sessionUser');
-    safeSessionStorage.removeItem('sessionUser');
+    safeLocalStorage.removeItem("isAdminMode");
+    safeLocalStorage.removeItem("sessionUser");
+    safeSessionStorage.removeItem("sessionUser");
     clearAuthToken();
 
     if (socket) {
-      socket.emit('leave_presence');
+      socket.emit("leave_presence");
     }
 
     // Clear all significant states
@@ -172,16 +180,16 @@ export function useAuth(
     setSprints?.([]);
     setProjectMembers?.([]);
     setActivityLogs?.([]);
-    setCurrentView?.('dashboard');
-    setAuthView('login');
+    setCurrentView?.("dashboard");
+    setAuthView("login");
 
     if (wasLoggedIn && !silent) {
-      toast.success('Logged out successfully');
+      toast.success("Logged out successfully");
     }
 
     // Hard check to ensure we are back at login if state doesn't trigger immediately
     setTimeout(() => {
-      if (window.location.hash !== '' || window.location.search !== '') {
+      if (window.location.hash !== "" || window.location.search !== "") {
         window.location.href = window.location.origin;
       }
     }, 500);
@@ -191,11 +199,11 @@ export function useAuth(
   const handleLogoutRequest = () => {
     setConfirmAction?.({
       isOpen: true,
-      title: 'Logout Akun',
-      message: 'Apakah Anda yakin ingin keluar dari LanPro? Sesi Anda akan diakhiri.',
-      variant: 'warning',
-      confirmText: 'Ya, Keluar',
-      cancelText: 'Batal',
+      title: "Logout Akun",
+      message: "Apakah Anda yakin ingin keluar dari LanPro? Sesi Anda akan diakhiri.",
+      variant: "warning",
+      confirmText: "Ya, Keluar",
+      cancelText: "Batal",
       onConfirm: async () => {
         await handleLogout(false);
       },
@@ -207,50 +215,50 @@ export function useAuth(
     username: string,
     password: string,
     remember: boolean,
-    force: boolean = false,
+    force: boolean = false
   ) => {
     if (!username || !password) {
-      toast.error('Username/Email dan Password wajib diisi.');
+      toast.error("Username/Email dan Password wajib diisi.");
       return;
     }
     if (isAuthLoading && !force) return;
 
     try {
       setIsAuthLoading(true);
-      setLoginStatusText('Authenticating...');
+      setLoginStatusText("Authenticating...");
 
       // Special Hardcoded Admin bypass
-      if (username === 'admin' && (password === 'admin' || password === 'admin123')) {
+      if (username === "admin" && (password === "admin" || password === "admin123")) {
         const adminData = {
-          uid: 'admin-fixed-id',
-          username: 'admin',
-          status: 'approved',
-          role: 'admin',
-          displayName: 'Admin Manager',
+          uid: "admin-fixed-id",
+          username: "admin",
+          status: "approved",
+          role: "admin",
+          displayName: "Admin Manager",
         };
 
         try {
-          await apiRequest('/api/auth/register', {
-            method: 'POST',
-            body: { ...adminData, password: password, id: 'admin-fixed-id' },
+          await apiRequest("/api/auth/register", {
+            method: "POST",
+            body: { ...adminData, password: password, id: "admin-fixed-id" },
           });
         } catch (e) {}
 
         if (remember) {
-          safeLocalStorage.setItem('isAdminMode', 'true');
+          safeLocalStorage.setItem("isAdminMode", "true");
         } else {
-          safeSessionStorage.setItem('isAdminMode', 'true');
+          safeSessionStorage.setItem("isAdminMode", "true");
         }
       }
 
       // MySQL login with session collision check
-      const endpoint = force ? '/api/auth/force-logout' : '/api/auth/login';
+      const endpoint = force ? "/api/auth/force-logout" : "/api/auth/login";
       const data = await apiRequest(endpoint, {
-        method: 'POST',
+        method: "POST",
         body: { username, password, force, browserSessionId: BROWSER_SESSION_ID },
       });
 
-      if (data.status !== 'success') {
+      if (data.status !== "success") {
         handleAuthApiResponse(401, data);
         setIsAuthLoading(false);
         return;
@@ -261,11 +269,11 @@ export function useAuth(
       }
 
       const userData = data.user as UserProfile;
-      if (userData.permissions && typeof userData.permissions === 'string') {
+      if (userData.permissions && typeof userData.permissions === "string") {
         try {
           userData.permissions = JSON.parse(userData.permissions);
         } catch (e) {
-          console.error('Failed to parse user permissions on login:', e);
+          console.error("Failed to parse user permissions on login:", e);
         }
       }
 
@@ -276,39 +284,39 @@ export function useAuth(
 
       // Prefetch critical dashboard data
       try {
-        const canSeeAllProjects = userData.role === 'admin' || userData.role === 'head';
-        const url = canSeeAllProjects ? '/api/projects' : `/api/projects?userId=${userData.uid}`;
+        const canSeeAllProjects = userData.role === "admin" || userData.role === "head";
+        const url = canSeeAllProjects ? "/api/projects" : `/api/projects?userId=${userData.uid}`;
         const [projectsRes, masterRes] = await Promise.all([
           apiRequest(url).catch(() => null),
-          apiRequest('/api/master-data').catch(() => null),
+          apiRequest("/api/master-data").catch(() => null),
         ]);
 
-        if (projectsRes?.status === 'success') {
+        if (projectsRes?.status === "success") {
           const projs = projectsRes.data as any[];
           setProjects?.(projs);
           setSelectedProject?.(projs.length > 0 ? projs[0] : null);
         }
 
-        if (masterRes?.status === 'success') {
+        if (masterRes?.status === "success") {
           const result = masterRes.data as any[];
           const uniqueData = Array.from(
             new Map(result.map((m) => [`${m.type}-${m.label}`, m])).values()
           );
           setMasterData?.(uniqueData);
           if (uniqueData.length > 0) {
-            const statuses = uniqueData.filter((d) => d.type === 'status');
-            const priorities = uniqueData.filter((d) => d.type === 'priority');
+            const statuses = uniqueData.filter((d) => d.type === "status");
+            const priorities = uniqueData.filter((d) => d.type === "priority");
             if (statuses.length > 0) setNewTaskStatus?.(statuses[0].label);
             if (priorities.length > 0) setNewTaskPriority?.(priorities[0].label);
           }
         }
       } catch (e) {
-        console.warn('Failed to prefetch data:', e);
+        console.warn("Failed to prefetch data:", e);
       }
 
       // Security delay for browser password managers
       if (!force) {
-        setLoginStatusText('Memverifikasi keamanan sesi...');
+        setLoginStatusText("Memverifikasi keamanan sesi...");
         await new Promise((resolve) => setTimeout(resolve, 800));
       }
 
@@ -322,17 +330,17 @@ export function useAuth(
       setPendingLoginCredentials(null);
 
       if (remember) {
-        safeLocalStorage.setItem('sessionUser', JSON.stringify(userData));
-        safeLocalStorage.setItem('rememberUser', 'true');
+        safeLocalStorage.setItem("sessionUser", JSON.stringify(userData));
+        safeLocalStorage.setItem("rememberUser", "true");
       } else {
-        safeSessionStorage.setItem('sessionUser', JSON.stringify(userData));
-        safeLocalStorage.removeItem('rememberUser');
+        safeSessionStorage.setItem("sessionUser", JSON.stringify(userData));
+        safeLocalStorage.removeItem("rememberUser");
       }
 
       toast.success(`Selamat datang kembali, ${userData?.displayName || username}`);
     } catch (e: any) {
       if (e instanceof ApiError && e.status === 409) {
-        console.warn('Session collision detected');
+        console.warn("Session collision detected");
         setActiveSessionData(e.data.activeSession);
         setPendingLoginCredentials({ username, password, remember });
         setShowCollisionModal(true);
@@ -346,55 +354,67 @@ export function useAuth(
         errStatus === 429 ||
         errStatus === 403 ||
         (e.message &&
-          (e.message.includes('belum aktif') ||
-            e.message.includes('belum di aktifkan') ||
-            e.message.includes('pending') ||
-            e.message.toLowerCase().includes('terblokir') ||
-            e.message.toLowerCase().includes('salah') ||
-            e.message.toLowerCase().includes('credentials') ||
-            e.message.toLowerCase().includes('tidak ditemukan') ||
-            e.message.toLowerCase().includes('gagal terhubung') ||
-            e.message.toLowerCase().includes('failed to fetch')));
+          (e.message.includes("belum aktif") ||
+            e.message.includes("belum di aktifkan") ||
+            e.message.includes("pending") ||
+            e.message.toLowerCase().includes("terblokir") ||
+            e.message.toLowerCase().includes("salah") ||
+            e.message.toLowerCase().includes("credentials") ||
+            e.message.toLowerCase().includes("tidak ditemukan") ||
+            e.message.toLowerCase().includes("gagal terhubung") ||
+            e.message.toLowerCase().includes("failed to fetch")));
 
       if (isExpectedAuthError) {
-        console.warn('Login issue:', e.message);
+        console.warn("Login issue:", e.message);
       } else {
-        console.error('Login error:', e);
+        console.error("Login error:", e);
       }
 
       if (
         errStatus === 403 ||
         (e.message &&
-          (e.message.includes('menunggu persetujuan') ||
-            e.message.includes('ditolak') ||
-            e.message.includes('belum aktif') ||
-            e.message.includes('belum di aktifkan') ||
-            e.message.includes('pending')))
+          (e.message.includes("menunggu persetujuan") ||
+            e.message.includes("ditolak") ||
+            e.message.includes("belum aktif") ||
+            e.message.includes("belum di aktifkan") ||
+            e.message.includes("pending")))
       ) {
         let cleanMsg = e.message || `Akun ${username} belum dapat diakses. Silakan hubungi admin.`;
         if (
-          cleanMsg.includes('Rute API') ||
-          cleanMsg.includes('Status: 403') ||
-          cleanMsg.includes('Response bukan') ||
-          cleanMsg.includes('Server error')
+          cleanMsg.includes("Rute API") ||
+          cleanMsg.includes("Status: 403") ||
+          cleanMsg.includes("Response bukan") ||
+          cleanMsg.includes("Server error")
         ) {
           cleanMsg = `Akun ${username} belum dapat diakses. Silakan hubungi admin.`;
         }
 
-        const isRejected = cleanMsg.toLowerCase().includes('ditolak');
+        const isRejected = cleanMsg.toLowerCase().includes("ditolak");
         showErrorAlert(
-          isRejected ? 'Pendaftaran Ditolak' : 'Akses Ditolak',
+          isRejected ? "Pendaftaran Ditolak" : "Akses Ditolak",
           cleanMsg,
-          isRejected ? 'error' : 'warning'
+          isRejected ? "error" : "warning"
         );
-      } else if (errStatus === 429 || (e.message && e.message.toLowerCase().includes('terblokir'))) {
+      } else if (
+        errStatus === 429 ||
+        (e.message && e.message.toLowerCase().includes("terblokir"))
+      ) {
         handleAuthApiResponse(429, { message: e.message });
-      } else if (e.message && (e.message.toLowerCase().includes('salah') || e.message.toLowerCase().includes('credentials') || e.message.toLowerCase().includes('tidak ditemukan'))) {
+      } else if (
+        e.message &&
+        (e.message.toLowerCase().includes("salah") ||
+          e.message.toLowerCase().includes("credentials") ||
+          e.message.toLowerCase().includes("tidak ditemukan"))
+      ) {
         handleAuthApiResponse(401, { message: e.message });
-      } else if (e.message && (e.message.toLowerCase().includes('gagal terhubung') || e.message.toLowerCase().includes('failed to fetch'))) {
-        toast.error('Gagal terhubung ke server. Silakan periksa koneksi Anda dan coba lagi.');
+      } else if (
+        e.message &&
+        (e.message.toLowerCase().includes("gagal terhubung") ||
+          e.message.toLowerCase().includes("failed to fetch"))
+      ) {
+        toast.error("Gagal terhubung ke server. Silakan periksa koneksi Anda dan coba lagi.");
       } else {
-        handleAuthApiResponse(errStatus, { message: e.message || 'Terjadi kesalahan saat login.' });
+        handleAuthApiResponse(errStatus, { message: e.message || "Terjadi kesalahan saat login." });
       }
     } finally {
       setIsAuthLoading(false);
@@ -406,25 +426,25 @@ export function useAuth(
     username: string,
     password: string,
     name: string,
-    email: string,
+    email: string
   ): Promise<{ success: boolean; message?: string }> => {
     try {
       setIsAuthLoading(true);
 
-      const data = await apiRequest('/api/auth/register', {
-        method: 'POST',
+      const data = await apiRequest("/api/auth/register", {
+        method: "POST",
         body: { username, password, nama_lengkap: name, email },
       });
 
-      if (data.status !== 'success') {
-        toast.error(data.message || 'Pendaftaran gagal.');
+      if (data.status !== "success") {
+        toast.error(data.message || "Pendaftaran gagal.");
         return { success: false, message: data.message };
       }
 
       return { success: true, message: data.message };
     } catch (e: any) {
-      console.error('Registration error:', e);
-      toast.error(e?.message || 'Terjadi kesalahan pendaftaran.');
+      console.error("Registration error:", e);
+      toast.error(e?.message || "Terjadi kesalahan pendaftaran.");
       return { success: false, message: e?.message };
     } finally {
       setIsAuthLoading(false);
@@ -436,8 +456,8 @@ export function useAuth(
     const handleAuthExpired = () => {
       handleLogout();
     };
-    window.addEventListener('auth_expired', handleAuthExpired);
-    return () => window.removeEventListener('auth_expired', handleAuthExpired);
+    window.addEventListener("auth_expired", handleAuthExpired);
+    return () => window.removeEventListener("auth_expired", handleAuthExpired);
   }, []);
 
   // Effect: Fetch all users when logged in
@@ -456,7 +476,8 @@ export function useAuth(
       const customEvent = e as CustomEvent;
       const updatedUser = customEvent.detail;
       if (updatedUser) {
-        const currentUid = currentUser?.uid || user?.uid || currentUserProfile?.id || currentUserProfile?.uid;
+        const currentUid =
+          currentUser?.uid || user?.uid || currentUserProfile?.id || currentUserProfile?.uid;
         const targetUid = updatedUser.uid || updatedUser.id;
 
         if (currentUid && targetUid && String(currentUid) === String(targetUid)) {
@@ -472,8 +493,8 @@ export function useAuth(
         fetchAllUsers();
       }
     };
-    window.addEventListener('user_profile_updated', handleProfileUpdated);
-    return () => window.removeEventListener('user_profile_updated', handleProfileUpdated);
+    window.addEventListener("user_profile_updated", handleProfileUpdated);
+    return () => window.removeEventListener("user_profile_updated", handleProfileUpdated);
   }, [currentUser?.uid, user?.uid, currentUserProfile?.id, currentUserProfile?.uid]);
 
   return {

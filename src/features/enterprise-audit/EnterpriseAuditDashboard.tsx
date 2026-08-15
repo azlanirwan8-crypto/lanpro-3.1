@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  History,
   Search,
-  Filter,
   Calendar,
   ArrowRight,
   X,

@@ -24,7 +24,6 @@ import {
   Plus,
   Minus,
   Zap,
-  CornerDownRight,
   ListTodo,
   Target,
   Calendar,

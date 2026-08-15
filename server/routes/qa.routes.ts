@@ -1,6 +1,5 @@
 import { Express } from "express";
-import { z } from "zod";
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";

@@ -12,7 +12,6 @@ import {
   endOfYear,
 } from "date-fns";
 import { ensureDate } from "../../lib/utils";
-import { toast } from "sonner";
 import html2canvas from "html2canvas";
 
 interface TimelineViewProps {

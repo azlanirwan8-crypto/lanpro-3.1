@@ -1,6 +1,4 @@
 import { apiRequest } from "../lib/api";
-import { Task } from "../types";
-
 export const taskService = {
   updateTaskField: async (projectId: string, taskId: string, field: string, value: any) => {
     let updateData: any = {};
@@ -10,7 +8,7 @@ export const taskService = {
         endDate: value.endDate,
       };
     } else if (field === "assigneeId") {
-      const isEmail = typeof value === 'string' && value.includes("@");
+      const isEmail = typeof value === "string" && value.includes("@");
       if (isEmail) {
         updateData = {
           assigneeId: null,
@@ -30,14 +28,14 @@ export const taskService = {
 
     const data = await apiRequest(`/api/projects/${projectId}/tasks/${taskId}`, {
       method: "PUT",
-      body: updateData
+      body: updateData,
     });
 
     if (data.status !== "success") throw new Error(data.message || "Failed to update task");
 
     return data;
   },
-  
+
   // Add other task-related methods here as we extract them from App.tsx
 };
 
@@ -47,8 +45,7 @@ export const taskService = {
  * URL, metode, header, dan bentuk body dipertahankan persis seperti aslinya.
  * ------------------------------------------------------------------------- */
 
-export const fetchTasks = (projectId: string) =>
-  apiRequest(`/api/projects/${projectId}/tasks`);
+export const fetchTasks = (projectId: string) => apiRequest(`/api/projects/${projectId}/tasks`);
 
 export const createTask = (projectId: string, body: any) =>
   apiRequest(`/api/projects/${projectId}/tasks`, { method: "POST", body });

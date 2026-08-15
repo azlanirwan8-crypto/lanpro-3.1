@@ -1,8 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { X, Users } from "lucide-react";
-import { UserProfile } from "../../types";
-
+import { X } from "lucide-react";
 export const Button = ({
   children,
   onClick,

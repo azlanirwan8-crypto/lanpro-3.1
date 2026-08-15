@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { User, Mail, Phone, Lock, Eye, EyeOff, Loader2, Save } from "lucide-react";
-import { Button, Input } from "../../components/ui/CoreUI";
+import { Eye, EyeOff, Save } from "lucide-react";
+import { Input } from "../../components/ui/CoreUI";
 import { uploadAvatar, updateProfile } from "./services/users.service";
 import { Modal } from "../../components/ui/Modal";
 import { UserAvatar } from "./styles";
@@ -20,9 +20,7 @@ export const ProfileEditModal = ({
 }) => {
   const [selectedAvatar, setSelectedAvatar] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [displayName, setDisplayName] = useState(
-    userProfile?.displayName || "",
-  );
+  const [displayName, setDisplayName] = useState(userProfile?.displayName || "");
   const [username, setUsername] = useState(userProfile?.username || "");
   const [email, setEmail] = useState(userProfile?.email || "");
   const [phone, setPhone] = useState(userProfile?.phone || "");
@@ -38,7 +36,7 @@ export const ProfileEditModal = ({
 
   useEffect(() => {
     return () => {
-      if (previewUrl && previewUrl.startsWith('blob:')) {
+      if (previewUrl && previewUrl.startsWith("blob:")) {
         URL.revokeObjectURL(previewUrl);
       }
     };
@@ -52,7 +50,7 @@ export const ProfileEditModal = ({
       setPhone(userProfile?.phone || "");
       setPhotoURL(userProfile?.photoURL || "");
       setSelectedAvatar(null);
-      if (previewUrl && previewUrl.startsWith('blob:')) {
+      if (previewUrl && previewUrl.startsWith("blob:")) {
         URL.revokeObjectURL(previewUrl);
       }
       setPreviewUrl(null);
@@ -64,19 +62,19 @@ export const ProfileEditModal = ({
     if (!file) return;
 
     // Client-side validation
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
     if (!allowedTypes.includes(file.type)) {
-      toast.error('Format file tidak didukung (gunakan JPG, PNG, WEBP, GIF, atau SVG)');
-      return;
-    }
-    
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
-      toast.error('Ukuran file maksimal 5MB');
+      toast.error("Format file tidak didukung (gunakan JPG, PNG, WEBP, GIF, atau SVG)");
       return;
     }
 
-    if (previewUrl && previewUrl.startsWith('blob:')) {
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      toast.error("Ukuran file maksimal 5MB");
+      return;
+    }
+
+    if (previewUrl && previewUrl.startsWith("blob:")) {
       URL.revokeObjectURL(previewUrl);
     }
 
@@ -96,12 +94,16 @@ export const ProfileEditModal = ({
       if (selectedAvatar) {
         setIsUploading(true);
         const formData = new FormData();
-        formData.append('file', selectedAvatar);
+        formData.append("file", selectedAvatar);
 
         const uploadData = await uploadAvatar(docId, formData);
 
-        if (uploadData && (uploadData.status === 'success' || uploadData.avatar_url)) {
-          finalPhotoURL = uploadData.avatar_url || uploadData.data?.avatar_url || uploadData.data?.photoURL || finalPhotoURL;
+        if (uploadData && (uploadData.status === "success" || uploadData.avatar_url)) {
+          finalPhotoURL =
+            uploadData.avatar_url ||
+            uploadData.data?.avatar_url ||
+            uploadData.data?.photoURL ||
+            finalPhotoURL;
           setPhotoURL(finalPhotoURL);
 
           // Preview blob DITAHAN sampai gambar dari server benar-benar termuat.
@@ -118,19 +120,22 @@ export const ProfileEditModal = ({
           await new Promise<void>((selesai) => {
             const img = new Image();
             const batas = setTimeout(selesai, 3000);
-            const rampung = () => { clearTimeout(batas); selesai(); };
+            const rampung = () => {
+              clearTimeout(batas);
+              selesai();
+            };
             img.onload = rampung;
             img.onerror = rampung;
             img.src = finalPhotoURL;
           });
 
-          if (blobLama && blobLama.startsWith('blob:')) {
+          if (blobLama && blobLama.startsWith("blob:")) {
             URL.revokeObjectURL(blobLama);
           }
           setPreviewUrl(null);
           setSelectedAvatar(null);
         } else {
-          toast.error(uploadData?.message || 'Gagal mengunggah foto avatar.');
+          toast.error(uploadData?.message || "Gagal mengunggah foto avatar.");
           setLoading(false);
           setIsUploading(false);
           return;
@@ -196,15 +201,17 @@ export const ProfileEditModal = ({
                 `key` memaksa elemen dibuat ulang saat sumber berubah, supaya
                 status galat gambar sebelumnya tidak terbawa. */}
             <UserAvatar
-              key={previewUrl || photoURL || 'kosong'}
-              user={{
-                ...userProfile,
-                displayName,
-                username,
-                avatar_url: previewUrl || photoURL,
-                photoURL: previewUrl || photoURL,
-                avatarUrl: previewUrl || photoURL,
-              } as any}
+              key={previewUrl || photoURL || "kosong"}
+              user={
+                {
+                  ...userProfile,
+                  displayName,
+                  username,
+                  avatar_url: previewUrl || photoURL,
+                  photoURL: previewUrl || photoURL,
+                  avatarUrl: previewUrl || photoURL,
+                } as any
+              }
               className="w-16 h-16 text-2xl"
             />
             {previewUrl && (
@@ -213,14 +220,20 @@ export const ProfileEditModal = ({
               </span>
             )}
             <label className="absolute inset-0 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity">
-              <span className="text-xs sm:text-[10px] font-medium uppercase tracking-wider">{isUploading ? '...' : 'Pilih Foto'}</span>
-              <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} disabled={isUploading || loading} />
+              <span className="text-xs sm:text-[10px] font-medium uppercase tracking-wider">
+                {isUploading ? "..." : "Pilih Foto"}
+              </span>
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileChange}
+                disabled={isUploading || loading}
+              />
             </label>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-medium text-content-strong">
-              {displayName}
-            </p>
+            <p className="text-sm font-medium text-content-strong">{displayName}</p>
             <p className="text-xs text-content-muted">{email}</p>
           </div>
         </div>
@@ -230,20 +243,14 @@ export const ProfileEditModal = ({
             <label className="block text-xs font-medium text-content-muted uppercase tracking-wider">
               Nama Lengkap
             </label>
-            <Input
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-            />
+            <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
           </div>
 
           <div className="space-y-1">
             <label className="block text-xs font-medium text-content-muted uppercase tracking-wider">
               Username
             </label>
-            <Input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
+            <Input value={username} onChange={(e) => setUsername(e.target.value)} />
           </div>
 
           <div className="space-y-1 md:col-span-2">
@@ -328,5 +335,3 @@ export const ProfileEditModal = ({
     </Modal>
   );
 };
-
-

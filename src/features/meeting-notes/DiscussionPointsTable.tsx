@@ -28,7 +28,6 @@ import {
   Trash2,
   MessageSquare,
   Calendar,
-  CornerDownRight,
   Clock,
   CheckCircle2,
   X,
@@ -76,16 +75,16 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
   const [quickFitur, setQuickFitur] = useState("");
   const [quickTargetDate, setQuickTargetDate] = useState("");
 
-
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const filteredPoints = points.filter(p => 
-    (p.concern || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (p.keterangan || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (p.fitur || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (p.assignTo || "").toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredPoints = points.filter(
+    (p) =>
+      (p.concern || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (p.keterangan || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (p.fitur || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (p.assignTo || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredPoints.length / itemsPerPage) || 1;
@@ -98,9 +97,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
     if (!point.id) return;
     const nextStatus = point.status === "completed" ? "pending" : "completed";
     try {
-      setPoints((prev) =>
-        prev.map((p) => (p.id === point.id ? { ...p, status: nextStatus } : p))
-      );
+      setPoints((prev) => prev.map((p) => (p.id === point.id ? { ...p, status: nextStatus } : p)));
       await updateDiscussionPoint(
         projectId,
         meetingId,
@@ -108,7 +105,10 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
         { status: nextStatus },
         currentUser?.uid
       );
-      showSuccessAlert("Berhasil!", `Status diubah menjadi ${nextStatus === "completed" ? "DONE" : "PENDING"}`);
+      showSuccessAlert(
+        "Berhasil!",
+        `Status diubah menjadi ${nextStatus === "completed" ? "DONE" : "PENDING"}`
+      );
     } catch (e: any) {
       toast.error("Gagal mengubah status: " + e.message);
       fetchPoints();
@@ -133,9 +133,9 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
 
     if (socket) {
       socket.on("data_changed", (event: any) => {
-         if (event.path?.includes("/discussionPoints") || event.path?.includes("/meetings")) {
-            fetchPoints();
-         }
+        if (event.path?.includes("/discussionPoints") || event.path?.includes("/meetings")) {
+          fetchPoints();
+        }
       });
     }
 
@@ -155,13 +155,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
     }
   };
 
-  const canAdd = hasPermission(
-    userRole,
-    "meetingNotes",
-    "create",
-    false,
-    permissions,
-  );
+  const canAdd = hasPermission(userRole, "meetingNotes", "create", false, permissions);
 
   // Handle Live Inline Quick Add
   const handleLiveQuickAdd = async (e?: React.FormEvent) => {
@@ -253,7 +247,12 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
 
     setIsSendingComment(true);
     try {
-      const userName = currentUser?.displayName || currentUser?.username || (currentUser as any)?.nama_lengkap || (currentUser as any)?.name || "Member";
+      const userName =
+        currentUser?.displayName ||
+        currentUser?.username ||
+        (currentUser as any)?.nama_lengkap ||
+        (currentUser as any)?.name ||
+        "Member";
       await createDiscussionPointComment(
         activeThreadPoint.id,
         {
@@ -336,9 +335,9 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
     }
   };
 
-  const userOptions = projectMembers.map(m => ({
-    id: m?.uid || '',
-    label: m?.displayName || m?.username || 'Unknown User'
+  const userOptions = projectMembers.map((m) => ({
+    id: m?.uid || "",
+    label: m?.displayName || m?.username || "Unknown User",
   }));
 
   return (
@@ -398,8 +397,6 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
         </div>
       </div>
 
-      
-
       {/* Edit Modal Popup (When clicking edit icon on a row) */}
       {editingId !== null && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-[9999] animate-in fade-in duration-200">
@@ -410,13 +407,20 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                   <Edit2 className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-content-strong tracking-tight">Edit Poin Diskusi</h3>
-                  <p className="text-xs sm:text-[11px] text-content-muted font-medium">Ubah detail, catatan, atau penanggung jawab</p>
+                  <h3 className="text-sm font-medium text-content-strong tracking-tight">
+                    Edit Poin Diskusi
+                  </h3>
+                  <p className="text-xs sm:text-[11px] text-content-muted font-medium">
+                    Ubah detail, catatan, atau penanggung jawab
+                  </p>
                 </div>
               </div>
               <button
                 type="button"
-                onClick={() => { setEditingId(null); setEditForm({}); }}
+                onClick={() => {
+                  setEditingId(null);
+                  setEditForm({});
+                }}
                 className="p-1.5 text-content-subtle hover:text-content-secondary hover:bg-surface-muted rounded-md transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
@@ -425,7 +429,9 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
 
             <div className="p-5 overflow-y-auto flex-1 space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">Concern / Topic *</label>
+                <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">
+                  Concern / Topic *
+                </label>
                 <textarea
                   className="w-full px-3.5 py-2 bg-surface border border-border-subtle rounded-md text-xs font-medium text-content-strong outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 min-h-[80px] shadow-2xs"
                   value={editForm.concern || ""}
@@ -435,7 +441,9 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">Catatan / Keterangan</label>
+                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">
+                    Catatan / Keterangan
+                  </label>
                   <input
                     type="text"
                     className="w-full px-3.5 py-2 bg-surface border border-border-subtle rounded-md text-xs font-medium text-content-strong outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 shadow-2xs"
@@ -444,7 +452,9 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">Tindakan Lanjut</label>
+                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">
+                    Tindakan Lanjut
+                  </label>
                   <input
                     type="text"
                     className="w-full px-3.5 py-2 bg-surface border border-border-subtle rounded-md text-xs font-medium text-content-strong outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 shadow-2xs"
@@ -456,11 +466,13 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">PIC (Assigned To)</label>
+                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">
+                    PIC (Assigned To)
+                  </label>
                   <StyledDropdown
                     value={editForm.assignTo || "Unassigned"}
                     onChange={(val) => setEditForm({ ...editForm, assignTo: val })}
-                    options={[{ id: 'Unassigned', label: 'Unassigned' }, ...userOptions]}
+                    options={[{ id: "Unassigned", label: "Unassigned" }, ...userOptions]}
                     members={projectMembers}
                     type="member"
                     masterData={masterData}
@@ -468,18 +480,24 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">Fitur</label>
+                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">
+                    Fitur
+                  </label>
                   <StyledDropdown
                     value={editForm.fitur || ""}
                     onChange={(val) => setEditForm({ ...editForm, fitur: val })}
-                    options={masterData.filter(m => m.type?.toLowerCase() === 'fitur').map(m => ({ id: m.label, label: m.label, color: m.color, icon: m.icon }))}
+                    options={masterData
+                      .filter((m) => m.type?.toLowerCase() === "fitur")
+                      .map((m) => ({ id: m.label, label: m.label, color: m.color, icon: m.icon }))}
                     type="fitur"
                     masterData={masterData}
                     buttonClassName="w-full h-9 px-3 bg-surface border border-border-subtle text-xs text-left text-content-body rounded-md font-medium shadow-2xs"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">Target Date</label>
+                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted tracking-wider">
+                    Target Date
+                  </label>
                   <input
                     type="date"
                     value={editForm.targetDate || ""}
@@ -493,7 +511,10 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
             <div className="px-5 py-3.5 border-t border-border-faint flex justify-end gap-2.5 bg-surface-sunken shrink-0">
               <button
                 type="button"
-                onClick={() => { setEditingId(null); setEditForm({}); }}
+                onClick={() => {
+                  setEditingId(null);
+                  setEditForm({});
+                }}
                 className="px-4 py-2 text-xs font-medium text-content-secondary hover:bg-surface-muted rounded-md border border-border-subtle bg-surface transition-all cursor-pointer shadow-2xs"
               >
                 Batal
@@ -530,294 +551,332 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
         <div className="space-y-4">
           {/* STREAMLINED LIVE EDITABLE DATA TABLE */}
           <div className="bg-surface border border-border-subtle/80 rounded-lg shadow-2xs overflow-hidden">
-          <div className="overflow-x-auto">
-            <ResponsiveTable className="w-full border-collapse text-left text-xs">
-            <thead>
-              <tr className="bg-primary/5 border-b border-primary/15 text-xs sm:text-[11px] font-medium uppercase tracking-wider text-primary">
-                <th className="py-3 px-4 w-12 text-center">No</th>
-                <th className="py-3 px-4 min-w-[220px]">Concern</th>
-                <th className="py-3 px-4 min-w-[200px]">Catatan / Keterangan</th>
-                <th className="py-3 px-4 min-w-[150px]">Context / Tags</th>
-                <th className="py-3 px-4 min-w-[140px]">PIC</th>
-                <th className="py-3 px-4 min-w-[130px]">Target Date</th>
-                <th className="py-3 px-4 w-24 text-center">Thread</th>
-                <th className="py-3 px-4 w-28 text-center">Status</th>
-                <th className="py-3 px-4 w-24 text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-faint text-content-body">
-              {paginatedPoints.map((p, idx) => {
-                const isOwner = p.authorId === (currentUser?.uid || "");
-                const isCompleted = p.status === "completed";
-                const assigneeName = projectMembers.find(m => (m.uid || m.id) === (p.assignTo || p.assignee_id))?.displayName || 
-                                     projectMembers.find(m => (m.uid || m.id) === (p.assignTo || p.assignee_id))?.username || 
-                                     p.assignTo || "Unassigned";
+            <div className="overflow-x-auto">
+              <ResponsiveTable className="w-full border-collapse text-left text-xs">
+                <thead>
+                  <tr className="bg-primary/5 border-b border-primary/15 text-xs sm:text-[11px] font-medium uppercase tracking-wider text-primary">
+                    <th className="py-3 px-4 w-12 text-center">No</th>
+                    <th className="py-3 px-4 min-w-[220px]">Concern</th>
+                    <th className="py-3 px-4 min-w-[200px]">Catatan / Keterangan</th>
+                    <th className="py-3 px-4 min-w-[150px]">Context / Tags</th>
+                    <th className="py-3 px-4 min-w-[140px]">PIC</th>
+                    <th className="py-3 px-4 min-w-[130px]">Target Date</th>
+                    <th className="py-3 px-4 w-24 text-center">Thread</th>
+                    <th className="py-3 px-4 w-28 text-center">Status</th>
+                    <th className="py-3 px-4 w-24 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border-faint text-content-body">
+                  {paginatedPoints.map((p, idx) => {
+                    const isOwner = p.authorId === (currentUser?.uid || "");
+                    const isCompleted = p.status === "completed";
+                    const assigneeName =
+                      projectMembers.find((m) => (m.uid || m.id) === (p.assignTo || p.assignee_id))
+                        ?.displayName ||
+                      projectMembers.find((m) => (m.uid || m.id) === (p.assignTo || p.assignee_id))
+                        ?.username ||
+                      p.assignTo ||
+                      "Unassigned";
 
-                return (
-                  <tr key={p.id} className="hover:bg-surface-sunken/70 transition-colors group">
-                    <td className="py-3 px-4 text-center text-content-subtle font-medium text-xs align-middle">
-                      {String((currentPage - 1) * itemsPerPage + idx + 1).padStart(2, "0")}
-                    </td>
+                    return (
+                      <tr key={p.id} className="hover:bg-surface-sunken/70 transition-colors group">
+                        <td className="py-3 px-4 text-center text-content-subtle font-medium text-xs align-middle">
+                          {String((currentPage - 1) * itemsPerPage + idx + 1).padStart(2, "0")}
+                        </td>
 
-                    {/* Concern */}
-                    <td className="py-3 px-4 align-middle">
-                      <div className={`font-medium text-content text-xs leading-snug ${isCompleted ? "line-through text-content-subtle" : ""}`}>
-                        {p.concern}
-                      </div>
-                      {(p.tindakanLanjut || p.next_action) && (
-                        <div className="text-primary text-xs sm:text-[11px] font-medium flex items-center gap-1 mt-1 pt-1 border-t border-border-faint">
-                          <span className="uppercase text-xs sm:text-[11px] sm:text-[9px] text-content-subtle font-medium">Next:</span>
-                          {p.tindakanLanjut || p.next_action}
-                        </div>
-                      )}
-                    </td>
+                        {/* Concern */}
+                        <td className="py-3 px-4 align-middle">
+                          <div
+                            className={`font-medium text-content text-xs leading-snug ${isCompleted ? "line-through text-content-subtle" : ""}`}
+                          >
+                            {p.concern}
+                          </div>
+                          {(p.tindakanLanjut || p.next_action) && (
+                            <div className="text-primary text-xs sm:text-[11px] font-medium flex items-center gap-1 mt-1 pt-1 border-t border-border-faint">
+                              <span className="uppercase text-xs sm:text-[11px] sm:text-[9px] text-content-subtle font-medium">
+                                Next:
+                              </span>
+                              {p.tindakanLanjut || p.next_action}
+                            </div>
+                          )}
+                        </td>
 
-                    {/* Catatan / Keterangan */}
-                    <td className="py-3 px-4 align-middle">
-                      <div className="text-content-secondary text-xs font-normal leading-relaxed">
-                        {p.keterangan || p.comment || <span className="text-slate-300 italic">No notes</span>}
-                      </div>
-                    </td>
+                        {/* Catatan / Keterangan */}
+                        <td className="py-3 px-4 align-middle">
+                          <div className="text-content-secondary text-xs font-normal leading-relaxed">
+                            {p.keterangan || p.comment || (
+                              <span className="text-slate-300 italic">No notes</span>
+                            )}
+                          </div>
+                        </td>
 
-                    {/* Context / Tags */}
-                    <td className="py-3 px-4 align-middle">
-                      <div className="flex flex-wrap gap-1">
-                        {p.fitur && (
-                          <span className="px-2 py-0.5 bg-indigo-50 text-primary border border-indigo-100 rounded-md text-xs sm:text-[10px] font-medium">
-                            {p.fitur}
-                          </span>
-                        )}
-                        {p.system && (
-                          <span className="px-2 py-0.5 bg-purple-50 text-purple-700 border border-purple-100/80 rounded-md text-xs sm:text-[10px] font-medium">
-                            {p.system}
-                          </span>
-                        )}
-                        {p.surrounding && (
-                          <span className="px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-100/80 rounded-md text-xs sm:text-[10px] font-medium">
-                            {p.surrounding}
-                          </span>
-                        )}
-                        {!p.fitur && !p.system && !p.surrounding && (
-                          <span className="text-slate-300 text-xs sm:text-[11px] italic">No tags</span>
-                        )}
-                      </div>
-                    </td>
+                        {/* Context / Tags */}
+                        <td className="py-3 px-4 align-middle">
+                          <div className="flex flex-wrap gap-1">
+                            {p.fitur && (
+                              <span className="px-2 py-0.5 bg-indigo-50 text-primary border border-indigo-100 rounded-md text-xs sm:text-[10px] font-medium">
+                                {p.fitur}
+                              </span>
+                            )}
+                            {p.system && (
+                              <span className="px-2 py-0.5 bg-purple-50 text-purple-700 border border-purple-100/80 rounded-md text-xs sm:text-[10px] font-medium">
+                                {p.system}
+                              </span>
+                            )}
+                            {p.surrounding && (
+                              <span className="px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-100/80 rounded-md text-xs sm:text-[10px] font-medium">
+                                {p.surrounding}
+                              </span>
+                            )}
+                            {!p.fitur && !p.system && !p.surrounding && (
+                              <span className="text-slate-300 text-xs sm:text-[11px] italic">
+                                No tags
+                              </span>
+                            )}
+                          </div>
+                        </td>
 
-                    {/* PIC */}
-                    <td className="py-3 px-4 align-middle">
-                      <div className="text-xs font-medium text-content-strong">
-                        {assigneeName}
-                      </div>
-                    </td>
+                        {/* PIC */}
+                        <td className="py-3 px-4 align-middle">
+                          <div className="text-xs font-medium text-content-strong">
+                            {assigneeName}
+                          </div>
+                        </td>
 
-                    {/* Target Date */}
-                    <td className="py-3 px-4 align-middle">
-                      {(p.targetDate || p.target_date) ? (
-                        <div className="flex items-center gap-1 text-xs text-content-secondary font-medium">
-                          <Calendar className="w-3.5 h-3.5 text-content-subtle shrink-0" />
-                          <span>{p.targetDate || p.target_date}</span>
-                        </div>
-                      ) : (
-                        <span className="text-slate-300 text-xs italic">-</span>
-                      )}
-                    </td>
+                        {/* Target Date */}
+                        <td className="py-3 px-4 align-middle">
+                          {p.targetDate || p.target_date ? (
+                            <div className="flex items-center gap-1 text-xs text-content-secondary font-medium">
+                              <Calendar className="w-3.5 h-3.5 text-content-subtle shrink-0" />
+                              <span>{p.targetDate || p.target_date}</span>
+                            </div>
+                          ) : (
+                            <span className="text-slate-300 text-xs italic">-</span>
+                          )}
+                        </td>
 
-                    {/* Thread Icon Button */}
-                    <td className="py-3 px-4 text-center align-middle">
-                      {(() => {
-                        const commentsList = p.id ? (commentsMap[p.id] || []) : [];
-                        const count = commentsList.length;
+                        {/* Thread Icon Button */}
+                        <td className="py-3 px-4 text-center align-middle">
+                          {(() => {
+                            const commentsList = p.id ? commentsMap[p.id] || [] : [];
+                            const count = commentsList.length;
 
-                        return (
+                            return (
+                              <button
+                                type="button"
+                                onClick={() => handleOpenThreadDrawer(p)}
+                                className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer border shadow-2xs active:scale-95 ${
+                                  count > 0
+                                    ? "bg-indigo-50 hover:bg-indigo-100 text-primary border-indigo-200/80"
+                                    : "bg-surface-sunken hover:bg-surface-muted text-content-subtle border-border-subtle/60"
+                                }`}
+                                title="Buka Thread Komentar & Balasan"
+                              >
+                                <MessageSquare
+                                  className={`w-3.5 h-3.5 ${count > 0 ? "text-primary fill-indigo-100" : "text-content-subtle"}`}
+                                />
+                                <span>{count}</span>
+                              </button>
+                            );
+                          })()}
+                        </td>
+
+                        {/* Status Badge */}
+                        <td className="py-3 px-4 text-center align-middle">
                           <button
                             type="button"
-                            onClick={() => handleOpenThreadDrawer(p)}
-                            className={`inline-flex items-center justify-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer border shadow-2xs active:scale-95 ${
-                              count > 0
-                                ? "bg-indigo-50 hover:bg-indigo-100 text-primary border-indigo-200/80"
-                                : "bg-surface-sunken hover:bg-surface-muted text-content-subtle border-border-subtle/60"
-                            }`}
-                            title="Buka Thread Komentar & Balasan"
+                            onClick={() => handleToggleStatus(p)}
+                            className="cursor-pointer transition-all active:scale-95 inline-block"
+                            title="Klik untuk ubah status PENDING / DONE"
                           >
-                            <MessageSquare className={`w-3.5 h-3.5 ${count > 0 ? "text-primary fill-indigo-100" : "text-content-subtle"}`} />
-                            <span>{count}</span>
+                            {isCompleted ? (
+                              <span className="flex items-center justify-center gap-1 px-2.5 py-1 rounded-md text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-2xs hover:bg-emerald-100">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                                DONE
+                              </span>
+                            ) : (
+                              <span className="flex items-center justify-center gap-1 px-2.5 py-1 rounded-md text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200/80 shadow-2xs hover:bg-amber-100">
+                                <Clock className="w-3 h-3 text-amber-600" />
+                                PENDING
+                              </span>
+                            )}
                           </button>
-                        );
-                      })()}
-                    </td>
+                        </td>
 
-                    {/* Status Badge */}
-                    <td className="py-3 px-4 text-center align-middle">
-                      <button
-                        type="button"
-                        onClick={() => handleToggleStatus(p)}
-                        className="cursor-pointer transition-all active:scale-95 inline-block"
-                        title="Klik untuk ubah status PENDING / DONE"
-                      >
-                        {isCompleted ? (
-                          <span className="flex items-center justify-center gap-1 px-2.5 py-1 rounded-md text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-2xs hover:bg-emerald-100">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                            DONE
-                          </span>
-                        ) : (
-                          <span className="flex items-center justify-center gap-1 px-2.5 py-1 rounded-md text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200/80 shadow-2xs hover:bg-amber-100">
-                            <Clock className="w-3 h-3 text-amber-600" />
-                            PENDING
-                          </span>
-                        )}
-                      </button>
-                    </td>
+                        {/* Actions */}
+                        <td className="py-3 px-4 text-center align-middle">
+                          <div className="flex items-center justify-center gap-1">
+                            {hasPermission(
+                              userRole,
+                              "meetingNotes",
+                              "update",
+                              isOwner,
+                              permissions
+                            ) && (
+                              <button
+                                onClick={() => startEdit(p)}
+                                className="p-1.5 text-content-muted hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
+                                title="Edit"
+                              >
+                                <Edit2 className="w-4 h-4" />
+                              </button>
+                            )}
+                            {hasPermission(
+                              userRole,
+                              "meetingNotes",
+                              "delete",
+                              isOwner,
+                              permissions
+                            ) && (
+                              <button
+                                onClick={() => handleDelete(p.id!)}
+                                className="p-1.5 text-content-muted hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer"
+                                title="Hapus"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
 
-                    {/* Actions */}
-                    <td className="py-3 px-4 text-center align-middle">
-                      <div className="flex items-center justify-center gap-1">
-                        {hasPermission(userRole, "meetingNotes", "update", isOwner, permissions) && (
-                          <button
-                            onClick={() => startEdit(p)}
-                            className="p-1.5 text-content-muted hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
-                            title="Edit"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                        )}
-                        {hasPermission(userRole, "meetingNotes", "delete", isOwner, permissions) && (
-                          <button
-                            onClick={() => handleDelete(p.id!)}
-                            className="p-1.5 text-content-muted hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer"
-                            title="Hapus"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+                  {/* LIVE QUICK ADD INLINE ROW (Separate columns matching headers) */}
+                  {canAdd && (
+                    <tr className="bg-indigo-50/20 hover:bg-indigo-50/40 transition-colors">
+                      <td className="py-2.5 px-4 text-center text-indigo-400 text-xs align-middle font-medium">
+                        +
+                      </td>
 
-              {/* LIVE QUICK ADD INLINE ROW (Separate columns matching headers) */}
-              {canAdd && (
-                <tr className="bg-indigo-50/20 hover:bg-indigo-50/40 transition-colors">
-                  <td className="py-2.5 px-4 text-center text-indigo-400 text-xs align-middle font-medium">
-                    +
-                  </td>
+                      {/* Concern */}
+                      <td className="py-2.5 px-4 align-middle">
+                        <input
+                          type="text"
+                          placeholder="Ketik concern baru..."
+                          value={quickConcern}
+                          onChange={(e) => setQuickConcern(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleLiveQuickAdd();
+                          }}
+                          className="w-full px-3 py-1.5 bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-medium text-content-strong outline-none shadow-2xs placeholder:text-content-subtle"
+                        />
+                      </td>
 
-                  {/* Concern */}
-                  <td className="py-2.5 px-4 align-middle">
-                    <input
-                      type="text"
-                      placeholder="Ketik concern baru..."
-                      value={quickConcern}
-                      onChange={(e) => setQuickConcern(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter') handleLiveQuickAdd(); }}
-                      className="w-full px-3 py-1.5 bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-medium text-content-strong outline-none shadow-2xs placeholder:text-content-subtle"
-                    />
-                  </td>
+                      {/* Catatan / Keterangan */}
+                      <td className="py-2.5 px-4 align-middle">
+                        <input
+                          type="text"
+                          placeholder="Catatan / Keterangan..."
+                          value={quickCatatan}
+                          onChange={(e) => setQuickCatatan(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleLiveQuickAdd();
+                          }}
+                          className="w-full px-3 py-1.5 bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-normal text-content-body outline-none placeholder:text-content-subtle shadow-2xs"
+                        />
+                      </td>
 
-                  {/* Catatan / Keterangan */}
-                  <td className="py-2.5 px-4 align-middle">
-                    <input
-                      type="text"
-                      placeholder="Catatan / Keterangan..."
-                      value={quickCatatan}
-                      onChange={(e) => setQuickCatatan(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter') handleLiveQuickAdd(); }}
-                      className="w-full px-3 py-1.5 bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-normal text-content-body outline-none placeholder:text-content-subtle shadow-2xs"
-                    />
-                  </td>
+                      {/* Context / Tags */}
+                      <td className="py-2.5 px-4 align-middle">
+                        <StyledDropdown
+                          value={quickFitur}
+                          onChange={(val) => setQuickFitur(val)}
+                          options={masterData
+                            .filter((m) => m.type?.toLowerCase() === "fitur")
+                            .map((m) => ({
+                              id: m.label,
+                              label: m.label,
+                              color: m.color,
+                              icon: m.icon,
+                            }))}
+                          type="fitur"
+                          masterData={masterData}
+                          buttonClassName="w-full h-8 px-2.5 bg-surface border border-border-subtle text-xs text-left text-content-body rounded-md font-medium shadow-2xs"
+                        />
+                      </td>
 
-                  {/* Context / Tags */}
-                  <td className="py-2.5 px-4 align-middle">
-                    <StyledDropdown
-                      value={quickFitur}
-                      onChange={(val) => setQuickFitur(val)}
-                      options={masterData.filter(m => m.type?.toLowerCase() === 'fitur').map(m => ({ id: m.label, label: m.label, color: m.color, icon: m.icon }))}
-                      type="fitur"
-                      masterData={masterData}
-                      buttonClassName="w-full h-8 px-2.5 bg-surface border border-border-subtle text-xs text-left text-content-body rounded-md font-medium shadow-2xs"
-                    />
-                  </td>
+                      {/* PIC */}
+                      <td className="py-2.5 px-4 align-middle">
+                        <StyledDropdown
+                          value={quickAssignTo}
+                          onChange={(val) => setQuickAssignTo(val)}
+                          options={[{ id: "Unassigned", label: "Assign PIC" }, ...userOptions]}
+                          members={projectMembers}
+                          type="member"
+                          masterData={masterData}
+                          buttonClassName="w-full h-8 px-2.5 bg-surface border border-border-subtle text-xs text-left text-content-body rounded-md font-medium shadow-2xs"
+                        />
+                      </td>
 
-                  {/* PIC */}
-                  <td className="py-2.5 px-4 align-middle">
-                    <StyledDropdown
-                      value={quickAssignTo}
-                      onChange={(val) => setQuickAssignTo(val)}
-                      options={[{ id: 'Unassigned', label: 'Assign PIC' }, ...userOptions]}
-                      members={projectMembers}
-                      type="member"
-                      masterData={masterData}
-                      buttonClassName="w-full h-8 px-2.5 bg-surface border border-border-subtle text-xs text-left text-content-body rounded-md font-medium shadow-2xs"
-                    />
-                  </td>
+                      {/* Target Date */}
+                      <td className="py-2.5 px-4 align-middle">
+                        <input
+                          type="date"
+                          value={quickTargetDate}
+                          onChange={(e) => setQuickTargetDate(e.target.value)}
+                          className="w-full h-8 px-2 bg-surface border border-border-subtle text-xs font-medium text-content-body rounded-md outline-none shadow-2xs"
+                        />
+                      </td>
 
-                  {/* Target Date */}
-                  <td className="py-2.5 px-4 align-middle">
-                    <input
-                      type="date"
-                      value={quickTargetDate}
-                      onChange={(e) => setQuickTargetDate(e.target.value)}
-                      className="w-full h-8 px-2 bg-surface border border-border-subtle text-xs font-medium text-content-body rounded-md outline-none shadow-2xs"
-                    />
-                  </td>
+                      {/* Thread */}
+                      <td className="py-2.5 px-4 text-center align-middle text-slate-300 text-xs">
+                        -
+                      </td>
 
-                  {/* Thread */}
-                  <td className="py-2.5 px-4 text-center align-middle text-slate-300 text-xs">
-                    -
-                  </td>
+                      {/* Status */}
+                      <td className="py-2.5 px-4 text-center align-middle">
+                        <span className="px-2.5 py-1 rounded-md text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200/80">
+                          PENDING
+                        </span>
+                      </td>
 
-                  {/* Status */}
-                  <td className="py-2.5 px-4 text-center align-middle">
-                    <span className="px-2.5 py-1 rounded-md text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200/80">
-                      PENDING
-                    </span>
-                  </td>
+                      {/* Action */}
+                      <td className="py-2.5 px-4 text-center align-middle">
+                        <button
+                          type="button"
+                          onClick={() => handleLiveQuickAdd()}
+                          disabled={isSaving || !quickConcern.trim()}
+                          className="px-3 py-1.5 bg-primary hover:bg-primary-hover active:bg-primary-active disabled:opacity-40 text-white rounded-md text-xs font-medium shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 mx-auto"
+                          title="Tambah Poin"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>Add</span>
+                        </button>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </ResponsiveTable>
+            </div>
+          </div>
 
-                  {/* Action */}
-                  <td className="py-2.5 px-4 text-center align-middle">
-                    <button
-                      type="button"
-                      onClick={() => handleLiveQuickAdd()}
-                      disabled={isSaving || !quickConcern.trim()}
-                      className="px-3 py-1.5 bg-primary hover:bg-primary-hover active:bg-primary-active disabled:opacity-40 text-white rounded-md text-xs font-medium shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1 mx-auto"
-                      title="Tambah Poin"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Add</span>
-                  </button>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </ResponsiveTable>
-      </div>
-    </div>
-
-      {/* Pagination Footer */}
-      <div className="px-6 py-3.5 bg-surface-sunken/60 border-t border-border-subtle flex items-center justify-between text-xs  text-content-secondary">
-        <div>
-          Menampilkan {paginatedPoints.length} dari {filteredPoints.length} poin (Total: {points.length})
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-3 py-1.5 bg-surface border border-border-subtle rounded-lg text-content-body hover:bg-surface-muted disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 shadow-2xs cursor-pointer"
-          >
-            <ChevronLeft className="w-3.5 h-3.5" /> Prev
-          </button>
-          <span className="px-3 py-1  bg-surface border border-border-subtle rounded-lg text-indigo-600 shadow-2xs">
-            {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            disabled={currentPage >= totalPages}
-            className="px-3 py-1.5 bg-surface border border-border-subtle rounded-lg text-content-body hover:bg-surface-muted disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 shadow-2xs cursor-pointer"
-          >
-            Next <ChevronRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
+          {/* Pagination Footer */}
+          <div className="px-6 py-3.5 bg-surface-sunken/60 border-t border-border-subtle flex items-center justify-between text-xs  text-content-secondary">
+            <div>
+              Menampilkan {paginatedPoints.length} dari {filteredPoints.length} poin (Total:{" "}
+              {points.length})
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-3 py-1.5 bg-surface border border-border-subtle rounded-lg text-content-body hover:bg-surface-muted disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 shadow-2xs cursor-pointer"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" /> Prev
+              </button>
+              <span className="px-3 py-1  bg-surface border border-border-subtle rounded-lg text-indigo-600 shadow-2xs">
+                {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage >= totalPages}
+                className="px-3 py-1.5 bg-surface border border-border-subtle rounded-lg text-content-body hover:bg-surface-muted disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1 shadow-2xs cursor-pointer"
+              >
+                Next <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -857,42 +916,77 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                   </div>
                   <h4 className="text-xs  text-content-body">Belum Ada Balasan Komentar</h4>
                   <p className="text-xs sm:text-[11px] text-content-subtle  mt-1 leading-normal">
-                    Jadilah yang pertama memberikan balasan atau instruksi tambahan untuk PIC topik ini!
+                    Jadilah yang pertama memberikan balasan atau instruksi tambahan untuk PIC topik
+                    ini!
                   </p>
                 </div>
               ) : (
                 threadComments.map((comment) => {
-                  const authorName = comment.userName || comment.user_name || (comment as any).authorName || (comment as any).name || "Member";
-                  const commentBody = comment.commentText || comment.comment_text || (comment as any).content || (comment as any).text || "";
+                  const authorName =
+                    comment.userName ||
+                    comment.user_name ||
+                    (comment as any).authorName ||
+                    (comment as any).name ||
+                    "Member";
+                  const commentBody =
+                    comment.commentText ||
+                    comment.comment_text ||
+                    (comment as any).content ||
+                    (comment as any).text ||
+                    "";
                   const commentDate = comment.createdAt || comment.created_at || new Date();
                   const c = comment as any;
                   const commentUserId = c.userId || c.user_id || c.authorId || c.author_id;
-                  const isMine = (commentUserId && currentUser && (commentUserId === currentUser.uid || commentUserId === currentUser.id)) ||
-                                 (authorName && currentUser && (authorName === currentUser.displayName || authorName === currentUser.username));
+                  const isMine =
+                    (commentUserId &&
+                      currentUser &&
+                      (commentUserId === currentUser.uid || commentUserId === currentUser.id)) ||
+                    (authorName &&
+                      currentUser &&
+                      (authorName === currentUser.displayName ||
+                        authorName === currentUser.username));
 
                   return (
-                    <div key={comment.id || Math.random()} className={cn("flex w-full mb-2", isMine ? "justify-end" : "justify-start")}>
-                      <div className={cn(
-                        "flex flex-col max-w-[85%] md:max-w-xl",
-                        isMine ? "items-end" : "items-start"
-                      )}>
+                    <div
+                      key={comment.id || Math.random()}
+                      className={cn("flex w-full mb-2", isMine ? "justify-end" : "justify-start")}
+                    >
+                      <div
+                        className={cn(
+                          "flex flex-col max-w-[85%] md:max-w-xl",
+                          isMine ? "items-end" : "items-start"
+                        )}
+                      >
                         {!isMine && (
                           <div className="flex items-center gap-1.5 mb-1 ml-1">
-                            <UserAvatar uid={commentUserId} members={users} name={authorName} className="w-4 h-4 text-xs sm:text-[11px] sm:text-[9px]" />
-                            <span className="text-xs sm:text-[10px] text-content-muted font-medium">{authorName}</span>
+                            <UserAvatar
+                              uid={commentUserId}
+                              members={users}
+                              name={authorName}
+                              className="w-4 h-4 text-xs sm:text-[11px] sm:text-[9px]"
+                            />
+                            <span className="text-xs sm:text-[10px] text-content-muted font-medium">
+                              {authorName}
+                            </span>
                           </div>
                         )}
-                        <div className={cn(
-                          "px-3.5 py-2 rounded-2xl relative shadow-soft group",
-                          isMine ? "bg-indigo-600 text-white rounded-br-sm" : "bg-surface text-content-strong border border-border-subtle rounded-bl-sm"
-                        )}>
+                        <div
+                          className={cn(
+                            "px-3.5 py-2 rounded-2xl relative shadow-soft group",
+                            isMine
+                              ? "bg-indigo-600 text-white rounded-br-sm"
+                              : "bg-surface text-content-strong border border-border-subtle rounded-bl-sm"
+                          )}
+                        >
                           <p className="text-[13px] leading-relaxed whitespace-pre-wrap break-words min-w-[50px] pb-3.5">
                             {commentBody}
                           </p>
-                          <span className={cn(
-                            "absolute bottom-1 right-3 text-xs sm:text-[11px] sm:text-[9px]  tracking-tight",
-                            isMine ? "text-indigo-200" : "text-content-subtle"
-                          )}>
+                          <span
+                            className={cn(
+                              "absolute bottom-1 right-3 text-xs sm:text-[11px] sm:text-[9px]  tracking-tight",
+                              isMine ? "text-indigo-200" : "text-content-subtle"
+                            )}
+                          >
                             {new Date(commentDate).toLocaleTimeString("id-ID", {
                               hour: "2-digit",
                               minute: "2-digit",
@@ -914,7 +1008,7 @@ export const DiscussionPointsTable: React.FC<DiscussionPointsTableProps> = ({
                   value={newCommentText}
                   onChange={(e) => setNewCommentText(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !isSendingComment && newCommentText.trim()) {
+                    if (e.key === "Enter" && !isSendingComment && newCommentText.trim()) {
                       handleSendThreadComment();
                     }
                   }}

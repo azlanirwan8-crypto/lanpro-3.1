@@ -1,10 +1,19 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { HardDrive, Download, Upload, AlertTriangle, Loader2, CheckCircle2, Clock, FileText, Trash2 } from 'lucide-react';
-import { Project, Task, Sprint, UserProfile, MasterData, ActivityLog } from '../../types';
-import { toast } from 'sonner';
-import { format } from 'date-fns';
-import { createBackup, restoreBackup } from './services/backup.service';
-import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
+import React, { useRef, useState, useEffect } from "react";
+import {
+  Download,
+  Upload,
+  AlertTriangle,
+  Loader2,
+  CheckCircle2,
+  Clock,
+  FileText,
+  Trash2,
+} from "lucide-react";
+import { Project, Task, Sprint, UserProfile, MasterData, ActivityLog } from "../../types";
+import { toast } from "sonner";
+import { format } from "date-fns";
+import { createBackup, restoreBackup } from "./services/backup.service";
+import { ConfirmationModal } from "../../components/ui/ConfirmationModal";
 import { ResponsiveTable } from "../../components/ResponsiveTable";
 
 interface ExportItem {
@@ -12,7 +21,7 @@ interface ExportItem {
   filename: string;
   createdAt: Date;
   sizeBytes: number;
-  status: 'processing' | 'completed' | 'failed';
+  status: "processing" | "completed" | "failed";
   progress: number; // 0 to 100
   data?: any;
 }
@@ -23,7 +32,7 @@ export const BackupPanel = ({
   sprints,
   projectMembers,
   activityLogs,
-  masterData
+  masterData,
 }: {
   selectedProject: Project | null;
   tasks: Task[];
@@ -33,7 +42,7 @@ export const BackupPanel = ({
   masterData: MasterData[];
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const [selectedFileToRestore, setSelectedFileToRestore] = useState<File | null>(null);
   const [isRestoreConfirmOpen, setIsRestoreConfirmOpen] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
@@ -43,93 +52,107 @@ export const BackupPanel = ({
   // Simulate progress interval for processing items
   useEffect(() => {
     const timer = setInterval(() => {
-      setExportHistory(prev => prev.map(item => {
-        if (item.status === 'processing') {
-          const nextProgress = item.progress + 15;
-          if (nextProgress >= 95) {
-            return item; // wait for API response
+      setExportHistory((prev) =>
+        prev.map((item) => {
+          if (item.status === "processing") {
+            const nextProgress = item.progress + 15;
+            if (nextProgress >= 95) {
+              return item; // wait for API response
+            }
+            return { ...item, progress: nextProgress };
           }
-          return { ...item, progress: nextProgress };
-        }
-        return item;
-      }));
+          return item;
+        })
+      );
     }, 300);
     return () => clearInterval(timer);
   }, []);
 
   const formatSize = (bytes: number) => {
-    if (bytes === 0 || !bytes) return '0 B';
+    if (bytes === 0 || !bytes) return "0 B";
     const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const sizes = ["B", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   const exportProjectBackup = async () => {
-    const timestampStr = format(new Date(), 'yyyyMMdd_HHmmss');
+    const timestampStr = format(new Date(), "yyyyMMdd_HHmmss");
     const filename = `system_backup_${timestampStr}.json`;
     const newItem: ExportItem = {
       id: crypto.randomUUID(),
       filename,
       createdAt: new Date(),
       sizeBytes: 0,
-      status: 'processing',
-      progress: 20
+      status: "processing",
+      progress: 20,
     };
-    
-    setExportHistory(prev => [newItem, ...prev]);
-    toast.info('Memulai proses export database...');
+
+    setExportHistory((prev) => [newItem, ...prev]);
+    toast.info("Memulai proses export database...");
 
     try {
       const result = await createBackup();
-      if (result.status !== 'success') throw new Error(result.message);
-      
+      if (result.status !== "success") throw new Error(result.message);
+
       const jsonString = JSON.stringify(result.data, null, 2);
-      const blob = new Blob([jsonString], { type: 'application/json' });
+      const blob = new Blob([jsonString], { type: "application/json" });
       const sizeBytes = blob.size;
       const url = URL.createObjectURL(blob);
 
-      setExportHistory(prev => prev.map(item => item.id === newItem.id ? {
-        ...item,
-        status: 'completed',
-        progress: 100,
-        sizeBytes,
-        data: result.data
-      } : item));
+      setExportHistory((prev) =>
+        prev.map((item) =>
+          item.id === newItem.id
+            ? {
+                ...item,
+                status: "completed",
+                progress: 100,
+                sizeBytes,
+                data: result.data,
+              }
+            : item
+        )
+      );
 
       // Auto download
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
       a.download = filename;
       a.click();
       URL.revokeObjectURL(url);
-      toast.success('System Backup berhasil diexport & diunduh');
+      toast.success("System Backup berhasil diexport & diunduh");
     } catch (e: any) {
       console.error(e);
-      setExportHistory(prev => prev.map(item => item.id === newItem.id ? {
-        ...item,
-        status: 'failed',
-        progress: 100
-      } : item));
-      toast.error('Gagal export backup: ' + e.message);
+      setExportHistory((prev) =>
+        prev.map((item) =>
+          item.id === newItem.id
+            ? {
+                ...item,
+                status: "failed",
+                progress: 100,
+              }
+            : item
+        )
+      );
+      toast.error("Gagal export backup: " + e.message);
     }
   };
 
   const handleDownloadItem = (item: ExportItem) => {
     if (!item.data) return;
-    const blob = new Blob([JSON.stringify(item.data, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(item.data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = item.filename;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success('File backup berhasil diunduh');
+    toast.success("File backup berhasil diunduh");
   };
 
   const handleDeleteItem = (id: string) => {
-    setExportHistory(prev => prev.filter(item => item.id !== id));
-    toast.success('Riwayat backup berhasil dihapus');
+    setExportHistory((prev) => prev.filter((item) => item.id !== id));
+    toast.success("Riwayat backup berhasil dihapus");
   };
 
   const handleRestoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,28 +168,28 @@ export const BackupPanel = ({
     try {
       const text = await selectedFileToRestore.text();
       const data = JSON.parse(text);
-      
+
       const result = await restoreBackup(data);
-      
-      if (result.status !== 'success') throw new Error(result.message);
-      
-      toast.success('System restore berhasil! Memuat ulang aplikasi...');
+
+      if (result.status !== "success") throw new Error(result.message);
+
+      toast.success("System restore berhasil! Memuat ulang aplikasi...");
       setTimeout(() => window.location.reload(), 1500);
     } catch (err: any) {
       console.error(err);
-      toast.error('Gagal restore backup: ' + err.message);
+      toast.error("Gagal restore backup: " + err.message);
     } finally {
       setIsRestoring(false);
       setIsRestoreConfirmOpen(false);
       setSelectedFileToRestore(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
   const cancelRestore = () => {
     setIsRestoreConfirmOpen(false);
     setSelectedFileToRestore(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   return (
@@ -181,13 +204,17 @@ export const BackupPanel = ({
                 <Download className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-xs font-medium text-content-strong uppercase tracking-wide">Export Database Backup</h2>
-                <p className="text-xs text-content-muted mt-0.5">Unduh snapshot lengkap seluruh tabel database dalam format JSON.</p>
+                <h2 className="text-xs font-medium text-content-strong uppercase tracking-wide">
+                  Export Database Backup
+                </h2>
+                <p className="text-xs text-content-muted mt-0.5">
+                  Unduh snapshot lengkap seluruh tabel database dalam format JSON.
+                </p>
               </div>
             </div>
           </div>
           <div className="mt-4 pt-3 border-t border-border-faint flex justify-end">
-            <button 
+            <button
               onClick={exportProjectBackup}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-xs transition-all shadow-2xs active:scale-95 flex items-center gap-1.5 cursor-pointer"
             >
@@ -205,7 +232,9 @@ export const BackupPanel = ({
                 <Upload className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-xs font-medium text-content-strong uppercase tracking-wide">Restore Database Backup</h2>
+                <h2 className="text-xs font-medium text-content-strong uppercase tracking-wide">
+                  Restore Database Backup
+                </h2>
                 <p className="text-xs text-content-muted flex items-center gap-1 mt-0.5">
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                   <span>Timpa data sistem dengan file backup JSON.</span>
@@ -214,19 +243,19 @@ export const BackupPanel = ({
             </div>
           </div>
           <div className="mt-4 pt-3 border-t border-border-faint flex justify-end">
-            <button 
-               onClick={() => fileInputRef.current?.click()}
-               className="px-4 py-2 bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 rounded-md font-medium text-xs transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="px-4 py-2 bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 rounded-md font-medium text-xs transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
             >
               <Upload className="w-3.5 h-3.5" />
               <span>Upload Backup File</span>
             </button>
-            <input 
-              type="file" 
-              ref={fileInputRef} 
-              onChange={handleRestoreChange} 
-              accept="application/json" 
-              className="hidden" 
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleRestoreChange}
+              accept="application/json"
+              className="hidden"
             />
           </div>
         </div>
@@ -237,9 +266,13 @@ export const BackupPanel = ({
         <div className="px-4 py-3 bg-surface-sunken/80 border-b border-border-subtle/80 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4 text-content-muted" />
-            <h3 className="text-xs font-medium text-content-body uppercase tracking-wider">Hasil Export Database (DataTable)</h3>
+            <h3 className="text-xs font-medium text-content-body uppercase tracking-wider">
+              Hasil Export Database (DataTable)
+            </h3>
           </div>
-          <span className="text-xs sm:text-[11px] text-content-muted font-medium">Total: {exportHistory.length} file</span>
+          <span className="text-xs sm:text-[11px] text-content-muted font-medium">
+            Total: {exportHistory.length} file
+          </span>
         </div>
 
         <div className="overflow-x-auto">
@@ -259,12 +292,16 @@ export const BackupPanel = ({
                   <tr key={item.id} className="hover:bg-surface-sunken/80 transition-colors">
                     <td className="py-2.5 px-3.5 text-content-secondary flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-content-subtle" />
-                      {format(item.createdAt, 'dd MMM yyyy, HH:mm:ss')}
+                      {format(item.createdAt, "dd MMM yyyy, HH:mm:ss")}
                     </td>
-                    <td className="py-2.5 px-3.5 font-mono text-content-body font-medium">{item.filename}</td>
-                    <td className="py-2.5 px-3.5 text-content-secondary font-mono">{item.status === 'completed' ? formatSize(item.sizeBytes) : '-'}</td>
+                    <td className="py-2.5 px-3.5 font-mono text-content-body font-medium">
+                      {item.filename}
+                    </td>
+                    <td className="py-2.5 px-3.5 text-content-secondary font-mono">
+                      {item.status === "completed" ? formatSize(item.sizeBytes) : "-"}
+                    </td>
                     <td className="py-2.5 px-3.5">
-                      {item.status === 'processing' && (
+                      {item.status === "processing" && (
                         <div className="space-y-1 w-48">
                           <div className="flex justify-between text-xs sm:text-[10px] text-amber-700 font-medium">
                             <span className="flex items-center gap-1">
@@ -274,20 +311,20 @@ export const BackupPanel = ({
                             <span>{item.progress}%</span>
                           </div>
                           <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                            <div 
-                              className="bg-amber-500 h-full rounded-full transition-all duration-300 ease-out" 
+                            <div
+                              className="bg-amber-500 h-full rounded-full transition-all duration-300 ease-out"
                               style={{ width: `${item.progress}%` }}
                             />
                           </div>
                         </div>
                       )}
-                      {item.status === 'completed' && (
+                      {item.status === "completed" && (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs sm:text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
                           <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                           Selesai
                         </span>
                       )}
-                      {item.status === 'failed' && (
+                      {item.status === "failed" && (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs sm:text-[11px] font-medium bg-rose-50 text-rose-700 border border-rose-200">
                           <AlertTriangle className="w-3 h-3 text-rose-600" />
                           Gagal
@@ -295,7 +332,7 @@ export const BackupPanel = ({
                       )}
                     </td>
                     <td className="py-2.5 px-3.5 text-right space-x-1.5">
-                      {item.status === 'completed' && (
+                      {item.status === "completed" && (
                         <button
                           onClick={() => handleDownloadItem(item)}
                           className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-medium text-xs sm:text-[11px] transition-all shadow-2xs inline-flex items-center gap-1 cursor-pointer active:scale-95"
@@ -319,7 +356,11 @@ export const BackupPanel = ({
               ) : (
                 <tr>
                   <td colSpan={5} className="py-8 text-center text-content-subtle italic text-xs">
-                    Belum ada riwayat export backup. Klik tombol <strong className="font-medium text-content-secondary">"Export Project Backup"</strong> di atas untuk membuat backup baru.
+                    Belum ada riwayat export backup. Klik tombol{" "}
+                    <strong className="font-medium text-content-secondary">
+                      "Export Project Backup"
+                    </strong>{" "}
+                    di atas untuk membuat backup baru.
                   </td>
                 </tr>
               )}

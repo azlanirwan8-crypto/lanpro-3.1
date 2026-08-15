@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
-import { 
-  ChevronRight, ChevronLeft, ChevronDown, Kanban, Plus, LogOut, User 
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from 'sonner';
-import { cn } from '../../lib/utils';
-import { SidebarProps } from './types';
-import { useSidebar } from './hooks';
-import { styles } from './styles';
-import { sidebarSections, SidebarItemConfig } from './config';
-import { getUserPermissions, normalizeModuleKey } from '../../lib/permissions';
-import { UserAvatar } from '../../components/ui/UserAvatar';
+import React, { useState } from "react";
+import { ChevronRight, ChevronLeft, ChevronDown, Kanban, Plus, LogOut, User } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "../../lib/utils";
+import { SidebarProps } from "./types";
+import { useSidebar } from "./hooks";
+import { styles } from "./styles";
+import { sidebarSections } from "./config";
+import { getUserPermissions, normalizeModuleKey } from "../../lib/permissions";
+import { UserAvatar } from "../../components/ui/UserAvatar";
 
 export const Sidebar: React.FC<SidebarProps> = (props) => {
   const {
@@ -29,7 +26,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     user,
     setIsProfileModalOpen,
     onOpenProfile,
-    handleLogout
+    handleLogout,
   } = props;
 
   const { canCreateProject } = useSidebar(props);
@@ -38,28 +35,33 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
 
   const toggleExpand = (itemId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setExpandedItems(prev => ({ ...prev, [itemId]: !prev[itemId] }));
+    setExpandedItems((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
   };
 
   const renderBadge = (badge?: string, badgeColor?: string) => {
     if (!badge) return null;
     let colorClasses = "bg-danger text-white"; // default Hot orange-red
-    if (badgeColor === 'emerald' || badge === 'New') colorClasses = "bg-success text-white";
-    if (badgeColor === 'blue') colorClasses = "bg-info text-white";
-    if (badgeColor === 'purple') colorClasses = "bg-[#878a99] text-white";
+    if (badgeColor === "emerald" || badge === "New") colorClasses = "bg-success text-white";
+    if (badgeColor === "blue") colorClasses = "bg-info text-white";
+    if (badgeColor === "purple") colorClasses = "bg-[#878a99] text-white";
 
     return (
-      <span className={cn("text-xs sm:text-[10px] font-medium px-1.5 py-0.5 rounded shadow-xs uppercase tracking-wider shrink-0", colorClasses)}>
+      <span
+        className={cn(
+          "text-xs sm:text-[10px] font-medium px-1.5 py-0.5 rounded shadow-xs uppercase tracking-wider shrink-0",
+          colorClasses
+        )}
+      >
         {badge}
       </span>
     );
   };
 
   return (
-    <motion.aside 
+    <motion.aside
       initial={{ x: -20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
       className={cn(
         styles.aside,
         isMobileMenuOpen ? styles.asideMobileOpen : styles.asideMobileClosed,
@@ -73,21 +75,27 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         className={styles.collapseButton}
         title={isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
       >
-        {isSidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+        {isSidebarCollapsed ? (
+          <ChevronRight className="w-4 h-4" />
+        ) : (
+          <ChevronLeft className="w-4 h-4" />
+        )}
       </motion.button>
-      
+
       {/* Brand Header */}
-      <div className={cn(styles.logoWrapper, isSidebarCollapsed ? 'justify-center' : 'justify-between')}>
+      <div
+        className={cn(
+          styles.logoWrapper,
+          isSidebarCollapsed ? "justify-center" : "justify-between"
+        )}
+      >
         <div className="flex items-center gap-3">
-          <motion.div 
-            whileHover={{ rotate: 8, scale: 1.05 }}
-            className={styles.logoIcon}
-          >
+          <motion.div whileHover={{ rotate: 8, scale: 1.05 }} className={styles.logoIcon}>
             <Kanban className="text-white w-5 h-5" />
           </motion.div>
           <AnimatePresence mode="wait">
             {!isSidebarCollapsed && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -8 }}
@@ -95,7 +103,9 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                 className="flex flex-col"
               >
                 <span className={styles.logoText}>LANPRO</span>
-                <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-[#878a99] tracking-widest uppercase -mt-1">Project Management</span>
+                <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-[#878a99] tracking-widest uppercase -mt-1">
+                  Project Management
+                </span>
               </motion.div>
             )}
           </AnimatePresence>
@@ -105,14 +115,14 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
       <nav className={styles.nav}>
         {/* Active Projects Section */}
         {!isSidebarCollapsed && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className={styles.sectionLabelWrapper}
           >
             <div className={styles.sectionLabel}>PROYEK AKTIF</div>
             {canCreateProject && (
-              <motion.button 
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsNewProjectModalOpen(true)}
@@ -120,7 +130,9 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                 title="Buat Proyek Baru"
               >
                 <Plus className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-xs sm:text-[10px] font-medium uppercase text-amber-300">Baru</span>
+                <span className="text-xs sm:text-[10px] font-medium uppercase text-amber-300">
+                  Baru
+                </span>
               </motion.button>
             )}
           </motion.div>
@@ -128,8 +140,8 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
 
         {/* Project List Buttons */}
         {projects.map((p, idx) => (
-          <motion.div 
-            key={p.id} 
+          <motion.div
+            key={p.id}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2, delay: idx * 0.02 }}
@@ -141,16 +153,27 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
               onClick={() => setSelectedProject(p)}
               className={cn(
                 styles.projectButton,
-                isSidebarCollapsed ? 'justify-center px-0 py-2 min-h-11' : 'gap-2.5 px-3 py-2 min-h-11',
-                selectedProject?.id === p.id ? styles.projectButtonSelected : styles.projectButtonDefault
+                isSidebarCollapsed
+                  ? "justify-center px-0 py-2 min-h-11"
+                  : "gap-2.5 px-3 py-2 min-h-11",
+                selectedProject?.id === p.id
+                  ? styles.projectButtonSelected
+                  : styles.projectButtonDefault
               )}
               title={isSidebarCollapsed ? p.name : undefined}
             >
-              <div className={cn(styles.indicator, selectedProject?.id === p.id ? "bg-amber-400 scale-125 shadow-xs" : "bg-[#878a99]")} />
+              <div
+                className={cn(
+                  styles.indicator,
+                  selectedProject?.id === p.id ? "bg-amber-400 scale-125 shadow-xs" : "bg-[#878a99]"
+                )}
+              />
               {!isSidebarCollapsed && (
                 <>
                   <span className="truncate flex-1 text-left text-xs font-medium">{p.name}</span>
-                  <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium px-1.5 py-0.5 rounded bg-black/20 text-[#abb9e8]">{p.key}</span>
+                  <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium px-1.5 py-0.5 rounded bg-black/20 text-[#abb9e8]">
+                    {p.key}
+                  </span>
                 </>
               )}
             </motion.button>
@@ -158,26 +181,37 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         ))}
 
         {/* Sidebar Categories & Navigation Items */}
-        {sidebarSections.map(section => {
-          const permittedItems = section.items.filter(item => {
-            const normRole = (userRole ? String(userRole).toLowerCase().trim() : 'viewer') as any;
-            const uName = String(currentUserProfile?.username || currentUser?.username || user?.username || '').toLowerCase().trim();
-            const uRole = String(currentUserProfile?.role || currentUser?.role || '').toLowerCase().trim();
-            
-            const isAdmin = normRole === 'admin' || normRole === 'administrator' || normRole === 'superadmin' || 
-                            uRole === 'admin' || uRole === 'administrator' || uRole === 'superadmin' ||
-                            uName === 'admin';
+        {sidebarSections.map((section) => {
+          const permittedItems = section.items.filter((item) => {
+            const normRole = (userRole ? String(userRole).toLowerCase().trim() : "viewer") as any;
+            const uName = String(
+              currentUserProfile?.username || currentUser?.username || user?.username || ""
+            )
+              .toLowerCase()
+              .trim();
+            const uRole = String(currentUserProfile?.role || currentUser?.role || "")
+              .toLowerCase()
+              .trim();
+
+            const isAdmin =
+              normRole === "admin" ||
+              normRole === "administrator" ||
+              normRole === "superadmin" ||
+              uRole === "admin" ||
+              uRole === "administrator" ||
+              uRole === "superadmin" ||
+              uName === "admin";
             if (isAdmin) return true;
 
             const perms = getUserPermissions(normRole, currentUserProfile?.permissions);
             const normModule = normalizeModuleKey(item.module);
             const modulePerm = perms[normModule as keyof typeof perms];
-            
+
             const hasRead = Boolean(modulePerm?.read);
             const hasCreate = Boolean(modulePerm?.create);
             const hasUpdate = Boolean(modulePerm?.update);
             const hasDelete = Boolean(modulePerm?.delete);
-            
+
             const hasAnyPermission = hasRead || hasCreate || hasUpdate || hasDelete;
             return hasAnyPermission && hasRead;
           });
@@ -188,7 +222,9 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
             <React.Fragment key={section.id}>
               {!isSidebarCollapsed && (
                 <div className="flex items-center justify-between px-3 mt-5 mb-1.5">
-                  <div className="text-xs sm:text-[11px] font-medium text-[#878a99] uppercase tracking-wider">{section.title}</div>
+                  <div className="text-xs sm:text-[11px] font-medium text-[#878a99] uppercase tracking-wider">
+                    {section.title}
+                  </div>
                 </div>
               )}
               {permittedItems.map((item) => {
@@ -206,23 +242,31 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                       }}
                       className={cn(
                         "w-full flex items-center gap-3 px-3 py-2.5 min-h-11 rounded-md transition-all text-xs relative overflow-hidden group",
-                        isActive 
-                          ? 'bg-[#364574] text-white font-medium border-l-3 border-amber-400 shadow-soft' 
-                          : 'text-[#abb9e8] hover:bg-surface/5 hover:text-white'
+                        isActive
+                          ? "bg-[#364574] text-white font-medium border-l-3 border-amber-400 shadow-soft"
+                          : "text-[#abb9e8] hover:bg-surface/5 hover:text-white"
                       )}
                       title={isSidebarCollapsed ? item.label : undefined}
                     >
-                      <div className="shrink-0 text-slate-300 group-hover:text-white transition-colors">{item.icon}</div>
+                      <div className="shrink-0 text-slate-300 group-hover:text-white transition-colors">
+                        {item.icon}
+                      </div>
                       {!isSidebarCollapsed && (
                         <>
-                          <span className="flex-1 text-left font-medium truncate">{item.label}</span>
+                          <span className="flex-1 text-left font-medium truncate">
+                            {item.label}
+                          </span>
                           {item.badge && renderBadge(item.badge, item.badgeColor)}
                           {hasChildren && (
-                            <div 
+                            <div
                               onClick={(e) => toggleExpand(item.id, e)}
                               className="p-2 min-w-9 min-h-9 flex items-center justify-center rounded hover:bg-surface/10 text-slate-300 hover:text-white transition-colors ml-1"
                             >
-                              {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                              {isExpanded ? (
+                                <ChevronDown className="w-3.5 h-3.5" />
+                              ) : (
+                                <ChevronRight className="w-3.5 h-3.5" />
+                              )}
                             </div>
                           )}
                         </>
@@ -231,13 +275,13 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
 
                     {/* Render Sub-items in Velzon hyphen style */}
                     {hasChildren && isExpanded && !isSidebarCollapsed && (
-                      <motion.div 
+                      <motion.div
                         initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
+                        animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         className="pl-7 pr-2 py-1 space-y-1"
                       >
-                        {item.children?.map(subItem => {
+                        {item.children?.map((subItem) => {
                           const isSubActive = currentView === subItem.id;
                           return (
                             <button
@@ -245,9 +289,9 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                               onClick={() => setCurrentView(subItem.id as any)}
                               className={cn(
                                 "w-full flex items-center gap-2 py-2 px-2 min-h-11 rounded text-xs transition-colors text-left",
-                                isSubActive 
-                                  ? 'text-white font-medium bg-surface/10' 
-                                  : 'text-[#878a99] hover:text-white hover:bg-surface/5'
+                                isSubActive
+                                  ? "text-white font-medium bg-surface/10"
+                                  : "text-[#878a99] hover:text-white hover:bg-surface/5"
                               )}
                             >
                               <span className="text-content-subtle text-xs sm:text-[10px]">—</span>
@@ -293,32 +337,44 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
           </div>
         )}
 
-        <motion.div 
-           whileHover={{ scale: 1.01 }}
-           onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-           className={cn(
-             "flex items-center p-2 rounded-lg hover:bg-surface/10 transition-all cursor-pointer group",
-             isSidebarCollapsed ? 'justify-center' : 'gap-3'
-           )}
-           title="Klik untuk opsi profil & keluar"
+        <motion.div
+          whileHover={{ scale: 1.01 }}
+          onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+          className={cn(
+            "flex items-center p-2 rounded-lg hover:bg-surface/10 transition-all cursor-pointer group",
+            isSidebarCollapsed ? "justify-center" : "gap-3"
+          )}
+          title="Klik untuk opsi profil & keluar"
         >
-          <UserAvatar user={user || currentUserProfile || currentUser} className="w-8 h-8 shrink-0 border border-amber-400/50" />
+          <UserAvatar
+            user={user || currentUserProfile || currentUser}
+            className="w-8 h-8 shrink-0 border border-amber-400/50"
+          />
           {!isSidebarCollapsed && (
             <>
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-medium text-white truncate">{user?.displayName || currentUser?.displayName || currentUser?.username || 'User'}</div>
-                <div className="text-xs sm:text-[10px] text-[#878a99] truncate font-mono">{currentUser?.username || 'admin'}</div>
+                <div className="text-xs font-medium text-white truncate">
+                  {user?.displayName || currentUser?.displayName || currentUser?.username || "User"}
+                </div>
+                <div className="text-xs sm:text-[10px] text-[#878a99] truncate font-mono">
+                  {currentUser?.username || "admin"}
+                </div>
               </div>
-              <ChevronDown className={cn("w-4 h-4 text-content-subtle transition-transform duration-200", isUserMenuOpen && "rotate-180")} />
+              <ChevronDown
+                className={cn(
+                  "w-4 h-4 text-content-subtle transition-transform duration-200",
+                  isUserMenuOpen && "rotate-180"
+                )}
+              />
             </>
           )}
         </motion.div>
         {isSidebarCollapsed && (
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-            className="w-full mt-2 flex justify-center p-2 text-slate-300 hover:text-white transition-colors" 
+            className="w-full mt-2 flex justify-center p-2 text-slate-300 hover:text-white transition-colors"
             title="Opsi Profil"
           >
             <User className="w-4 h-4" />

@@ -1,17 +1,15 @@
 import React from "react";
-import { 
-  Sparkles, 
-  UserPlus, 
-  ArrowRightLeft, 
-  MessageSquare, 
-  Clock, 
-  ShieldAlert, 
-  PlusCircle, 
+import {
+  UserPlus,
+  ArrowRightLeft,
+  MessageSquare,
+  Clock,
+  ShieldAlert,
+  PlusCircle,
   Edit3,
   HelpCircle,
   FileText,
-  UserCheck,
-  Bug
+  Bug,
 } from "lucide-react";
 
 export interface ParsedNotification {
@@ -21,7 +19,16 @@ export interface ParsedNotification {
   badgeClass: string;
   formattedTitle: React.ReactNode;
   formattedMessage: React.ReactNode;
-  activityType: "create" | "status" | "assignee" | "comment" | "update" | "deadline" | "blocked" | "general" | "bug_retest";
+  activityType:
+    | "create"
+    | "status"
+    | "assignee"
+    | "comment"
+    | "update"
+    | "deadline"
+    | "blocked"
+    | "general"
+    | "bug_retest";
 }
 
 /**
@@ -46,7 +53,7 @@ const translateFieldName = (field: string): string => {
     release: "Rilis",
     sprintId: "Sprint",
     projectRisk: "Risiko Proyek",
-    labels: "Label/Tag"
+    labels: "Label/Tag",
   };
   return mapping[field] || field;
 };
@@ -57,7 +64,7 @@ const translateFieldName = (field: string): string => {
 const renderStatusBadge = (status: string) => {
   const s = status ? status.trim().toLowerCase() : "";
   let colorClass = "bg-surface-muted text-content-body border-border-subtle";
-  
+
   if (s === "to do" || s === "backlog" || s === "none" || s === "unassigned") {
     colorClass = "bg-surface-muted text-content-secondary border-border-subtle/80";
   } else if (s === "in progress" || s === "dev" || s === "development" || s === "ready for dev") {
@@ -71,7 +78,9 @@ const renderStatusBadge = (status: string) => {
   }
 
   return (
-    <span className={`inline-flex items-center px-1.5 py-0 rounded-full text-xs sm:text-[10px] font-medium border ${colorClass} mx-0.5`}>
+    <span
+      className={`inline-flex items-center px-1.5 py-0 rounded-full text-xs sm:text-[10px] font-medium border ${colorClass} mx-0.5`}
+    >
       {status}
     </span>
   );
@@ -81,7 +90,7 @@ const renderStatusBadge = (status: string) => {
  * Helper to strip UUID strings from text
  */
 const stripUUIDs = (text: string): string => {
-  const uuidPattern = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/ig;
+  const uuidPattern = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi;
   return text.replace(uuidPattern, "").replace(/\s+/g, " ").trim();
 };
 
@@ -96,7 +105,7 @@ export const formatNotification = (
   // Clean raw inputs
   const rawTitle = title || "Notifikasi Baru";
   let rawMessage = message || "";
-  
+
   // Clean up any UUIDs
   rawMessage = stripUUIDs(rawMessage);
 
@@ -113,13 +122,32 @@ export const formatNotification = (
   const lowerMsg = rawMessage.toLowerCase();
   const lowerType = (type || "").toLowerCase();
 
-  if (lowerType === "bug_retest" || lowerType === "qa_retest" || lowerTitle.includes("retest") || lowerMsg.includes("retest")) {
+  if (
+    lowerType === "bug_retest" ||
+    lowerType === "qa_retest" ||
+    lowerTitle.includes("retest") ||
+    lowerMsg.includes("retest")
+  ) {
     activityType = "bug_retest";
-  } else if (lowerType === "blocked" || lowerTitle.includes("block") || lowerMsg.includes("terblokir")) {
+  } else if (
+    lowerType === "blocked" ||
+    lowerTitle.includes("block") ||
+    lowerMsg.includes("terblokir")
+  ) {
     activityType = "blocked";
-  } else if (lowerType === "deadline" || lowerTitle.includes("deadline") || lowerTitle.includes("tenggat") || lowerMsg.includes("tempo")) {
+  } else if (
+    lowerType === "deadline" ||
+    lowerTitle.includes("deadline") ||
+    lowerTitle.includes("tenggat") ||
+    lowerMsg.includes("tempo")
+  ) {
     activityType = "deadline";
-  } else if (lowerTitle.includes("tugas baru") || lowerTitle.includes("create_task") || lowerMsg.includes("membuat tugas baru") || lowerTitle.includes("ditambahkan")) {
+  } else if (
+    lowerTitle.includes("tugas baru") ||
+    lowerTitle.includes("create_task") ||
+    lowerMsg.includes("membuat tugas baru") ||
+    lowerTitle.includes("ditambahkan")
+  ) {
     activityType = "create";
   } else if (lowerTitle.includes("komentar") || lowerMsg.includes("mengomentari")) {
     activityType = "comment";
@@ -127,7 +155,11 @@ export const formatNotification = (
     activityType = "status";
   } else if (lowerMsg.includes("menugaskan") || lowerMsg.includes("assigned")) {
     activityType = "assignee";
-  } else if (lowerTitle.includes("update") || lowerMsg.includes("memperbarui") || lowerMsg.includes("update")) {
+  } else if (
+    lowerTitle.includes("update") ||
+    lowerMsg.includes("memperbarui") ||
+    lowerMsg.includes("update")
+  ) {
     activityType = "update";
   }
 
@@ -214,7 +246,7 @@ export const formatNotification = (
   // Formatting message body
   // Goal: Find `[TASK_KEY: TITLE]` and format it as bold block, parse comments into quote, map technical keys.
   const taskRegex = /\[([A-Za-z0-9-]+):\s*([^\]]+)\]/g;
-  
+
   // Check if there is a task identity match
   let taskCode = "";
   let taskTitle = "";
@@ -277,7 +309,7 @@ export const formatNotification = (
   // Split message to isolate the [TASK_KEY: TITLE] for custom React styling
   const parts = [];
   let lastIndex = 0;
-  
+
   // Reset regex
   taskRegex.lastIndex = 0;
   let match;
@@ -294,7 +326,10 @@ export const formatNotification = (
     const code = match[1];
     const name = match[2];
     parts.push(
-      <span key={`task-${code}-${startIndex}`} className="inline-flex items-center gap-0.5 px-1 py-0 rounded bg-surface-muted hover:bg-slate-200 border border-border-subtle/60 text-xs sm:text-[10px] font-medium text-content-strong font-mono transition-colors my-0.5 select-all">
+      <span
+        key={`task-${code}-${startIndex}`}
+        className="inline-flex items-center gap-0.5 px-1 py-0 rounded bg-surface-muted hover:bg-slate-200 border border-border-subtle/60 text-xs sm:text-[10px] font-medium text-content-strong font-mono transition-colors my-0.5 select-all"
+      >
         <span className="text-violet-600 font-medium">{code}</span>
         <span className="text-slate-300">|</span>
         <span className="truncate max-w-[120px]">{name}</span>
@@ -320,33 +355,42 @@ export const formatNotification = (
       </div>
 
       {/* Special Block: If there's an update with a transition of status, parse and render beautifully (Compact: mt-1 p-1 px-1.5) */}
-      {activityType === "status" && (() => {
-        const statusMatch = rawMessage.match(/dari\s+"([^"]+)"\s+menjadi\s+"([^"]+)"/i);
-        const toMatch = rawMessage.match(/menjadi\s+"([^"]+)"/i);
-        if (statusMatch && statusMatch[1] && statusMatch[2]) {
-          return (
-            <div className="mt-1 flex items-center gap-1 text-content-muted bg-surface-sunken border border-border-faint rounded-md p-1 px-1.5 max-w-fit">
-              <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-content-subtle">Transisi:</span>
-              <div className="flex items-center gap-0.5">
-                {renderStatusBadge(statusMatch[1])}
-                <span className="text-content-subtle text-xs sm:text-[11px] sm:text-[9px]">➔</span>
-                {renderStatusBadge(statusMatch[2])}
+      {activityType === "status" &&
+        (() => {
+          const statusMatch = rawMessage.match(/dari\s+"([^"]+)"\s+menjadi\s+"([^"]+)"/i);
+          const toMatch = rawMessage.match(/menjadi\s+"([^"]+)"/i);
+          if (statusMatch && statusMatch[1] && statusMatch[2]) {
+            return (
+              <div className="mt-1 flex items-center gap-1 text-content-muted bg-surface-sunken border border-border-faint rounded-md p-1 px-1.5 max-w-fit">
+                <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-content-subtle">
+                  Transisi:
+                </span>
+                <div className="flex items-center gap-0.5">
+                  {renderStatusBadge(statusMatch[1])}
+                  <span className="text-content-subtle text-xs sm:text-[11px] sm:text-[9px]">
+                    ➔
+                  </span>
+                  {renderStatusBadge(statusMatch[2])}
+                </div>
               </div>
-            </div>
-          );
-        } else if (toMatch && toMatch[1]) {
-          return (
-            <div className="mt-1 flex items-center gap-1 text-content-muted bg-surface-sunken border border-border-faint rounded-md p-1 px-1.5 max-w-fit">
-              <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-content-subtle">Transisi:</span>
-              <div className="flex items-center gap-0.5">
-                <span className="text-content-subtle text-xs sm:text-[11px] sm:text-[9px] font-medium">Ke</span>
-                {renderStatusBadge(toMatch[1])}
+            );
+          } else if (toMatch && toMatch[1]) {
+            return (
+              <div className="mt-1 flex items-center gap-1 text-content-muted bg-surface-sunken border border-border-faint rounded-md p-1 px-1.5 max-w-fit">
+                <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-content-subtle">
+                  Transisi:
+                </span>
+                <div className="flex items-center gap-0.5">
+                  <span className="text-content-subtle text-xs sm:text-[11px] sm:text-[9px] font-medium">
+                    Ke
+                  </span>
+                  {renderStatusBadge(toMatch[1])}
+                </div>
               </div>
-            </div>
-          );
-        }
-        return null;
-      })()}
+            );
+          }
+          return null;
+        })()}
 
       {/* Special Block: Render comments inside stylized blockquotes (Compact: mt-1 pl-2 py-0.5 px-1.5) */}
       {commentBlock && (
@@ -364,6 +408,6 @@ export const formatNotification = (
     badgeClass,
     formattedTitle,
     formattedMessage,
-    activityType
+    activityType,
   };
 };

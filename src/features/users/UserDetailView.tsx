@@ -1,4 +1,4 @@
-import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
+import { safeLocalStorage } from "../../lib/safeStorage";
 import React, { useState, useEffect } from "react";
 import { UserProfile, Project, Task, AppRole, UserPermissions } from "../../types";
 import { UserAvatar } from "./styles";
@@ -13,11 +13,8 @@ import {
   Layout,
   Mail,
   Phone,
-  Calendar,
   Key,
   Check,
-  X,
-  Shield,
   Clock,
   Building,
   Lock,
@@ -27,9 +24,7 @@ import {
   UserPlus,
   Save,
   RefreshCw,
-  HelpCircle,
   Server,
-  Edit3,
   RotateCcw,
 } from "lucide-react";
 import { ResponsiveTable } from "../../components/ResponsiveTable";

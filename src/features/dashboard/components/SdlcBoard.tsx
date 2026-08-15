@@ -1,5 +1,5 @@
 import React from "react";
-import { PackageOpen, ShieldAlert, Check, Send, FileText, GripVertical } from "lucide-react";
+import { PackageOpen, Check, Send, FileText, GripVertical } from "lucide-react";
 import { cn } from "../../../lib/utils";
 
 interface SdlcBoardProps {
@@ -27,7 +27,9 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
       <div className="flex justify-between items-center mb-6 pb-4 border-b border-white/10 relative z-10 transition-all select-none">
         <div className="flex items-center gap-2">
           <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-          <span className="font-medium text-slate-200 text-xs tracking-wider uppercase">SDLC Waterfall Governance</span>
+          <span className="font-medium text-slate-200 text-xs tracking-wider uppercase">
+            SDLC Waterfall Governance
+          </span>
         </div>
         <GripVertical className="w-4 h-4 text-content-muted hover:text-slate-300 cursor-move custom-drag-grip shrink-0" />
       </div>
@@ -45,9 +47,12 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
           const isApproved = waterfallGates[phase.id]?.approved;
           const isActive = activeWaterfallTab === phase.id;
           const taskStat = waterfallPhaseTaskCounts[phase.id] || { total: 0, done: 0 };
-          const progressVal = taskStat.total > 0
-            ? Math.round((taskStat.done / taskStat.total) * 100)
-            : isApproved ? 100 : 0;
+          const progressVal =
+            taskStat.total > 0
+              ? Math.round((taskStat.done / taskStat.total) * 100)
+              : isApproved
+                ? 100
+                : 0;
 
           return (
             <button
@@ -62,10 +67,14 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
               )}
             >
               <div className="flex justify-between items-center w-full mb-3 select-none">
-                <span className={cn(
-                  "w-5 h-5 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-medium pointer-events-none",
-                  isApproved ? "bg-emerald-500 text-white shadow-soft" : "bg-slate-700 text-slate-300"
-                )}>
+                <span
+                  className={cn(
+                    "w-5 h-5 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-medium pointer-events-none",
+                    isApproved
+                      ? "bg-emerald-500 text-white shadow-soft"
+                      : "bg-slate-700 text-slate-300"
+                  )}
+                >
                   {isApproved ? "✓" : idx + 1}
                 </span>
                 {isApproved && (
@@ -76,19 +85,23 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
               </div>
 
               <div className="text-xs font-medium truncate text-white">{phase.label}</div>
-              <div className="text-xs sm:text-[10px] text-content-subtle truncate mt-0.5 leading-tight">{phase.desc}</div>
+              <div className="text-xs sm:text-[10px] text-content-subtle truncate mt-0.5 leading-tight">
+                {phase.desc}
+              </div>
 
               {/* Mini task progress */}
               <div className="mt-4 w-full select-none">
                 <div className="flex justify-between items-center text-xs sm:text-[11px] sm:text-[9px] text-content-subtle mb-1 leading-none">
-                  <span>Done: {taskStat.done}/{taskStat.total}</span>
+                  <span>
+                    Done: {taskStat.done}/{taskStat.total}
+                  </span>
                   <span>{progressVal}%</span>
                 </div>
                 <div className="w-full bg-slate-700 h-1 rounded-full overflow-hidden">
                   <div
                     className={cn(
                       "h-full rounded-full transition-all duration-500",
-                      idx <= Object.keys(waterfallGates).findIndex(k => k === phase.id)
+                      idx <= Object.keys(waterfallGates).findIndex((k) => k === phase.id)
                         ? "bg-amber-400"
                         : "bg-slate-500"
                     )}
@@ -177,9 +190,7 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                   {activeInfo.title}
                 </h4>
-                <p className="text-slate-300 text-xs mt-1 max-w-2xl">
-                  {activeInfo.desc}
-                </p>
+                <p className="text-slate-300 text-xs mt-1 max-w-2xl">{activeInfo.desc}</p>
               </div>
 
               {/* Approval Toggle */}
@@ -250,7 +261,8 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
                         <span className="font-medium text-white">{phaseGateStatus.approvedBy}</span>
                       </div>
                       <div className="mt-0.5">
-                        Waktu: <span className="font-mono text-white">{phaseGateStatus.approvedAt}</span>
+                        Waktu:{" "}
+                        <span className="font-mono text-white">{phaseGateStatus.approvedAt}</span>
                       </div>
                     </>
                   ) : (

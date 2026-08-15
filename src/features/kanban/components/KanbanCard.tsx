@@ -1,19 +1,11 @@
-import { safeLocalStorage, safeSessionStorage } from "../../../lib/safeStorage";
+import { safeLocalStorage } from "../../../lib/safeStorage";
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { cn, ensureDate } from "../../../lib/utils";
 import { UserAvatar } from "../../../components/ui/UserAvatar";
 import { RenderIcon } from "../../../components/RenderIcon";
 import { useAppStore } from "../../../store/useAppStore";
-import {
-  MoreHorizontal,
-  AlertTriangle,
-  AlertCircle,
-  ChevronDown,
-  ChevronUp,
-  CheckSquare,
-  Square,
-} from "lucide-react";
+import { AlertTriangle, ChevronDown, ChevronUp, CheckSquare, Square } from "lucide-react";
 
 interface KanbanCardProps {
   task: any;

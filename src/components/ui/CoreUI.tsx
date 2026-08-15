@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useMemo, useState } from "react";
 import { format, differenceInDays } from "date-fns";
-import { Loader2, Calendar, AlertCircle } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Calendar, AlertCircle } from "lucide-react";
+import { motion } from "framer-motion";
 
 type Task = any;
 

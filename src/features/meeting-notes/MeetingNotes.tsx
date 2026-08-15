@@ -1,13 +1,10 @@
 import { confirmDeleteAlert, showSuccessAlert } from "../../lib/sweetalert";
 import React, { useState, useEffect } from "react";
 import {
-  ChevronDown,
-  ChevronRight,
   Plus,
   Trash2,
   ChevronLeft,
   Edit2,
-  User,
   MessageSquare,
   Calendar,
   ExternalLink,
@@ -19,7 +16,7 @@ import {
   Eye,
   Download,
 } from "lucide-react";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import {
   getMeetings,
   createMeeting,
@@ -29,10 +26,7 @@ import {
 } from "../../services/meetingService";
 import { type Meeting, type UserProfile, type AppRole, type UserPermissions } from "../../types";
 import { DiscussionPointsTable } from "./DiscussionPointsTable";
-import { UserBadge } from "./UserBadge";
 import { UserAvatar } from "../../components/ui/UserAvatar";
-import { AiMeetingCompanion } from "./AiMeetingCompanion";
-import { Sparkles, Brain } from "lucide-react";
 import { hasPermission } from "../../lib/permissions";
 import { downloadMeetingFile, resolveUserId } from "./services/meeting.service";
 import { ResponsiveTable } from "../../components/ResponsiveTable";

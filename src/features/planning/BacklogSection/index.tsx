@@ -1,34 +1,41 @@
-
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { Zap, Search, Target, LayoutGrid, Filter } from 'lucide-react';
-import { cn } from '../../../lib/utils';
-import { Task, MasterData } from '../../../types';
-import { StyledDropdown } from '../../../components/ui/CommonComponents';
+import React, { useState } from "react";
+import { Zap, Search, Target, LayoutGrid, Filter } from "lucide-react";
+import { Task, MasterData } from "../../../types";
+import { StyledDropdown } from "../../../components/ui/CommonComponents";
 
 interface BacklogSectionProps {
   tasks: Task[];
   masterData: MasterData[];
-  renderDraggableTask: (task: Task, index: number, variant: 'card' | 'row') => React.ReactNode;
+  renderDraggableTask: (task: Task, index: number, variant: "card" | "row") => React.ReactNode;
 }
 
-export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterData, renderDraggableTask }) => {
-  const [search, setSearch] = useState('');
-  const [priorityFilter, setPriorityFilter] = useState('All Priorities');
+export const BacklogSection: React.FC<BacklogSectionProps> = ({
+  tasks,
+  masterData,
+  renderDraggableTask,
+}) => {
+  const [search, setSearch] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("All Priorities");
 
-  const backlogTasks = tasks.filter(t => !t.sprintId && (t.type || '').toLowerCase() !== 'epic');
-  
-  const filteredBacklogTasks = backlogTasks.filter(t => {
-    if (search && !t.title.toLowerCase().includes(search.toLowerCase()) && !t.key?.toLowerCase().includes(search.toLowerCase())) return false;
-    if (priorityFilter !== 'All Priorities' && t.priority !== priorityFilter) return false;
+  const backlogTasks = tasks.filter((t) => !t.sprintId && (t.type || "").toLowerCase() !== "epic");
+
+  const filteredBacklogTasks = backlogTasks.filter((t) => {
+    if (
+      search &&
+      !t.title.toLowerCase().includes(search.toLowerCase()) &&
+      !t.key?.toLowerCase().includes(search.toLowerCase())
+    )
+      return false;
+    if (priorityFilter !== "All Priorities" && t.priority !== priorityFilter) return false;
     return true;
   });
 
-  const epics = tasks.filter(t => (t.type || '').toLowerCase() === 'epic');
+  const epics = tasks.filter((t) => (t.type || "").toLowerCase() === "epic");
 
   const getTasksForParent = (parentId: string | null) => {
-    if (parentId === 'standalone') return filteredBacklogTasks.filter(t => !t.parentId && t.type?.toLowerCase() !== 'epic');
-    return filteredBacklogTasks.filter(t => t.parentId === parentId);
+    if (parentId === "standalone")
+      return filteredBacklogTasks.filter((t) => !t.parentId && t.type?.toLowerCase() !== "epic");
+    return filteredBacklogTasks.filter((t) => t.parentId === parentId);
   };
 
   let _draggablesRenderedCount = 0;
@@ -39,33 +46,37 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <LayoutGrid className="w-4 h-4 text-content-muted" />
-            <h3 className="font-medium text-content-strong text-sm tracking-tight">Backlog Tasks</h3>
+            <h3 className="font-medium text-content-strong text-sm tracking-tight">
+              Backlog Tasks
+            </h3>
           </div>
           <div className="px-2 py-0.5 bg-indigo-50/80 border border-indigo-200/80 rounded-md text-xs font-semibold text-primary">
             {filteredBacklogTasks.length} Issues
           </div>
         </div>
-        
+
         <div className="flex flex-col gap-2.5">
           <div className="relative">
             <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-content-subtle" />
-            <input 
-              placeholder="Search backlog tasks..." 
+            <input
+              placeholder="Search backlog tasks..."
               value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 h-[38px] bg-surface-sunken/70 border border-border-subtle/80 rounded-md text-xs font-medium outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 focus:bg-surface transition-all shadow-2xs" 
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-8 pr-3 h-[38px] bg-surface-sunken/70 border border-border-subtle/80 rounded-md text-xs font-medium outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 focus:bg-surface transition-all shadow-2xs"
             />
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Filter className="w-3.5 h-3.5 text-content-subtle shrink-0" />
             <div className="flex-1">
-              <StyledDropdown 
+              <StyledDropdown
                 value={priorityFilter}
-                onChange={val => setPriorityFilter(val)}
+                onChange={(val) => setPriorityFilter(val)}
                 options={[
-                  { id: 'All Priorities', label: 'All Priorities' },
-                  ...masterData.filter(m => m.type === 'priority').map(p => ({ id: p.label, label: p.label, icon: p.icon, color: p.color }))
+                  { id: "All Priorities", label: "All Priorities" },
+                  ...masterData
+                    .filter((m) => m.type === "priority")
+                    .map((p) => ({ id: p.label, label: p.label, icon: p.icon, color: p.color })),
                 ]}
                 type="priority"
                 masterData={masterData}
@@ -78,43 +89,51 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
       </div>
 
       <div className="flex-1 overflow-y-auto p-3.5 bg-surface-sunken/40 min-h-0 custom-scrollbar">
-        {epics.flatMap(epic => {
+        {epics.flatMap((epic) => {
           const items = getTasksForParent(epic.id);
           if (items.length === 0) return [];
           return [
             <div key={`header-${epic.id}`} className="flex items-center gap-2 px-1 mt-3 mb-2">
               <Zap className="w-3.5 h-3.5 text-purple-600" />
-              <span className="text-xs sm:text-[10px] font-medium text-purple-700 uppercase tracking-wider leading-none">{epic.title}</span>
-              <div className="ml-auto text-xs sm:text-[10px] font-medium text-purple-600 bg-purple-50 px-2 py-0.2 rounded-md border border-purple-100">{items.length}</div>
+              <span className="text-xs sm:text-[10px] font-medium text-purple-700 uppercase tracking-wider leading-none">
+                {epic.title}
+              </span>
+              <div className="ml-auto text-xs sm:text-[10px] font-medium text-purple-600 bg-purple-50 px-2 py-0.2 rounded-md border border-purple-100">
+                {items.length}
+              </div>
             </div>,
-            ...items.map(task => {
+            ...items.map((task) => {
               const dndIndex = _draggablesRenderedCount++;
               return (
                 <div key={task.id} className="mb-2 pl-2 relative border-l-2 border-primary/40">
-                  {renderDraggableTask(task, dndIndex, 'card')}
+                  {renderDraggableTask(task, dndIndex, "card")}
                 </div>
-              )
-            })
+              );
+            }),
           ];
         })}
-        
+
         {(() => {
-          const items = getTasksForParent('standalone');
+          const items = getTasksForParent("standalone");
           if (items.length === 0) return [];
           return [
             <div key="header-standalone" className="flex items-center gap-2 px-1 mt-3 mb-2">
               <Target className="w-3.5 h-3.5 text-content-muted" />
-              <span className="text-xs sm:text-[10px] font-medium text-content-secondary uppercase tracking-wider leading-none">Standalone Backlog</span>
-              <div className="ml-auto text-xs sm:text-[10px] font-medium text-content-secondary bg-surface-muted px-2 py-0.2 rounded-md border border-border-subtle/60">{items.length}</div>
+              <span className="text-xs sm:text-[10px] font-medium text-content-secondary uppercase tracking-wider leading-none">
+                Standalone Backlog
+              </span>
+              <div className="ml-auto text-xs sm:text-[10px] font-medium text-content-secondary bg-surface-muted px-2 py-0.2 rounded-md border border-border-subtle/60">
+                {items.length}
+              </div>
             </div>,
-            ...items.map(task => {
+            ...items.map((task) => {
               const dndIndex = _draggablesRenderedCount++;
               return (
                 <div key={task.id} className="mb-2 pl-2 relative border-l-2 border-primary/40">
-                  {renderDraggableTask(task, dndIndex, 'card')}
+                  {renderDraggableTask(task, dndIndex, "card")}
                 </div>
-              )
-            })
+              );
+            }),
           ];
         })()}
 
