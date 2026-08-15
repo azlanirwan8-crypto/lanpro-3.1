@@ -1,23 +1,26 @@
-import React, { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { X } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { Portal } from './Portal';
+import React, { useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { X } from "lucide-react";
+import { cn } from "../../lib/utils";
+import { Portal } from "./Portal";
 
 declare global {
   namespace React.JSX {
     interface IntrinsicElements {
-      'lord-icon': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
-        src?: string;
-        trigger?: string;
-        colors?: string;
-        style?: React.CSSProperties;
-      }, HTMLElement>;
+      "lord-icon": React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement> & {
+          src?: string;
+          trigger?: string;
+          colors?: string;
+          style?: React.CSSProperties;
+        },
+        HTMLElement
+      >;
     }
   }
   namespace JSX {
     interface IntrinsicElements {
-      'lord-icon': any;
+      "lord-icon": any;
     }
   }
 }
@@ -30,7 +33,7 @@ interface ConfirmationModalProps {
   message: string;
   confirmText?: string;
   cancelText?: string;
-  variant?: 'danger' | 'warning' | 'info';
+  variant?: "danger" | "warning" | "info";
   isLoading?: boolean;
   isAlert?: boolean;
   closeOnBackdropClick?: boolean;
@@ -42,12 +45,12 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onConfirm,
   title,
   message,
-  confirmText = 'Ya, Hapus!',
-  cancelText = 'Batal',
-  variant = 'danger',
+  confirmText = "Ya, Hapus!",
+  cancelText = "Batal",
+  variant = "danger",
   isLoading = false,
   isAlert = false,
-  closeOnBackdropClick = true
+  closeOnBackdropClick = true,
 }) => {
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -61,10 +64,10 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   }, [isOpen]);
 
   const isDeleteAction =
-    variant === 'danger' ||
-    title.toLowerCase().includes('hapus') ||
-    title.toLowerCase().includes('delete') ||
-    title.toLowerCase().includes('remove');
+    variant === "danger" ||
+    title.toLowerCase().includes("hapus") ||
+    title.toLowerCase().includes("delete") ||
+    title.toLowerCase().includes("remove");
 
   return (
     <AnimatePresence>
@@ -85,8 +88,8 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ type: 'spring', duration: 0.3 }}
-              className="relative bg-white dark:bg-slate-900 rounded-md shadow-2xl w-full max-w-sm border border-slate-200/80 dark:border-slate-800 z-10 p-6 sm:p-8 text-center flex flex-col items-center"
+              transition={{ type: "spring", duration: 0.3 }}
+              className="relative bg-surface dark:bg-slate-900 rounded-md shadow-2xl w-full max-w-sm border border-border-subtle/80 dark:border-slate-800 z-10 p-6 sm:p-8 text-center flex flex-col items-center"
             >
               {/* Top Right Close X Button */}
               <button
@@ -104,21 +107,21 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                     src="https://cdn.lordicon.com/gsqxdxog.json"
                     trigger="loop"
                     colors="primary:#f7b84b,secondary:#f06548"
-                    style={{ width: '90px', height: '90px' }}
+                    style={{ width: "90px", height: "90px" }}
                   />
                 ) : (
                   <lord-icon
                     src="https://cdn.lordicon.com/lupuorrc.json"
                     trigger="loop"
                     colors="primary:#0ab39c,secondary:#405189"
-                    style={{ width: '90px', height: '90px' }}
+                    style={{ width: "90px", height: "90px" }}
                   />
                 )}
               </div>
 
               {/* Title */}
               <h3 className="text-[1.21875rem] font-semibold text-[#495057] dark:text-[#e9ecef] mb-2 leading-[1.4] tracking-tight text-center">
-                {title || 'Apakah Anda Yakin?'}
+                {title || "Apakah Anda Yakin?"}
               </h3>
 
               {/* Message */}
@@ -135,9 +138,25 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                   className="min-w-[5rem] px-4 py-2 bg-primary hover:bg-[#364574] text-white font-normal rounded text-[0.8125rem] shadow-xs transition-all cursor-pointer active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
                   {isLoading && (
-                    <svg className="animate-spin h-3.5 w-3.5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin h-3.5 w-3.5 text-current"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                   )}
                   {confirmText}

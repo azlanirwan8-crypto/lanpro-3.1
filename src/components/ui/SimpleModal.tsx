@@ -1,5 +1,5 @@
-import React from 'react';
-import { X } from 'lucide-react';
+import React from "react";
+import { X } from "lucide-react";
 
 interface SimpleModalProps {
   isOpen: boolean;
@@ -16,13 +16,11 @@ export const SimpleModal: React.FC<SimpleModalProps> = ({ isOpen, onClose, title
       <div className="bg-surface rounded-lg shadow-xl w-full max-w-lg overflow-hidden">
         <div className="flex justify-between items-center p-4 border-b">
           <h3 className="text-lg font-medium">{title}</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-full">
-            <X className="w-5 h-5 text-gray-500" />
+          <button onClick={onClose} className="p-1 hover:bg-surface-muted rounded-full">
+            <X className="w-5 h-5 text-content-muted" />
           </button>
         </div>
-        <div className="p-4">
-          {children}
-        </div>
+        <div className="p-4">{children}</div>
       </div>
     </div>
   );

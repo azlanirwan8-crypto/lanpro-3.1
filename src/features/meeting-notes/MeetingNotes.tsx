@@ -27,12 +27,7 @@ import {
   deleteMeeting,
   getUsers,
 } from "../../services/meetingService";
-import {
-  type Meeting,
-  type UserProfile,
-  type AppRole,
-  type UserPermissions,
-} from "../../types";
+import { type Meeting, type UserProfile, type AppRole, type UserPermissions } from "../../types";
 import { DiscussionPointsTable } from "./DiscussionPointsTable";
 import { UserBadge } from "./UserBadge";
 import { UserAvatar } from "../../components/ui/UserAvatar";
@@ -75,32 +70,48 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
   const [activeMeetingId, setActiveMeetingId] = useState<string | null>(null);
   const [workspaceTab, setWorkspaceTab] = useState<"manual" | "ai">("manual");
 
-
   const isMeetingAuthor = (meeting: Meeting | null) => {
     if (!meeting || !currentUser) return false;
-    const author = String(meeting.authorId || '').trim().toLowerCase();
-    const curId = String(currentUser?.id || '').trim().toLowerCase();
-    const curUid = String(currentUser?.uid || '').trim().toLowerCase();
-    const curUser = String(currentUser?.username || '').trim().toLowerCase();
-    const curEmail = String(currentUser?.email || '').trim().toLowerCase();
-    const curName = String(currentUser?.name || '').trim().toLowerCase();
-    const curDisplay = String(currentUser?.displayName || '').trim().toLowerCase();
-    
+    const author = String(meeting.authorId || "")
+      .trim()
+      .toLowerCase();
+    const curId = String(currentUser?.id || "")
+      .trim()
+      .toLowerCase();
+    const curUid = String(currentUser?.uid || "")
+      .trim()
+      .toLowerCase();
+    const curUser = String(currentUser?.username || "")
+      .trim()
+      .toLowerCase();
+    const curEmail = String(currentUser?.email || "")
+      .trim()
+      .toLowerCase();
+    const curName = String(currentUser?.name || "")
+      .trim()
+      .toLowerCase();
+    const curDisplay = String(currentUser?.displayName || "")
+      .trim()
+      .toLowerCase();
+
     return (
-      author !== "" && (
-        author === curId ||
+      author !== "" &&
+      (author === curId ||
         author === curUid ||
         author === curUser ||
         author === curEmail ||
         author === curName ||
-        author === curDisplay
-      )
+        author === curDisplay)
     );
   };
 
   const isEditing = !!editingMeeting;
   const isAuthor = isEditing ? isMeetingAuthor(editingMeeting) : true;
-  const isUserAdmin = currentUser ? ['SADM', 'ADMN', 'ADMIN'].includes(((currentUser as any).system_role || currentUser.role || '').toUpperCase()) : false;
+  const isUserAdmin = currentUser
+    ? ["SADM", "ADMN", "ADMIN"].includes(
+        ((currentUser as any).system_role || currentUser.role || "").toUpperCase()
+      )
+    : false;
   const canModify = !isEditing || isAuthor || isUserAdmin;
 
   const fileToBase64 = (file: File): Promise<string> => {
@@ -108,7 +119,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
   };
 
@@ -118,7 +129,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
       const data = await downloadMeetingFile(projectId, meetingId, resolveUserId(currentUser));
       if (data.status === "success" && data.data && data.data.fileData) {
         const { fileData, fileName } = data.data;
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = fileData;
         link.download = fileName || fName || "document";
         document.body.appendChild(link);
@@ -137,36 +148,27 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const itemsPerPage = 8; // adjusted for side-by-side list density
 
-  const currentUserProfile =
-    users.find((u) => u.uid === currentUser?.uid) || currentUser;
+  const currentUserProfile = users.find((u) => u.uid === currentUser?.uid) || currentUser;
 
-  const userRoleStr = currentUser?.role || (currentUser as any)?.system_role || userRole || 'user';
-  const isAdmin = ['admin', 'sadm', 'admn'].includes(String(userRoleStr).toLowerCase());
+  const userRoleStr = currentUser?.role || (currentUser as any)?.system_role || userRole || "user";
+  const isAdmin = ["admin", "sadm", "admn"].includes(String(userRoleStr).toLowerCase());
   const currentUserId = currentUser?.id || currentUser?.uid;
 
   const canDeleteMeeting = (meeting: Meeting) => {
     return isUserAdmin || isMeetingAuthor(meeting);
   };
 
-  const canAdd = hasPermission(
-    userRole,
-    "meetingNotes",
-    "create",
-    false,
-    permissions,
-  );
+  const canAdd = hasPermission(userRole, "meetingNotes", "create", false, permissions);
 
   const filteredMeetings = meetings.filter((m) =>
-    m.title.toLowerCase().includes(searchQuery.toLowerCase()),
+    m.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredMeetings.length / itemsPerPage);
   const paginatedMeetings = filteredMeetings.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
+    currentPage * itemsPerPage
   );
-
-
 
   useEffect(() => {
     fetchMeetings();
@@ -212,23 +214,11 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
     }
 
     const isEdit = !!editingMeeting;
-    const isOwner = isEdit
-      ? editingMeeting!.authorId === currentUser.uid
-      : false;
+    const isOwner = isEdit ? editingMeeting!.authorId === currentUser.uid : false;
     const permissionAction = isEdit ? "update" : "create";
 
-    if (
-      !hasPermission(
-        userRole,
-        "meetingNotes",
-        permissionAction,
-        isOwner,
-        permissions,
-      )
-    ) {
-      toast.error(
-        `You do not have permission to ${isEdit ? "update" : "add"} the meeting.`,
-      );
+    if (!hasPermission(userRole, "meetingNotes", permissionAction, isOwner, permissions)) {
+      toast.error(`You do not have permission to ${isEdit ? "update" : "add"} the meeting.`);
       return;
     }
 
@@ -239,8 +229,16 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
     setLoading(true);
     try {
       let fileData = null;
-      let fileName = shouldRemoveMeetingFile ? "" : (editingMeeting ? (editingMeeting.fileName || "") : "");
-      let fileTypeStr = shouldRemoveMeetingFile ? "" : (editingMeeting ? (editingMeeting.fileType || "") : "");
+      let fileName = shouldRemoveMeetingFile
+        ? ""
+        : editingMeeting
+          ? editingMeeting.fileName || ""
+          : "";
+      let fileTypeStr = shouldRemoveMeetingFile
+        ? ""
+        : editingMeeting
+          ? editingMeeting.fileType || ""
+          : "";
 
       if (newMeetingFile) {
         if (newMeetingFile.size > 5 * 1024 * 1024) {
@@ -250,7 +248,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
         }
         fileData = await fileToBase64(newMeetingFile);
         fileName = newMeetingFile.name;
-        fileTypeStr = newMeetingFile.type || 'application/octet-stream';
+        fileTypeStr = newMeetingFile.type || "application/octet-stream";
       }
 
       if (editingMeeting) {
@@ -348,7 +346,11 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
 
   const getAuthorDisplay = (authorId: string) => {
     const list = Array.isArray(users) ? users : [];
-    const user = list.find((u) => u && (u.uid === authorId || u.id === authorId || u.username === authorId || u.email === authorId));
+    const user = list.find(
+      (u) =>
+        u &&
+        (u.uid === authorId || u.id === authorId || u.username === authorId || u.email === authorId)
+    );
     if (!user) {
       if (authorId === "admin") return { name: "Admin Manager", initial: "AM" };
       return { name: authorId || "Unknown", initial: "U" };
@@ -385,21 +387,21 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
   const activeMeeting = meetings.find((m) => m.id === activeMeetingId);
 
   return (
-    <div className="w-full flex-1 flex flex-col p-3 md:p-6 min-h-0 overflow-hidden bg-[#f4f7f9] text-left">
+    <div className="w-full flex-1 flex flex-col p-3 md:p-6 min-h-0 overflow-hidden bg-surface-muted text-left">
       <div className="flex-1 flex flex-col min-h-0 bg-surface border border-border-subtle/80 rounded-lg shadow-soft overflow-hidden">
-        
         {activeMeetingId === null ? (
           /* DATATABLE VIEW */
           <div className="flex-1 flex flex-col min-h-0 bg-surface">
-            
-              {/* Table Header / Action Bar */}
+            {/* Table Header / Action Bar */}
             <div className="p-4 md:p-6 border-b border-border-subtle/80 bg-surface flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
               <div className="flex items-center gap-3.5">
                 <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-lg text-primary shadow-2xs">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-content-strong tracking-tight">Meeting Notes</h3>
+                  <h3 className="text-sm font-medium text-content-strong tracking-tight">
+                    Meeting Notes
+                  </h3>
                   <p className="text-xs text-content-muted mt-0.5">
                     Kelola catatan rapat proyek, agenda, datetime, dan poin diskusi.
                   </p>
@@ -455,7 +457,9 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                           <MessageSquare className="w-6 h-6 text-primary" />
                         </div>
                         <p className="font-medium text-content-strong text-sm">No meetings found</p>
-                        <p className="text-xs text-content-subtle mt-1">Create a new meeting or adjust your search keyword.</p>
+                        <p className="text-xs text-content-subtle mt-1">
+                          Create a new meeting or adjust your search keyword.
+                        </p>
                       </td>
                     </tr>
                   ) : (
@@ -463,8 +467,8 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                       const srNo = (currentPage - 1) * itemsPerPage + index + 1;
                       const author = getAuthorDisplay(meeting.authorId);
                       return (
-                        <tr 
-                          key={meeting.id} 
+                        <tr
+                          key={meeting.id}
                           onClick={() => {
                             setActiveMeetingId(meeting.id!);
                             setMobileViewMode("detail");
@@ -486,7 +490,11 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                           <td className="py-3 px-4" onClick={(e) => e.stopPropagation()}>
                             {meeting.meetingLink ? (
                               <a
-                                href={meeting.meetingLink.startsWith("http") ? meeting.meetingLink : `https://${meeting.meetingLink}`}
+                                href={
+                                  meeting.meetingLink.startsWith("http")
+                                    ? meeting.meetingLink
+                                    : `https://${meeting.meetingLink}`
+                                }
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50/80 text-primary hover:bg-indigo-100 rounded-md font-medium truncate max-w-[150px] transition-all text-xs sm:text-[11px] border border-indigo-100/80"
@@ -496,13 +504,17 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                                 <span className="truncate">Join Room</span>
                               </a>
                             ) : (
-                              <span className="px-2 py-0.5 bg-surface-muted text-content-muted rounded-md text-xs sm:text-[10px] font-medium">No link</span>
+                              <span className="px-2 py-0.5 bg-surface-muted text-content-muted rounded-md text-xs sm:text-[10px] font-medium">
+                                No link
+                              </span>
                             )}
                           </td>
                           <td className="py-3 px-4" onClick={(e) => e.stopPropagation()}>
                             {meeting.fileName ? (
                               <button
-                                onClick={() => handleDownloadMeeting(meeting.id!, meeting.fileName!)}
+                                onClick={() =>
+                                  handleDownloadMeeting(meeting.id!, meeting.fileName!)
+                                }
                                 className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 rounded-md text-xs font-medium transition-all cursor-pointer group/file shadow-2xs"
                                 title="Klik untuk mengunduh berkas"
                               >
@@ -526,10 +538,17 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                           </td>
                           <td className="py-3 px-4 text-content-muted font-normal">
                             <div className="line-clamp-1 max-w-xs">
-                              {meeting.description || <span className="text-content-subtle text-xs sm:text-[11px] italic">No description</span>}
+                              {meeting.description || (
+                                <span className="text-content-subtle text-xs sm:text-[11px] italic">
+                                  No description
+                                </span>
+                              )}
                             </div>
                           </td>
-                          <td className="py-3 px-4 text-center" onClick={(e) => e.stopPropagation()}>
+                          <td
+                            className="py-3 px-4 text-center"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <div className="inline-flex items-center justify-center gap-1">
                               <button
                                 onClick={() => {
@@ -572,7 +591,9 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
             {/* Table Footer / Pagination */}
             <div className="px-6 py-3.5 border-t border-border-subtle bg-surface-sunken/60 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
               <div className="text-xs text-content-muted font-medium">
-                Showing {filteredMeetings.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredMeetings.length)} of {filteredMeetings.length} entries
+                Showing {filteredMeetings.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}{" "}
+                to {Math.min(currentPage * itemsPerPage, filteredMeetings.length)} of{" "}
+                {filteredMeetings.length} entries
               </div>
 
               {totalPages > 1 && (
@@ -597,14 +618,12 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                 </div>
               )}
             </div>
-
           </div>
         ) : (
           /* DETAIL VIEW */
           <div className="flex-1 flex flex-col min-h-0 bg-surface-sunken/50 w-full">
             {activeMeeting ? (
               <div className="flex-1 flex flex-col min-h-0 overflow-y-auto p-4 md:p-6 space-y-4 animate-in fade-in duration-300">
-                
                 {/* Panel 1: Top Actions */}
                 <div className="bg-surface border border-border-subtle/80 rounded-lg p-4 flex items-center justify-between shadow-2xs shrink-0">
                   <button
@@ -617,12 +636,17 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                   <div className="flex items-center gap-2">
                     {activeMeeting.meetingLink && (
                       <a
-                        href={activeMeeting.meetingLink.startsWith("http") ? activeMeeting.meetingLink : `https://${activeMeeting.meetingLink}`}
+                        href={
+                          activeMeeting.meetingLink.startsWith("http")
+                            ? activeMeeting.meetingLink
+                            : `https://${activeMeeting.meetingLink}`
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary hover:bg-primary-hover text-white rounded-md text-xs font-medium transition-all shadow-xs cursor-pointer"
                       >
-                        <Video className="w-3.5 h-3.5" /> Join Meeting <ExternalLink className="w-3 h-3 opacity-80" />
+                        <Video className="w-3.5 h-3.5" /> Join Meeting{" "}
+                        <ExternalLink className="w-3 h-3 opacity-80" />
                       </a>
                     )}
                     {(isUserAdmin || isMeetingAuthor(activeMeeting)) && (
@@ -658,7 +682,9 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                         </span>
                         <div className="flex items-center gap-2 text-xs sm:text-[11px] text-content-muted mb-2 not-italic">
                           <Calendar className="w-3.5 h-3.5 text-content-subtle" />
-                          <span className="text-content-secondary font-medium">{formatDate(activeMeeting.createdAt)}</span>
+                          <span className="text-content-secondary font-medium">
+                            {formatDate(activeMeeting.createdAt)}
+                          </span>
                         </div>
                         <p className="text-xs text-content-body leading-relaxed whitespace-pre-wrap">
                           {activeMeeting.description}
@@ -666,13 +692,17 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                       </div>
                       {activeMeeting.fileName && (
                         <button
-                          onClick={() => handleDownloadMeeting(activeMeeting.id!, activeMeeting.fileName!)}
+                          onClick={() =>
+                            handleDownloadMeeting(activeMeeting.id!, activeMeeting.fileName!)
+                          }
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-md text-xs font-medium transition-all border border-emerald-200/80 cursor-pointer shadow-2xs shrink-0 self-start sm:self-center"
                           title="Unduh Berkas Lampiran"
                         >
                           <FileText className="w-3.5 h-3.5 text-emerald-600" />
                           <span className="truncate max-w-[140px]">{activeMeeting.fileName}</span>
-                          <span className="text-xs sm:text-[10px] bg-emerald-200/60 px-1.5 py-0.5 rounded font-medium">Download</span>
+                          <span className="text-xs sm:text-[10px] bg-emerald-200/60 px-1.5 py-0.5 rounded font-medium">
+                            Download
+                          </span>
                         </button>
                       )}
                     </div>
@@ -691,19 +721,16 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                     masterData={masterData}
                   />
                 </div>
-
               </div>
             ) : null}
           </div>
         )}
-
       </div>
 
       {/* POPUP MODAL: Add / Edit Meeting */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-in fade-in duration-150">
           <div className="bg-surface p-5 sm:p-6 rounded-lg shadow-xl w-full max-w-lg border border-border-subtle text-left relative">
-            
             <button
               onClick={() => {
                 setIsModalOpen(false);
@@ -731,7 +758,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                 </h3>
               </div>
             </div>
-            
+
             <div className="space-y-4 mb-5">
               <div>
                 <label className="block text-content-body font-medium text-xs tracking-wider uppercase mb-1.5">
@@ -822,7 +849,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                     </button>
                   )}
                 </label>
-                
+
                 <div className="border-2 border-dashed border-border-subtle hover:border-primary rounded-md p-3 text-center bg-surface-sunken/50 transition-all relative">
                   <input
                     type="file"
@@ -833,8 +860,8 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                       const file = e.target.files?.[0];
                       if (file) {
                         if (file.size > 5 * 1024 * 1024) {
-                           toast.error("Ukuran berkas maksimal 5 MB.");
-                           return;
+                          toast.error("Ukuran berkas maksimal 5 MB.");
+                          return;
                         }
                         setNewMeetingFile(file);
                         setShouldRemoveMeetingFile(false);
@@ -844,15 +871,23 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                   {newMeetingFile ? (
                     <div className="flex items-center justify-center gap-2">
                       <FileText className="w-4 h-4 text-emerald-600" />
-                      <span className="text-xs font-medium text-content-strong truncate max-w-[200px]">{newMeetingFile.name}</span>
-                      <span className="text-xs sm:text-[10px] text-content-subtle">({(newMeetingFile.size / 1024 / 1024).toFixed(2)} MB)</span>
+                      <span className="text-xs font-medium text-content-strong truncate max-w-[200px]">
+                        {newMeetingFile.name}
+                      </span>
+                      <span className="text-xs sm:text-[10px] text-content-subtle">
+                        ({(newMeetingFile.size / 1024 / 1024).toFixed(2)} MB)
+                      </span>
                     </div>
                   ) : editingMeeting?.fileName && !shouldRemoveMeetingFile ? (
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 truncate">
                         <FileText className="w-4 h-4 text-primary" />
-                        <span className="text-xs font-medium text-content-strong truncate max-w-[180px]">{editingMeeting.fileName}</span>
-                        <span className="text-xs sm:text-[10px] text-content-subtle">(Existing)</span>
+                        <span className="text-xs font-medium text-content-strong truncate max-w-[180px]">
+                          {editingMeeting.fileName}
+                        </span>
+                        <span className="text-xs sm:text-[10px] text-content-subtle">
+                          (Existing)
+                        </span>
                       </div>
                       {canModify && (
                         <button
@@ -869,8 +904,12 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                     </div>
                   ) : (
                     <div className="space-y-1">
-                      <p className="text-xs font-medium text-content-secondary">Klik atau seret berkas ke sini untuk upload</p>
-                      <p className="text-xs sm:text-[10px] text-content-subtle">PDF, Word (.doc, .docx), Excel (.xls, .xlsx) hingga 5MB</p>
+                      <p className="text-xs font-medium text-content-secondary">
+                        Klik atau seret berkas ke sini untuk upload
+                      </p>
+                      <p className="text-xs sm:text-[10px] text-content-subtle">
+                        PDF, Word (.doc, .docx), Excel (.xls, .xlsx) hingga 5MB
+                      </p>
                     </div>
                   )}
                 </div>
@@ -920,7 +959,6 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
           </div>
         </div>
       )}
-
-      </div>
+    </div>
   );
 };

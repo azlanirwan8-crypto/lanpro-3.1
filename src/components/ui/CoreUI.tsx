@@ -21,11 +21,7 @@ export const ensureDate = (dateValue: any): Date => {
   return isNaN(d.getTime()) ? new Date() : d;
 };
 
-export const safeFormat = (
-  dateValue: any,
-  formatStr: string,
-  fallback: string = "-",
-) => {
+export const safeFormat = (dateValue: any, formatStr: string, fallback: string = "-") => {
   try {
     const d = ensureDate(dateValue);
     if (!dateValue || isNaN(d.getTime())) return fallback;
@@ -107,7 +103,8 @@ export const Button = ({
   };
   const variants: any = {
     primary: "bg-primary text-white hover:bg-primary-hover active:bg-primary-active shadow-soft",
-    secondary: "bg-surface-muted text-content-body hover:bg-border-subtle border border-border-subtle",
+    secondary:
+      "bg-surface-muted text-content-body hover:bg-border-subtle border border-border-subtle",
     danger: "bg-danger text-white hover:opacity-90 shadow-soft",
     ghost: "text-content-secondary hover:bg-surface-muted",
   };
@@ -141,13 +138,7 @@ export const Input = ({
   />
 );
 
-export const Textarea = ({
-  value,
-  onChange,
-  placeholder,
-  className = "",
-  rows = 3,
-}: any) => (
+export const Textarea = ({ value, onChange, placeholder, className = "", rows = 3 }: any) => (
   <textarea
     value={value ?? ""}
     onChange={onChange}
@@ -190,12 +181,10 @@ class ErrorBoundary extends React.Component<any, any> {
         // Not a JSON error
       }
       return (
-        <div className="h-screen flex flex-col items-center justify-center bg-gray-50 p-4 text-center">
+        <div className="h-screen flex flex-col items-center justify-center bg-surface-sunken p-4 text-center">
           <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
-          <h2 className="text-2xl font-medium text-gray-900 mb-2">
-            Oops! An error occurred
-          </h2>
-          <p className="text-gray-600 mb-6 max-w-md">{message}</p>
+          <h2 className="text-2xl font-medium text-content mb-2">Oops! An error occurred</h2>
+          <p className="text-content-secondary mb-6 max-w-md">{message}</p>
           <Button onClick={() => window.location.reload()}>Refresh Page</Button>
         </div>
       );

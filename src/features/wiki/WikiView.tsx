@@ -1,20 +1,20 @@
 import { safeLocalStorage, safeSessionStorage } from "../../lib/safeStorage";
-import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { UserAvatar } from '../../components/ui/UserAvatar';
-import { 
-  Book, 
-  Plus, 
-  Edit2, 
-  Trash2, 
-  FileText, 
-  ChevronLeft, 
-  ChevronRight, 
-  Save, 
-  Upload, 
-  Link as LinkIcon, 
-  Download, 
-  X, 
-  Calendar, 
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import { UserAvatar } from "../../components/ui/UserAvatar";
+import {
+  Book,
+  Plus,
+  Edit2,
+  Trash2,
+  FileText,
+  ChevronLeft,
+  ChevronRight,
+  Save,
+  Upload,
+  Link as LinkIcon,
+  Download,
+  X,
+  Calendar,
   User,
   Filter,
   Eye,
@@ -33,19 +33,19 @@ import {
   Maximize2,
   Minimize2,
   MessageSquare,
-  Send
-} from 'lucide-react';
+  Send,
+} from "lucide-react";
 import { ResponsiveTable } from "../../components/ResponsiveTable";
-import { toast } from 'sonner';
-import { validateFileClient } from '../../lib/fileSecurity';
-import Markdown from 'react-markdown';
-import { cn } from '../../lib/utils';
-import { motion, AnimatePresence } from 'motion/react';
-import { WikiEmptyState } from './components/WikiEmptyState';
-import { hasPermission } from '../../lib/permissions';
-import { confirmDeleteAlert, showSuccessAlert } from '../../lib/sweetalert';
+import { toast } from "sonner";
+import { validateFileClient } from "../../lib/fileSecurity";
+import Markdown from "react-markdown";
+import { cn } from "../../lib/utils";
+import { motion, AnimatePresence } from "motion/react";
+import { WikiEmptyState } from "./components/WikiEmptyState";
+import { hasPermission } from "../../lib/permissions";
+import { confirmDeleteAlert, showSuccessAlert } from "../../lib/sweetalert";
 
-import type { DocumentModel, WikiViewProps } from './types';
+import type { DocumentModel, WikiViewProps } from "./types";
 import {
   resolveUserId,
   fetchDocuments as fetchDocumentsApi,
@@ -53,7 +53,7 @@ import {
   updateDocument as updateDocumentApi,
   deleteDocument as deleteDocumentApi,
   downloadDocument as downloadDocumentApi,
-} from './services/wiki.service';
+} from "./services/wiki.service";
 
 export const WikiView: React.FC<WikiViewProps> = ({
   projectId,
@@ -64,8 +64,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
   // Core states for storing documents and loading feedback
   const [documents, setDocuments] = useState<DocumentModel[]>([]);
   const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Semua');
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Semua");
   const [dragActive, setDragActive] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
@@ -83,38 +83,58 @@ export const WikiView: React.FC<WikiViewProps> = ({
   */
   const [activeDocId, setActiveDocId] = useState<string | null>(null);
   const [showFormModal, setShowFormModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<'detail' | 'preview'>('detail');
-  const [mobileActiveView, setMobileActiveView] = useState<'list' | 'detail'>('list');
+  const [activeTab, setActiveTab] = useState<"detail" | "preview">("detail");
+  const [mobileActiveView, setMobileActiveView] = useState<"list" | "detail">("list");
 
   // Permission states & BOLA Check (LanPro v1.4)
-  const effectiveUser = currentUser || (() => {
-    try {
-      const stored = safeLocalStorage.getItem('sessionUser') || safeLocalStorage.getItem('lanpro_user') || safeSessionStorage.getItem('sessionUser');
-      return stored ? JSON.parse(stored) : null;
-    } catch (e) {
-      return null;
-    }
-  })();
+  const effectiveUser =
+    currentUser ||
+    (() => {
+      try {
+        const stored =
+          safeLocalStorage.getItem("sessionUser") ||
+          safeLocalStorage.getItem("lanpro_user") ||
+          safeSessionStorage.getItem("sessionUser");
+        return stored ? JSON.parse(stored) : null;
+      } catch (e) {
+        return null;
+      }
+    })();
   const currentUserId = effectiveUser?.id || effectiveUser?.uid || effectiveUser?.userId;
-  const userRoleStr = effectiveUser?.role || effectiveUser?.system_role || 'user';
-  const isAdmin = ['admin', 'sadm', 'admn'].includes(String(userRoleStr).toLowerCase());
+  const userRoleStr = effectiveUser?.role || effectiveUser?.system_role || "user";
+  const isAdmin = ["admin", "sadm", "admn"].includes(String(userRoleStr).toLowerCase());
 
   const isAuthor = (doc: DocumentModel) => {
     if (!doc || !effectiveUser) return false;
-    const author = String(doc.createdBy || '').trim().toLowerCase();
-    const curId = String(effectiveUser.id || '').trim().toLowerCase();
-    const curUid = String(effectiveUser.uid || '').trim().toLowerCase();
-    const curUser = String(effectiveUser.username || '').trim().toLowerCase();
-    const curEmail = String(effectiveUser.email || '').trim().toLowerCase();
-    const curName = String(effectiveUser.name || '').trim().toLowerCase();
-    const curDisplay = String(effectiveUser.displayName || '').trim().toLowerCase();
-    return author !== "" && (
-      author === curId ||
-      author === curUid ||
-      author === curUser ||
-      author === curEmail ||
-      author === curName ||
-      author === curDisplay
+    const author = String(doc.createdBy || "")
+      .trim()
+      .toLowerCase();
+    const curId = String(effectiveUser.id || "")
+      .trim()
+      .toLowerCase();
+    const curUid = String(effectiveUser.uid || "")
+      .trim()
+      .toLowerCase();
+    const curUser = String(effectiveUser.username || "")
+      .trim()
+      .toLowerCase();
+    const curEmail = String(effectiveUser.email || "")
+      .trim()
+      .toLowerCase();
+    const curName = String(effectiveUser.name || "")
+      .trim()
+      .toLowerCase();
+    const curDisplay = String(effectiveUser.displayName || "")
+      .trim()
+      .toLowerCase();
+    return (
+      author !== "" &&
+      (author === curId ||
+        author === curUid ||
+        author === curUser ||
+        author === curEmail ||
+        author === curName ||
+        author === curDisplay)
     );
   };
   const canModifyDoc = (doc: DocumentModel) => isAuthor(doc) || isAdmin;
@@ -137,7 +157,12 @@ export const WikiView: React.FC<WikiViewProps> = ({
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [savingNotes, setSavingNotes] = useState(false);
   const commentsStorageKey = `lanpro_doc_comments_${projectId}`;
-  const [docCommentsMap, setDocCommentsMap] = useState<Record<string, Array<{id: string, userId: string, userName: string, text: string, createdAt: string}>>>(() => {
+  const [docCommentsMap, setDocCommentsMap] = useState<
+    Record<
+      string,
+      Array<{ id: string; userId: string; userName: string; text: string; createdAt: string }>
+    >
+  >(() => {
     try {
       const saved = safeLocalStorage.getItem(commentsStorageKey);
       if (saved) return JSON.parse(saved);
@@ -151,18 +176,23 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
   const handleSendDocComment = () => {
     if (!activeDocId || !newDocCommentText.trim()) return;
-    const userName = currentUser?.displayName || currentUser?.username || (currentUser as any)?.nama_lengkap || (currentUser as any)?.name || "Administrator";
+    const userName =
+      currentUser?.displayName ||
+      currentUser?.username ||
+      (currentUser as any)?.nama_lengkap ||
+      (currentUser as any)?.name ||
+      "Administrator";
     const newComment = {
-      id: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+      id: "c_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
       docId: activeDocId,
-      userId: currentUser?.uid || currentUser?.id || 'anon',
+      userId: currentUser?.uid || currentUser?.id || "anon",
       userName,
       text: newDocCommentText.trim(),
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
     const updatedMap = {
       ...docCommentsMap,
-      [activeDocId]: [...(docCommentsMap[activeDocId] || []), newComment]
+      [activeDocId]: [...(docCommentsMap[activeDocId] || []), newComment],
     };
     setDocCommentsMap(updatedMap);
     try {
@@ -180,17 +210,17 @@ export const WikiView: React.FC<WikiViewProps> = ({
   // Form State (Untuk Modal Create/Edit)
   const [isNew, setIsNew] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [editTitle, setEditTitle] = useState('');
-  const [editDescription, setEditDescription] = useState('');
-  const [editType, setEditType] = useState('PRD');
-  const [editLink, setEditLink] = useState('');
+  const [editTitle, setEditTitle] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editType, setEditType] = useState("PRD");
+  const [editLink, setEditLink] = useState("");
   const [editFile, setEditFile] = useState<File | null>(null);
   const [shouldRemoveFile, setShouldRemoveFile] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const editingDoc = useMemo(() => {
     if (!editId) return null;
-    return documents.find(d => d.id === editId) || null;
+    return documents.find((d) => d.id === editId) || null;
   }, [editId, documents]);
 
   const isFormEditable = useMemo(() => {
@@ -201,7 +231,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
   // Direct upload handler for active document in Main View
   const handleDirectUpload = async (file: File) => {
-    const activeDocObj = documents.find(d => d.id === activeDocId);
+    const activeDocObj = documents.find((d) => d.id === activeDocId);
     if (!activeDocObj) return;
     setLoading(true);
     try {
@@ -214,11 +244,11 @@ export const WikiView: React.FC<WikiViewProps> = ({
         createdBy: activeDocObj.createdBy,
         fileData: fileData,
         fileName: file.name,
-        fileType: file.type || 'application/octet-stream'
+        fileType: file.type || "application/octet-stream",
       };
       const effectiveUserId = resolveUserId(currentUser);
       const data = await updateDocumentApi(projectId, effectiveUserId, activeDocObj.id, payload);
-      if (data.status === 'success') {
+      if (data.status === "success") {
         showSuccessAlert("Berhasil!", "Berkas spesifikasi berhasil diunggah!");
         await fetchDocuments();
       } else {
@@ -232,20 +262,20 @@ export const WikiView: React.FC<WikiViewProps> = ({
   };
 
   // Helper to convert base64/dataURL string into a safe Blob URL for iframe rendering
-  const base64ToBlobUrl = (base64: string, defaultMime: string = 'application/pdf'): string => {
+  const base64ToBlobUrl = (base64: string, defaultMime: string = "application/pdf"): string => {
     try {
       let bytes = base64;
       let mimeType = defaultMime;
-      
-      if (base64.startsWith('data:')) {
-        const parts = base64.split(',');
-        bytes = parts[1] || '';
+
+      if (base64.startsWith("data:")) {
+        const parts = base64.split(",");
+        bytes = parts[1] || "";
         const mimeMatch = parts[0].match(/:(.*?);/);
         if (mimeMatch) {
           mimeType = mimeMatch[1];
         }
       }
-      
+
       const byteCharacters = atob(bytes);
       const byteNumbers = new Array(byteCharacters.length);
       for (let i = 0; i < byteCharacters.length; i++) {
@@ -263,8 +293,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
   // Effect to handle Active Document preview data loading and notes selection
   useEffect(() => {
     if (!activeDocId) {
-      setPreviewFileData(prev => {
-        if (prev && prev.startsWith('blob:')) {
+      setPreviewFileData((prev) => {
+        if (prev && prev.startsWith("blob:")) {
           URL.revokeObjectURL(prev);
         }
         return null;
@@ -274,7 +304,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
       setIsFullscreenPreview(false);
       return;
     }
-    const activeDocObj = documents.find(d => d.id === activeDocId);
+    const activeDocObj = documents.find((d) => d.id === activeDocId);
     if (activeDocObj) {
       setNotesText(activeDocObj.description || "");
       setIsEditingNotes(false);
@@ -284,28 +314,31 @@ export const WikiView: React.FC<WikiViewProps> = ({
         setPreviewLoading(true);
         const effectiveUserId = resolveUserId(currentUser);
         downloadDocumentApi(projectId, effectiveUserId, activeDocId)
-          .then(data => {
-            if (data.status === 'success' && data.data && data.data.fileData) {
-              const blobUrl = base64ToBlobUrl(data.data.fileData, data.data.fileType || 'application/pdf');
-              setPreviewFileData(prev => {
-                if (prev && prev.startsWith('blob:')) {
+          .then((data) => {
+            if (data.status === "success" && data.data && data.data.fileData) {
+              const blobUrl = base64ToBlobUrl(
+                data.data.fileData,
+                data.data.fileType || "application/pdf"
+              );
+              setPreviewFileData((prev) => {
+                if (prev && prev.startsWith("blob:")) {
                   URL.revokeObjectURL(prev);
                 }
                 return blobUrl;
               });
             } else {
-              setPreviewFileData(prev => {
-                if (prev && prev.startsWith('blob:')) {
+              setPreviewFileData((prev) => {
+                if (prev && prev.startsWith("blob:")) {
                   URL.revokeObjectURL(prev);
                 }
                 return null;
               });
             }
           })
-          .catch(err => {
+          .catch((err) => {
             console.error("Gagal memuat pratinjau dokumen:", err);
-            setPreviewFileData(prev => {
-              if (prev && prev.startsWith('blob:')) {
+            setPreviewFileData((prev) => {
+              if (prev && prev.startsWith("blob:")) {
                 URL.revokeObjectURL(prev);
               }
               return null;
@@ -315,8 +348,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
             setPreviewLoading(false);
           });
       } else {
-        setPreviewFileData(prev => {
-          if (prev && prev.startsWith('blob:')) {
+        setPreviewFileData((prev) => {
+          if (prev && prev.startsWith("blob:")) {
             URL.revokeObjectURL(prev);
           }
           return null;
@@ -325,8 +358,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
     }
 
     return () => {
-      setPreviewFileData(prev => {
-        if (prev && prev.startsWith('blob:')) {
+      setPreviewFileData((prev) => {
+        if (prev && prev.startsWith("blob:")) {
           URL.revokeObjectURL(prev);
         }
         return null;
@@ -344,11 +377,11 @@ export const WikiView: React.FC<WikiViewProps> = ({
         description: notesText,
         type: activeDoc.type,
         link: activeDoc.link || "",
-        createdBy: activeDoc.createdBy
+        createdBy: activeDoc.createdBy,
       };
       const effectiveUserId = resolveUserId(currentUser);
       const data = await updateDocumentApi(projectId, effectiveUserId, activeDoc.id, payload);
-      if (data.status === 'success') {
+      if (data.status === "success") {
         showSuccessAlert("Berhasil!", "Catatan berhasil disimpan!");
         await fetchDocuments();
         setIsEditingNotes(false);
@@ -367,7 +400,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
     const effectiveUserId = resolveUserId(currentUser);
     try {
       const data = await fetchDocumentsApi(projectId, effectiveUserId);
-      if (data.status === 'success') {
+      if (data.status === "success") {
         setDocuments(data.data);
       }
     } catch (e: any) {
@@ -380,46 +413,47 @@ export const WikiView: React.FC<WikiViewProps> = ({
     // Reset selection states on project switch
     setActiveDocId(null);
     setShowFormModal(false);
-    setMobileActiveView('list');
+    setMobileActiveView("list");
   }, [projectId]);
-
-
 
   // Grid layout catalog defaults to showing all documents at once
 
   // Determine standard document categories
   const documentTypes = useMemo(() => {
-    const types = masterData.filter(d => d.type === 'jenis_dokumen');
+    const types = masterData.filter((d) => d.type === "jenis_dokumen");
     if (types.length === 0) {
       return [
-        { label: 'PRD', value: 'PRD' },
-        { label: 'Panduan', value: 'Panduan' },
-        { label: 'Laporan', value: 'Laporan' },
-        { label: 'Spesifikasi', value: 'Spesifikasi' },
-        { label: 'Lainnya', value: 'Lainnya' }
+        { label: "PRD", value: "PRD" },
+        { label: "Panduan", value: "Panduan" },
+        { label: "Laporan", value: "Laporan" },
+        { label: "Spesifikasi", value: "Spesifikasi" },
+        { label: "Lainnya", value: "Lainnya" },
       ];
     }
     const map = new Map<string, { label: string; value: string }>();
-    types.sort((a, b) => (a.order || 0) - (b.order || 0)).forEach(t => {
-      if (!map.has(t.label)) {
-        map.set(t.label, { label: t.label, value: t.label });
-      }
-    });
+    types
+      .sort((a, b) => (a.order || 0) - (b.order || 0))
+      .forEach((t) => {
+        if (!map.has(t.label)) {
+          map.set(t.label, { label: t.label, value: t.label });
+        }
+      });
     return Array.from(map.values());
   }, [masterData]);
 
   const categoriesList = useMemo(() => {
-    const set = new Set<string>(['Semua']);
-    documentTypes.forEach(t => set.add(t.value));
+    const set = new Set<string>(["Semua"]);
+    documentTypes.forEach((t) => set.add(t.value));
     return Array.from(set);
   }, [documentTypes]);
 
   // Filter documents based on search keyword & selected category
   const filteredDocs = useMemo(() => {
-    return documents.filter(d => {
-      const matchSearch = d.title.toLowerCase().includes(search.toLowerCase()) || 
-                          (d.description && d.description.toLowerCase().includes(search.toLowerCase()));
-      const matchCategory = selectedCategory === 'Semua' || d.type === selectedCategory;
+    return documents.filter((d) => {
+      const matchSearch =
+        d.title.toLowerCase().includes(search.toLowerCase()) ||
+        (d.description && d.description.toLowerCase().includes(search.toLowerCase()));
+      const matchCategory = selectedCategory === "Semua" || d.type === selectedCategory;
       return matchSearch && matchCategory;
     });
   }, [documents, search, selectedCategory]);
@@ -432,17 +466,17 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
   // Active viewed document computed object
   const activeDoc = useMemo(() => {
-    return documents.find(d => d.id === activeDocId) || null;
+    return documents.find((d) => d.id === activeDocId) || null;
   }, [documents, activeDocId]);
 
   // Trigger modal for Creating new documentation
   const handleCreateNew = () => {
     setIsNew(true);
     setEditId(null);
-    setEditTitle('');
-    setEditDescription('');
-    setEditType(documentTypes.length > 0 ? documentTypes[0].value : 'PRD');
-    setEditLink('');
+    setEditTitle("");
+    setEditDescription("");
+    setEditType(documentTypes.length > 0 ? documentTypes[0].value : "PRD");
+    setEditLink("");
     setEditFile(null);
     setShouldRemoveFile(false);
     setShowFormModal(true);
@@ -454,9 +488,9 @@ export const WikiView: React.FC<WikiViewProps> = ({
     setIsNew(false);
     setEditId(doc.id);
     setEditTitle(doc.title);
-    setEditDescription(doc.description || '');
-    setEditType(doc.type || 'PRD');
-    setEditLink(doc.link || '');
+    setEditDescription(doc.description || "");
+    setEditType(doc.type || "PRD");
+    setEditLink(doc.link || "");
     setEditFile(null);
     setShouldRemoveFile(false);
     setShowFormModal(true);
@@ -475,12 +509,12 @@ export const WikiView: React.FC<WikiViewProps> = ({
     const effectiveUserId = resolveUserId(currentUser);
     try {
       const data = await deleteDocumentApi(projectId, effectiveUserId, doc.id);
-      if (data.status === 'success') {
+      if (data.status === "success") {
         showSuccessAlert("Berhasil!", "Data dokumen berhasil dihapus.");
         if (activeDocId === doc.id) {
-          const remaining = documents.filter(d => d.id !== doc.id);
+          const remaining = documents.filter((d) => d.id !== doc.id);
           setActiveDocId(remaining.length > 0 ? remaining[0].id : null);
-          setMobileActiveView('list');
+          setMobileActiveView("list");
         }
         await fetchDocuments();
       } else {
@@ -499,7 +533,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
   };
 
@@ -512,13 +546,21 @@ export const WikiView: React.FC<WikiViewProps> = ({
     setLoading(true);
     try {
       let fileData = null;
-      let fileName = shouldRemoveFile ? "" : (editId ? (documents.find(d => d.id === editId)?.fileName || "") : "");
-      let fileTypeStr = shouldRemoveFile ? "" : (editId ? (documents.find(d => d.id === editId)?.fileType || "") : "");
+      let fileName = shouldRemoveFile
+        ? ""
+        : editId
+          ? documents.find((d) => d.id === editId)?.fileName || ""
+          : "";
+      let fileTypeStr = shouldRemoveFile
+        ? ""
+        : editId
+          ? documents.find((d) => d.id === editId)?.fileType || ""
+          : "";
 
       if (editFile) {
         fileData = await fileToBase64(editFile);
         fileName = editFile.name;
-        fileTypeStr = editFile.type || 'application/octet-stream';
+        fileTypeStr = editFile.type || "application/octet-stream";
       }
 
       const payload: any = {
@@ -526,7 +568,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
         description: editDescription.trim(),
         type: editType,
         link: editLink.trim(),
-        createdBy: currentUser?.id || currentUser?.uid || (users.length > 0 ? users[0].id : "3")
+        createdBy: currentUser?.id || currentUser?.uid || (users.length > 0 ? users[0].id : "3"),
       };
 
       if (editFile) {
@@ -542,7 +584,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
       const effectiveUserId = resolveUserId(currentUser);
       if (isNew) {
         const data = await createDocumentApi(projectId, effectiveUserId, payload);
-        if (data.status === 'success') {
+        if (data.status === "success") {
           showSuccessAlert("Berhasil!", "Dokumen baru berhasil dibuat!");
           setShowFormModal(false);
           setActiveDocId(null);
@@ -553,7 +595,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
         }
       } else if (editId) {
         const data = await updateDocumentApi(projectId, effectiveUserId, editId, payload);
-        if (data.status === 'success') {
+        if (data.status === "success") {
           showSuccessAlert("Berhasil!", "Dokumen berhasil diperbarui!");
           setShowFormModal(false);
           setActiveDocId(null);
@@ -576,7 +618,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
     const effectiveUserId = resolveUserId(currentUser);
     try {
       const data = await downloadDocumentApi(projectId, effectiveUserId, docId);
-      if (data.status === 'success' && data.data && data.data.fileData) {
+      if (data.status === "success" && data.data && data.data.fileData) {
         const link = document.createElement("a");
         link.href = data.data.fileData;
         link.download = fName || "Document";
@@ -592,17 +634,32 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
   // Helper UI methods
   const getUserName = (id?: string) => {
-    if (!id || id === "guest" || id === "admin" || id === currentUser?.id || id === currentUser?.uid) {
+    if (
+      !id ||
+      id === "guest" ||
+      id === "admin" ||
+      id === currentUser?.id ||
+      id === currentUser?.uid
+    ) {
       return currentUser?.displayName || currentUser?.username || "Administrator";
     }
     const list = Array.isArray(users) ? users : [];
-    const u = list.find(u => u && (u.id === id || u.uid === id || u.username === id || u.email === id));
+    const u = list.find(
+      (u) => u && (u.id === id || u.uid === id || u.username === id || u.email === id)
+    );
     return u?.displayName || u?.username || currentUser?.displayName || "Administrator";
   };
 
   const getUserInitials = (id: string) => {
     const name = getUserName(id);
-    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || '?';
+    return (
+      name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .substring(0, 2)
+        .toUpperCase() || "?"
+    );
   };
 
   const getEmbedUrl = (url?: string): string => {
@@ -654,279 +711,308 @@ export const WikiView: React.FC<WikiViewProps> = ({
   // Color classes map for document categories
   const getCategoryStyles = (type: string) => {
     switch (type?.toUpperCase()) {
-      case 'PRD':
+      case "PRD":
         return {
-          bg: 'bg-indigo-50 border-indigo-100 text-primary hover:bg-indigo-100/50',
-          badge: 'bg-indigo-50 text-primary border border-indigo-100 text-xs sm:text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block',
-          accent: 'border-primary'
+          bg: "bg-indigo-50 border-indigo-100 text-primary hover:bg-indigo-100/50",
+          badge:
+            "bg-indigo-50 text-primary border border-indigo-100 text-xs sm:text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block",
+          accent: "border-primary",
         };
-      case 'PANDUAN':
+      case "PANDUAN":
         return {
-          bg: 'bg-blue-50 border-blue-100 text-blue-700 hover:bg-blue-100/50',
-          badge: 'bg-blue-50 text-blue-700 border border-blue-100 text-xs sm:text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block',
-          accent: 'border-blue-500'
+          bg: "bg-blue-50 border-blue-100 text-blue-700 hover:bg-blue-100/50",
+          badge:
+            "bg-blue-50 text-blue-700 border border-blue-100 text-xs sm:text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block",
+          accent: "border-blue-500",
         };
-      case 'LAPORAN':
+      case "LAPORAN":
         return {
-          bg: 'bg-emerald-50 border-emerald-100 text-emerald-700 hover:bg-emerald-100/50',
-          badge: 'bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs sm:text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block',
-          accent: 'border-emerald-500'
+          bg: "bg-emerald-50 border-emerald-100 text-emerald-700 hover:bg-emerald-100/50",
+          badge:
+            "bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs sm:text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block",
+          accent: "border-emerald-500",
         };
-      case 'SPESIFIKASI':
+      case "SPESIFIKASI":
         return {
-          bg: 'bg-purple-50 border-purple-100 text-purple-700 hover:bg-purple-100/50',
-          badge: 'bg-purple-50 text-purple-700 border border-purple-100 text-xs sm:text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block',
-          accent: 'border-purple-500'
+          bg: "bg-purple-50 border-purple-100 text-purple-700 hover:bg-purple-100/50",
+          badge:
+            "bg-purple-50 text-purple-700 border border-purple-100 text-xs sm:text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block",
+          accent: "border-purple-500",
         };
       default:
         return {
-          bg: 'bg-surface-sunken border-border-faint text-content-body hover:bg-surface-muted/50',
-          badge: 'bg-surface-sunken text-content-body border border-border-subtle text-xs sm:text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block',
-          accent: 'border-slate-500'
+          bg: "bg-surface-sunken border-border-faint text-content-body hover:bg-surface-muted/50",
+          badge:
+            "bg-surface-sunken text-content-body border border-border-subtle text-xs sm:text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block",
+          accent: "border-slate-500",
         };
     }
   };
 
   const getCategoryIcon = (type: string) => {
     switch (type?.toUpperCase()) {
-      case 'PRD':
-        return <Layers className="w-3.5 h-3.5 text-indigo-600 group-hover:scale-110 transition-transform duration-300" />;
-      case 'PANDUAN':
-        return <BookOpen className="w-3.5 h-3.5 text-blue-600 group-hover:scale-110 transition-transform duration-300" />;
-      case 'LAPORAN':
-        return <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600 group-hover:scale-110 transition-transform duration-300" />;
-      case 'SPESIFIKASI':
-        return <FileCheck className="w-3.5 h-3.5 text-violet-600 group-hover:scale-110 transition-transform duration-300" />;
+      case "PRD":
+        return (
+          <Layers className="w-3.5 h-3.5 text-indigo-600 group-hover:scale-110 transition-transform duration-300" />
+        );
+      case "PANDUAN":
+        return (
+          <BookOpen className="w-3.5 h-3.5 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
+        );
+      case "LAPORAN":
+        return (
+          <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600 group-hover:scale-110 transition-transform duration-300" />
+        );
+      case "SPESIFIKASI":
+        return (
+          <FileCheck className="w-3.5 h-3.5 text-violet-600 group-hover:scale-110 transition-transform duration-300" />
+        );
       default:
-        return <FileText className="w-3.5 h-3.5 text-content-muted group-hover:scale-110 transition-transform duration-300" />;
+        return (
+          <FileText className="w-3.5 h-3.5 text-content-muted group-hover:scale-110 transition-transform duration-300" />
+        );
     }
   };
 
   const getCategoryGlow = (type: string) => {
     switch (type?.toUpperCase()) {
-      case 'PRD':
-        return 'from-indigo-400/80 via-indigo-500/80 to-indigo-400/80';
-      case 'PANDUAN':
-        return 'from-blue-400/80 via-blue-500/80 to-blue-400/80';
-      case 'LAPORAN':
-        return 'from-emerald-400/80 via-emerald-500/80 to-emerald-400/80';
-      case 'SPESIFIKASI':
-        return 'from-violet-400/80 via-violet-500/80 to-violet-400/80';
+      case "PRD":
+        return "from-indigo-400/80 via-indigo-500/80 to-indigo-400/80";
+      case "PANDUAN":
+        return "from-blue-400/80 via-blue-500/80 to-blue-400/80";
+      case "LAPORAN":
+        return "from-emerald-400/80 via-emerald-500/80 to-emerald-400/80";
+      case "SPESIFIKASI":
+        return "from-violet-400/80 via-violet-500/80 to-violet-400/80";
       default:
-        return 'from-slate-400/80 via-slate-500/80 to-slate-400/80';
+        return "from-slate-400/80 via-slate-500/80 to-slate-400/80";
     }
   };
 
   return (
     <div className="w-full flex-1 flex flex-col min-h-0 overflow-hidden relative">
       {!activeDocId ? (
-        <div className="w-full flex-1 flex flex-col p-3 md:p-6 min-h-0 overflow-hidden bg-[#f4f7f9] text-left font-sans">
-        <div className="flex-1 flex flex-col min-h-0 bg-surface border border-border-subtle/80 rounded-lg shadow-soft overflow-hidden">
-          
-          <div className="flex-1 flex flex-col min-h-0 bg-surface">
-            {/* Header / Action Bar */}
-            <div className="p-5 md:p-6 border-b border-border-subtle/80 bg-surface flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-md text-primary shadow-2xs">
-                  <BookOpen className="w-5 h-5" />
+        <div className="w-full flex-1 flex flex-col p-3 md:p-6 min-h-0 overflow-hidden bg-surface-muted text-left font-sans">
+          <div className="flex-1 flex flex-col min-h-0 bg-surface border border-border-subtle/80 rounded-lg shadow-soft overflow-hidden">
+            <div className="flex-1 flex flex-col min-h-0 bg-surface">
+              {/* Header / Action Bar */}
+              <div className="p-5 md:p-6 border-b border-border-subtle/80 bg-surface flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-md text-primary shadow-2xs">
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-content tracking-tight">
+                      Documentation
+                    </h3>
+                    <p className="text-xs font-medium text-content-muted mt-0.5">
+                      Kelola dokumentasi proyek, PRD, spesifikasi teknis, dan panduan tim.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-sm font-medium text-content tracking-tight">Documentation</h3>
-                  <p className="text-xs font-medium text-content-muted mt-0.5">
-                    Kelola dokumentasi proyek, PRD, spesifikasi teknis, dan panduan tim.
-                  </p>
+
+                <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                  <div className="relative flex-1 sm:w-72">
+                    <input
+                      type="text"
+                      placeholder="Cari dokumentasi..."
+                      value={search}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                      className="w-full pl-9 pr-3.5 py-1.5 bg-surface border border-border-subtle rounded-md text-xs placeholder:text-content-subtle outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all text-content-strong font-medium shadow-2xs"
+                    />
+                    <Search className="w-3.5 h-3.5 text-content-subtle absolute left-3 top-1/2 -translate-y-1/2" />
+                  </div>
+
+                  {canCreate && (
+                    <button
+                      onClick={handleCreateNew}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md text-xs font-medium transition-all shadow-xs cursor-pointer shrink-0"
+                    >
+                      <Plus className="w-4 h-4" /> Add Document
+                    </button>
+                  )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 w-full sm:w-auto">
-                <div className="relative flex-1 sm:w-72">
-                  <input
-                    type="text"
-                    placeholder="Cari dokumentasi..."
-                    value={search}
-                    onChange={(e) => {
-                      setSearch(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    className="w-full pl-9 pr-3.5 py-1.5 bg-surface border border-border-subtle rounded-md text-xs placeholder:text-content-subtle outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all text-content-strong font-medium shadow-2xs"
-                  />
-                  <Search className="w-3.5 h-3.5 text-content-subtle absolute left-3 top-1/2 -translate-y-1/2" />
+              {/* Datatable Container */}
+              <div className="flex-1 overflow-x-auto overflow-y-auto m-5 bg-surface rounded-md border border-border-subtle/80 shadow-2xs">
+                <ResponsiveTable className="w-full text-left border-collapse min-w-[880px]">
+                  <thead>
+                    <tr className="bg-primary/5 border-b border-primary/15 text-xs sm:text-[11px] font-semibold text-primary uppercase tracking-wider whitespace-nowrap">
+                      <th className="py-3 px-4 w-14 text-center">No</th>
+                      <th className="py-3 px-4 min-w-[200px] max-w-[320px]">Document Title</th>
+                      <th className="py-3 px-4 w-44">Category</th>
+                      <th className="py-3 px-4 w-44">Document File</th>
+                      <th className="py-3 px-4 w-40">Author</th>
+                      <th className="py-3 px-4 w-36">Last Updated</th>
+                      <th className="py-3 px-4 w-28 text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border-faint text-xs font-medium text-content-body">
+                    {currentDocs.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="text-center py-16 text-content-subtle">
+                          <div className="w-12 h-12 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto mb-3 text-primary shadow-2xs">
+                            <FileText className="w-5 h-5" />
+                          </div>
+                          <p className="font-medium text-content-strong text-sm">
+                            Dokumen tidak ditemukan
+                          </p>
+                          <p className="text-xs text-content-subtle mt-1">
+                            Buat dokumen baru atau sesuaikan kata kunci pencarian Anda.
+                          </p>
+                        </td>
+                      </tr>
+                    ) : (
+                      currentDocs.map((doc, index) => {
+                        const srNo = (currentPage - 1) * itemsPerPage + index + 1;
+                        const creatorName = getUserName(doc.createdBy);
+                        const style = getCategoryStyles(doc.type);
+                        const lastEdited = doc.updatedAt
+                          ? new Date(doc.updatedAt).toLocaleDateString("id-ID", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })
+                          : "-";
+
+                        return (
+                          <tr
+                            key={doc.id}
+                            onClick={() => {
+                              setActiveDocId(doc.id);
+                              setMobileActiveView("detail");
+                            }}
+                            className="hover:bg-surface-sunken/80 transition-colors duration-150 group cursor-pointer whitespace-nowrap h-12"
+                          >
+                            <td className="py-2.5 px-4 text-center text-content-subtle font-medium whitespace-nowrap">
+                              {String(srNo).padStart(2, "0")}
+                            </td>
+                            <td className="py-2.5 px-4 font-medium text-content group-hover:text-primary transition-colors max-w-[320px]">
+                              <div className="truncate">{doc.title}</div>
+                              {doc.description && (
+                                <div className="text-content-subtle font-normal text-xs sm:text-[11px] truncate mt-0.5">
+                                  {doc.description}
+                                </div>
+                              )}
+                            </td>
+                            <td className="py-2.5 px-4 whitespace-nowrap">
+                              <span className={style.badge}>{doc.type}</span>
+                            </td>
+                            <td
+                              className="py-2.5 px-4 whitespace-nowrap"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {doc.fileName ? (
+                                <button
+                                  onClick={() => handleDownload(doc.id, doc.fileName)}
+                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-md text-xs font-medium transition-all cursor-pointer group/file shadow-2xs"
+                                  title="Klik untuk mengunduh berkas"
+                                >
+                                  <Download className="w-3.5 h-3.5 shrink-0 text-emerald-600 group-hover/file:scale-110 transition-transform" />
+                                  <span className="truncate max-w-[130px]">{doc.fileName}</span>
+                                </button>
+                              ) : (
+                                <span className="text-slate-300 italic text-xs">—</span>
+                              )}
+                            </td>
+                            <td className="py-2.5 px-4 text-content-body font-medium whitespace-nowrap">
+                              <div className="flex items-center gap-2">
+                                <UserAvatar
+                                  uid={doc.createdBy}
+                                  members={users}
+                                  name={creatorName}
+                                  className="w-6 h-6 text-xs sm:text-[10px]"
+                                />
+                                <span className="truncate max-w-[130px]">{creatorName}</span>
+                              </div>
+                            </td>
+                            <td className="py-2.5 px-4 text-content-muted font-medium whitespace-nowrap">
+                              {lastEdited}
+                            </td>
+                            <td
+                              className="py-2.5 px-4 text-center"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div className="inline-flex items-center justify-center gap-1">
+                                <button
+                                  onClick={() => {
+                                    setActiveDocId(doc.id);
+                                    setMobileActiveView("detail");
+                                  }}
+                                  className="p-1.5 text-content-subtle hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
+                                  title="Lihat detail dokumen"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </button>
+                                {canModifyDoc(doc) && (
+                                  <>
+                                    <button
+                                      onClick={(e) => handleEditClick(doc, e)}
+                                      className="p-1.5 text-content-subtle hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
+                                      title="Edit dokumen"
+                                    >
+                                      <Edit2 className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                      onClick={(e) => handleDeleteClick(doc, e)}
+                                      className="p-1.5 text-content-subtle hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer"
+                                      title="Hapus dokumen"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </ResponsiveTable>
+              </div>
+
+              {/* Table Footer / Pagination */}
+              <div className="px-6 py-4 border-t border-border-subtle bg-surface-sunken/60 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+                <div className="text-xs text-content-muted font-medium">
+                  Showing {totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} to{" "}
+                  {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} entries
                 </div>
 
-                {canCreate && (
-                  <button
-                    onClick={handleCreateNew}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md text-xs font-medium transition-all shadow-xs cursor-pointer shrink-0"
-                  >
-                    <Plus className="w-4 h-4" /> Add Document
-                  </button>
+                {totalPages > 1 && (
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="px-3 py-1.5 bg-surface border border-border-subtle text-content-secondary hover:bg-surface-sunken rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
+                    >
+                      Previous
+                    </button>
+                    <span className="text-xs font-medium px-2 text-content-secondary">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="px-3 py-1.5 bg-surface border border-border-subtle text-content-secondary hover:bg-surface-sunken rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
+                    >
+                      Next
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
-
-            {/* Datatable Container */}
-            <div className="flex-1 overflow-x-auto overflow-y-auto m-5 bg-surface rounded-md border border-border-subtle/80 shadow-2xs">
-              <ResponsiveTable className="w-full text-left border-collapse min-w-[880px]">
-                <thead>
-                  <tr className="bg-primary/5 border-b border-primary/15 text-xs sm:text-[11px] font-semibold text-primary uppercase tracking-wider whitespace-nowrap">
-                    <th className="py-3 px-4 w-14 text-center">No</th>
-                    <th className="py-3 px-4 min-w-[200px] max-w-[320px]">Document Title</th>
-                    <th className="py-3 px-4 w-44">Category</th>
-                    <th className="py-3 px-4 w-44">Document File</th>
-                    <th className="py-3 px-4 w-40">Author</th>
-                    <th className="py-3 px-4 w-36">Last Updated</th>
-                    <th className="py-3 px-4 w-28 text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border-faint text-xs font-medium text-content-body">
-                  {currentDocs.length === 0 ? (
-                    <tr>
-                      <td colSpan={7} className="text-center py-16 text-content-subtle">
-                        <div className="w-12 h-12 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto mb-3 text-primary shadow-2xs">
-                          <FileText className="w-5 h-5" />
-                        </div>
-                        <p className="font-medium text-content-strong text-sm">Dokumen tidak ditemukan</p>
-                        <p className="text-xs text-content-subtle mt-1">Buat dokumen baru atau sesuaikan kata kunci pencarian Anda.</p>
-                      </td>
-                    </tr>
-                  ) : (
-                    currentDocs.map((doc, index) => {
-                      const srNo = (currentPage - 1) * itemsPerPage + index + 1;
-                      const creatorName = getUserName(doc.createdBy);
-                      const style = getCategoryStyles(doc.type);
-                      const lastEdited = doc.updatedAt ? new Date(doc.updatedAt).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric' }) : "-";
-
-                      return (
-                        <tr
-                          key={doc.id}
-                          onClick={() => {
-                            setActiveDocId(doc.id);
-                            setMobileActiveView('detail');
-                          }}
-                          className="hover:bg-surface-sunken/80 transition-colors duration-150 group cursor-pointer whitespace-nowrap h-12"
-                        >
-                          <td className="py-2.5 px-4 text-center text-content-subtle font-medium whitespace-nowrap">
-                            {String(srNo).padStart(2, "0")}
-                          </td>
-                          <td className="py-2.5 px-4 font-medium text-content group-hover:text-primary transition-colors max-w-[320px]">
-                            <div className="truncate">{doc.title}</div>
-                            {doc.description && (
-                              <div className="text-content-subtle font-normal text-xs sm:text-[11px] truncate mt-0.5">
-                                {doc.description}
-                              </div>
-                            )}
-                          </td>
-                          <td className="py-2.5 px-4 whitespace-nowrap">
-                            <span className={style.badge}>
-                              {doc.type}
-                            </span>
-                          </td>
-                          <td className="py-2.5 px-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
-                            {doc.fileName ? (
-                              <button
-                                onClick={() => handleDownload(doc.id, doc.fileName)}
-                                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-md text-xs font-medium transition-all cursor-pointer group/file shadow-2xs"
-                                title="Klik untuk mengunduh berkas"
-                              >
-                                <Download className="w-3.5 h-3.5 shrink-0 text-emerald-600 group-hover/file:scale-110 transition-transform" />
-                                <span className="truncate max-w-[130px]">{doc.fileName}</span>
-                              </button>
-                            ) : (
-                              <span className="text-slate-300 italic text-xs">—</span>
-                            )}
-                          </td>
-                          <td className="py-2.5 px-4 text-content-body font-medium whitespace-nowrap">
-                            <div className="flex items-center gap-2">
-                              <UserAvatar
-                                uid={doc.createdBy}
-                                members={users}
-                                name={creatorName}
-                                className="w-6 h-6 text-xs sm:text-[10px]"
-                              />
-                              <span className="truncate max-w-[130px]">{creatorName}</span>
-                            </div>
-                          </td>
-                          <td className="py-2.5 px-4 text-content-muted font-medium whitespace-nowrap">
-                            {lastEdited}
-                          </td>
-                          <td className="py-2.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
-                            <div className="inline-flex items-center justify-center gap-1">
-                              <button
-                                onClick={() => {
-                                  setActiveDocId(doc.id);
-                                  setMobileActiveView('detail');
-                                }}
-                                className="p-1.5 text-content-subtle hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
-                                title="Lihat detail dokumen"
-                              >
-                                <Eye className="w-4 h-4" />
-                              </button>
-                              {canModifyDoc(doc) && (
-                                <>
-                                  <button
-                                    onClick={(e) => handleEditClick(doc, e)}
-                                    className="p-1.5 text-content-subtle hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
-                                    title="Edit dokumen"
-                                  >
-                                    <Edit2 className="w-4 h-4" />
-                                  </button>
-                                  <button
-                                    onClick={(e) => handleDeleteClick(doc, e)}
-                                    className="p-1.5 text-content-subtle hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer"
-                                    title="Hapus dokumen"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </ResponsiveTable>
-            </div>
-
-            {/* Table Footer / Pagination */}
-            <div className="px-6 py-4 border-t border-border-subtle bg-surface-sunken/60 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
-              <div className="text-xs text-content-muted font-medium">
-                Showing {totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} entries
-              </div>
-
-              {totalPages > 1 && (
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                    className="px-3 py-1.5 bg-surface border border-border-subtle text-content-secondary hover:bg-surface-sunken rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-xs font-medium px-2 text-content-secondary">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages}
-                    className="px-3 py-1.5 bg-surface border border-border-subtle text-content-secondary hover:bg-surface-sunken rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
-            </div>
-
           </div>
         </div>
-      </div>
       ) : (
         <div className="w-full flex-1 flex flex-col min-h-0 bg-surface-sunken text-left font-sans">
           <div className="flex-1 flex flex-col min-h-0 overflow-y-auto p-4 md:p-6 space-y-4 animate-in fade-in duration-300">
             {activeDoc ? (
               <>
-                
                 {/* Panel 1: Top Actions */}
                 <div className="bg-surface border border-border-subtle rounded-lg p-3.5 md:p-4 flex items-center justify-between shadow-2xs shrink-0">
                   <button
@@ -956,14 +1042,20 @@ export const WikiView: React.FC<WikiViewProps> = ({
                         onClick={() => setIsFullscreenPreview(!isFullscreenPreview)}
                         className={cn(
                           "flex items-center gap-1.5 px-3 py-1.5 font-medium text-xs border rounded-md transition-all cursor-pointer whitespace-nowrap shadow-2xs",
-                          isFullscreenPreview 
-                            ? "bg-slate-900 border-slate-900 text-white hover:bg-slate-800" 
+                          isFullscreenPreview
+                            ? "bg-slate-900 border-slate-900 text-white hover:bg-slate-800"
                             : "bg-surface border-border-subtle text-content-body hover:bg-surface-sunken"
                         )}
                         title={isFullscreenPreview ? "Keluar Layar Penuh" : "Pratinjau Layar Penuh"}
                       >
-                        {isFullscreenPreview ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
-                        <span className="hidden sm:inline">{isFullscreenPreview ? "Normal" : "Layar Penuh"}</span>
+                        {isFullscreenPreview ? (
+                          <Minimize2 className="w-3.5 h-3.5" />
+                        ) : (
+                          <Maximize2 className="w-3.5 h-3.5" />
+                        )}
+                        <span className="hidden sm:inline">
+                          {isFullscreenPreview ? "Normal" : "Layar Penuh"}
+                        </span>
                       </button>
                     )}
 
@@ -996,12 +1088,17 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       {activeDoc.type}
                     </span>
                     <span className="text-xs sm:text-[10px] text-content-subtle font-medium flex items-center gap-1">
-                      <User className="w-3 h-3 text-content-subtle" /> {getUserName(activeDoc.createdBy)}
+                      <User className="w-3 h-3 text-content-subtle" />{" "}
+                      {getUserName(activeDoc.createdBy)}
                     </span>
                     <span className="text-slate-300">•</span>
                     <span className="text-xs sm:text-[10px] text-content-subtle font-medium flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-content-subtle" /> 
-                      {new Date(activeDoc.createdAt).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric' })}
+                      <Calendar className="w-3 h-3 text-content-subtle" />
+                      {new Date(activeDoc.createdAt).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
                     </span>
                   </div>
 
@@ -1013,235 +1110,271 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
                 {/* Panel 3: Split-Pane Dual Workspace Layout */}
                 <div className="bg-surface border border-border-subtle rounded-lg shadow-2xs flex-1 flex flex-col md:flex-row min-h-[600px] overflow-hidden p-3 gap-3">
-                  
                   {/* LEFT PANE / MAIN VIEW (DOCUMENT VIEWER) */}
                   <div className="flex-1 bg-surface border border-border-subtle/80 rounded-lg flex flex-col min-h-0 overflow-hidden relative shadow-2xs">
-                  {/* Title Bar Left Pane */}
-                  <div className="px-4 py-2.5 bg-surface-sunken border-b border-border-subtle/80 flex items-center justify-between shrink-0 select-none">
-                    <span className="text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
-                      <Eye className="w-3.5 h-3.5 text-primary" />
-                      Pratinjau Dokumen Utama
-                    </span>
-                    {activeDoc.fileName && (
-                      <span className="text-xs sm:text-[10px] sm:text-[8px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded-md uppercase tracking-wider">
-                        Disematkan: {activeDoc.fileType.split('/')[1]?.toUpperCase() || 'FILE'}
+                    {/* Title Bar Left Pane */}
+                    <div className="px-4 py-2.5 bg-surface-sunken border-b border-border-subtle/80 flex items-center justify-between shrink-0 select-none">
+                      <span className="text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
+                        <Eye className="w-3.5 h-3.5 text-primary" />
+                        Pratinjau Dokumen Utama
                       </span>
-                    )}
-                  </div>
+                      {activeDoc.fileName && (
+                        <span className="text-xs sm:text-[10px] sm:text-[8px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                          Disematkan: {activeDoc.fileType.split("/")[1]?.toUpperCase() || "FILE"}
+                        </span>
+                      )}
+                    </div>
 
-                  {/* Left Pane Workspace View State */}
-                  <div className="flex-1 min-h-0 relative bg-surface-sunken/50 flex flex-col">
-                    {previewLoading ? (
-                      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center select-none">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-3"></div>
-                        <p className="text-xs font-medium text-content-muted">Memuat pratinjau dokumen...</p>
-                      </div>
-                    ) : previewFileData ? (
-                      /* Embedded Document Viewer with Bulletproof Safe View Actions */
-                      <div className="flex-1 flex flex-col relative bg-surface-sunken min-h-0 overflow-hidden">
-                        {/* Safe View Toolbar Info Bar */}
-                        <div className="bg-amber-50/90 border-b border-amber-200/60 p-3 sm:px-4 sm:py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs z-10 shrink-0">
-                          <div className="flex items-start gap-2.5">
-                            <span className="p-1 bg-amber-100 text-amber-800 rounded-md mt-0.5 shrink-0">
-                              <Info className="w-3.5 h-3.5" />
-                            </span>
-                            <div>
-                              <p className="font-medium text-amber-950 leading-tight">Pratinjau PDF Terbatas di Iframe</p>
-                              <p className="text-xs sm:text-[10px] text-amber-800/90 font-medium mt-0.5 leading-normal">
-                                Keamanan browser memblokir pratinjau PDF blob langsung. Klik tombol di samping untuk membuka atau mengunduh.
-                              </p>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
-                            <a
-                              href={previewFileData}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-primary hover:bg-primary-hover active:bg-primary-active text-white font-medium text-xs sm:text-[10px] uppercase tracking-wide rounded-md shadow-xs transition-all cursor-pointer whitespace-nowrap"
-                            >
-                              <ExternalLink className="w-3 h-3" />
-                              Buka di Tab Baru
-                            </a>
-
-                            <button
-                              onClick={() => handleDownload(activeDoc.id, activeDoc.fileName)}
-                              className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-surface-sunken text-content-body font-medium text-xs sm:text-[10px] uppercase tracking-wide border border-border-subtle rounded-md shadow-2xs transition-all cursor-pointer whitespace-nowrap"
-                            >
-                              <Download className="w-3 h-3 text-primary" />
-                              Unduh PDF
-                            </button>
-                          </div>
+                    {/* Left Pane Workspace View State */}
+                    <div className="flex-1 min-h-0 relative bg-surface-sunken/50 flex flex-col">
+                      {previewLoading ? (
+                        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center select-none">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-3"></div>
+                          <p className="text-xs font-medium text-content-muted">
+                            Memuat pratinjau dokumen...
+                          </p>
                         </div>
-
-                        {/* PDF Frame */}
-                        <div className="flex-1 relative min-h-0 bg-surface">
-                          <iframe
-                            src={previewFileData}
-                            className="w-full h-full border-none absolute inset-0 bg-surface"
-                            title={activeDoc.title}
-                            referrerPolicy="no-referrer"
-                          />
-                        </div>
-                      </div>
-                    ) : activeDoc.link ? (
-                      /* Embed Google Doc Preview */
-                      <iframe
-                        src={getEmbedUrl(activeDoc.link)}
-                        className="w-full h-full border-none absolute inset-0 bg-surface"
-                        title={activeDoc.title}
-                        referrerPolicy="no-referrer"
-                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                      />
-                    ) : (
-                      /* Empty State: Drag-Drop File Uploader */
-                      <div className="flex-1 flex flex-col items-center justify-center p-8 bg-surface-sunken/40">
-                        <div 
-                          onDragEnter={handleDrag}
-                          onDragOver={handleDrag}
-                          onDragLeave={handleDrag}
-                          onDrop={handleDrop}
-                          onClick={() => {
-                            if (canUpdate) directFileInputRef.current?.click();
-                          }}
-                          className={cn(
-                            "border-2 border-dashed rounded-md p-5 max-w-sm w-full flex flex-col items-center justify-center gap-3 text-center group transition-all bg-surface shadow-2xs",
-                            canUpdate 
-                              ? "cursor-pointer hover:border-primary hover:bg-indigo-50/10" 
-                              : "cursor-not-allowed opacity-70 border-border-subtle"
-                          )}
-                        >
-                          <div className="w-12 h-12 bg-indigo-50 text-primary rounded-md flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform duration-200">
-                            <Upload className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <h4 className="text-xs font-medium text-content-strong tracking-tight group-hover:text-primary transition-colors">
-                              Belum Ada Lampiran Berkas
-                            </h4>
-                            <p className="text-xs sm:text-[10px] text-content-subtle font-medium leading-normal mt-1 max-w-xs mx-auto">
-                              {canUpdate 
-                                ? "Seret & lepaskan file PDF spesifikasi teknis di sini, atau klik untuk memilih file dari komputer Anda." 
-                                : "Pengguna dengan akses edit dapat mengunggah dokumen PDF spesifikasi di sini."}
-                            </p>
-                          </div>
-                          
-                          {canUpdate && (
-                            <input 
-                              type="file" 
-                              ref={directFileInputRef} 
-                              className="hidden" 
-                              accept=".pdf"
-                              onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                  const selected = e.target.files[0];
-                                  const check = validateFileClient(selected);
-                                  if (!check.valid) {
-                                    toast.error(check.error || "Gagal Mengunggah Dokumen: Format file tidak didukung atau ukuran melebihi batas maksimum (Max 10MB).");
-                                    return;
-                                  }
-                                  handleDirectUpload(selected);
-                                }
-                              }}
-                            />
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* RIGHT PANE / SIDE WIDGET (CATATAN & KOMENTAR CHAT BUBBLE) */}
-                <div className={cn(
-                  "w-full md:w-[350px] lg:w-[400px] shrink-0 bg-surface border border-border-subtle/80 rounded-lg flex flex-col min-h-0 overflow-hidden shadow-2xs transition-all duration-300",
-                  isFullscreenPreview ? "hidden md:hidden" : "flex"
-                )}>
-                  {/* Side Pane Header */}
-                  <div className="px-4 py-3 bg-surface-sunken border-b border-border-subtle/80 flex items-center justify-between shrink-0 select-none">
-                    <span className="text-xs sm:text-[11px] font-medium text-content-body uppercase tracking-wider flex items-center gap-1.5">
-                      <MessageSquare className="w-4 h-4 text-primary" />
-                      Catatan & Komentar Diskusi
-                    </span>
-                    <span className="text-xs sm:text-[10px] font-medium text-content-muted bg-slate-200/60 px-2 py-0.5 rounded-full">
-                      {(activeDocId ? (docCommentsMap[activeDocId] || []) : []).length} Catatan
-                    </span>
-                  </div>
-
-                  {/* Comments Chat Bubbles Area */}
-                  <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3.5 bg-surface-sunken/30">
-                    {(!activeDocId || (docCommentsMap[activeDocId] || []).length === 0) ? (
-                      <div className="text-center py-12 px-4 my-auto">
-                        <div className="w-12 h-12 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto mb-3 text-primary shadow-2xs">
-                          <MessageSquare className="w-6 h-6" />
-                        </div>
-                        <h4 className="text-xs font-medium text-content-strong">Belum Ada Catatan / Komentar</h4>
-                        <p className="text-xs sm:text-[11px] text-content-subtle font-medium mt-1 leading-normal">
-                          Siapa pun dapat memberikan catatan teknis, instruksi rilis, atau umpan balik untuk dokumen ini.
-                        </p>
-                      </div>
-                    ) : (
-                      (docCommentsMap[activeDocId] || []).map((comment) => {
-                        const isMine = currentUser && (comment.userId === currentUser.uid || comment.userId === currentUser.id || comment.userName === currentUser.displayName);
-                        return (
-                          <div key={comment.id} className={cn("flex w-full mb-2", isMine ? "justify-end" : "justify-start")}>
-                            <div className={cn(
-                              "flex flex-col max-w-[85%] md:max-w-xl",
-                              isMine ? "items-end" : "items-start"
-                            )}>
-                              {!isMine && (
-                                <span className="text-xs sm:text-[10px] font-medium text-content-muted mb-0.5 ml-1">{comment.userName}</span>
-                              )}
-                              <div className={cn(
-                                "px-3.5 py-2.5 rounded-md relative shadow-2xs group",
-                                isMine ? "bg-primary text-white" : "bg-surface text-content-strong border border-border-subtle"
-                              )}>
-                                <p className="text-[13px] leading-relaxed whitespace-pre-wrap break-words min-w-[50px] pb-3.5">
-                                  {comment.text}
+                      ) : previewFileData ? (
+                        /* Embedded Document Viewer with Bulletproof Safe View Actions */
+                        <div className="flex-1 flex flex-col relative bg-surface-sunken min-h-0 overflow-hidden">
+                          {/* Safe View Toolbar Info Bar */}
+                          <div className="bg-amber-50/90 border-b border-amber-200/60 p-3 sm:px-4 sm:py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs z-10 shrink-0">
+                            <div className="flex items-start gap-2.5">
+                              <span className="p-1 bg-amber-100 text-amber-800 rounded-md mt-0.5 shrink-0">
+                                <Info className="w-3.5 h-3.5" />
+                              </span>
+                              <div>
+                                <p className="font-medium text-amber-950 leading-tight">
+                                  Pratinjau PDF Terbatas di Iframe
                                 </p>
-                                <span className={cn(
-                                  "absolute bottom-1 right-3 text-xs sm:text-[11px] sm:text-[9px] font-medium tracking-tight",
-                                  isMine ? "text-indigo-200" : "text-content-subtle"
-                                )}>
-                                  {new Date(comment.createdAt).toLocaleTimeString("id-ID", {
-                                    hour: "2-digit",
-                                    minute: "2-digit"
-                                  })}
-                                </span>
+                                <p className="text-xs sm:text-[10px] text-amber-800/90 font-medium mt-0.5 leading-normal">
+                                  Keamanan browser memblokir pratinjau PDF blob langsung. Klik
+                                  tombol di samping untuk membuka atau mengunduh.
+                                </p>
                               </div>
                             </div>
+
+                            <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end">
+                              <a
+                                href={previewFileData}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-primary hover:bg-primary-hover active:bg-primary-active text-white font-medium text-xs sm:text-[10px] uppercase tracking-wide rounded-md shadow-xs transition-all cursor-pointer whitespace-nowrap"
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                                Buka di Tab Baru
+                              </a>
+
+                              <button
+                                onClick={() => handleDownload(activeDoc.id, activeDoc.fileName)}
+                                className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-surface-sunken text-content-body font-medium text-xs sm:text-[10px] uppercase tracking-wide border border-border-subtle rounded-md shadow-2xs transition-all cursor-pointer whitespace-nowrap"
+                              >
+                                <Download className="w-3 h-3 text-primary" />
+                                Unduh PDF
+                              </button>
+                            </div>
                           </div>
-                        );
-                      })
-                    )}
+
+                          {/* PDF Frame */}
+                          <div className="flex-1 relative min-h-0 bg-surface">
+                            <iframe
+                              src={previewFileData}
+                              className="w-full h-full border-none absolute inset-0 bg-surface"
+                              title={activeDoc.title}
+                              referrerPolicy="no-referrer"
+                            />
+                          </div>
+                        </div>
+                      ) : activeDoc.link ? (
+                        /* Embed Google Doc Preview */
+                        <iframe
+                          src={getEmbedUrl(activeDoc.link)}
+                          className="w-full h-full border-none absolute inset-0 bg-surface"
+                          title={activeDoc.title}
+                          referrerPolicy="no-referrer"
+                          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                        />
+                      ) : (
+                        /* Empty State: Drag-Drop File Uploader */
+                        <div className="flex-1 flex flex-col items-center justify-center p-8 bg-surface-sunken/40">
+                          <div
+                            onDragEnter={handleDrag}
+                            onDragOver={handleDrag}
+                            onDragLeave={handleDrag}
+                            onDrop={handleDrop}
+                            onClick={() => {
+                              if (canUpdate) directFileInputRef.current?.click();
+                            }}
+                            className={cn(
+                              "border-2 border-dashed rounded-md p-5 max-w-sm w-full flex flex-col items-center justify-center gap-3 text-center group transition-all bg-surface shadow-2xs",
+                              canUpdate
+                                ? "cursor-pointer hover:border-primary hover:bg-indigo-50/10"
+                                : "cursor-not-allowed opacity-70 border-border-subtle"
+                            )}
+                          >
+                            <div className="w-12 h-12 bg-indigo-50 text-primary rounded-md flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform duration-200">
+                              <Upload className="w-6 h-6" />
+                            </div>
+                            <div>
+                              <h4 className="text-xs font-medium text-content-strong tracking-tight group-hover:text-primary transition-colors">
+                                Belum Ada Lampiran Berkas
+                              </h4>
+                              <p className="text-xs sm:text-[10px] text-content-subtle font-medium leading-normal mt-1 max-w-xs mx-auto">
+                                {canUpdate
+                                  ? "Seret & lepaskan file PDF spesifikasi teknis di sini, atau klik untuk memilih file dari komputer Anda."
+                                  : "Pengguna dengan akses edit dapat mengunggah dokumen PDF spesifikasi di sini."}
+                              </p>
+                            </div>
+
+                            {canUpdate && (
+                              <input
+                                type="file"
+                                ref={directFileInputRef}
+                                className="hidden"
+                                accept=".pdf"
+                                onChange={(e) => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    const selected = e.target.files[0];
+                                    const check = validateFileClient(selected);
+                                    if (!check.valid) {
+                                      toast.error(
+                                        check.error ||
+                                          "Gagal Mengunggah Dokumen: Format file tidak didukung atau ukuran melebihi batas maksimum (Max 10MB)."
+                                      );
+                                      return;
+                                    }
+                                    handleDirectUpload(selected);
+                                  }
+                                }}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Input Bar for Comments */}
-                  <div className="p-3 border-t border-border-subtle bg-surface shrink-0">
-                    <div className="flex items-center gap-2 bg-surface-sunken rounded-md px-3 py-1 border border-border-subtle focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 transition-all">
-                      <input
-                        type="text"
-                        placeholder="Tulis catatan atau komentar..."
-                        value={newDocCommentText}
-                        onChange={(e) => setNewDocCommentText(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !isSendingDocComment && newDocCommentText.trim()) {
-                            handleSendDocComment();
-                          }
-                        }}
-                        className="w-full bg-transparent border-0 focus:ring-0 outline-none text-xs text-content-strong placeholder:text-content-subtle py-1 font-medium"
-                      />
-                      <button
-                        onClick={handleSendDocComment}
-                        disabled={!newDocCommentText.trim()}
-                        className="p-1.5 bg-primary hover:bg-primary-hover text-white disabled:opacity-40 cursor-pointer rounded-md transition-all shrink-0 shadow-2xs flex items-center justify-center"
-                        title="Kirim Catatan"
-                      >
-                        <Send className="w-3.5 h-3.5" />
-                      </button>
+                  {/* RIGHT PANE / SIDE WIDGET (CATATAN & KOMENTAR CHAT BUBBLE) */}
+                  <div
+                    className={cn(
+                      "w-full md:w-[350px] lg:w-[400px] shrink-0 bg-surface border border-border-subtle/80 rounded-lg flex flex-col min-h-0 overflow-hidden shadow-2xs transition-all duration-300",
+                      isFullscreenPreview ? "hidden md:hidden" : "flex"
+                    )}
+                  >
+                    {/* Side Pane Header */}
+                    <div className="px-4 py-3 bg-surface-sunken border-b border-border-subtle/80 flex items-center justify-between shrink-0 select-none">
+                      <span className="text-xs sm:text-[11px] font-medium text-content-body uppercase tracking-wider flex items-center gap-1.5">
+                        <MessageSquare className="w-4 h-4 text-primary" />
+                        Catatan & Komentar Diskusi
+                      </span>
+                      <span className="text-xs sm:text-[10px] font-medium text-content-muted bg-slate-200/60 px-2 py-0.5 rounded-full">
+                        {(activeDocId ? docCommentsMap[activeDocId] || [] : []).length} Catatan
+                      </span>
+                    </div>
+
+                    {/* Comments Chat Bubbles Area */}
+                    <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3.5 bg-surface-sunken/30">
+                      {!activeDocId || (docCommentsMap[activeDocId] || []).length === 0 ? (
+                        <div className="text-center py-12 px-4 my-auto">
+                          <div className="w-12 h-12 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto mb-3 text-primary shadow-2xs">
+                            <MessageSquare className="w-6 h-6" />
+                          </div>
+                          <h4 className="text-xs font-medium text-content-strong">
+                            Belum Ada Catatan / Komentar
+                          </h4>
+                          <p className="text-xs sm:text-[11px] text-content-subtle font-medium mt-1 leading-normal">
+                            Siapa pun dapat memberikan catatan teknis, instruksi rilis, atau umpan
+                            balik untuk dokumen ini.
+                          </p>
+                        </div>
+                      ) : (
+                        (docCommentsMap[activeDocId] || []).map((comment) => {
+                          const isMine =
+                            currentUser &&
+                            (comment.userId === currentUser.uid ||
+                              comment.userId === currentUser.id ||
+                              comment.userName === currentUser.displayName);
+                          return (
+                            <div
+                              key={comment.id}
+                              className={cn(
+                                "flex w-full mb-2",
+                                isMine ? "justify-end" : "justify-start"
+                              )}
+                            >
+                              <div
+                                className={cn(
+                                  "flex flex-col max-w-[85%] md:max-w-xl",
+                                  isMine ? "items-end" : "items-start"
+                                )}
+                              >
+                                {!isMine && (
+                                  <span className="text-xs sm:text-[10px] font-medium text-content-muted mb-0.5 ml-1">
+                                    {comment.userName}
+                                  </span>
+                                )}
+                                <div
+                                  className={cn(
+                                    "px-3.5 py-2.5 rounded-md relative shadow-2xs group",
+                                    isMine
+                                      ? "bg-primary text-white"
+                                      : "bg-surface text-content-strong border border-border-subtle"
+                                  )}
+                                >
+                                  <p className="text-[13px] leading-relaxed whitespace-pre-wrap break-words min-w-[50px] pb-3.5">
+                                    {comment.text}
+                                  </p>
+                                  <span
+                                    className={cn(
+                                      "absolute bottom-1 right-3 text-xs sm:text-[11px] sm:text-[9px] font-medium tracking-tight",
+                                      isMine ? "text-indigo-200" : "text-content-subtle"
+                                    )}
+                                  >
+                                    {new Date(comment.createdAt).toLocaleTimeString("id-ID", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+
+                    {/* Input Bar for Comments */}
+                    <div className="p-3 border-t border-border-subtle bg-surface shrink-0">
+                      <div className="flex items-center gap-2 bg-surface-sunken rounded-md px-3 py-1 border border-border-subtle focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 transition-all">
+                        <input
+                          type="text"
+                          placeholder="Tulis catatan atau komentar..."
+                          value={newDocCommentText}
+                          onChange={(e) => setNewDocCommentText(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === "Enter" &&
+                              !isSendingDocComment &&
+                              newDocCommentText.trim()
+                            ) {
+                              handleSendDocComment();
+                            }
+                          }}
+                          className="w-full bg-transparent border-0 focus:ring-0 outline-none text-xs text-content-strong placeholder:text-content-subtle py-1 font-medium"
+                        />
+                        <button
+                          onClick={handleSendDocComment}
+                          disabled={!newDocCommentText.trim()}
+                          className="p-1.5 bg-primary hover:bg-primary-hover text-white disabled:opacity-40 cursor-pointer rounded-md transition-all shrink-0 shadow-2xs flex items-center justify-center"
+                          title="Kirim Catatan"
+                        >
+                          <Send className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </>
+              </>
             ) : (
               /* Workspace Empty State */
               <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-surface border border-border-subtle rounded-lg shadow-2xs select-none">
@@ -1252,7 +1385,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
                   Pilih atau Buat Dokumentasi
                 </h2>
                 <p className="text-xs font-medium text-content-subtle mt-1 max-w-sm leading-relaxed mx-auto">
-                  Pilih salah satu dokumen di panel kiri atau klik tombol tambah untuk membuat dokumen baru.
+                  Pilih salah satu dokumen di panel kiri atau klik tombol tambah untuk membuat
+                  dokumen baru.
                 </p>
                 {canCreate && (
                   <button
@@ -1270,13 +1404,12 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
       {/* OVERLAY PORT (MODALS) */}
       <AnimatePresence>
-        
         {/* ==============================================================
             A. FORM MODAL (POP-UP FORM UNTUK CREATE & EDIT)
             ============================================================== */}
         {showFormModal && (
           <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
@@ -1291,12 +1424,14 @@ export const WikiView: React.FC<WikiViewProps> = ({
                   </div>
                   <div>
                     <h3 className="text-xs md:text-sm font-medium text-content tracking-tight">
-                      {isNew ? 'Tambah Dokumen Baru' : 'Ubah Data Dokumentasi'}
+                      {isNew ? "Tambah Dokumen Baru" : "Ubah Data Dokumentasi"}
                     </h3>
-                    <p className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider mt-0.5">Formulir Dokumentasi Proyek</p>
+                    <p className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider mt-0.5">
+                      Formulir Dokumentasi Proyek
+                    </p>
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={() => setShowFormModal(false)}
                   className="p-1 hover:bg-surface-muted text-content-subtle hover:text-content-strong rounded-md transition-colors cursor-pointer"
                 >
@@ -1306,14 +1441,13 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
               {/* Form entries body */}
               <div className="p-5 md:p-6 overflow-y-auto space-y-4">
-                
                 {/* Title Input */}
                 <div className="space-y-1">
                   <label className="text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                     Judul Dokumen <span className="text-rose-500">*</span>
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
                     placeholder="Contoh: PRD Fitur Pembayaran, SOP Server Production, dll"
@@ -1331,7 +1465,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       Mendukung Markdown 📝
                     </span>
                   </div>
-                  <textarea 
+                  <textarea
                     value={editDescription}
                     onChange={(e) => setEditDescription(e.target.value)}
                     placeholder="Tuliskan spesifikasi detail, instruksi instalasi, atau memo kerja di sini..."
@@ -1341,20 +1475,21 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
                 {/* Dropdowns & Links Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  
                   {/* Type drop-down selection */}
                   <div className="space-y-1">
                     <label className="text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                       Jenis Kategori
                     </label>
                     <div className="relative">
-                      <select 
+                      <select
                         value={editType}
                         onChange={(e) => setEditType(e.target.value)}
                         className="w-full bg-surface border border-border-subtle pl-3 pr-8 py-2 rounded-md text-xs font-medium text-content-body outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 appearance-none cursor-pointer transition-all shadow-2xs"
                       >
-                        {documentTypes.map(t => (
-                          <option key={t.value} value={t.value}>{t.label}</option>
+                        {documentTypes.map((t) => (
+                          <option key={t.value} value={t.value}>
+                            {t.label}
+                          </option>
                         ))}
                       </select>
                       <ChevronRight className="w-3.5 h-3.5 text-content-subtle absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none rotate-90" />
@@ -1366,8 +1501,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
                     <label className="text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                       Tautan Google Docs / Slides (Opsional)
                     </label>
-                    <input 
-                      type="url" 
+                    <input
+                      type="url"
                       value={editLink}
                       onChange={(e) => setEditLink(e.target.value)}
                       placeholder="https://docs.google.com/document/..."
@@ -1381,8 +1516,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
                   <label className="text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                     Lampiran Berkas (PDF / DOCX / XLSX)
                   </label>
-                  
-                  <div 
+
+                  <div
                     onDragEnter={handleDrag}
                     onDragOver={handleDrag}
                     onDragLeave={handleDrag}
@@ -1390,12 +1525,17 @@ export const WikiView: React.FC<WikiViewProps> = ({
                     onClick={() => fileInputRef.current?.click()}
                     className={cn(
                       "border-2 border-dashed rounded-md p-4 flex flex-col items-center justify-center gap-2 cursor-pointer text-center group transition-all",
-                      dragActive 
-                        ? "border-primary bg-indigo-50/50" 
+                      dragActive
+                        ? "border-primary bg-indigo-50/50"
                         : "border-border-subtle bg-surface-sunken/50 hover:border-primary hover:bg-indigo-50/10"
                     )}
                   >
-                    <Upload className={cn("w-5 h-5 text-content-subtle group-hover:text-primary transition-colors", dragActive && "text-primary")} />
+                    <Upload
+                      className={cn(
+                        "w-5 h-5 text-content-subtle group-hover:text-primary transition-colors",
+                        dragActive && "text-primary"
+                      )}
+                    />
 
                     {editFile ? (
                       <div>
@@ -1407,19 +1547,22 @@ export const WikiView: React.FC<WikiViewProps> = ({
                           Klik untuk mengganti berkas lampiran
                         </p>
                       </div>
-                    ) : (isNew === false && editId && documents.find(d => d.id === editId)?.fileName && !shouldRemoveFile) ? (
+                    ) : isNew === false &&
+                      editId &&
+                      documents.find((d) => d.id === editId)?.fileName &&
+                      !shouldRemoveFile ? (
                       <div className="space-y-1">
                         <div className="flex items-center gap-1.5 bg-surface-muted border border-border-subtle px-2.5 py-1 rounded-md justify-center w-max mx-auto">
                           <FileText className="w-3 h-3 text-content-muted" />
                           <p className="text-xs sm:text-[11px] font-medium text-content-body max-w-[150px] truncate">
-                            {documents.find(d => d.id === editId)?.fileName}
+                            {documents.find((d) => d.id === editId)?.fileName}
                           </p>
                         </div>
                         <div className="flex items-center justify-center gap-2">
                           <p className="text-xs sm:text-[10px] sm:text-[8px] font-medium text-content-subtle uppercase tracking-wider">
                             Klik area untuk mengunggah berkas baru
                           </p>
-                          <button 
+                          <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -1449,17 +1592,20 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       </div>
                     )}
 
-                    <input 
-                      type="file" 
-                      ref={fileInputRef} 
-                      className="hidden" 
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      className="hidden"
                       accept=".pdf,.doc,.docx,.xls,.xlsx"
                       onChange={(e) => {
                         if (e.target.files && e.target.files[0]) {
                           const selected = e.target.files[0];
                           const check = validateFileClient(selected);
                           if (!check.valid) {
-                            toast.error(check.error || "Gagal Mengunggah Dokumen: Format file tidak didukung atau ukuran melebihi batas maksimum (Max 10MB).");
+                            toast.error(
+                              check.error ||
+                                "Gagal Mengunggah Dokumen: Format file tidak didukung atau ukuran melebihi batas maksimum (Max 10MB)."
+                            );
                             return;
                           }
                           setEditFile(selected);
@@ -1473,14 +1619,14 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
               {/* Action Buttons Footer */}
               <div className="px-5 py-3.5 bg-surface-sunken border-t border-border-faint flex items-center justify-end gap-2.5 shrink-0 select-none rounded-b-lg">
-                <button 
+                <button
                   onClick={() => setShowFormModal(false)}
                   className="px-4 py-2 bg-surface hover:bg-surface-muted border border-border-subtle text-content-secondary hover:text-content rounded-md text-xs font-medium transition-all cursor-pointer shadow-2xs"
                 >
                   Batal
                 </button>
-                <button 
-                  onClick={handleSave} 
+                <button
+                  onClick={handleSave}
                   disabled={loading}
                   className="px-4 py-2 bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md text-xs font-medium shadow-xs flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                 >
@@ -1491,7 +1637,6 @@ export const WikiView: React.FC<WikiViewProps> = ({
             </motion.div>
           </div>
         )}
-
       </AnimatePresence>
     </div>
   );
