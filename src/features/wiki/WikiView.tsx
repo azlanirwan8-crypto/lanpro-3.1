@@ -680,8 +680,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
         };
       default:
         return {
-          bg: 'bg-slate-50 border-slate-100 text-slate-700 hover:bg-slate-100/50',
-          badge: 'bg-slate-50 text-slate-700 border border-slate-200 text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block',
+          bg: 'bg-surface-sunken border-border-faint text-content-strong hover:bg-surface-muted/50',
+          badge: 'bg-surface-sunken text-content-strong border border-border-subtle text-[10px] font-medium px-2.5 py-0.5 rounded-md tracking-wider uppercase whitespace-nowrap inline-block',
           accent: 'border-slate-500'
         };
     }
@@ -698,7 +698,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
       case 'SPESIFIKASI':
         return <FileCheck className="w-3.5 h-3.5 text-violet-600 group-hover:scale-110 transition-transform duration-300" />;
       default:
-        return <FileText className="w-3.5 h-3.5 text-slate-500 group-hover:scale-110 transition-transform duration-300" />;
+        return <FileText className="w-3.5 h-3.5 text-content-muted group-hover:scale-110 transition-transform duration-300" />;
     }
   };
 
@@ -721,18 +721,18 @@ export const WikiView: React.FC<WikiViewProps> = ({
     <div className="w-full flex-1 flex flex-col min-h-0 overflow-hidden relative">
       {!activeDocId ? (
         <div className="w-full flex-1 flex flex-col p-3 md:p-6 min-h-0 overflow-hidden bg-[#f4f7f9] text-left font-sans">
-        <div className="flex-1 flex flex-col min-h-0 bg-white border border-slate-200/80 rounded-lg shadow-sm overflow-hidden">
+        <div className="flex-1 flex flex-col min-h-0 bg-surface border border-border-subtle/80 rounded-lg shadow-sm overflow-hidden">
           
-          <div className="flex-1 flex flex-col min-h-0 bg-white">
+          <div className="flex-1 flex flex-col min-h-0 bg-surface">
             {/* Header / Action Bar */}
-            <div className="p-5 md:p-6 border-b border-slate-200/80 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
+            <div className="p-5 md:p-6 border-b border-border-subtle/80 bg-surface flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-md text-primary shadow-2xs">
                   <BookOpen className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-slate-900 tracking-tight">Documentation</h3>
-                  <p className="text-xs font-medium text-slate-500 mt-0.5">
+                  <h3 className="text-sm font-medium text-content tracking-tight">Documentation</h3>
+                  <p className="text-xs font-medium text-content-muted mt-0.5">
                     Kelola dokumentasi proyek, PRD, spesifikasi teknis, dan panduan tim.
                   </p>
                 </div>
@@ -748,9 +748,9 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       setSearch(e.target.value);
                       setCurrentPage(1);
                     }}
-                    className="w-full pl-9 pr-3.5 py-1.5 bg-white border border-slate-200 rounded-md text-xs placeholder:text-slate-400 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all text-slate-800 font-medium shadow-2xs"
+                    className="w-full pl-9 pr-3.5 py-1.5 bg-surface border border-border-subtle rounded-md text-xs placeholder:text-content-subtle outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all text-content-strong font-medium shadow-2xs"
                   />
-                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Search className="w-3.5 h-3.5 text-content-subtle absolute left-3 top-1/2 -translate-y-1/2" />
                 </div>
 
                 {canCreate && (
@@ -765,7 +765,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
             </div>
 
             {/* Datatable Container */}
-            <div className="flex-1 overflow-x-auto overflow-y-auto m-5 bg-white rounded-md border border-slate-200/80 shadow-2xs">
+            <div className="flex-1 overflow-x-auto overflow-y-auto m-5 bg-surface rounded-md border border-border-subtle/80 shadow-2xs">
               <ResponsiveTable className="w-full text-left border-collapse min-w-[880px]">
                 <thead>
                   <tr className="bg-primary/5 border-b border-primary/15 text-[11px] font-semibold text-primary uppercase tracking-wider whitespace-nowrap">
@@ -778,15 +778,15 @@ export const WikiView: React.FC<WikiViewProps> = ({
                     <th className="py-3 px-4 w-28 text-center">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+                <tbody className="divide-y divide-border-faint text-xs font-medium text-content-strong">
                   {currentDocs.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="text-center py-16 text-slate-400">
+                      <td colSpan={7} className="text-center py-16 text-content-subtle">
                         <div className="w-12 h-12 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto mb-3 text-primary shadow-2xs">
                           <FileText className="w-5 h-5" />
                         </div>
-                        <p className="font-medium text-slate-800 text-sm">Dokumen tidak ditemukan</p>
-                        <p className="text-xs text-slate-400 mt-1">Buat dokumen baru atau sesuaikan kata kunci pencarian Anda.</p>
+                        <p className="font-medium text-content-strong text-sm">Dokumen tidak ditemukan</p>
+                        <p className="text-xs text-content-subtle mt-1">Buat dokumen baru atau sesuaikan kata kunci pencarian Anda.</p>
                       </td>
                     </tr>
                   ) : (
@@ -803,15 +803,15 @@ export const WikiView: React.FC<WikiViewProps> = ({
                             setActiveDocId(doc.id);
                             setMobileActiveView('detail');
                           }}
-                          className="hover:bg-slate-50/80 transition-colors duration-150 group cursor-pointer whitespace-nowrap h-12"
+                          className="hover:bg-surface-sunken/80 transition-colors duration-150 group cursor-pointer whitespace-nowrap h-12"
                         >
-                          <td className="py-2.5 px-4 text-center text-slate-400 font-medium whitespace-nowrap">
+                          <td className="py-2.5 px-4 text-center text-content-subtle font-medium whitespace-nowrap">
                             {String(srNo).padStart(2, "0")}
                           </td>
-                          <td className="py-2.5 px-4 font-medium text-slate-900 group-hover:text-primary transition-colors max-w-[320px]">
+                          <td className="py-2.5 px-4 font-medium text-content group-hover:text-primary transition-colors max-w-[320px]">
                             <div className="truncate">{doc.title}</div>
                             {doc.description && (
-                              <div className="text-slate-400 font-normal text-[11px] truncate mt-0.5">
+                              <div className="text-content-subtle font-normal text-[11px] truncate mt-0.5">
                                 {doc.description}
                               </div>
                             )}
@@ -835,7 +835,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                               <span className="text-slate-300 italic text-xs">—</span>
                             )}
                           </td>
-                          <td className="py-2.5 px-4 text-slate-700 font-medium whitespace-nowrap">
+                          <td className="py-2.5 px-4 text-content-strong font-medium whitespace-nowrap">
                             <div className="flex items-center gap-2">
                               <UserAvatar
                                 uid={doc.createdBy}
@@ -846,7 +846,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                               <span className="truncate max-w-[130px]">{creatorName}</span>
                             </div>
                           </td>
-                          <td className="py-2.5 px-4 text-slate-500 font-medium whitespace-nowrap">
+                          <td className="py-2.5 px-4 text-content-muted font-medium whitespace-nowrap">
                             {lastEdited}
                           </td>
                           <td className="py-2.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
@@ -856,7 +856,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                                   setActiveDocId(doc.id);
                                   setMobileActiveView('detail');
                                 }}
-                                className="p-1.5 text-slate-400 hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
+                                className="p-1.5 text-content-subtle hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
                                 title="Lihat detail dokumen"
                               >
                                 <Eye className="w-4 h-4" />
@@ -865,14 +865,14 @@ export const WikiView: React.FC<WikiViewProps> = ({
                                 <>
                                   <button
                                     onClick={(e) => handleEditClick(doc, e)}
-                                    className="p-1.5 text-slate-400 hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
+                                    className="p-1.5 text-content-subtle hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
                                     title="Edit dokumen"
                                   >
                                     <Edit2 className="w-4 h-4" />
                                   </button>
                                   <button
                                     onClick={(e) => handleDeleteClick(doc, e)}
-                                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer"
+                                    className="p-1.5 text-content-subtle hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer"
                                     title="Hapus dokumen"
                                   >
                                     <Trash2 className="w-4 h-4" />
@@ -890,8 +890,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
             </div>
 
             {/* Table Footer / Pagination */}
-            <div className="px-6 py-4 border-t border-slate-200 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
-              <div className="text-xs text-slate-500 font-medium">
+            <div className="px-6 py-4 border-t border-border-subtle bg-surface-sunken/60 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+              <div className="text-xs text-content-muted font-medium">
                 Showing {totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} entries
               </div>
 
@@ -900,17 +900,17 @@ export const WikiView: React.FC<WikiViewProps> = ({
                   <button
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                     disabled={currentPage === 1}
-                    className="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
+                    className="px-3 py-1.5 bg-surface border border-border-subtle text-content-muted hover:bg-surface-sunken rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
                   >
                     Previous
                   </button>
-                  <span className="text-xs font-medium px-2 text-slate-600">
+                  <span className="text-xs font-medium px-2 text-content-muted">
                     Page {currentPage} of {totalPages}
                   </span>
                   <button
                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
+                    className="px-3 py-1.5 bg-surface border border-border-subtle text-content-muted hover:bg-surface-sunken rounded-md text-xs font-medium disabled:opacity-40 transition-colors cursor-pointer shadow-2xs"
                   >
                     Next
                   </button>
@@ -922,13 +922,13 @@ export const WikiView: React.FC<WikiViewProps> = ({
         </div>
       </div>
       ) : (
-        <div className="w-full flex-1 flex flex-col min-h-0 bg-slate-50 text-left font-sans">
+        <div className="w-full flex-1 flex flex-col min-h-0 bg-surface-sunken text-left font-sans">
           <div className="flex-1 flex flex-col min-h-0 overflow-y-auto p-4 md:p-6 space-y-4 animate-in fade-in duration-300">
             {activeDoc ? (
               <>
                 
                 {/* Panel 1: Top Actions */}
-                <div className="bg-white border border-slate-200 rounded-lg p-3.5 md:p-4 flex items-center justify-between shadow-2xs shrink-0">
+                <div className="bg-surface border border-border-subtle rounded-lg p-3.5 md:p-4 flex items-center justify-between shadow-2xs shrink-0">
                   <button
                     onClick={() => setActiveDocId(null)}
                     className="flex items-center gap-1.5 text-xs font-medium text-primary bg-indigo-50 hover:bg-indigo-100/80 border border-indigo-100 px-3 py-1.5 rounded-md transition-all cursor-pointer shrink-0 shadow-2xs"
@@ -958,7 +958,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                           "flex items-center gap-1.5 px-3 py-1.5 font-medium text-xs border rounded-md transition-all cursor-pointer whitespace-nowrap shadow-2xs",
                           isFullscreenPreview 
                             ? "bg-slate-900 border-slate-900 text-white hover:bg-slate-800" 
-                            : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+                            : "bg-surface border-border-subtle text-content-strong hover:bg-surface-sunken"
                         )}
                         title={isFullscreenPreview ? "Keluar Layar Penuh" : "Pratinjau Layar Penuh"}
                       >
@@ -972,14 +972,14 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       <>
                         <button
                           onClick={(e) => handleEditClick(activeDoc, e)}
-                          className="p-1.5 text-slate-500 hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer border border-slate-200 bg-white shadow-2xs"
+                          className="p-1.5 text-content-muted hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer border border-border-subtle bg-surface shadow-2xs"
                           title="Ubah Judul & Kategori"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={(e) => handleDeleteClick(activeDoc, e)}
-                          className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer border border-slate-200 bg-white shadow-2xs"
+                          className="p-1.5 text-content-muted hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all cursor-pointer border border-border-subtle bg-surface shadow-2xs"
                           title="Hapus Dokumentasi"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -990,35 +990,35 @@ export const WikiView: React.FC<WikiViewProps> = ({
                 </div>
 
                 {/* Panel 2: Meta Context & Title */}
-                <div className="bg-white border border-slate-200 rounded-lg p-5 md:p-6 shadow-2xs shrink-0">
+                <div className="bg-surface border border-border-subtle rounded-lg p-5 md:p-6 shadow-2xs shrink-0">
                   <div className="flex flex-wrap items-center gap-2 select-none mb-3">
                     <span className={getCategoryStyles(activeDoc.type).badge}>
                       {activeDoc.type}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
-                      <User className="w-3 h-3 text-slate-400" /> {getUserName(activeDoc.createdBy)}
+                    <span className="text-[10px] text-content-subtle font-medium flex items-center gap-1">
+                      <User className="w-3 h-3 text-content-subtle" /> {getUserName(activeDoc.createdBy)}
                     </span>
                     <span className="text-slate-300">•</span>
-                    <span className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-slate-400" /> 
+                    <span className="text-[10px] text-content-subtle font-medium flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-content-subtle" /> 
                       {new Date(activeDoc.createdAt).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric' })}
                     </span>
                   </div>
 
-                  <h2 className="text-xl md:text-2xl font-medium text-slate-900 tracking-tight leading-snug flex items-center gap-2.5">
+                  <h2 className="text-xl md:text-2xl font-medium text-content tracking-tight leading-snug flex items-center gap-2.5">
                     <FileText className="w-6 h-6 text-primary shrink-0" />
                     <span className="truncate">{activeDoc.title}</span>
                   </h2>
                 </div>
 
                 {/* Panel 3: Split-Pane Dual Workspace Layout */}
-                <div className="bg-white border border-slate-200 rounded-lg shadow-2xs flex-1 flex flex-col md:flex-row min-h-[600px] overflow-hidden p-3 gap-3">
+                <div className="bg-surface border border-border-subtle rounded-lg shadow-2xs flex-1 flex flex-col md:flex-row min-h-[600px] overflow-hidden p-3 gap-3">
                   
                   {/* LEFT PANE / MAIN VIEW (DOCUMENT VIEWER) */}
-                  <div className="flex-1 bg-white border border-slate-200/80 rounded-lg flex flex-col min-h-0 overflow-hidden relative shadow-2xs">
+                  <div className="flex-1 bg-surface border border-border-subtle/80 rounded-lg flex flex-col min-h-0 overflow-hidden relative shadow-2xs">
                   {/* Title Bar Left Pane */}
-                  <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between shrink-0 select-none">
-                    <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <div className="px-4 py-2.5 bg-surface-sunken border-b border-border-subtle/80 flex items-center justify-between shrink-0 select-none">
+                    <span className="text-[10px] font-medium text-content-muted uppercase tracking-wider flex items-center gap-1.5">
                       <Eye className="w-3.5 h-3.5 text-primary" />
                       Pratinjau Dokumen Utama
                     </span>
@@ -1030,15 +1030,15 @@ export const WikiView: React.FC<WikiViewProps> = ({
                   </div>
 
                   {/* Left Pane Workspace View State */}
-                  <div className="flex-1 min-h-0 relative bg-slate-50/50 flex flex-col">
+                  <div className="flex-1 min-h-0 relative bg-surface-sunken/50 flex flex-col">
                     {previewLoading ? (
                       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center select-none">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-3"></div>
-                        <p className="text-xs font-medium text-slate-500">Memuat pratinjau dokumen...</p>
+                        <p className="text-xs font-medium text-content-muted">Memuat pratinjau dokumen...</p>
                       </div>
                     ) : previewFileData ? (
                       /* Embedded Document Viewer with Bulletproof Safe View Actions */
-                      <div className="flex-1 flex flex-col relative bg-slate-50 min-h-0 overflow-hidden">
+                      <div className="flex-1 flex flex-col relative bg-surface-sunken min-h-0 overflow-hidden">
                         {/* Safe View Toolbar Info Bar */}
                         <div className="bg-amber-50/90 border-b border-amber-200/60 p-3 sm:px-4 sm:py-3 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs z-10 shrink-0">
                           <div className="flex items-start gap-2.5">
@@ -1066,7 +1066,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
                             <button
                               onClick={() => handleDownload(activeDoc.id, activeDoc.fileName)}
-                              className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 font-medium text-[10px] uppercase tracking-wide border border-slate-200 rounded-md shadow-2xs transition-all cursor-pointer whitespace-nowrap"
+                              className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-surface hover:bg-surface-sunken text-content-strong font-medium text-[10px] uppercase tracking-wide border border-border-subtle rounded-md shadow-2xs transition-all cursor-pointer whitespace-nowrap"
                             >
                               <Download className="w-3 h-3 text-primary" />
                               Unduh PDF
@@ -1075,10 +1075,10 @@ export const WikiView: React.FC<WikiViewProps> = ({
                         </div>
 
                         {/* PDF Frame */}
-                        <div className="flex-1 relative min-h-0 bg-white">
+                        <div className="flex-1 relative min-h-0 bg-surface">
                           <iframe
                             src={previewFileData}
-                            className="w-full h-full border-none absolute inset-0 bg-white"
+                            className="w-full h-full border-none absolute inset-0 bg-surface"
                             title={activeDoc.title}
                             referrerPolicy="no-referrer"
                           />
@@ -1088,14 +1088,14 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       /* Embed Google Doc Preview */
                       <iframe
                         src={getEmbedUrl(activeDoc.link)}
-                        className="w-full h-full border-none absolute inset-0 bg-white"
+                        className="w-full h-full border-none absolute inset-0 bg-surface"
                         title={activeDoc.title}
                         referrerPolicy="no-referrer"
                         sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
                       />
                     ) : (
                       /* Empty State: Drag-Drop File Uploader */
-                      <div className="flex-1 flex flex-col items-center justify-center p-8 bg-slate-50/40">
+                      <div className="flex-1 flex flex-col items-center justify-center p-8 bg-surface-sunken/40">
                         <div 
                           onDragEnter={handleDrag}
                           onDragOver={handleDrag}
@@ -1105,20 +1105,20 @@ export const WikiView: React.FC<WikiViewProps> = ({
                             if (canUpdate) directFileInputRef.current?.click();
                           }}
                           className={cn(
-                            "border-2 border-dashed rounded-md p-5 max-w-sm w-full flex flex-col items-center justify-center gap-3 text-center group transition-all bg-white shadow-2xs",
+                            "border-2 border-dashed rounded-md p-5 max-w-sm w-full flex flex-col items-center justify-center gap-3 text-center group transition-all bg-surface shadow-2xs",
                             canUpdate 
                               ? "cursor-pointer hover:border-primary hover:bg-indigo-50/10" 
-                              : "cursor-not-allowed opacity-70 border-slate-200"
+                              : "cursor-not-allowed opacity-70 border-border-subtle"
                           )}
                         >
                           <div className="w-12 h-12 bg-indigo-50 text-primary rounded-md flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform duration-200">
                             <Upload className="w-6 h-6" />
                           </div>
                           <div>
-                            <h4 className="text-xs font-medium text-slate-800 tracking-tight group-hover:text-primary transition-colors">
+                            <h4 className="text-xs font-medium text-content-strong tracking-tight group-hover:text-primary transition-colors">
                               Belum Ada Lampiran Berkas
                             </h4>
-                            <p className="text-[10px] text-slate-400 font-medium leading-normal mt-1 max-w-xs mx-auto">
+                            <p className="text-[10px] text-content-subtle font-medium leading-normal mt-1 max-w-xs mx-auto">
                               {canUpdate 
                                 ? "Seret & lepaskan file PDF spesifikasi teknis di sini, atau klik untuk memilih file dari komputer Anda." 
                                 : "Pengguna dengan akses edit dapat mengunggah dokumen PDF spesifikasi di sini."}
@@ -1152,29 +1152,29 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
                 {/* RIGHT PANE / SIDE WIDGET (CATATAN & KOMENTAR CHAT BUBBLE) */}
                 <div className={cn(
-                  "w-full md:w-[350px] lg:w-[400px] shrink-0 bg-white border border-slate-200/80 rounded-lg flex flex-col min-h-0 overflow-hidden shadow-2xs transition-all duration-300",
+                  "w-full md:w-[350px] lg:w-[400px] shrink-0 bg-surface border border-border-subtle/80 rounded-lg flex flex-col min-h-0 overflow-hidden shadow-2xs transition-all duration-300",
                   isFullscreenPreview ? "hidden md:hidden" : "flex"
                 )}>
                   {/* Side Pane Header */}
-                  <div className="px-4 py-3 bg-slate-50 border-b border-slate-200/80 flex items-center justify-between shrink-0 select-none">
-                    <span className="text-[11px] font-medium text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                  <div className="px-4 py-3 bg-surface-sunken border-b border-border-subtle/80 flex items-center justify-between shrink-0 select-none">
+                    <span className="text-[11px] font-medium text-content-strong uppercase tracking-wider flex items-center gap-1.5">
                       <MessageSquare className="w-4 h-4 text-primary" />
                       Catatan & Komentar Diskusi
                     </span>
-                    <span className="text-[10px] font-medium text-slate-500 bg-slate-200/60 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-medium text-content-muted bg-slate-200/60 px-2 py-0.5 rounded-full">
                       {(activeDocId ? (docCommentsMap[activeDocId] || []) : []).length} Catatan
                     </span>
                   </div>
 
                   {/* Comments Chat Bubbles Area */}
-                  <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3.5 bg-slate-50/30">
+                  <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3.5 bg-surface-sunken/30">
                     {(!activeDocId || (docCommentsMap[activeDocId] || []).length === 0) ? (
                       <div className="text-center py-12 px-4 my-auto">
                         <div className="w-12 h-12 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center mx-auto mb-3 text-primary shadow-2xs">
                           <MessageSquare className="w-6 h-6" />
                         </div>
-                        <h4 className="text-xs font-medium text-slate-800">Belum Ada Catatan / Komentar</h4>
-                        <p className="text-[11px] text-slate-400 font-medium mt-1 leading-normal">
+                        <h4 className="text-xs font-medium text-content-strong">Belum Ada Catatan / Komentar</h4>
+                        <p className="text-[11px] text-content-subtle font-medium mt-1 leading-normal">
                           Siapa pun dapat memberikan catatan teknis, instruksi rilis, atau umpan balik untuk dokumen ini.
                         </p>
                       </div>
@@ -1188,18 +1188,18 @@ export const WikiView: React.FC<WikiViewProps> = ({
                               isMine ? "items-end" : "items-start"
                             )}>
                               {!isMine && (
-                                <span className="text-[10px] font-medium text-slate-500 mb-0.5 ml-1">{comment.userName}</span>
+                                <span className="text-[10px] font-medium text-content-muted mb-0.5 ml-1">{comment.userName}</span>
                               )}
                               <div className={cn(
                                 "px-3.5 py-2.5 rounded-md relative shadow-2xs group",
-                                isMine ? "bg-primary text-white" : "bg-white text-slate-800 border border-slate-200"
+                                isMine ? "bg-primary text-white" : "bg-surface text-content-strong border border-border-subtle"
                               )}>
                                 <p className="text-[13px] leading-relaxed whitespace-pre-wrap break-words min-w-[50px] pb-3.5">
                                   {comment.text}
                                 </p>
                                 <span className={cn(
                                   "absolute bottom-1 right-3 text-[9px] font-medium tracking-tight",
-                                  isMine ? "text-indigo-200" : "text-slate-400"
+                                  isMine ? "text-indigo-200" : "text-content-subtle"
                                 )}>
                                   {new Date(comment.createdAt).toLocaleTimeString("id-ID", {
                                     hour: "2-digit",
@@ -1215,8 +1215,8 @@ export const WikiView: React.FC<WikiViewProps> = ({
                   </div>
 
                   {/* Input Bar for Comments */}
-                  <div className="p-3 border-t border-slate-200 bg-white shrink-0">
-                    <div className="flex items-center gap-2 bg-slate-50 rounded-md px-3 py-1 border border-slate-200 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 transition-all">
+                  <div className="p-3 border-t border-border-subtle bg-surface shrink-0">
+                    <div className="flex items-center gap-2 bg-surface-sunken rounded-md px-3 py-1 border border-border-subtle focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 transition-all">
                       <input
                         type="text"
                         placeholder="Tulis catatan atau komentar..."
@@ -1227,7 +1227,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                             handleSendDocComment();
                           }
                         }}
-                        className="w-full bg-transparent border-0 focus:ring-0 outline-none text-xs text-slate-800 placeholder:text-slate-400 py-1 font-medium"
+                        className="w-full bg-transparent border-0 focus:ring-0 outline-none text-xs text-content-strong placeholder:text-content-subtle py-1 font-medium"
                       />
                       <button
                         onClick={handleSendDocComment}
@@ -1244,14 +1244,14 @@ export const WikiView: React.FC<WikiViewProps> = ({
             </>
             ) : (
               /* Workspace Empty State */
-              <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-white border border-slate-200 rounded-lg shadow-2xs select-none">
+              <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-surface border border-border-subtle rounded-lg shadow-2xs select-none">
                 <div className="w-14 h-14 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-4 text-primary shadow-2xs">
                   <BookOpen className="w-7 h-7" />
                 </div>
-                <h2 className="text-sm font-medium text-slate-800 tracking-tight">
+                <h2 className="text-sm font-medium text-content-strong tracking-tight">
                   Pilih atau Buat Dokumentasi
                 </h2>
-                <p className="text-xs font-medium text-slate-400 mt-1 max-w-sm leading-relaxed mx-auto">
+                <p className="text-xs font-medium text-content-subtle mt-1 max-w-sm leading-relaxed mx-auto">
                   Pilih salah satu dokumen di panel kiri atau klik tombol tambah untuk membuat dokumen baru.
                 </p>
                 {canCreate && (
@@ -1281,24 +1281,24 @@ export const WikiView: React.FC<WikiViewProps> = ({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="bg-white rounded-lg shadow-xl border border-slate-200 max-w-2xl w-full flex flex-col relative overflow-hidden my-auto max-h-[90vh]"
+              className="bg-surface rounded-lg shadow-xl border border-border-subtle max-w-2xl w-full flex flex-col relative overflow-hidden my-auto max-h-[90vh]"
             >
               {/* Modal header decor */}
-              <div className="bg-slate-50/80 px-5 py-3.5 border-b border-slate-100 flex justify-between items-center select-none">
+              <div className="bg-surface-sunken/80 px-5 py-3.5 border-b border-border-faint flex justify-between items-center select-none">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 bg-indigo-50 border border-indigo-100 text-primary rounded-md flex items-center justify-center shadow-2xs">
                     {isNew ? <Plus className="w-4 h-4" /> : <Edit2 className="w-4 h-4" />}
                   </div>
                   <div>
-                    <h3 className="text-xs md:text-sm font-medium text-slate-900 tracking-tight">
+                    <h3 className="text-xs md:text-sm font-medium text-content tracking-tight">
                       {isNew ? 'Tambah Dokumen Baru' : 'Ubah Data Dokumentasi'}
                     </h3>
-                    <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider mt-0.5">Formulir Dokumentasi Proyek</p>
+                    <p className="text-[10px] font-medium text-content-subtle uppercase tracking-wider mt-0.5">Formulir Dokumentasi Proyek</p>
                   </div>
                 </div>
                 <button 
                   onClick={() => setShowFormModal(false)}
-                  className="p-1 hover:bg-slate-100 text-slate-400 hover:text-slate-800 rounded-md transition-colors cursor-pointer"
+                  className="p-1 hover:bg-surface-muted text-content-subtle hover:text-content-strong rounded-md transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -1309,7 +1309,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                 
                 {/* Title Input */}
                 <div className="space-y-1">
-                  <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+                  <label className="text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                     Judul Dokumen <span className="text-rose-500">*</span>
                   </label>
                   <input 
@@ -1317,17 +1317,17 @@ export const WikiView: React.FC<WikiViewProps> = ({
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
                     placeholder="Contoh: PRD Fitur Pembayaran, SOP Server Production, dll"
-                    className="w-full bg-white border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 px-3 py-2 rounded-md text-xs font-medium text-slate-800 outline-none transition-all placeholder:text-slate-400 shadow-2xs"
+                    className="w-full bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 px-3 py-2 rounded-md text-xs font-medium text-content-strong outline-none transition-all placeholder:text-content-subtle shadow-2xs"
                   />
                 </div>
 
                 {/* Markdown Text Description Input */}
                 <div className="space-y-1">
                   <div className="flex justify-between items-center select-none">
-                    <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+                    <label className="text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                       Rangkuman / Catatan Dokumentasi
                     </label>
-                    <span className="text-[9px] font-medium text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200">
+                    <span className="text-[9px] font-medium text-content-subtle bg-surface-sunken px-1.5 py-0.5 rounded border border-border-subtle">
                       Mendukung Markdown 📝
                     </span>
                   </div>
@@ -1335,7 +1335,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                     value={editDescription}
                     onChange={(e) => setEditDescription(e.target.value)}
                     placeholder="Tuliskan spesifikasi detail, instruksi instalasi, atau memo kerja di sini..."
-                    className="w-full bg-white border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 px-3 py-2 rounded-md text-xs font-medium text-slate-700 outline-none transition-all placeholder:text-slate-400 min-h-[100px] resize-y font-sans shadow-2xs"
+                    className="w-full bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 px-3 py-2 rounded-md text-xs font-medium text-content-strong outline-none transition-all placeholder:text-content-subtle min-h-[100px] resize-y font-sans shadow-2xs"
                   />
                 </div>
 
@@ -1344,26 +1344,26 @@ export const WikiView: React.FC<WikiViewProps> = ({
                   
                   {/* Type drop-down selection */}
                   <div className="space-y-1">
-                    <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+                    <label className="text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                       Jenis Kategori
                     </label>
                     <div className="relative">
                       <select 
                         value={editType}
                         onChange={(e) => setEditType(e.target.value)}
-                        className="w-full bg-white border border-slate-200 pl-3 pr-8 py-2 rounded-md text-xs font-medium text-slate-700 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 appearance-none cursor-pointer transition-all shadow-2xs"
+                        className="w-full bg-surface border border-border-subtle pl-3 pr-8 py-2 rounded-md text-xs font-medium text-content-strong outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 appearance-none cursor-pointer transition-all shadow-2xs"
                       >
                         {documentTypes.map(t => (
                           <option key={t.value} value={t.value}>{t.label}</option>
                         ))}
                       </select>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none rotate-90" />
+                      <ChevronRight className="w-3.5 h-3.5 text-content-subtle absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none rotate-90" />
                     </div>
                   </div>
 
                   {/* External URL Link */}
                   <div className="space-y-1">
-                    <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+                    <label className="text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                       Tautan Google Docs / Slides (Opsional)
                     </label>
                     <input 
@@ -1371,14 +1371,14 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       value={editLink}
                       onChange={(e) => setEditLink(e.target.value)}
                       placeholder="https://docs.google.com/document/..."
-                      className="w-full bg-white border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 px-3 py-2 rounded-md text-xs font-medium text-slate-700 outline-none transition-all placeholder:text-slate-400 font-mono shadow-2xs"
+                      className="w-full bg-surface border border-border-subtle focus:border-primary focus:ring-1 focus:ring-primary/20 px-3 py-2 rounded-md text-xs font-medium text-content-strong outline-none transition-all placeholder:text-content-subtle font-mono shadow-2xs"
                     />
                   </div>
                 </div>
 
                 {/* File Uploading Drag-Drop Sandbox */}
                 <div className="space-y-1">
-                  <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+                  <label className="text-[10px] font-medium text-content-muted uppercase tracking-wider block">
                     Lampiran Berkas (PDF / DOCX / XLSX)
                   </label>
                   
@@ -1392,10 +1392,10 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       "border-2 border-dashed rounded-md p-4 flex flex-col items-center justify-center gap-2 cursor-pointer text-center group transition-all",
                       dragActive 
                         ? "border-primary bg-indigo-50/50" 
-                        : "border-slate-200 bg-slate-50/50 hover:border-primary hover:bg-indigo-50/10"
+                        : "border-border-subtle bg-surface-sunken/50 hover:border-primary hover:bg-indigo-50/10"
                     )}
                   >
-                    <Upload className={cn("w-5 h-5 text-slate-400 group-hover:text-primary transition-colors", dragActive && "text-primary")} />
+                    <Upload className={cn("w-5 h-5 text-content-subtle group-hover:text-primary transition-colors", dragActive && "text-primary")} />
 
                     {editFile ? (
                       <div>
@@ -1403,20 +1403,20 @@ export const WikiView: React.FC<WikiViewProps> = ({
                           <Paperclip className="w-3 h-3" />
                           {editFile.name}
                         </p>
-                        <p className="text-[8px] font-medium text-slate-400 uppercase tracking-wider mt-1">
+                        <p className="text-[8px] font-medium text-content-subtle uppercase tracking-wider mt-1">
                           Klik untuk mengganti berkas lampiran
                         </p>
                       </div>
                     ) : (isNew === false && editId && documents.find(d => d.id === editId)?.fileName && !shouldRemoveFile) ? (
                       <div className="space-y-1">
-                        <div className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md justify-center w-max mx-auto">
-                          <FileText className="w-3 h-3 text-slate-500" />
-                          <p className="text-[11px] font-medium text-slate-700 max-w-[150px] truncate">
+                        <div className="flex items-center gap-1.5 bg-surface-muted border border-border-subtle px-2.5 py-1 rounded-md justify-center w-max mx-auto">
+                          <FileText className="w-3 h-3 text-content-muted" />
+                          <p className="text-[11px] font-medium text-content-strong max-w-[150px] truncate">
                             {documents.find(d => d.id === editId)?.fileName}
                           </p>
                         </div>
                         <div className="flex items-center justify-center gap-2">
-                          <p className="text-[8px] font-medium text-slate-400 uppercase tracking-wider">
+                          <p className="text-[8px] font-medium text-content-subtle uppercase tracking-wider">
                             Klik area untuk mengunggah berkas baru
                           </p>
                           <button 
@@ -1434,10 +1434,10 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       </div>
                     ) : (
                       <div className="space-y-0.5">
-                        <h4 className="text-xs font-medium text-slate-700 group-hover:text-primary transition-colors">
+                        <h4 className="text-xs font-medium text-content-strong group-hover:text-primary transition-colors">
                           Pilih berkas dari komputer Anda
                         </h4>
-                        <p className="text-[9px] text-slate-400 font-medium leading-normal">
+                        <p className="text-[9px] text-content-subtle font-medium leading-normal">
                           Seret & lepaskan berkas di sini (Maks 10MB)
                         </p>
                       </div>
@@ -1472,10 +1472,10 @@ export const WikiView: React.FC<WikiViewProps> = ({
               </div>
 
               {/* Action Buttons Footer */}
-              <div className="px-5 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2.5 shrink-0 select-none rounded-b-lg">
+              <div className="px-5 py-3.5 bg-surface-sunken border-t border-border-faint flex items-center justify-end gap-2.5 shrink-0 select-none rounded-b-lg">
                 <button 
                   onClick={() => setShowFormModal(false)}
-                  className="px-4 py-2 bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-900 rounded-md text-xs font-medium transition-all cursor-pointer shadow-2xs"
+                  className="px-4 py-2 bg-surface hover:bg-surface-muted border border-border-subtle text-content-muted hover:text-content rounded-md text-xs font-medium transition-all cursor-pointer shadow-2xs"
                 >
                   Batal
                 </button>

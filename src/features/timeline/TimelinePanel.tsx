@@ -66,8 +66,8 @@ const getStatusColors = (status: string = '', isEpic: boolean) => {
   // Default (To Do / Backlog)
   return {
     bg: "bg-gradient-to-r from-slate-50 to-white",
-    border: "border-slate-200/80 hover:border-slate-300",
-    text: "text-slate-900",
+    border: "border-border-subtle/80 hover:border-slate-300",
+    text: "text-content",
     activeBg: "bg-slate-950 ring-2 ring-slate-400 border-slate-800",
     handle: "hover:bg-slate-600/15 active:bg-slate-600/25 group/l-handle",
     handleBar: "bg-slate-400/80 border-slate-400/20 group-hover/l-handle:bg-slate-600",
@@ -1077,14 +1077,14 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-[#f3f3f9] p-4 md:p-5 gap-4 text-left">
       {/* Timeline Controls Header */}
-      <div className="bg-white px-5 py-3.5 rounded-md border border-slate-200/80 shadow-2xs flex items-center justify-between shrink-0">
+      <div className="bg-surface px-5 py-3.5 rounded-md border border-border-subtle/80 shadow-2xs flex items-center justify-between shrink-0">
         <div>
-          <h2 className="text-base font-semibold text-slate-800 tracking-tight">Project Roadmap</h2>
-          <p className="text-xs font-medium text-slate-500 mt-0.5">Visualisasi lini masa proyek, epics, dan ketergantungan tugas</p>
+          <h2 className="text-base font-semibold text-content-strong tracking-tight">Project Roadmap</h2>
+          <p className="text-xs font-medium text-content-muted mt-0.5">Visualisasi lini masa proyek, epics, dan ketergantungan tugas</p>
         </div>
         <div className="flex items-center gap-3">
           {/* Quick Action Navigation Buttons */}
-          <div className="flex items-center gap-1.5 bg-slate-50/80 p-1 rounded-md border border-slate-200/80">
+          <div className="flex items-center gap-1.5 bg-surface-sunken/80 p-1 rounded-md border border-border-subtle/80">
             <button
               type="button"
               onClick={() => {
@@ -1092,7 +1092,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                 scrollToDate(earliest, 'smooth');
                 toast.success("Berhasil fokus ke Task Pertama Aktif");
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 rounded-md text-xs font-medium shadow-2xs transition-all border border-slate-200/80 cursor-pointer active:scale-95"
+              className="flex items-center gap-1.5 px-2.5 py-1 bg-surface hover:bg-surface-muted text-content-strong rounded-md text-xs font-medium shadow-2xs transition-all border border-border-subtle/80 cursor-pointer active:scale-95"
               title="Focus First Task"
             >
               <Target className="w-3.5 h-3.5 text-primary" />
@@ -1104,7 +1104,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                 scrollToDate(new Date(), 'smooth');
                 toast.success("Berhasil melompat ke garis hari ini (Today)");
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 rounded-md text-xs font-medium shadow-2xs transition-all border border-slate-200/80 cursor-pointer active:scale-95"
+              className="flex items-center gap-1.5 px-2.5 py-1 bg-surface hover:bg-surface-muted text-content-strong rounded-md text-xs font-medium shadow-2xs transition-all border border-border-subtle/80 cursor-pointer active:scale-95"
               title="Jump to Today"
             >
               <Calendar className="w-3.5 h-3.5 text-success" />
@@ -1112,11 +1112,11 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
             </button>
           </div>
 
-          <div className="flex bg-white rounded-md border border-slate-200/80 p-1 shadow-2xs items-center gap-0.5">
+          <div className="flex bg-surface rounded-md border border-border-subtle/80 p-1 shadow-2xs items-center gap-0.5">
             <button
               type="button"
               onClick={() => setPixelsPerDay(prev => Math.max(4, prev - 4))}
-              className="p-1.5 text-xs text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+              className="p-1.5 text-xs text-content-muted hover:text-content-strong hover:bg-surface-muted rounded-md transition-colors cursor-pointer"
               title="Zoom Out (Ctrl + Scroll Down)"
             >
               <Minus className="w-3.5 h-3.5" />
@@ -1135,7 +1135,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                 className={`px-3 py-1 text-xs uppercase tracking-wider rounded-md transition-all cursor-pointer ${
                   timelineZoom === z 
                     ? 'bg-primary/10 text-primary font-semibold shadow-2xs border border-primary/20' 
-                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-medium'
+                    : 'text-content-muted hover:text-content-strong hover:bg-surface-sunken font-medium'
                 }`}
               >
                 {z}
@@ -1146,7 +1146,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
             <button
               type="button"
               onClick={() => setPixelsPerDay(prev => Math.min(150, prev + 4))}
-              className="p-1.5 text-xs text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+              className="p-1.5 text-xs text-content-muted hover:text-content-strong hover:bg-surface-muted rounded-md transition-colors cursor-pointer"
               title="Zoom In (Ctrl + Scroll Up)"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -1162,17 +1162,17 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
               <span>EXPORT AS</span> <ChevronDown className="w-3 h-3" />
             </button>
             {isExportMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-md border border-slate-200/80 py-1.5 z-50">
+              <div className="absolute right-0 mt-2 w-48 bg-surface rounded-md shadow-md border border-border-subtle/80 py-1.5 z-50">
                 <button 
                   onClick={exportTimelineToPdf}
-                  className="w-full text-left px-3.5 py-2 hover:bg-slate-50 text-xs font-medium text-slate-700 flex items-center gap-2 cursor-pointer transition-colors"
+                  className="w-full text-left px-3.5 py-2 hover:bg-surface-sunken text-xs font-medium text-content-strong flex items-center gap-2 cursor-pointer transition-colors"
                 >
                   <FileText className="w-4 h-4 text-danger" />
                   <span>PDF Document</span>
                 </button>
                 <button 
                   onClick={exportTimelineToPng}
-                  className="w-full text-left px-3.5 py-2 hover:bg-slate-50 text-xs font-medium text-slate-700 flex items-center gap-2 cursor-pointer transition-colors"
+                  className="w-full text-left px-3.5 py-2 hover:bg-surface-sunken text-xs font-medium text-content-strong flex items-center gap-2 cursor-pointer transition-colors"
                 >
                   <ImageIcon className="w-4 h-4 text-secondary" />
                   <span>PNG Image</span>
@@ -1184,12 +1184,12 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
       </div>
 
       <div className="flex-1 overflow-hidden flex min-h-0">
-        <div ref={timelineContainerRef} className="print-roadmap-container flex flex-1 w-full relative bg-white rounded-lg border border-slate-200/80 shadow-2xs overflow-hidden select-none">
-          <div className="w-64 md:w-80 shrink-0 border-r border-slate-200/80 flex flex-col z-20 bg-white relative">
-            <div className="sticky top-0 z-30 h-[73px] bg-slate-50/90 backdrop-blur-sm border-b border-slate-200 px-5 flex items-center justify-between">
-              <span className="font-medium text-[11px] text-slate-500 uppercase tracking-widest">Item & Hierarki</span>
+        <div ref={timelineContainerRef} className="print-roadmap-container flex flex-1 w-full relative bg-surface rounded-lg border border-border-subtle/80 shadow-2xs overflow-hidden select-none">
+          <div className="w-64 md:w-80 shrink-0 border-r border-border-subtle/80 flex flex-col z-20 bg-surface relative">
+            <div className="sticky top-0 z-30 h-[73px] bg-surface-sunken/90 backdrop-blur-sm border-b border-border-subtle px-5 flex items-center justify-between">
+              <span className="font-medium text-[11px] text-content-muted uppercase tracking-widest">Item & Hierarki</span>
             </div>
-            <div className="flex-1 overflow-y-auto no-scrollbar pb-10 pt-4 border-t border-slate-200" ref={timelineListRef} onScroll={handleTimelineVerticalScroll}>
+            <div className="flex-1 overflow-y-auto no-scrollbar pb-10 pt-4 border-t border-border-subtle" ref={timelineListRef} onScroll={handleTimelineVerticalScroll}>
               <AnimatePresence initial={false}>
                 {renderedRows.map(({ task, isChild, depth, isLastChild }) => {
                   const hasChildren = tasks.some(t => t.parentId === task.id);
@@ -1204,12 +1204,12 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.2, ease: "easeInOut" }}
                       className={cn(
-                        "h-14 flex items-center gap-2 border-b border-slate-100 bg-white transition-colors relative z-10 overflow-hidden",
+                        "h-14 flex items-center gap-2 border-b border-border-faint bg-surface transition-colors relative z-10 overflow-hidden",
                         isChild 
-                          ? "bg-slate-50/40 hover:bg-slate-50/80 pr-3" 
+                          ? "bg-surface-sunken/40 hover:bg-surface-sunken/80 pr-3" 
                           : isEpic
                             ? "bg-purple-50/10 hover:bg-purple-50/40 px-3"
-                            : "hover:bg-slate-50 px-3"
+                            : "hover:bg-surface-sunken px-3"
                       )}
                       style={{
                         ...isChild ? { paddingLeft: `${14 + (depth * 20)}px` } : {},
@@ -1246,12 +1246,12 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                         <button
                           type="button"
                           onClick={() => toggleEpic(task.id)}
-                          className="p-1 rounded hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-all shrink-0 active:scale-95 z-20 bg-inherit"
+                          className="p-1 rounded hover:bg-surface-muted text-content-subtle hover:text-content-muted transition-all shrink-0 active:scale-95 z-20 bg-inherit"
                         >
                           <ChevronRight 
                             className={cn(
                               "w-3.5 h-3.5 transform transition-transform duration-200 ease-in-out",
-                              expanded ? "rotate-90 text-indigo-650" : "text-slate-400"
+                              expanded ? "rotate-90 text-indigo-650" : "text-content-subtle"
                             )} 
                           />
                         </button>
@@ -1276,7 +1276,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                       <div className="flex flex-col min-w-0 flex-1">
                         <span className={cn(
                           "text-[11px] truncate leading-tight tracking-tight select-none",
-                          isChild ? "font-medium text-slate-600" : "font-medium text-slate-900"
+                          isChild ? "font-medium text-content-muted" : "font-medium text-content"
                         )}>
                           {task.title}
                         </span>
@@ -1294,7 +1294,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                           <span className="text-[7px] text-slate-300">•</span>
                           <span className={cn(
                             "text-[8px] font-medium uppercase tracking-wider",
-                            task.status === 'Done' ? "text-emerald-600" : task.status === 'In Progress' ? "text-blue-600" : "text-slate-500"
+                            task.status === 'Done' ? "text-emerald-600" : task.status === 'In Progress' ? "text-blue-600" : "text-content-muted"
                           )}>
                             {task.status}
                           </span>
@@ -1320,8 +1320,8 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
               className="min-w-max relative" 
               style={{ width: `${totalDays * pixelsPerDay}px`, minHeight: '100%', willChange: "transform, opacity" }}
             >
-              <div className="sticky top-0 z-30 h-[73px] bg-slate-50/90 backdrop-blur-sm border-b border-slate-200 shadow-sm box-border flex flex-col">
-                <div className="flex h-8 border-b border-slate-200/50">
+              <div className="sticky top-0 z-30 h-[73px] bg-surface-sunken/90 backdrop-blur-sm border-b border-border-subtle shadow-sm box-border flex flex-col">
+                <div className="flex h-8 border-b border-border-subtle/50">
                   {timelineZoom !== 'months' ? timelineMonths.map((m: any) => {
                     const mStart = startOfMonth(m);
                     const actualStart = mStart < minDate ? minDate : mStart;
@@ -1380,7 +1380,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
               </div>
               <div className="absolute inset-0 pointer-events-none flex z-10 pt-[73px]">
                 {timelineZoom === 'days' && timelineDays.map((d: any, i: number) => (
-                  <div key={'grid-'+d.toISOString()} className={`shrink-0 border-r ${d.getDay() === 0 || d.getDay() === 6 ? 'bg-slate-100/40 border-slate-200/50' : 'border-gray-100/50'}`} style={{ width: `${pixelsPerDay}px` }} />
+                  <div key={'grid-'+d.toISOString()} className={`shrink-0 border-r ${d.getDay() === 0 || d.getDay() === 6 ? 'bg-surface-muted/40 border-border-subtle/50' : 'border-gray-100/50'}`} style={{ width: `${pixelsPerDay}px` }} />
                 ))}
                 {timelineZoom === 'weeks' && timelineWeeks.map((w: any, i: number) => {
                   const wStart = startOfWeek(w);
@@ -1399,7 +1399,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                   return <div key={'grid-'+m.toISOString()} className="shrink-0 border-r border-gray-100/50" style={{ width: `${actualDays * pixelsPerDay}px` }} />;
                 })}
               </div>
-              <div className="relative pt-4 z-20 pb-10 border-t border-slate-200">
+              <div className="relative pt-4 z-20 pb-10 border-t border-border-subtle">
                 <AnimatePresence initial={false}>
                   {renderedRows.map(({ task, isChild }) => {
                     const dates = tempDates[task.id] || { startDate: task.startDate, endDate: task.endDate };
@@ -1411,7 +1411,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                           animate={{ height: 56, opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
                           transition={{ duration: 0.2, ease: "easeInOut" }}
-                          className="h-14 relative border-b border-gray-100 bg-transparent flex items-center group/row hover:bg-slate-50/50 transition-colors overflow-hidden"
+                          className="h-14 relative border-b border-gray-100 bg-transparent flex items-center group/row hover:bg-surface-sunken/50 transition-colors overflow-hidden"
                           style={{ willChange: "transform, opacity, height" }}
                         >
                           <motion.button
@@ -1422,7 +1422,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                             whileTap={{ scale: 0.96 }}
                             transition={{ type: "spring", stiffness: 400, damping: 15 }}
                             onClick={() => { setSelectedTaskForDetail(task); setIsTaskDetailModalOpen(true); }}
-                            className="absolute left-6 h-8 px-4 rounded-xl flex items-center bg-slate-50/60 border border-slate-200 border-dashed hover:border-indigo-400 hover:bg-white group-hover/row:bg-white text-[10px] font-medium text-slate-400 hover:text-indigo-600 hover:shadow-sm transition-all cursor-pointer gap-2"
+                            className="absolute left-6 h-8 px-4 rounded-xl flex items-center bg-surface-sunken/60 border border-border-subtle border-dashed hover:border-indigo-400 hover:bg-surface group-hover/row:bg-surface text-[10px] font-medium text-content-subtle hover:text-indigo-600 hover:shadow-sm transition-all cursor-pointer gap-2"
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/row:bg-indigo-500 animate-pulse transition-colors" />
                             Belum diplot. Klik untuk config.
@@ -1443,7 +1443,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                         animate={{ height: 56, opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="h-14 relative border-b border-gray-100 bg-transparent flex items-center group/row hover:bg-slate-50/50 transition-colors overflow-hidden"
+                        className="h-14 relative border-b border-gray-100 bg-transparent flex items-center group/row hover:bg-surface-sunken/50 transition-colors overflow-hidden"
                         style={{ willChange: "transform, opacity, height" }}
                       >
                         <motion.div
@@ -1473,7 +1473,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                             timelineInteraction?.taskId === task.id ? "opacity-100 scale-100 ring-2" : ""
                           )}>
                             <span className={cn("font-medium", getStatusColors(task.status, isEpic).tooltipText)}>{format(start, 'dd MMM yyyy')}</span>
-                            <span className="text-slate-400">→</span>
+                            <span className="text-content-subtle">→</span>
                             <span className={cn("font-medium", getStatusColors(task.status, isEpic).tooltipText)}>{format(end, 'dd MMM yyyy')}</span>
                             <span className={cn(
                               "font-medium px-1.5 py-0.5 rounded text-[9px] ml-1", 
@@ -1570,8 +1570,8 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                 <div className="absolute top-0 bottom-0 z-20 border-l-2 border-danger border-dashed pointer-events-none" style={{ left: `${todayLeft}%` }}>
                   <div className="bg-danger text-white text-[9px] font-semibold px-2 py-0.5 rounded-md absolute top-1.5 -translate-x-1/2 shadow-sm flex items-center gap-1 z-30 tracking-wider">
                     <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-surface opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-surface"></span>
                     </span>
                     TODAY
                   </div>

@@ -33,7 +33,7 @@ const Input = ({ value, onChange, placeholder, type = 'text', className = '', ..
     value={value}
     onChange={onChange}
     placeholder={placeholder}
-    className={`w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-400 placeholder:font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white outline-none transition-all ${className}`}
+    className={`w-full px-4 py-3 bg-surface-sunken border border-border-subtle rounded-xl text-sm font-medium text-content-strong placeholder:text-content-subtle placeholder:font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-surface outline-none transition-all ${className}`}
     {...props}
   />
 );
@@ -42,10 +42,10 @@ const Button = ({ children, onClick, variant = 'primary', className = '', disabl
   const baseStyle = "inline-flex items-center justify-center font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed outline-none";
   let variantStyle = "";
   if (variant === 'primary') variantStyle = "bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 shadow-md shadow-indigo-600/20";
-  if (variant === 'secondary') variantStyle = "bg-slate-100 text-slate-700 hover:bg-slate-200 active:scale-95";
-  if (variant === 'outline') variantStyle = "border-2 border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50 active:scale-95";
+  if (variant === 'secondary') variantStyle = "bg-surface-muted text-content-strong hover:bg-slate-200 active:scale-95";
+  if (variant === 'outline') variantStyle = "border-2 border-border-subtle text-content-strong hover:border-slate-300 hover:bg-surface-sunken active:scale-95";
   if (variant === 'danger') variantStyle = "bg-rose-500 text-white hover:bg-rose-600 active:scale-95 shadow-md shadow-rose-500/20";
-  if (variant === 'ghost') variantStyle = "bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:scale-95";
+  if (variant === 'ghost') variantStyle = "bg-transparent text-content-muted hover:bg-surface-muted hover:text-content active:scale-95";
   
   let sizeStyle = "";
   if (size === 'sm') sizeStyle = "px-3 py-1.5 text-xs rounded-lg";
@@ -377,11 +377,11 @@ export const MasterDataPanel = ({
     <div className="flex-1 overflow-hidden bg-[#f3f3f9] flex flex-col w-full h-full animate-in fade-in duration-300 text-left">
         <div className="flex flex-1 gap-4 w-full h-full p-4 md:p-5">
           {/* Sidebar for Master Data Types */}
-          <div className="w-[260px] shrink-0 flex flex-col h-full bg-white border border-slate-200/80 rounded-lg overflow-hidden shadow-2xs">
-            <div className="p-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="w-[260px] shrink-0 flex flex-col h-full bg-surface border border-border-subtle/80 rounded-lg overflow-hidden shadow-2xs">
+            <div className="p-3.5 border-b border-border-faint flex items-center justify-between bg-surface-sunken/50">
                 <div>
-                    <h3 className="font-medium text-slate-800 text-xs uppercase tracking-wider">Master Database</h3>
-                    <p className="text-[10px] font-medium text-slate-400 mt-0.5">System configuration</p>
+                    <h3 className="font-medium text-content-strong text-xs uppercase tracking-wider">Master Database</h3>
+                    <p className="text-[10px] font-medium text-content-subtle mt-0.5">System configuration</p>
                 </div>
                 <div className="w-7 h-7 rounded-md bg-indigo-50 flex items-center justify-center text-indigo-600">
                     <Settings className="w-3.5 h-3.5" />
@@ -399,7 +399,7 @@ export const MasterDataPanel = ({
                       "w-full text-left px-3 py-2 rounded-md text-xs transition-all flex items-center justify-between group relative cursor-pointer select-none",
                       isActive 
                         ? "bg-indigo-50/90 text-indigo-700 font-medium border-l-3 border-l-indigo-600 shadow-2xs" 
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium"
+                        : "text-content-muted hover:bg-surface-sunken hover:text-content font-medium"
                     )}
                   >
                     <span className="flex items-center gap-2 truncate">
@@ -408,7 +408,7 @@ export const MasterDataPanel = ({
                     </span>
                     <span className={cn(
                         "text-[10px] font-medium px-2 py-0.5 rounded-md transition-all shrink-0", 
-                        isActive ? "bg-indigo-100 text-indigo-700" : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"
+                        isActive ? "bg-indigo-100 text-indigo-700" : "bg-surface-muted text-content-muted group-hover:bg-slate-200"
                     )}>
                       {count}
                     </span>
@@ -421,14 +421,14 @@ export const MasterDataPanel = ({
           {/* Main Content Area */}
           <div className="flex-1 flex flex-col h-full overflow-hidden">
             {/* Header */}
-            <div className="bg-white p-4 md:p-5 rounded-lg border border-slate-200/80 mb-4 flex justify-between items-center shadow-2xs shrink-0">
+            <div className="bg-surface p-4 md:p-5 rounded-lg border border-border-subtle/80 mb-4 flex justify-between items-center shadow-2xs shrink-0">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-100/60">System Master</span>
-                      <span className="text-xs text-slate-400 font-medium">• Enterprise Control Center</span>
+                      <span className="text-xs text-content-subtle font-medium">• Enterprise Control Center</span>
                     </div>
-                    <h2 className="text-base font-medium text-slate-800 tracking-tight">{masterDataTypes.find(t => t.type === selectedType)?.label}</h2>
-                    <p className="text-slate-500 text-xs font-medium mt-0.5">
+                    <h2 className="text-base font-medium text-content-strong tracking-tight">{masterDataTypes.find(t => t.type === selectedType)?.label}</h2>
+                    <p className="text-content-muted text-xs font-medium mt-0.5">
                       {selectedType === 'modul_aplikasi' 
                         ? "Kelola master data modul / aplikasi yang dipetakan ke project aktif enterprise." 
                         : `Kelola konfigurasi standar untuk ${masterDataTypes.find(t => t.type === selectedType)?.label.toLowerCase()} dengan penguncian integritas data.`}
@@ -458,35 +458,35 @@ export const MasterDataPanel = ({
             </div>
             
             {selectedType === 'modul_aplikasi' ? (
-                <div className="bg-white rounded-lg border border-slate-200/80 shadow-2xs p-4 flex-1 overflow-y-auto custom-scrollbar">
+                <div className="bg-surface rounded-lg border border-border-subtle/80 shadow-2xs p-4 flex-1 overflow-y-auto custom-scrollbar">
                     {loadingModules ? (
                         <div className="flex justify-center items-center h-48">
-                            <span className="text-xs font-medium text-slate-500 animate-pulse">Memuat modul aplikasi...</span>
+                            <span className="text-xs font-medium text-content-muted animate-pulse">Memuat modul aplikasi...</span>
                         </div>
                     ) : projectModules.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+                        <div className="flex flex-col items-center justify-center py-20 text-content-subtle">
                             <Layers className="w-12 h-12 mb-3 text-slate-300 animate-pulse" />
-                            <p className="text-xs font-medium text-slate-700">Belum ada modul / aplikasi</p>
-                            <p className="text-xs mt-1 text-slate-400">Klik tombol 'Add Modul / Aplikasi' di atas untuk membuat modul master pertama.</p>
+                            <p className="text-xs font-medium text-content-strong">Belum ada modul / aplikasi</p>
+                            <p className="text-xs mt-1 text-content-subtle">Klik tombol 'Add Modul / Aplikasi' di atas untuk membuat modul master pertama.</p>
                         </div>
                     ) : (
                         <div className="space-y-2">
                             {projectModules.map((mod: any) => {
                                 const p = projects?.find(proj => proj.id === mod.projectId);
                                 return (
-                                    <div key={mod.id} className="flex items-center justify-between p-3 bg-white border border-slate-200/80 rounded-lg shadow-2xs hover:border-indigo-300 transition-all group">
+                                    <div key={mod.id} className="flex items-center justify-between p-3 bg-surface border border-border-subtle/80 rounded-lg shadow-2xs hover:border-indigo-300 transition-all group">
                                         <div className="flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 font-medium text-xs">
                                                 MOD
                                             </div>
                                             <div>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-xs font-medium text-slate-800">{mod.namaModul}</span>
+                                                    <span className="text-xs font-medium text-content-strong">{mod.namaModul}</span>
                                                     <span className="text-[10px] bg-indigo-50 text-indigo-700 font-medium px-2 py-0.5 rounded-md border border-indigo-100">
                                                         {p ? p.name : mod.projectId}
                                                     </span>
                                                 </div>
-                                                <p className="text-[11px] text-slate-400 font-medium mt-0.5">
+                                                <p className="text-[11px] text-content-subtle font-medium mt-0.5">
                                                     {mod.keterangan || <span className="text-slate-300 italic">Tidak ada keterangan</span>}
                                                 </p>
                                             </div>
@@ -501,7 +501,7 @@ export const MasterDataPanel = ({
                                                         setEditingModuleKeterangan(mod.keterangan || '');
                                                         setIsEditModuleModalOpen(true);
                                                     }}
-                                                    className="w-7 h-7 bg-slate-50 hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 border border-slate-200/60 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center"
+                                                    className="w-7 h-7 bg-surface-sunken hover:bg-indigo-50 text-content-muted hover:text-indigo-600 border border-border-subtle/60 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center"
                                                     title="Edit Modul"
                                                 >
                                                     <Edit className="w-3.5 h-3.5 shrink-0" />
@@ -531,22 +531,22 @@ export const MasterDataPanel = ({
                 <div className="flex-1 flex flex-col min-h-0">
                     {/* TOP SEGMENTED CONTROL / TAB FILTER */}
                     {selectedType === 'project_role' && (
-                        <div className="bg-white p-3 rounded-lg border border-slate-200/80 mb-3 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shrink-0">
+                        <div className="bg-surface p-3 rounded-lg border border-border-subtle/80 mb-3 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shrink-0">
                             <div>
-                                <span className="text-xs font-medium text-slate-700 block">Scope Filter</span>
-                                <span className="text-[10px] text-slate-400 font-medium block">Filter berdasarkan jenis jangkauan peran</span>
+                                <span className="text-xs font-medium text-content-strong block">Scope Filter</span>
+                                <span className="text-[10px] text-content-subtle font-medium block">Filter berdasarkan jenis jangkauan peran</span>
                             </div>
-                            <div className="flex bg-slate-100 p-0.5 rounded-md border border-slate-200/80 shrink-0 self-start sm:self-auto overflow-x-auto max-w-full">
+                            <div className="flex bg-surface-muted p-0.5 rounded-md border border-border-subtle/80 shrink-0 self-start sm:self-auto overflow-x-auto max-w-full">
                                 <button
                                     type="button"
                                     onClick={() => setRoleTabFilter('ALL')}
                                     className={cn(
                                         "px-2.5 py-1 text-xs font-medium rounded transition-all flex items-center gap-1.5",
-                                        roleTabFilter === 'ALL' ? "bg-white text-slate-800 shadow-2xs font-medium" : "text-slate-500 hover:text-slate-800"
+                                        roleTabFilter === 'ALL' ? "bg-surface text-content-strong shadow-2xs font-medium" : "text-content-muted hover:text-content-strong"
                                     )}
                                 >
                                     <span>All Roles</span>
-                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'ALL' ? "bg-slate-100 text-slate-700" : "bg-slate-200/60 text-slate-600")}>
+                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'ALL' ? "bg-surface-muted text-content-strong" : "bg-slate-200/60 text-content-muted")}>
                                         {localMasterData.filter(d => d.type === 'project_role').length}
                                     </span>
                                 </button>
@@ -555,11 +555,11 @@ export const MasterDataPanel = ({
                                     onClick={() => setRoleTabFilter('PROJECT')}
                                     className={cn(
                                         "px-2.5 py-1 text-xs font-medium rounded transition-all flex items-center gap-1.5",
-                                        roleTabFilter === 'PROJECT' ? "bg-white text-blue-700 shadow-2xs font-medium" : "text-slate-500 hover:text-slate-800"
+                                        roleTabFilter === 'PROJECT' ? "bg-surface text-blue-700 shadow-2xs font-medium" : "text-content-muted hover:text-content-strong"
                                     )}
                                 >
                                     <span>Project Roles</span>
-                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'PROJECT' ? "bg-blue-50 text-blue-700" : "bg-slate-200/60 text-slate-600")}>
+                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'PROJECT' ? "bg-blue-50 text-blue-700" : "bg-slate-200/60 text-content-muted")}>
                                         {localMasterData.filter(d => d.type === 'project_role' && (d.roleType === 'PROJECT' || d.role_type === 'PROJECT' || (!d.roleType && !d.role_type))).length}
                                     </span>
                                 </button>
@@ -568,11 +568,11 @@ export const MasterDataPanel = ({
                                     onClick={() => setRoleTabFilter('SYSTEM')}
                                     className={cn(
                                         "px-2.5 py-1 text-xs font-medium rounded transition-all flex items-center gap-1.5",
-                                        roleTabFilter === 'SYSTEM' ? "bg-white text-purple-700 shadow-2xs font-medium" : "text-slate-500 hover:text-slate-800"
+                                        roleTabFilter === 'SYSTEM' ? "bg-surface text-purple-700 shadow-2xs font-medium" : "text-content-muted hover:text-content-strong"
                                     )}
                                 >
                                     <span>System Roles</span>
-                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'SYSTEM' ? "bg-purple-50 text-purple-700" : "bg-slate-200/60 text-slate-600")}>
+                                    <span className={cn("text-[9px] font-medium px-1.5 py-0.5 rounded-full", roleTabFilter === 'SYSTEM' ? "bg-purple-50 text-purple-700" : "bg-slate-200/60 text-content-muted")}>
                                         {localMasterData.filter(d => d.type === 'project_role' && (d.roleType === 'SYSTEM' || d.role_type === 'SYSTEM')).length}
                                     </span>
                                 </button>
@@ -580,7 +580,7 @@ export const MasterDataPanel = ({
                         </div>
                     )}
 
-                    <div className="bg-white rounded-lg border border-slate-200/80 shadow-2xs p-3.5 flex-1 overflow-y-auto custom-scrollbar">
+                    <div className="bg-surface rounded-lg border border-border-subtle/80 shadow-2xs p-3.5 flex-1 overflow-y-auto custom-scrollbar">
                     <DragDropContext 
                         onDragEnd={async (result) => {
                             if (!result.destination) return;
@@ -651,17 +651,17 @@ export const MasterDataPanel = ({
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                             className={cn(
-                                                "flex justify-between items-center p-3 bg-white border border-slate-200/80 rounded-lg transition-all group hover:border-indigo-300 shadow-2xs",
+                                                "flex justify-between items-center p-3 bg-surface border border-border-subtle/80 rounded-lg transition-all group hover:border-indigo-300 shadow-2xs",
                                                 snapshot.isDragging ? 'shadow-lg border-indigo-500 bg-indigo-50/50 cursor-grabbing z-50' : ''
                                             )}
                                             >
                                                 <div className="flex items-center gap-3">
-                                                    <div className="text-slate-300 group-hover:text-slate-500 transition-colors cursor-grab active:cursor-grabbing p-1">
+                                                    <div className="text-slate-300 group-hover:text-content-muted transition-colors cursor-grab active:cursor-grabbing p-1">
                                                         <GripVertical className="w-4 h-4" />
                                                     </div>
                                                     
                                                     {item.icon ? (
-                                                        <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0 border border-slate-100 shadow-2xs" style={{ backgroundColor: (item.color || '#3b82f6') + '15', color: item.color || '#3b82f6' }}>
+                                                        <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0 border border-border-faint shadow-2xs" style={{ backgroundColor: (item.color || '#3b82f6') + '15', color: item.color || '#3b82f6' }}>
                                                             <RenderIcon iconName={item.icon} className="w-4 h-4" />
                                                         </div>
                                                     ) : (
@@ -670,7 +670,7 @@ export const MasterDataPanel = ({
 
                                                     <div className="flex flex-col">
                                                         <div className="flex items-center gap-2 flex-wrap">
-                                                            <span className="text-xs font-medium text-slate-800">{item.label}</span>
+                                                            <span className="text-xs font-medium text-content-strong">{item.label}</span>
                                                             
                                                             {selectedType === 'project_role' && (() => {
                                                                 const rType = item.roleType || item.role_type || 'PROJECT';
@@ -700,7 +700,7 @@ export const MasterDataPanel = ({
                                                             )}
                                                         </div>
                                                         {item.description && (
-                                                            <span className="text-[11px] text-slate-400 font-medium mt-0.5">{item.description}</span>
+                                                            <span className="text-[11px] text-content-subtle font-medium mt-0.5">{item.description}</span>
                                                         )}
                                                     </div>
                                                 </div>
@@ -713,7 +713,7 @@ export const MasterDataPanel = ({
                                                                     setEditingMaster(item);
                                                                     setIsEditMasterModalOpen(true);
                                                                 }}
-                                                                className="w-7 h-7 bg-slate-50 hover:bg-indigo-50 text-slate-500 hover:text-indigo-600 border border-slate-200/60 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center"
+                                                                className="w-7 h-7 bg-surface-sunken hover:bg-indigo-50 text-content-muted hover:text-indigo-600 border border-border-subtle/60 rounded-md transition-all cursor-pointer font-medium flex items-center justify-center"
                                                                 title="Edit Master Data"
                                                             >
                                                                 <Edit className="w-3.5 h-3.5 shrink-0" />
@@ -755,7 +755,7 @@ export const MasterDataPanel = ({
           {/* Live Preview Badge Component */}
           <div className="p-4 bg-slate-900 text-white rounded-xl flex items-center justify-between shadow-lg border border-slate-800">
             <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-white/10 shadow-inner" style={{ color: newMasterColor }}>
+              <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-surface/10 shadow-inner" style={{ color: newMasterColor }}>
                 <RenderIcon iconName={newMasterIcon} className="w-6 h-6" />
               </div>
               <div className="flex flex-col">
@@ -771,14 +771,14 @@ export const MasterDataPanel = ({
 
           {selectedType === 'project_role' && (
             <div className="space-y-2">
-              <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest ml-1">TIPE ROLE / SCOPE</label>
-              <div className="grid grid-cols-2 gap-2 p-1.5 bg-slate-100 rounded-xl border border-slate-200">
+              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest ml-1">TIPE ROLE / SCOPE</label>
+              <div className="grid grid-cols-2 gap-2 p-1.5 bg-surface-muted rounded-xl border border-border-subtle">
                 <button
                   type="button"
                   onClick={() => setNewMasterRoleType('PROJECT')}
                   className={cn(
                     "py-2.5 px-3 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer",
-                    newMasterRoleType === 'PROJECT' ? "bg-white text-indigo-600 shadow-sm border border-slate-200/60" : "text-slate-600 hover:text-slate-900"
+                    newMasterRoleType === 'PROJECT' ? "bg-surface text-indigo-600 shadow-sm border border-border-subtle/60" : "text-content-muted hover:text-content"
                   )}
                 >
                   <span>Project Role</span>
@@ -788,13 +788,13 @@ export const MasterDataPanel = ({
                   onClick={() => setNewMasterRoleType('SYSTEM')}
                   className={cn(
                     "py-2.5 px-3 rounded-xl text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer",
-                    newMasterRoleType === 'SYSTEM' ? "bg-white text-indigo-600 shadow-sm border border-slate-200/60" : "text-slate-600 hover:text-slate-900"
+                    newMasterRoleType === 'SYSTEM' ? "bg-surface text-indigo-600 shadow-sm border border-border-subtle/60" : "text-content-muted hover:text-content"
                   )}
                 >
                   <span>System Role</span>
                 </button>
               </div>
-              <p className="text-[10px] text-slate-500 font-medium ml-1">
+              <p className="text-[10px] text-content-muted font-medium ml-1">
                 {newMasterRoleType === 'PROJECT' ? 'Peran anggota dalam tim proyek (cth: BA, Lead, QA, Developer)' : 'Hak akses global level aplikasi (cth: Administrator, Auditor, Guest)'}
               </p>
             </div>
@@ -802,35 +802,35 @@ export const MasterDataPanel = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Label Name</label>
+              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Label Name</label>
               <Input 
                 value={newMasterLabel} 
                 onChange={(e: any) => setNewMasterLabel(e.target.value)}
                 placeholder={selectedType === 'project_role' ? "cth: Business Analyst, Project Lead, QA Specialist, Senior Developer" : "misal: Critical, Done, Staging"}
-                className="!bg-white border-slate-200"
+                className="!bg-surface border-border-subtle"
               />
             </div>
             
             {/* Dynamic Contextual Fields */}
             {selectedType === 'priority' && (
               <div>
-                <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Short Code</label>
+                <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Short Code</label>
                 <Input 
                   value={newMasterShortCode}
                   onChange={(e: any) => setNewMasterShortCode(e.target.value)}
                   placeholder="misal: P0, P1, CRIT"
-                  className="!bg-white border-slate-200"
+                  className="!bg-surface border-border-subtle"
                 />
               </div>
             )}
 
             {selectedType === 'issue_type' && (
               <div>
-                <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Hierarchy Level</label>
+                <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Hierarchy Level</label>
                 <select
                   value={newMasterHierarchy}
                   onChange={(e) => setNewMasterHierarchy(e.target.value)}
-                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500"
+                  className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-sm font-medium text-content-strong outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500"
                 >
                   <option value="Epic">Epic</option>
                   <option value="Standard">Standard</option>
@@ -841,11 +841,11 @@ export const MasterDataPanel = ({
 
             {selectedType === 'status' && (
               <div>
-                <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Status Group</label>
+                <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Status Group</label>
                 <select
                   value={newMasterStatusGroup}
                   onChange={(e) => setNewMasterStatusGroup(e.target.value)}
-                  className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500"
+                  className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-sm font-medium text-content-strong outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500"
                 >
                   <option value="To Do">To Do</option>
                   <option value="In Progress">In Progress</option>
@@ -856,20 +856,20 @@ export const MasterDataPanel = ({
 
             {selectedType === 'environment' && (
               <div>
-                <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Endpoint / Base URL</label>
+                <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Endpoint / Base URL</label>
                 <Input 
                   value={newMasterBaseUrl}
                   onChange={(e: any) => setNewMasterBaseUrl(e.target.value)}
                   placeholder="https://staging.enterprise.com"
-                  className="!bg-white border-slate-200"
+                  className="!bg-surface border-border-subtle"
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Warna / Color Accent</label>
+              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Warna / Color Accent</label>
               <div className="flex gap-2">
-                <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-slate-200 shadow-sm shrink-0 bg-white flex items-center justify-center">
+                <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-border-subtle shadow-sm shrink-0 bg-surface flex items-center justify-center">
                   <input 
                     type="color"
                     value={newMasterColor} 
@@ -890,7 +890,7 @@ export const MasterDataPanel = ({
                         setNewMasterColor('#' + val);
                       }
                     }}
-                    className="w-full h-12 px-3 bg-white border border-slate-200 rounded-xl text-xs font-mono font-medium text-slate-700 outline-none focus:border-indigo-500 transition-all uppercase"
+                    className="w-full h-12 px-3 bg-surface border border-border-subtle rounded-xl text-xs font-mono font-medium text-content-strong outline-none focus:border-indigo-500 transition-all uppercase"
                     placeholder="#3b82f6"
                   />
                 </div>
@@ -899,8 +899,8 @@ export const MasterDataPanel = ({
           </div>
 
           <div>
-            <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Palet Warna</label>
-            <div className="flex flex-wrap gap-2 p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+            <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Palet Warna</label>
+            <div className="flex flex-wrap gap-2 p-2.5 bg-surface-sunken border border-border-subtle rounded-xl">
               {[
                 { hex: '#ef4444', label: 'Merah' },
                 { hex: '#f97316', label: 'Oranye' },
@@ -931,7 +931,7 @@ export const MasterDataPanel = ({
           
           <div>
             <div className="flex items-center justify-between mb-1.5 ml-1">
-              <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest">Pilih Ikon ({filteredNewIcons.length} tersedia)</label>
+              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest">Pilih Ikon ({filteredNewIcons.length} tersedia)</label>
             </div>
 
             <div className="relative mb-2">
@@ -940,12 +940,12 @@ export const MasterDataPanel = ({
                 placeholder="Cari ikon... (cth: bug, target, timer, check, activity, file, user, db, lock)"
                 value={iconSearch}
                 onChange={(e) => setIconSearch(e.target.value)}
-                className="w-full px-10 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 transition-all pl-10"
+                className="w-full px-10 py-2.5 bg-surface border border-border-subtle rounded-xl text-xs font-medium text-content-strong placeholder:text-content-subtle focus:outline-none focus:border-indigo-500 transition-all pl-10"
               />
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-content-subtle absolute left-3.5 top-1/2 -translate-y-1/2" />
             </div>
 
-            <div className="grid grid-cols-8 md:grid-cols-10 gap-1.5 p-2.5 border border-slate-200 rounded-xl bg-slate-50 max-h-52 overflow-y-auto custom-scrollbar">
+            <div className="grid grid-cols-8 md:grid-cols-10 gap-1.5 p-2.5 border border-border-subtle rounded-xl bg-surface-sunken max-h-52 overflow-y-auto custom-scrollbar">
               {filteredNewIcons.length > 0 ? (
                 filteredNewIcons.map(i => (
                   <button
@@ -954,7 +954,7 @@ export const MasterDataPanel = ({
                     onClick={() => setNewMasterIcon(i.id)}
                     className={cn(
                       "flex flex-col items-center justify-center p-2 rounded-lg transition-all",
-                      newMasterIcon === i.id ? "bg-indigo-600 text-white shadow-md scale-105" : "hover:bg-white text-slate-500 hover:text-slate-800"
+                      newMasterIcon === i.id ? "bg-indigo-600 text-white shadow-md scale-105" : "hover:bg-surface text-content-muted hover:text-content-strong"
                     )}
                     title={i.label}
                   >
@@ -962,7 +962,7 @@ export const MasterDataPanel = ({
                   </button>
                 ))
               ) : (
-                <div className="col-span-full py-6 text-center text-xs text-slate-400 font-medium">
+                <div className="col-span-full py-6 text-center text-xs text-content-subtle font-medium">
                   Tidak ada ikon yang cocok dengan kata kunci "{iconSearch}"
                 </div>
               )}
@@ -992,7 +992,7 @@ export const MasterDataPanel = ({
               {/* Live Preview Badge */}
               <div className="p-4 bg-slate-900 text-white rounded-xl flex items-center justify-between shadow-lg border border-slate-800">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-white/10 shadow-inner" style={{ color: editingMaster.color || '#3b82f6' }}>
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-surface/10 shadow-inner" style={{ color: editingMaster.color || '#3b82f6' }}>
                     <RenderIcon iconName={editingMaster.icon || 'CircleDot'} className="w-6 h-6" />
                   </div>
                   <div>
@@ -1003,17 +1003,17 @@ export const MasterDataPanel = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Label Name</label>
+                  <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Label Name</label>
                   <Input 
                     value={editingMaster.label} 
                     onChange={(e: any) => setEditingMaster({...editingMaster, label: e.target.value})}
-                    className="!bg-white border-slate-200"
+                    className="!bg-surface border-border-subtle"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Warna / Color Accent</label>
+                  <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Warna / Color Accent</label>
                   <div className="flex gap-2">
-                    <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-slate-200 shadow-sm shrink-0 bg-white flex items-center justify-center">
+                    <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-border-subtle shadow-sm shrink-0 bg-surface flex items-center justify-center">
                       <input 
                         type="color"
                         value={editingMaster.color || '#000000'} 
@@ -1034,7 +1034,7 @@ export const MasterDataPanel = ({
                             setEditingMaster({...editingMaster, color: '#' + val});
                           }
                         }}
-                        className="w-full h-12 px-3 bg-white border border-slate-200 rounded-xl text-xs font-mono font-medium text-slate-700 outline-none focus:border-indigo-500 transition-all uppercase"
+                        className="w-full h-12 px-3 bg-surface border border-border-subtle rounded-xl text-xs font-mono font-medium text-content-strong outline-none focus:border-indigo-500 transition-all uppercase"
                         placeholder="#3b82f6"
                       />
                     </div>
@@ -1043,8 +1043,8 @@ export const MasterDataPanel = ({
               </div>
 
               <div>
-                <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Palet Warna</label>
-                <div className="flex flex-wrap gap-2 p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Palet Warna</label>
+                <div className="flex flex-wrap gap-2 p-2.5 bg-surface-sunken border border-border-subtle rounded-xl">
                   {[
                     { hex: '#ef4444', label: 'Merah' },
                     { hex: '#f97316', label: 'Oranye' },
@@ -1075,7 +1075,7 @@ export const MasterDataPanel = ({
               
               <div>
                 <div className="flex items-center justify-between mb-1.5 ml-1">
-                  <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest">Ikon ({filteredEditIcons.length} tersedia)</label>
+                  <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest">Ikon ({filteredEditIcons.length} tersedia)</label>
                 </div>
 
                 <div className="relative mb-2">
@@ -1084,12 +1084,12 @@ export const MasterDataPanel = ({
                     placeholder="Cari ikon... (cth: bug, target, timer, check, activity, file, user, db, lock)"
                     value={editIconSearch}
                     onChange={(e) => setEditIconSearch(e.target.value)}
-                    className="w-full px-10 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 transition-all pl-10"
+                    className="w-full px-10 py-2.5 bg-surface border border-border-subtle rounded-xl text-xs font-medium text-content-strong placeholder:text-content-subtle focus:outline-none focus:border-indigo-500 transition-all pl-10"
                   />
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-content-subtle absolute left-3.5 top-1/2 -translate-y-1/2" />
                 </div>
 
-                <div className="grid grid-cols-8 md:grid-cols-10 gap-1.5 p-2.5 border border-slate-200 rounded-xl bg-slate-50 max-h-52 overflow-y-auto custom-scrollbar">
+                <div className="grid grid-cols-8 md:grid-cols-10 gap-1.5 p-2.5 border border-border-subtle rounded-xl bg-surface-sunken max-h-52 overflow-y-auto custom-scrollbar">
                   {filteredEditIcons.length > 0 ? (
                     filteredEditIcons.map(i => (
                       <button
@@ -1098,7 +1098,7 @@ export const MasterDataPanel = ({
                         onClick={() => setEditingMaster({...editingMaster, icon: i.id})}
                         className={cn(
                           "flex flex-col items-center justify-center p-2 rounded-lg transition-all",
-                          editingMaster.icon === i.id ? "bg-indigo-600 text-white shadow-md scale-105" : "hover:bg-white text-slate-500 hover:text-slate-800"
+                          editingMaster.icon === i.id ? "bg-indigo-600 text-white shadow-md scale-105" : "hover:bg-surface text-content-muted hover:text-content-strong"
                         )}
                         title={i.label}
                       >
@@ -1106,7 +1106,7 @@ export const MasterDataPanel = ({
                       </button>
                     ))
                   ) : (
-                    <div className="col-span-full py-6 text-center text-xs text-slate-400 font-medium">
+                    <div className="col-span-full py-6 text-center text-xs text-content-subtle font-medium">
                       Tidak ada ikon yang cocok dengan kata kunci "{editIconSearch}"
                     </div>
                   )}
@@ -1134,11 +1134,11 @@ export const MasterDataPanel = ({
         >
           <div className="space-y-4">
             <div>
-              <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Nama Project</label>
+              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Project</label>
               <select
                 value={newModuleProjectId}
                 onChange={(e) => setNewModuleProjectId(e.target.value)}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white outline-none transition-all"
+                className="w-full px-4 py-3 bg-surface-sunken border border-border-subtle rounded-xl text-sm font-medium text-content-strong focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-surface outline-none transition-all"
               >
                 <option value="">-- Pilih Project --</option>
                 {projects.map((p: any) => (
@@ -1148,23 +1148,23 @@ export const MasterDataPanel = ({
             </div>
             
             <div>
-              <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Nama Modul / Aplikasi</label>
+              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Modul / Aplikasi</label>
               <Input 
                 value={newModuleNamaModul} 
                 onChange={(e: any) => setNewModuleNamaModul(e.target.value)}
                 placeholder="misal: Front Office, Settlement, Auth Service"
-                className="!bg-white border-slate-200"
+                className="!bg-surface border-border-subtle"
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Keterangan</label>
+              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Keterangan</label>
               <textarea
                 value={newModuleKeterangan}
                 onChange={(e) => setNewModuleKeterangan(e.target.value)}
                 placeholder="Deskripsi singkat modul/aplikasi..."
                 rows={3}
-                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-400 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-sm font-medium text-content-strong placeholder:text-content-subtle outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
               />
             </div>
 
@@ -1188,11 +1188,11 @@ export const MasterDataPanel = ({
         >
           <div className="space-y-4">
             <div>
-              <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Nama Project</label>
+              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Project</label>
               <select
                 value={editingModuleProjectId}
                 onChange={(e) => setEditingModuleProjectId(e.target.value)}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white outline-none transition-all"
+                className="w-full px-4 py-3 bg-surface-sunken border border-border-subtle rounded-xl text-sm font-medium text-content-strong focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-surface outline-none transition-all"
               >
                 <option value="">-- Pilih Project --</option>
                 {projects.map((p: any) => (
@@ -1202,23 +1202,23 @@ export const MasterDataPanel = ({
             </div>
             
             <div>
-              <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Nama Modul / Aplikasi</label>
+              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Nama Modul / Aplikasi</label>
               <Input 
                 value={editingModuleNamaModul} 
                 onChange={(e: any) => setEditingModuleNamaModul(e.target.value)}
                 placeholder="misal: Front Office, Settlement, Auth Service"
-                className="!bg-white border-slate-200"
+                className="!bg-surface border-border-subtle"
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Keterangan</label>
+              <label className="block text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-1.5 ml-1">Keterangan</label>
               <textarea
                 value={editingModuleKeterangan}
                 onChange={(e) => setEditingModuleKeterangan(e.target.value)}
                 placeholder="Deskripsi singkat modul/aplikasi..."
                 rows={3}
-                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-400 outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                className="w-full px-4 py-3 bg-surface border border-border-subtle rounded-xl text-sm font-medium text-content-strong placeholder:text-content-subtle outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
               />
             </div>
 
