@@ -1,1 +1,1 @@
-export { DashboardView } from './index.tsx';
+export { DashboardView } from './DashboardView';
