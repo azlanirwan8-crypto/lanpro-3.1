@@ -18,7 +18,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   return (
     <div className="space-y-1.5">
       {label && (
-        <label className="text-[10px] text-slate-700 font-medium block uppercase tracking-wider">
+        <label className="text-xs sm:text-[10px] text-slate-700 font-medium block uppercase tracking-wider">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -29,8 +29,8 @@ export const TextField: React.FC<TextFieldProps> = ({
           error ? "border-red-300 focus:border-red-400" : ""
         } ${className}`}
       />
-      {error && <p className="text-[10px] text-red-600 font-medium">{error}</p>}
-      {helperText && !error && <p className="text-[10px] text-slate-500">{helperText}</p>}
+      {error && <p className="text-xs sm:text-[10px] text-red-600 font-medium">{error}</p>}
+      {helperText && !error && <p className="text-xs sm:text-[10px] text-slate-500">{helperText}</p>}
     </div>
   );
 };

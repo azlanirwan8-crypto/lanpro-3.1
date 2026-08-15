@@ -63,24 +63,24 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
             >
               <div className="flex justify-between items-center w-full mb-3 select-none">
                 <span className={cn(
-                  "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-medium pointer-events-none",
-                  isApproved ? "bg-emerald-500 text-white shadow-sm" : "bg-slate-700 text-slate-300"
+                  "w-5 h-5 rounded-full flex items-center justify-center text-xs sm:text-[10px] font-medium pointer-events-none",
+                  isApproved ? "bg-emerald-500 text-white shadow-soft" : "bg-slate-700 text-slate-300"
                 )}>
                   {isApproved ? "✓" : idx + 1}
                 </span>
                 {isApproved && (
-                  <span className="text-[8px] font-medium tracking-wider text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded leading-none border border-emerald-500/20">
+                  <span className="text-xs sm:text-[10px] sm:text-[8px] font-medium tracking-wider text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded leading-none border border-emerald-500/20">
                     SIGNED
                   </span>
                 )}
               </div>
 
               <div className="text-xs font-medium truncate text-white">{phase.label}</div>
-              <div className="text-[10px] text-slate-400 truncate mt-0.5 leading-tight">{phase.desc}</div>
+              <div className="text-xs sm:text-[10px] text-slate-400 truncate mt-0.5 leading-tight">{phase.desc}</div>
 
               {/* Mini task progress */}
               <div className="mt-4 w-full select-none">
-                <div className="flex justify-between items-center text-[9px] text-slate-400 mb-1 leading-none">
+                <div className="flex justify-between items-center text-xs sm:text-[11px] sm:text-[9px] text-slate-400 mb-1 leading-none">
                   <span>Done: {taskStat.done}/{taskStat.total}</span>
                   <span>{progressVal}%</span>
                 </div>
@@ -210,7 +210,7 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
               {/* Mandatori Deliverables list */}
               <div>
-                <h5 className="text-[10px] font-medium uppercase text-slate-400 tracking-wider mb-2 flex items-center gap-1.5 leading-none">
+                <h5 className="text-xs sm:text-[10px] font-medium uppercase text-slate-400 tracking-wider mb-2 flex items-center gap-1.5 leading-none">
                   <FileText className="w-4 h-4 text-amber-400" /> Mandatori Deliverables BNI SDLC
                 </h5>
                 <ul className="space-y-1.5">
@@ -226,7 +226,7 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
               {/* Signoff metadata */}
               <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 flex flex-col justify-between">
                 <div>
-                  <div className="text-[9px] font-medium text-slate-500 uppercase tracking-widest leading-none mb-1">
+                  <div className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-slate-500 uppercase tracking-widest leading-none mb-1">
                     Status Gate-Approval
                   </div>
                   <div className="text-xs font-medium">
@@ -242,7 +242,7 @@ export const SdlcBoard: React.FC<SdlcBoardProps> = ({
                   </div>
                 </div>
 
-                <div className="text-[10px] text-slate-400 mt-4 border-t border-white/5 pt-2 flex flex-col gap-0.5">
+                <div className="text-xs sm:text-[10px] text-slate-400 mt-4 border-t border-white/5 pt-2 flex flex-col gap-0.5">
                   {phaseGateStatus?.approved ? (
                     <>
                       <div>

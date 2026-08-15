@@ -84,8 +84,8 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
           return [
             <div key={`header-${epic.id}`} className="flex items-center gap-2 px-1 mt-3 mb-2">
               <Zap className="w-3.5 h-3.5 text-purple-600" />
-              <span className="text-[10px] font-medium text-purple-700 uppercase tracking-wider leading-none">{epic.title}</span>
-              <div className="ml-auto text-[10px] font-medium text-purple-600 bg-purple-50 px-2 py-0.2 rounded-md border border-purple-100">{items.length}</div>
+              <span className="text-xs sm:text-[10px] font-medium text-purple-700 uppercase tracking-wider leading-none">{epic.title}</span>
+              <div className="ml-auto text-xs sm:text-[10px] font-medium text-purple-600 bg-purple-50 px-2 py-0.2 rounded-md border border-purple-100">{items.length}</div>
             </div>,
             ...items.map(task => {
               const dndIndex = _draggablesRenderedCount++;
@@ -104,8 +104,8 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
           return [
             <div key="header-standalone" className="flex items-center gap-2 px-1 mt-3 mb-2">
               <Target className="w-3.5 h-3.5 text-slate-500" />
-              <span className="text-[10px] font-medium text-slate-600 uppercase tracking-wider leading-none">Standalone Backlog</span>
-              <div className="ml-auto text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.2 rounded-md border border-slate-200/60">{items.length}</div>
+              <span className="text-xs sm:text-[10px] font-medium text-slate-600 uppercase tracking-wider leading-none">Standalone Backlog</span>
+              <div className="ml-auto text-xs sm:text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.2 rounded-md border border-slate-200/60">{items.length}</div>
             </div>,
             ...items.map(task => {
               const dndIndex = _draggablesRenderedCount++;

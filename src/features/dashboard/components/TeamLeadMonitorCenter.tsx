@@ -77,7 +77,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6 relative z-10">
         <div>
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-medium uppercase tracking-widest">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs sm:text-[10px] font-medium uppercase tracking-widest">
               <Radio className="w-3 h-3 animate-pulse" /> Live Team Lead Control
             </span>
             <span className="text-slate-400 text-xs font-medium">• Pantauan Real-Time Tim & Kinerja</span>
@@ -93,14 +93,14 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
         <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={() => setCurrentView('team')}
-            className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-all border border-slate-700 flex items-center gap-2 shadow-sm"
+            className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-all border border-slate-700 flex items-center gap-2 shadow-soft"
           >
             <Users className="w-4 h-4 text-indigo-400" />
             Kelola Anggota Tim
           </button>
           <button
             onClick={() => setCurrentView('planning')}
-            className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-all flex items-center gap-2 shadow-lg shadow-indigo-600/25"
+            className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-all flex items-center gap-2 shadow-soft-lg shadow-indigo-600/25"
           >
             <Zap className="w-4 h-4" />
             Manajemen Sprint & Backlog
@@ -112,9 +112,9 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Total Anggota Aktif</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-slate-400">Total Anggota Aktif</span>
             <div className="text-2xl font-medium text-white mt-1">{projectMembers.length} Personil</div>
-            <span className="text-[10px] text-emerald-400 font-medium mt-1 inline-block">● {projectMembers.filter(m => m?.status === 'online' || true).length} Siap Tugas</span>
+            <span className="text-xs sm:text-[10px] text-emerald-400 font-medium mt-1 inline-block">● {projectMembers.filter(m => m?.status === 'online' || true).length} Siap Tugas</span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 flex items-center justify-center">
             <Users className="w-6 h-6" />
@@ -123,9 +123,9 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Tugas Terhambat (Blockers)</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-slate-400">Tugas Terhambat (Blockers)</span>
             <div className="text-2xl font-medium text-rose-400 mt-1">{blockedTasks.length} Kendala</div>
-            <span className="text-[10px] text-rose-400/80 font-medium mt-1 inline-block">⚠️ Perlu Intervensi Lead</span>
+            <span className="text-xs sm:text-[10px] text-rose-400/80 font-medium mt-1 inline-block">⚠️ Perlu Intervensi Lead</span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-400 flex items-center justify-center">
             <AlertTriangle className="w-6 h-6" />
@@ -134,9 +134,9 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Tugas Terlambat (Overdue)</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-slate-400">Tugas Terlambat (Overdue)</span>
             <div className="text-2xl font-medium text-amber-400 mt-1">{overdueTasks.length} Tugas</div>
-            <span className="text-[10px] text-amber-400/80 font-medium mt-1 inline-block">⏰ Melewati Deadline</span>
+            <span className="text-xs sm:text-[10px] text-amber-400/80 font-medium mt-1 inline-block">⏰ Melewati Deadline</span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center">
             <Clock className="w-6 h-6" />
@@ -145,11 +145,11 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
         <div className="bg-slate-800/60 backdrop-blur-md p-5 rounded-xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Sprint Aktif</span>
+            <span className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-slate-400">Sprint Aktif</span>
             <div className="text-2xl font-medium text-emerald-400 mt-1 truncate max-w-[140px]">
               {activeSprint ? activeSprint.name : 'Tidak Ada Sprint'}
             </div>
-            <span className="text-[10px] text-slate-400 font-medium mt-1 inline-block">
+            <span className="text-xs sm:text-[10px] text-slate-400 font-medium mt-1 inline-block">
               {activeSprint ? `${activeSprint.progress || 0}% Selesai` : 'Mulai sprint baru'}
             </span>
           </div>
@@ -166,7 +166,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
           className={cn(
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2",
             selectedTab === 'workload'
-              ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30"
+              ? "bg-indigo-600 text-white shadow-soft-lg shadow-indigo-600/30"
               : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
           )}
         >
@@ -179,14 +179,14 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
           className={cn(
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2 relative",
             selectedTab === 'blockers'
-              ? "bg-rose-600 text-white shadow-lg shadow-rose-600/30"
+              ? "bg-rose-600 text-white shadow-soft-lg shadow-rose-600/30"
               : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
           )}
         >
           <AlertTriangle className="w-4 h-4" />
           Blocker & Resiko Kritis
           {blockedTasks.length > 0 && (
-            <span className="px-1.5 py-0.5 rounded-full bg-white text-rose-600 text-[10px] font-medium ml-1">
+            <span className="px-1.5 py-0.5 rounded-full bg-white text-rose-600 text-xs sm:text-[10px] font-medium ml-1">
               {blockedTasks.length}
             </span>
           )}
@@ -197,7 +197,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
           className={cn(
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2",
             selectedTab === 'sprint'
-              ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/30"
+              ? "bg-emerald-600 text-white shadow-soft-lg shadow-emerald-600/30"
               : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
           )}
         >
@@ -210,7 +210,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
           className={cn(
             "px-4 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center gap-2",
             selectedTab === 'activity'
-              ? "bg-violet-600 text-white shadow-lg shadow-violet-600/30"
+              ? "bg-violet-600 text-white shadow-soft-lg shadow-violet-600/30"
               : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
           )}
         >
@@ -234,7 +234,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
               />
             </div>
             <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-              <span className="text-[10px] font-medium text-slate-400 uppercase">Departemen:</span>
+              <span className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase">Departemen:</span>
               <button
                 onClick={() => setSelectedDepartment('all')}
                 className={cn(
@@ -269,22 +269,22 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
               const isOverloaded = activeCount >= 6;
 
               return (
-                <div key={member.uid || idx} className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-5 hover:border-indigo-500/50 transition-all flex flex-col justify-between shadow-sm">
+                <div key={member.uid || idx} className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-5 hover:border-indigo-500/50 transition-all flex flex-col justify-between shadow-soft">
                   <div>
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div className="flex items-center gap-3">
                         <UserAvatar user={member} className="w-10 h-10 text-sm shadow-md rounded-xl shrink-0" />
                         <div>
                           <h4 className="font-medium text-white text-sm tracking-tight">{member.displayName || member.email}</h4>
-                          <span className="text-[10px] text-indigo-400 font-medium">{member.department || 'Anggota Tim'}</span>
+                          <span className="text-xs sm:text-[10px] text-indigo-400 font-medium">{member.department || 'Anggota Tim'}</span>
                         </div>
                       </div>
                       {isOverloaded ? (
-                        <span className="px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[9px] font-medium uppercase tracking-wider">
+                        <span className="px-2.5 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase tracking-wider">
                           Overloaded ⚠️
                         </span>
                       ) : (
-                        <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[9px] font-medium uppercase tracking-wider">
+                        <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase tracking-wider">
                           Optimal
                         </span>
                       )}
@@ -292,21 +292,21 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
                     <div className="grid grid-cols-3 gap-2 py-3 border-y border-slate-700/60 my-3 text-center">
                       <div>
-                        <span className="text-[9px] text-slate-400 uppercase tracking-widest font-medium block">Total</span>
+                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-slate-400 uppercase tracking-widest font-medium block">Total</span>
                         <span className="text-sm font-medium text-white">{totalAssigned}</span>
                       </div>
                       <div>
-                        <span className="text-[9px] text-slate-400 uppercase tracking-widest font-medium block">Aktif</span>
+                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-slate-400 uppercase tracking-widest font-medium block">Aktif</span>
                         <span className="text-sm font-medium text-sky-400">{activeCount}</span>
                       </div>
                       <div>
-                        <span className="text-[9px] text-slate-400 uppercase tracking-widest font-medium block">Selesai</span>
+                        <span className="text-xs sm:text-[11px] sm:text-[9px] text-slate-400 uppercase tracking-widest font-medium block">Selesai</span>
                         <span className="text-sm font-medium text-emerald-400">{doneCount}</span>
                       </div>
                     </div>
 
                     <div className="space-y-1.5">
-                      <div className="flex justify-between text-[10px] font-medium text-slate-400">
+                      <div className="flex justify-between text-xs sm:text-[10px] font-medium text-slate-400">
                         <span>Rasio Penyelesaian</span>
                         <span>{workloadPercentage}%</span>
                       </div>
@@ -326,7 +326,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                         // View tasks assigned to this member or open details
                         setCurrentView('issues');
                       }}
-                      className="text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1 text-[11px]"
+                      className="text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1 text-xs sm:text-[11px]"
                     >
                       Lihat Tugas <ChevronRight className="w-3.5 h-3.5" />
                     </button>
@@ -362,15 +362,15 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                   <div key={task.id || idx} className="bg-slate-800/80 border border-slate-700/80 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-rose-500/40 transition-all">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-300 text-[10px] font-medium uppercase font-mono">
+                        <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-300 text-xs sm:text-[10px] font-medium uppercase font-mono">
                           {task.taskNumber || `TSK-${idx + 1}`}
                         </span>
                         {isBlocked ? (
-                          <span className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 text-[10px] font-medium">Blocked</span>
+                          <span className="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 text-xs sm:text-[10px] font-medium">Blocked</span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[10px] font-medium">Overdue</span>
+                          <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-xs sm:text-[10px] font-medium">Overdue</span>
                         )}
-                        <span className="text-[10px] text-slate-400 font-medium">• Prioritas: <strong className="text-slate-200">{task.priority}</strong></span>
+                        <span className="text-xs sm:text-[10px] text-slate-400 font-medium">• Prioritas: <strong className="text-slate-200">{task.priority}</strong></span>
                       </div>
                       <h4 className="text-sm font-medium text-white">{task.title}</h4>
                       <p className="text-xs text-slate-400 line-clamp-1">{task.description || 'Tidak ada deskripsi tambahan.'}</p>
@@ -378,7 +378,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
 
                     <div className="flex items-center gap-3 shrink-0">
                       <div className="text-right hidden sm:block">
-                        <span className="text-[10px] text-slate-400 font-medium block">Deadline</span>
+                        <span className="text-xs sm:text-[10px] text-slate-400 font-medium block">Deadline</span>
                         <span className="text-xs text-rose-400 font-medium">
                           {task.endDate ? format(ensureDate(task.endDate), 'dd MMM yyyy') : 'Tidak ditentukan'}
                         </span>
@@ -388,7 +388,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                           setSelectedTaskForDetail(task);
                           setIsTaskDetailModalOpen(true);
                         }}
-                        className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-all shadow-sm flex items-center gap-1.5"
+                        className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-all shadow-soft flex items-center gap-1.5"
                       >
                         Detail Tugas <ArrowRight className="w-3.5 h-3.5" />
                       </button>
@@ -414,7 +414,7 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                   <div key={idx} className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between">
                     <div>
                       <h4 className="text-xs font-medium text-white">{team.name}</h4>
-                      <span className="text-[10px] text-slate-400">Selesai: {team.Done} | Aktif: {team.Active}</span>
+                      <span className="text-xs sm:text-[10px] text-slate-400">Selesai: {team.Done} | Aktif: {team.Active}</span>
                     </div>
                     <div className="text-right">
                       <span className="text-sm font-medium text-emerald-400">{team.Done + team.Active} Tugas</span>
@@ -433,11 +433,11 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                   <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-xs font-medium text-white">{activeSprint.name}</span>
-                      <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-medium">Aktif</span>
+                      <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-xs sm:text-[10px] font-medium">Aktif</span>
                     </div>
                     <p className="text-xs text-slate-400">{activeSprint.goal || 'Tidak ada goal sprint yang ditentukan.'}</p>
                     <div className="pt-2">
-                      <div className="flex justify-between text-[10px] font-medium text-slate-400 mb-1">
+                      <div className="flex justify-between text-xs sm:text-[10px] font-medium text-slate-400 mb-1">
                         <span>Progress Sprint</span>
                         <span>{activeSprint.progress || 0}%</span>
                       </div>
@@ -487,12 +487,12 @@ export const TeamLeadMonitorCenter: React.FC<TeamLeadMonitorCenterProps> = ({
                       <p className="text-xs text-white font-medium">
                         <strong className="text-indigo-300">{log.userName || log.userEmail || 'Anggota Tim'}</strong> {humanizeActivityAction(log.action || log.description)}
                       </p>
-                      <span className="text-[10px] text-slate-400 font-mono">
+                      <span className="text-xs sm:text-[10px] text-slate-400 font-mono">
                         {log.timestamp ? format(ensureDate(log.timestamp), 'dd MMM yyyy, HH:mm') : 'Baru saja'}
                       </span>
                     </div>
                   </div>
-                  <span className="px-2 py-1 rounded bg-slate-900 text-slate-400 text-[10px] font-mono">
+                  <span className="px-2 py-1 rounded bg-slate-900 text-slate-400 text-xs sm:text-[10px] font-mono">
                     {log.targetType || 'Aktivitas'}
                   </span>
                 </div>

@@ -317,7 +317,7 @@ export const FlowchartEdges: React.FC<FlowchartEdgesProps> = ({
                           width="90"
                           height="26"
                         >
-                          <div className="bg-white border border-slate-200 text-[9px] text-slate-800 font-medium px-1.5 py-0.5 rounded shadow-sm text-center truncate">
+                          <div className="bg-white border border-slate-200 text-xs sm:text-[11px] sm:text-[9px] text-slate-800 font-medium px-1.5 py-0.5 rounded shadow-soft text-center truncate">
                             {edge.label}
                           </div>
                         </foreignObject>

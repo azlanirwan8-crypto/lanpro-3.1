@@ -194,7 +194,7 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
       <div className="bg-surface p-4 md:p-5 rounded-lg border border-border-subtle/80 shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-100/60">System Audit</span>
+            <span className="text-xs sm:text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-md border border-indigo-100/60">System Audit</span>
             <span className="text-xs text-content-subtle font-medium">• Enterprise Control Center</span>
           </div>
           <h1 className="text-base font-medium text-content-strong tracking-tight">Dashboard Audit Enterprise</h1>
@@ -204,12 +204,12 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
         <div className="flex items-center gap-3">
            <div className="flex bg-surface-sunken rounded-md p-2 border border-border-subtle/80 items-center gap-4 text-xs">
               <div className="flex items-center gap-1.5">
-                 <span className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Total Log:</span>
+                 <span className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider">Total Log:</span>
                  <span className="font-medium text-content-strong">{logs.length}</span>
               </div>
               <div className="h-4 w-px bg-slate-200" />
               <div className="flex items-center gap-1.5">
-                 <span className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Status:</span>
+                 <span className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider">Status:</span>
                  <div className="flex items-center gap-1 text-emerald-600 font-medium">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span>Live</span>
@@ -337,12 +337,12 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                                 <UserIcon className="w-3 h-3" />
                               </div>
                               <span className="text-xs font-medium text-content-strong truncate">{log.userName}</span>
-                              <span className="text-[10px] bg-indigo-50 text-indigo-700 font-medium px-2 py-0.2 rounded border border-indigo-100 uppercase flex items-center gap-1">
+                              <span className="text-xs sm:text-[10px] bg-indigo-50 text-indigo-700 font-medium px-2 py-0.2 rounded border border-indigo-100 uppercase flex items-center gap-1">
                                  {getEntityIcon(log.entityName)}
                                  {log.entityName}
                               </span>
                            </div>
-                           <div className="text-[11px] font-medium text-content-subtle flex items-center gap-1 shrink-0">
+                           <div className="text-xs sm:text-[11px] font-medium text-content-subtle flex items-center gap-1 shrink-0">
                              <Clock className="w-3 h-3 text-slate-300" />
                              {formatDate(log.createdAt)}
                            </div>
@@ -351,13 +351,13 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                         <div className="flex items-center gap-2 text-xs text-content-secondary font-medium flex-wrap">
                            <span>
                              Melakukan aksis <span className={cn(
-                               "font-medium uppercase px-1.5 py-0.2 rounded text-[10px]",
+                               "font-medium uppercase px-1.5 py-0.2 rounded text-xs sm:text-[10px]",
                                log.actionType === 'CREATE' ? "bg-emerald-50 text-emerald-700" :
                                log.actionType === 'UPDATE' ? "bg-amber-50 text-amber-700" :
                                "bg-rose-50 text-rose-700"
                              )}>{log.actionType}</span> pada entitas {log.entityName} dengan referensi ID: 
                            </span>
-                           <span className="font-mono text-[11px] font-medium text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-100/60">
+                           <span className="font-mono text-xs sm:text-[11px] font-medium text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-100/60">
                              {log.entityId}
                            </span>
                         </div>
@@ -365,13 +365,13 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                         <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-border-faint">
                            <div className="flex items-center gap-2">
                               {log.oldValues && Object.keys(log.oldValues).length > 0 && (
-                                <span className="px-1.5 py-0.2 bg-rose-50 border border-rose-100 rounded text-[9px] font-medium text-rose-600 uppercase">Sebelum: {Object.keys(log.oldValues).length} keys</span>
+                                <span className="px-1.5 py-0.2 bg-rose-50 border border-rose-100 rounded text-xs sm:text-[11px] sm:text-[9px] font-medium text-rose-600 uppercase">Sebelum: {Object.keys(log.oldValues).length} keys</span>
                               )}
                               {log.newValues && Object.keys(log.newValues).length > 0 && (
-                                <span className="px-1.5 py-0.2 bg-emerald-50 border border-emerald-100 rounded text-[9px] font-medium text-emerald-600 uppercase">Sesudah: {Object.keys(log.newValues).length} keys</span>
+                                <span className="px-1.5 py-0.2 bg-emerald-50 border border-emerald-100 rounded text-xs sm:text-[11px] sm:text-[9px] font-medium text-emerald-600 uppercase">Sesudah: {Object.keys(log.newValues).length} keys</span>
                               )}
                            </div>
-                           <span className="text-[11px] font-medium text-indigo-600 group-hover:text-indigo-700 flex items-center gap-1 group-hover:gap-1.5 transition-all">
+                           <span className="text-xs sm:text-[11px] font-medium text-indigo-600 group-hover:text-indigo-700 flex items-center gap-1 group-hover:gap-1.5 transition-all">
                               Lihat detail perubahan <ArrowRight className="w-3 h-3" />
                            </span>
                         </div>
@@ -405,7 +405,7 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                 {/* Modal Header */}
                 <div className="p-8 border-b border-border-faint flex items-center justify-between bg-surface-sunken/50">
                    <div className="flex items-center gap-5">
-                      <div className={`p-4 rounded-xl border shadow-lg ${getActionStyles(selectedLog.actionType)}`}>
+                      <div className={`p-4 rounded-xl border shadow-soft-lg ${getActionStyles(selectedLog.actionType)}`}>
                          {getEntityIcon(selectedLog.entityName)}
                       </div>
                       <div>
@@ -413,7 +413,7 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                          <div className="flex items-center gap-3 mt-1">
                             <span className="text-xs font-medium text-content-muted uppercase tracking-widest">{selectedLog.entityName}</span>
                             <span className="text-slate-300">•</span>
-                            <code className="text-[10px] font-medium bg-slate-200/50 text-content-secondary px-2 py-0.5 rounded">{selectedLog.entityId}</code>
+                            <code className="text-xs sm:text-[10px] font-medium bg-slate-200/50 text-content-secondary px-2 py-0.5 rounded">{selectedLog.entityId}</code>
                          </div>
                       </div>
                    </div>
@@ -426,19 +426,19 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                 </div>                {/* Modal Info Stats */}
                 <div className="grid grid-cols-2 bg-surface-sunken/30 border-b border-border-faint">
                     <div className="p-6 border-r border-border-faint">
-                       <p className="text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-2">Aktivitas Penulis</p>
+                       <p className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-2">Aktivitas Penulis</p>
                        <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-medium">
                              {(selectedLog.userName || "U")[0]}
                           </div>
                           <div>
                              <p className="text-sm font-medium text-content-strong">{selectedLog.userName || "Unknown User"}</p>
-                             <p className="text-[10px] font-medium text-content-muted uppercase tracking-tighter">Akses Auditor Sistem</p>
+                             <p className="text-xs sm:text-[10px] font-medium text-content-muted uppercase tracking-tighter">Akses Auditor Sistem</p>
                           </div>
                        </div>
                     </div>
                     <div className="p-6">
-                       <p className="text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-2">Tanda Waktu (WIB)</p>
+                       <p className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-widest mb-2">Tanda Waktu (WIB)</p>
                        <div className="flex items-center gap-3 text-content-strong font-medium">
                           <Calendar className="w-5 h-5 text-indigo-500" />
                           <span className="text-sm">{new Date(selectedLog.createdAt).toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'medium'})}</span>
@@ -459,10 +459,10 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
                    
                    {/* Raw JSON fallback (Optional for high technical audit) */}
                    <details className="mt-12 group">
-                      <summary className="text-[10px] font-medium text-content-subtle cursor-pointer uppercase hover:text-content-secondary transition-colors">
+                      <summary className="text-xs sm:text-[10px] font-medium text-content-subtle cursor-pointer uppercase hover:text-content-secondary transition-colors">
                         Tampilkan Raw Technical Trace (JSON)
                       </summary>
-                      <div className="mt-4 p-4 rounded-xl bg-slate-900 text-indigo-400 font-mono text-[10px] overflow-x-auto border border-slate-800">
+                      <div className="mt-4 p-4 rounded-xl bg-slate-900 text-indigo-400 font-mono text-xs sm:text-[10px] overflow-x-auto border border-slate-800">
                          <pre>{JSON.stringify(selectedLog, null, 2)}</pre>
                       </div>
                    </details>
@@ -470,7 +470,7 @@ export const EnterpriseAuditDashboard: React.FC<EnterpriseAuditDashboardProps> =
 
                 {/* Footer */}
                 <div className="p-8 bg-surface-sunken border-t border-border-faint flex justify-between items-center">
-                   <p className="text-[10px] font-medium text-content-subtle italic">ID_JEJAK: {selectedLog.id}</p>
+                   <p className="text-xs sm:text-[10px] font-medium text-content-subtle italic">ID_JEJAK: {selectedLog.id}</p>
                    <button 
                      onClick={() => setSelectedLog(null)}
                      className="px-8 py-3 bg-slate-900 text-white text-xs font-medium rounded-xl hover:bg-slate-800 transition-all shadow-xl hover:shadow-2xl shadow-slate-200 active:scale-95"

@@ -62,13 +62,13 @@ export const TimelineDatePills = ({
   return (
     <>
       <div className="absolute -left-1 transform -translate-x-full pr-2 top-1/2 -translate-y-1/2 whitespace-nowrap z-50 pointer-events-none">
-        <div className="bg-slate-900/90 text-[10px] font-medium text-white px-2 py-1 rounded shadow-lg backdrop-blur-sm border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in slide-in-from-right-1">
+        <div className="bg-slate-900/90 text-xs sm:text-[10px] font-medium text-white px-2 py-1 rounded shadow-soft-lg backdrop-blur-sm border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in slide-in-from-right-1">
           <Calendar className="w-2.5 h-2.5 text-slate-400" />
           {format(start, "MMM d, yyyy")}
         </div>
       </div>
       <div className="absolute -right-1 transform translate-x-full pl-2 top-1/2 -translate-y-1/2 whitespace-nowrap z-50 pointer-events-none">
-        <div className="bg-slate-900/90 text-[10px] font-medium text-white px-2 py-1 rounded shadow-lg backdrop-blur-sm border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in slide-in-from-left-1">
+        <div className="bg-slate-900/90 text-xs sm:text-[10px] font-medium text-white px-2 py-1 rounded shadow-soft-lg backdrop-blur-sm border border-slate-700/50 flex items-center gap-1.5 animate-in fade-in slide-in-from-left-1">
           <Calendar className="w-2.5 h-2.5 text-slate-400" />
           {format(end, "MMM d, yyyy")}
           <span className="text-slate-400 font-normal">

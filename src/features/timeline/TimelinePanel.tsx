@@ -1187,7 +1187,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
         <div ref={timelineContainerRef} className="print-roadmap-container flex flex-1 w-full relative bg-surface rounded-lg border border-border-subtle/80 shadow-2xs overflow-hidden select-none">
           <div className="w-64 md:w-80 shrink-0 border-r border-border-subtle/80 flex flex-col z-20 bg-surface relative">
             <div className="sticky top-0 z-30 h-[73px] bg-surface-sunken/90 backdrop-blur-sm border-b border-border-subtle px-5 flex items-center justify-between">
-              <span className="font-medium text-[11px] text-content-muted uppercase tracking-widest">Item & Hierarki</span>
+              <span className="font-medium text-xs sm:text-[11px] text-content-muted uppercase tracking-widest">Item & Hierarki</span>
             </div>
             <div className="flex-1 overflow-y-auto no-scrollbar pb-10 pt-4 border-t border-border-subtle" ref={timelineListRef} onScroll={handleTimelineVerticalScroll}>
               <AnimatePresence initial={false}>
@@ -1263,7 +1263,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                       {/* Task type icon */}
                       <div className="shrink-0 flex items-center justify-center">
                         {isEpic ? (
-                          <div className="p-1 rounded-md bg-purple-50 text-purple-600 shadow-sm border border-purple-100">
+                          <div className="p-1 rounded-md bg-purple-50 text-purple-600 shadow-soft border border-purple-100">
                             <Zap className="w-3.5 h-3.5" />
                           </div>
                         ) : (
@@ -1275,7 +1275,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
 
                       <div className="flex flex-col min-w-0 flex-1">
                         <span className={cn(
-                          "text-[11px] truncate leading-tight tracking-tight select-none",
+                          "text-xs sm:text-[11px] truncate leading-tight tracking-tight select-none",
                           isChild ? "font-medium text-content-secondary" : "font-medium text-content"
                         )}>
                           {task.title}
@@ -1287,13 +1287,13 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                               setSelectedTaskForDetail(task); 
                               setIsTaskDetailModalOpen(true); 
                             }} 
-                            className="text-[9px] font-semibold text-primary bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/60 rounded-md px-1 py-0.2 tracking-tight text-left uppercase transition-colors"
+                            className="text-xs sm:text-[11px] sm:text-[9px] font-semibold text-primary bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/60 rounded-md px-1 py-0.2 tracking-tight text-left uppercase transition-colors"
                           >
                             {task.key}
                           </button>
-                          <span className="text-[7px] text-slate-300">•</span>
+                          <span className="text-xs sm:text-[10px] sm:text-[7px] text-slate-300">•</span>
                           <span className={cn(
-                            "text-[8px] font-medium uppercase tracking-wider",
+                            "text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider",
                             task.status === 'Done' ? "text-emerald-600" : task.status === 'In Progress' ? "text-blue-600" : "text-content-muted"
                           )}>
                             {task.status}
@@ -1320,7 +1320,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
               className="min-w-max relative" 
               style={{ width: `${totalDays * pixelsPerDay}px`, minHeight: '100%', willChange: "transform, opacity" }}
             >
-              <div className="sticky top-0 z-30 h-[73px] bg-surface-sunken/90 backdrop-blur-sm border-b border-border-subtle shadow-sm box-border flex flex-col">
+              <div className="sticky top-0 z-30 h-[73px] bg-surface-sunken/90 backdrop-blur-sm border-b border-border-subtle shadow-soft box-border flex flex-col">
                 <div className="flex h-8 border-b border-border-subtle/50">
                   {timelineZoom !== 'months' ? timelineMonths.map((m: any) => {
                     const mStart = startOfMonth(m);
@@ -1330,7 +1330,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                     const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
                     return (
                       <div key={m.toISOString()} className="flex items-center px-2 py-1 border-r border-gray-200/50" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                        <span className="text-[11px] font-medium text-gray-600 uppercase tracking-wider">{format(m, 'MMM yyyy')}</span>
+                        <span className="text-xs sm:text-[11px] font-medium text-gray-600 uppercase tracking-wider">{format(m, 'MMM yyyy')}</span>
                       </div>
                     );
                   }) : timelineYears.map((y: any) => {
@@ -1341,7 +1341,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                     const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
                     return (
                       <div key={y.toISOString()} className="flex items-center px-2 py-1 border-r border-gray-200/50" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                        <span className="text-[11px] font-medium text-gray-600 uppercase tracking-wider">{format(y, 'yyyy')}</span>
+                        <span className="text-xs sm:text-[11px] font-medium text-gray-600 uppercase tracking-wider">{format(y, 'yyyy')}</span>
                       </div>
                     );
                   })}
@@ -1349,7 +1349,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                 <div className="flex h-10">
                   {timelineZoom === 'days' && timelineDays.map((d: any, i: number) => (
                     <div key={d.toISOString()} className="flex items-center justify-center border-r border-gray-200/50 shrink-0" style={{ width: `${pixelsPerDay}px` }}>
-                      <span className="text-[10px] font-medium text-gray-400">{format(d, 'd')}</span>
+                      <span className="text-xs sm:text-[10px] font-medium text-gray-400">{format(d, 'd')}</span>
                     </div>
                   ))}
                   {timelineZoom === 'weeks' && timelineWeeks.map((w: any, i: number) => {
@@ -1360,7 +1360,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                     const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
                     return (
                       <div key={w.toISOString()} className="flex items-center justify-center border-r border-gray-200/50 shrink-0" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                        <span className="text-[10px] font-medium text-gray-400">W{format(w, 'w')}</span>
+                        <span className="text-xs sm:text-[10px] font-medium text-gray-400">W{format(w, 'w')}</span>
                       </div>
                     );
                   })}
@@ -1372,7 +1372,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                     const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
                     return (
                       <div key={m.toISOString()} className="flex items-center justify-center border-r border-gray-200/50 shrink-0" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                        <span className="text-[10px] font-medium text-gray-400">{format(m, 'MMM')}</span>
+                        <span className="text-xs sm:text-[10px] font-medium text-gray-400">{format(m, 'MMM')}</span>
                       </div>
                     );
                   })}
@@ -1422,7 +1422,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                             whileTap={{ scale: 0.96 }}
                             transition={{ type: "spring", stiffness: 400, damping: 15 }}
                             onClick={() => { setSelectedTaskForDetail(task); setIsTaskDetailModalOpen(true); }}
-                            className="absolute left-6 h-8 px-4 rounded-xl flex items-center bg-surface-sunken/60 border border-border-subtle border-dashed hover:border-indigo-400 hover:bg-surface group-hover/row:bg-surface text-[10px] font-medium text-content-subtle hover:text-indigo-600 hover:shadow-sm transition-all cursor-pointer gap-2"
+                            className="absolute left-6 h-8 px-4 rounded-xl flex items-center bg-surface-sunken/60 border border-border-subtle border-dashed hover:border-indigo-400 hover:bg-surface group-hover/row:bg-surface text-xs sm:text-[10px] font-medium text-content-subtle hover:text-indigo-600 hover:shadow-soft transition-all cursor-pointer gap-2"
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover/row:bg-indigo-500 animate-pulse transition-colors" />
                             Belum diplot. Klik untuk config.
@@ -1454,7 +1454,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                           }}
                           transition={timelineInteraction?.taskId === task.id ? { type: "tween", duration: 0 } : { type: "spring", stiffness: 350, damping: 25 }}
                           className={cn(
-                            "absolute top-1/2 -translate-y-1/2 h-8 rounded-lg shadow-sm flex items-center border overflow-hidden",
+                            "absolute top-1/2 -translate-y-1/2 h-8 rounded-lg shadow-soft flex items-center border overflow-hidden",
                             getStatusColors(task.status, isEpic).bg,
                             getStatusColors(task.status, isEpic).border,
                             getStatusColors(task.status, isEpic).text,
@@ -1468,7 +1468,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                         >
                           {/* Dynamic Floating Tooltip */}
                           <div className={cn(
-                            "absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-800 text-white text-[10px] font-medium px-2.5 py-1.5 rounded-lg shadow-xl pointer-events-none z-50 flex items-center gap-1.5 whitespace-nowrap transition-all duration-150 origin-bottom scale-90 opacity-0",
+                            "absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-slate-800 text-white text-xs sm:text-[10px] font-medium px-2.5 py-1.5 rounded-lg shadow-xl pointer-events-none z-50 flex items-center gap-1.5 whitespace-nowrap transition-all duration-150 origin-bottom scale-90 opacity-0",
                             "group-hover/bar:opacity-100 group-hover/bar:scale-100",
                             timelineInteraction?.taskId === task.id ? "opacity-100 scale-100 ring-2" : ""
                           )}>
@@ -1476,7 +1476,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                             <span className="text-content-subtle">→</span>
                             <span className={cn("font-medium", getStatusColors(task.status, isEpic).tooltipText)}>{format(end, 'dd MMM yyyy')}</span>
                             <span className={cn(
-                              "font-medium px-1.5 py-0.5 rounded text-[9px] ml-1", 
+                              "font-medium px-1.5 py-0.5 rounded text-xs sm:text-[11px] sm:text-[9px] ml-1", 
                               getStatusColors(task.status, isEpic).tooltipBadge
                             )}>
                               {differenceInDays(end, start) + 1} hari
@@ -1504,7 +1504,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                             title="Tarik ujung kiri untuk mengubah tanggal mulai"
                           >
                             <div className={cn(
-                              "w-[3px] h-3.5 border-l border-r rounded-full transition-colors shadow-sm",
+                              "w-[3px] h-3.5 border-l border-r rounded-full transition-colors shadow-soft",
                               getStatusColors(task.status, isEpic).handleBar
                             )} />
                           </div>
@@ -1529,7 +1529,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                             }}
                           >
                             <span className={cn(
-                              "text-[10.5px] font-medium truncate tracking-tight select-none pr-1",
+                              "text-xs sm:text-[10.5px] font-medium truncate tracking-tight select-none pr-1",
                               getStatusColors(task.status, isEpic).text
                             )}>
                               {task.title}
@@ -1556,7 +1556,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                             title="Tarik ujung kanan untuk mengubah tanggal selesai"
                           >
                             <div className={cn(
-                              "w-[3px] h-3.5 border-l border-r rounded-full transition-colors shadow-sm",
+                              "w-[3px] h-3.5 border-l border-r rounded-full transition-colors shadow-soft",
                               getStatusColors(task.status, isEpic).handleBarR
                             )} />
                           </div>
@@ -1568,7 +1568,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
               </div>
               {todayLeft >= 0 && todayLeft <= 100 && (
                 <div className="absolute top-0 bottom-0 z-20 border-l-2 border-danger border-dashed pointer-events-none" style={{ left: `${todayLeft}%` }}>
-                  <div className="bg-danger text-white text-[9px] font-semibold px-2 py-0.5 rounded-md absolute top-1.5 -translate-x-1/2 shadow-sm flex items-center gap-1 z-30 tracking-wider">
+                  <div className="bg-danger text-white text-xs sm:text-[11px] sm:text-[9px] font-semibold px-2 py-0.5 rounded-md absolute top-1.5 -translate-x-1/2 shadow-soft flex items-center gap-1 z-30 tracking-wider">
                     <span className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-surface opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-surface"></span>

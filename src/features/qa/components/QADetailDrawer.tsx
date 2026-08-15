@@ -57,11 +57,11 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
         <div className="p-4 border-b border-border-faint bg-primary/5 space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 bg-primary text-white font-medium text-[10px] rounded-md">
+              <span className="px-2 py-0.5 bg-primary text-white font-medium text-xs sm:text-[10px] rounded-md">
                 TC #{selectedTestCase.rowNum}
               </span>
               <span
-                className={`px-2 py-0.5 text-[9px] font-medium uppercase rounded-md ${
+                className={`px-2 py-0.5 text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase rounded-md ${
                   selectedTestCase.priority === "Critical" || selectedTestCase.priority === "High"
                     ? "bg-rose-50 text-danger border border-rose-200/60"
                     : "bg-surface-muted text-content-body border border-border-subtle/60"
@@ -80,7 +80,7 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
                   handleStatusChange(selectedTestCase.id, val);
                   setSelectedTestCase({ ...selectedTestCase, status: val });
                 }}
-                className={`py-1 px-2.5 rounded-md text-[11px] font-medium uppercase tracking-wider outline-none cursor-pointer border shadow-2xs ${
+                className={`py-1 px-2.5 rounded-md text-xs sm:text-[11px] font-medium uppercase tracking-wider outline-none cursor-pointer border shadow-2xs ${
                   selectedTestCase.status === "Passed"
                     ? "bg-emerald-50 text-success border-emerald-200"
                     : selectedTestCase.status === "Failed"
@@ -119,7 +119,7 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
           <button
             type="button"
             onClick={() => setDrawerActiveTab("details")}
-            className={`flex-1 py-1.5 text-[10px] font-medium uppercase tracking-wider rounded-md transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`flex-1 py-1.5 text-xs sm:text-[10px] font-medium uppercase tracking-wider rounded-md transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               drawerActiveTab === "details"
                 ? "bg-surface text-primary shadow-2xs"
                 : "text-content-muted hover:text-content-strong"
@@ -134,7 +134,7 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
               setDrawerActiveTab("history");
               fetchExecutionHistory(selectedTestCase.id);
             }}
-            className={`flex-1 py-1.5 text-[10px] font-medium uppercase tracking-wider rounded-md transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`flex-1 py-1.5 text-xs sm:text-[10px] font-medium uppercase tracking-wider rounded-md transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               drawerActiveTab === "history"
                 ? "bg-surface text-primary shadow-2xs"
                 : "text-content-muted hover:text-content-strong"
@@ -143,7 +143,7 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
             <History className="w-3.5 h-3.5" />
             Execution History
             {executionLogs.length > 0 && (
-              <span className="bg-primary/10 text-primary text-[9px] px-1.5 py-0.2 rounded-full font-medium">
+              <span className="bg-primary/10 text-primary text-xs sm:text-[11px] sm:text-[9px] px-1.5 py-0.2 rounded-full font-medium">
                 {executionLogs.length}
               </span>
             )}
@@ -156,11 +156,11 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-[10px] font-medium text-content-subtle uppercase tracking-wider flex items-center gap-1.5">
+                  <h4 className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider flex items-center gap-1.5">
                     <History className="w-3.5 h-3.5 text-primary" />
                     Execution History Timeline
                   </h4>
-                  <p className="text-[10px] text-content-subtle">Audit Trail historis eksekusi pengujian</p>
+                  <p className="text-xs sm:text-[10px] text-content-subtle">Audit Trail historis eksekusi pengujian</p>
                 </div>
                 <button
                   onClick={() => fetchExecutionHistory(selectedTestCase.id)}
@@ -200,12 +200,12 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
                             <span className="text-xs font-medium text-content-strong">
                               {log.executedByName || "Tester"}
                             </span>
-                            <span className="text-[10px] text-content-subtle">
+                            <span className="text-xs sm:text-[10px] text-content-subtle">
                               {new Date(log.executedAt || log.timestamp || Date.now()).toLocaleString("id-ID")}
                             </span>
                           </div>
                           <span
-                            className={`px-2 py-0.5 text-[9px] font-medium rounded ${
+                            className={`px-2 py-0.5 text-xs sm:text-[11px] sm:text-[9px] font-medium rounded ${
                               st === "PASSED"
                                 ? "bg-emerald-100 text-success"
                                 : st === "FAILED"
@@ -231,7 +231,7 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
             <div className="space-y-4">
               {/* Steps Box */}
               <div>
-                <h4 className="text-[10px] font-medium text-content-subtle uppercase tracking-wider mb-1">
+                <h4 className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider mb-1">
                   Langkah-Langkah Pengujian (Steps)
                 </h4>
                 <div className="bg-surface-sunken p-3 rounded-md border border-border-subtle/60 text-xs font-medium text-content-body whitespace-pre-line leading-relaxed">
@@ -241,7 +241,7 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
 
               {/* Expected Result Box */}
               <div>
-                <h4 className="text-[10px] font-medium text-content-subtle uppercase tracking-wider mb-1">
+                <h4 className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider mb-1">
                   Hasil yang Diharapkan (Expected Result)
                 </h4>
                 <div className="bg-emerald-50/40 p-3 rounded-md border border-emerald-100 text-xs font-medium text-success leading-relaxed">
@@ -252,10 +252,10 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
               {/* Evidence Screenshots */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <h4 className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">
+                  <h4 className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider">
                     Bukti Pengujian ({selectedTestCase.evidences?.length || 0})
                   </h4>
-                  <label className="px-2.5 py-1 bg-primary/10 hover:bg-primary/20 text-primary text-[10px] font-medium rounded-md transition-colors cursor-pointer flex items-center gap-1">
+                  <label className="px-2.5 py-1 bg-primary/10 hover:bg-primary/20 text-primary text-xs sm:text-[10px] font-medium rounded-md transition-colors cursor-pointer flex items-center gap-1">
                     <Paperclip className="w-3 h-3" />
                     <span>Upload Evidence</span>
                     <input
@@ -294,7 +294,7 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
 
               {/* Comments */}
               <div>
-                <h4 className="text-[10px] font-medium text-content-subtle uppercase tracking-wider mb-1.5">
+                <h4 className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider mb-1.5">
                   Komentar QA ({selectedTestCase.commentsList?.length || 0})
                 </h4>
                 <div className="space-y-2 mb-2.5">
@@ -302,7 +302,7 @@ export const QADetailDrawer: React.FC<QADetailDrawerProps> = ({
                     <div key={cm.id || cIdx} className="bg-surface-sunken p-2.5 rounded-md border border-border-subtle/60 space-y-1">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-medium text-content-strong">{cm.userName}</span>
-                        <span className="text-[10px] text-content-subtle">
+                        <span className="text-xs sm:text-[10px] text-content-subtle">
                           {new Date(cm.timestamp).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
                         </span>
                       </div>

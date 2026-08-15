@@ -114,13 +114,13 @@ export const KanbanCard = React.memo<KanbanCardProps>(({ task, mArr, pArr, onCli
             ) : (
                <RenderIcon iconName="CheckSquare" className={cn("transition-transform duration-200", isCompact ? "w-3 h-3" : "w-3.5 h-3.5")} />
             )}
-            <span className="font-mono font-semibold text-[11px] text-primary dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/60 px-1.5 py-0.5 rounded-md border border-indigo-200/60">
+            <span className="font-mono font-semibold text-xs sm:text-[11px] text-primary dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/60 px-1.5 py-0.5 rounded-md border border-indigo-200/60">
               {task.key}
             </span>
             {task.priority && (
               <span className={cn(
                 "font-medium uppercase rounded tracking-wider border",
-                isCompact ? "text-[8px] px-1 py-0.2" : "text-[9px] px-1.5 py-0.2",
+                isCompact ? "text-xs sm:text-[10px] sm:text-[8px] px-1 py-0.2" : "text-xs sm:text-[11px] sm:text-[9px] px-1.5 py-0.2",
                 (task.priority === 'Highest' || task.priority === 'High') 
                   ? "bg-red-50 text-red-600 border-red-200 dark:bg-red-950/60 dark:text-red-400 dark:border-red-800" 
                   : task.priority === 'Medium' 
@@ -131,7 +131,7 @@ export const KanbanCard = React.memo<KanbanCardProps>(({ task, mArr, pArr, onCli
               </span>
             )}
             {task.isBlocked && (
-              <span className={cn("font-medium uppercase text-red-600 dark:text-red-400 bg-red-100/90 dark:bg-red-950/90 rounded tracking-widest animate-pulse border border-red-200", isCompact ? "text-[8px] px-1 py-0.5" : "text-[9px] px-1.5 py-0.5")}>Blocked</span>
+              <span className={cn("font-medium uppercase text-red-600 dark:text-red-400 bg-red-100/90 dark:bg-red-950/90 rounded tracking-widest animate-pulse border border-red-200", isCompact ? "text-xs sm:text-[10px] sm:text-[8px] px-1 py-0.5" : "text-xs sm:text-[11px] sm:text-[9px] px-1.5 py-0.5")}>Blocked</span>
             )}
             {hasUnfinishedSubtasks && (
               <div 
@@ -144,7 +144,7 @@ export const KanbanCard = React.memo<KanbanCardProps>(({ task, mArr, pArr, onCli
             {qaStatus && (
               <span className={cn(
                 "font-medium uppercase rounded tracking-widest",
-                isCompact ? "text-[7.5px] px-1 py-0.5" : "text-[8.5px] px-1.5 py-0.5",
+                isCompact ? "text-xs sm:text-[10px] sm:text-[7.5px] px-1 py-0.5" : "text-xs sm:text-[10px] sm:text-[8.5px] px-1.5 py-0.5",
                 qaStatus === 'passed' ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800" :
                 qaStatus === 'failed' ? "bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800 animate-pulse" :
                 qaStatus === 'blocked' ? "bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800" :
@@ -159,7 +159,7 @@ export const KanbanCard = React.memo<KanbanCardProps>(({ task, mArr, pArr, onCli
          {isDueSoon && (
            <div 
              className={cn(
-               "flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-medium tracking-tight select-none border animate-pulse shrink-0",
+               "flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs sm:text-[11px] sm:text-[9px] font-medium tracking-tight select-none border animate-pulse shrink-0",
                isOverdue 
                  ? "bg-rose-50 dark:bg-rose-950/50 border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400" 
                  : "bg-amber-50 dark:bg-amber-950/50 border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400"
@@ -184,20 +184,20 @@ export const KanbanCard = React.memo<KanbanCardProps>(({ task, mArr, pArr, onCli
           <div className="flex items-center gap-2">
              <div className={cn("flex items-center gap-1 bg-slate-50 dark:bg-slate-900/60 border border-slate-100 dark:border-slate-700 group-hover:bg-indigo-50/30 dark:group-hover:bg-indigo-950/30 group-hover:border-indigo-100/50 dark:group-hover:border-indigo-800/50 transition-colors duration-300 rounded-full", isCompact ? "px-1.5 py-0" : "px-2 py-0.5")}>
                 <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: statusColor }} />
-                <span className={cn("font-medium text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 uppercase tracking-wider transition-colors duration-300", isCompact ? "text-[8px]" : "text-[10px]")}>{task.status}</span>
+                <span className={cn("font-medium text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 uppercase tracking-wider transition-colors duration-300", isCompact ? "text-xs sm:text-[10px] sm:text-[8px]" : "text-xs sm:text-[10px]")}>{task.status}</span>
              </div>
              {task.category && (
-               <span className={cn("font-medium text-slate-400 dark:text-slate-500 capitalize px-1", isCompact ? "text-[8px]" : "text-[10px]")}>{task.category}</span>
+               <span className={cn("font-medium text-slate-400 dark:text-slate-500 capitalize px-1", isCompact ? "text-xs sm:text-[10px] sm:text-[8px]" : "text-xs sm:text-[10px]")}>{task.category}</span>
              )}
           </div>
           <div className="flex items-center group-hover:scale-105 transition-transform duration-300">
-            <UserAvatar uid={task.assigneeId || ''} members={pArr} className={cn("ring-2 ring-white dark:ring-slate-800 shadow-sm", isCompact ? "w-5 h-5" : "w-6 h-6")} />
+            <UserAvatar uid={task.assigneeId || ''} members={pArr} className={cn("ring-2 ring-white dark:ring-slate-800 shadow-soft", isCompact ? "w-5 h-5" : "w-6 h-6")} />
           </div>
       </div>
 
       {totalCount > 0 && (
         <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700/60">
-          <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 mb-1 cursor-pointer" onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }}>
+          <div className="flex items-center justify-between text-xs sm:text-[10px] text-slate-500 dark:text-slate-400 mb-1 cursor-pointer" onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }}>
             <div className="flex items-center gap-1">
               <CheckSquare className="w-3 h-3 text-indigo-500 dark:text-indigo-400" />
               <span className={cn("font-medium", percentage === 100 ? "text-emerald-600 dark:text-emerald-400" : "text-slate-600 dark:text-slate-300")}>{completedCount}/{totalCount} Subtasks ({Math.round(percentage)}%)</span>
@@ -217,7 +217,7 @@ export const KanbanCard = React.memo<KanbanCardProps>(({ task, mArr, pArr, onCli
           {isExpanded && (
             <div className="mt-2 space-y-1">
               {subtasks.map((st: any) => (
-                <div key={st.id} className="flex items-center gap-2 text-[10px] text-slate-600 dark:text-slate-300 cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400" onClick={(e) => { e.stopPropagation(); handleToggleSubtask(st); }}>
+                <div key={st.id} className="flex items-center gap-2 text-xs sm:text-[10px] text-slate-600 dark:text-slate-300 cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400" onClick={(e) => { e.stopPropagation(); handleToggleSubtask(st); }}>
                   {st.status === 'Done' ? <CheckSquare className="w-3 h-3 text-emerald-500 dark:text-emerald-400" /> : <Square className="w-3 h-3 text-slate-300 dark:text-slate-600" />}
                   <span className={st.status === 'Done' ? "line-through text-slate-400 dark:text-slate-500" : ""}>{st.title}</span>
                 </div>

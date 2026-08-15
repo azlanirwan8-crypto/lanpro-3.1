@@ -67,13 +67,13 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
   return (
     <div className="flex-1 overflow-y-auto no-scrollbar space-y-6 h-auto p-1 select-none">
       {/* My Active Tasks */}
-      <div className="bg-surface shadow-sm border border-border-subtle/80 rounded-xl p-5">
+      <div className="bg-surface shadow-soft border border-border-subtle/80 rounded-xl p-5">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-[10px] font-medium uppercase tracking-widest text-indigo-700 flex items-center gap-2">
+          <h3 className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-indigo-700 flex items-center gap-2">
             <Zap className="w-4 h-4 text-indigo-500" /> My Active Tasks ({myActiveTasks.length})
           </h3>
           {myActiveTasks.some(task => isDueSoon24h(task.endDate)) && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse shrink-0">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse shrink-0">
               ⏰ Urgen (24j)
             </span>
           )}
@@ -100,16 +100,16 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
               >
                 <div className="flex justify-between items-center mb-1">
                   <div className="flex items-center gap-1.5">
-                    <div className="text-[10px] font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
+                    <div className="text-xs sm:text-[10px] font-medium text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">
                       {task.key}
                     </div>
                     {isDueSoon24h(task.endDate) && (
-                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse">
+                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse">
                         ⏰ {getRemainingHours(task.endDate)}
                       </span>
                     )}
                   </div>
-                  <div className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">
+                  <div className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider">
                     {task.priority}
                   </div>
                 </div>
@@ -124,18 +124,18 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
 
       {/* Blocked / Stoppers */}
       <div 
-        className="shadow-sm border rounded-xl p-5"
+        className="shadow-soft border rounded-xl p-5"
         style={{
           borderColor: "rgba(239, 68, 68, 0.4)",
           backgroundColor: "rgba(254, 242, 242, 0.5)",
         }}
       >
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-[10px] font-medium uppercase tracking-widest text-rose-700 flex items-center gap-2">
+          <h3 className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-rose-700 flex items-center gap-2">
             <AlertCircle className="w-4 h-4 text-rose-500 animate-bounce" /> Stoppers / Blocked ({blockedTasks.length})
           </h3>
           {blockedTasks.some(task => isDueSoon24h(task.endDate)) && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse shrink-0">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse shrink-0">
               ⏰ Urgen (24j)
             </span>
           )}
@@ -160,14 +160,14 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
               >
                 <div className="flex justify-between items-center mb-1">
                   <div className="flex items-center gap-1.5">
-                    <div className="text-[10px] font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">{task.key}</div>
+                    <div className="text-xs sm:text-[10px] font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">{task.key}</div>
                     {isDueSoon24h(task.endDate) && (
-                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse">
+                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse">
                         ⏰ {getRemainingHours(task.endDate)}
                       </span>
                     )}
                   </div>
-                  <div className="text-[10px] font-medium text-rose-500 uppercase tracking-wider">Blocked</div>
+                  <div className="text-xs sm:text-[10px] font-medium text-rose-500 uppercase tracking-wider">Blocked</div>
                 </div>
                 <div className="text-xs font-medium text-content-strong leading-snug line-clamp-2">
                   {task.title}
@@ -179,8 +179,8 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
       </div>
 
       {/* Needs Attention / Overdue */}
-      <div className="bg-surface shadow-sm border border-rose-100/80 rounded-xl p-5">
-        <h3 className="text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2 mb-3">
+      <div className="bg-surface shadow-soft border border-rose-100/80 rounded-xl p-5">
+        <h3 className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2 mb-3">
           <AlertCircle className="w-4 h-4 text-rose-500 animate-pulse" /> Needs Attention ({overdueTasks.length})
         </h3>
         <div className="space-y-2.5 max-h-[290px] overflow-y-auto custom-scrollbar pr-1">
@@ -197,8 +197,8 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
                 }}
               >
                 <div className="flex justify-between items-start mb-1">
-                  <div className="text-[10px] font-medium text-indigo-600">{task.key}</div>
-                  <div className="text-[10px] font-medium text-rose-500 uppercase tracking-wider">Overdue</div>
+                  <div className="text-xs sm:text-[10px] font-medium text-indigo-600">{task.key}</div>
+                  <div className="text-xs sm:text-[10px] font-medium text-rose-500 uppercase tracking-wider">Overdue</div>
                 </div>
                 <div className="text-xs font-medium text-content-strong leading-snug line-clamp-2">
                   {task.title}
@@ -210,13 +210,13 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
       </div>
 
       {/* Due Soon */}
-      <div className="bg-surface shadow-sm border border-border-faint/80 rounded-xl p-5">
+      <div className="bg-surface shadow-soft border border-border-faint/80 rounded-xl p-5">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2">
+          <h3 className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2">
             <Zap className="w-4 h-4 text-amber-500" /> Due Soon (3 Days) ({dueSoonTasks.length})
           </h3>
           {dueSoonTasks.some(task => isDueSoon24h(task.endDate)) && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse shrink-0">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse shrink-0">
               ⏰ Urgen (24j)
             </span>
           )}
@@ -241,14 +241,14 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
               >
                 <div className="flex justify-between items-center mb-1">
                   <div className="flex items-center gap-1.5">
-                    <div className="text-[10px] font-medium text-indigo-600">{task.key}</div>
+                    <div className="text-xs sm:text-[10px] font-medium text-indigo-600">{task.key}</div>
                     {isDueSoon24h(task.endDate) && (
-                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse">
+                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider bg-amber-500 text-white animate-pulse">
                         ⏰ {getRemainingHours(task.endDate)}
                       </span>
                     )}
                   </div>
-                  <div className="text-[10px] font-medium text-content-subtle">
+                  <div className="text-xs sm:text-[10px] font-medium text-content-subtle">
                     {formatDistanceToNow(ensureDate(task.endDate!), {
                       addSuffix: true,
                     })}
@@ -264,9 +264,9 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
       </div>
 
       {/* Recent Meeting Notes */}
-      <div className="bg-surface shadow-sm border border-border-faint/80 rounded-xl p-5">
+      <div className="bg-surface shadow-soft border border-border-faint/80 rounded-xl p-5">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2">
+          <h3 className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2">
             <Video className="w-4 h-4 text-sky-500" /> Recent Meetings ({meetings.length})
           </h3>
         </div>
@@ -283,7 +283,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
                 <div className="text-xs font-medium text-content-strong line-clamp-1 mb-1 leading-normal">
                   {meeting.title}
                 </div>
-                <div className="flex justify-between items-center text-[10px] text-content-subtle">
+                <div className="flex justify-between items-center text-xs sm:text-[10px] text-content-subtle">
                   <span className="font-medium uppercase text-content-muted">
                     {format(ensureDate(meeting.createdAt), "MMM dd, yyyy")}
                   </span>
@@ -298,9 +298,9 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
       </div>
 
       {/* Recent Documentation */}
-      <div className="bg-surface shadow-sm border border-border-faint/80 rounded-xl p-5">
+      <div className="bg-surface shadow-soft border border-border-faint/80 rounded-xl p-5">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2">
+          <h3 className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-content-strong flex items-center gap-2">
             <FileText className="w-4 h-4 text-teal-500" /> Documentation ({documents.length})
           </h3>
         </div>
@@ -317,7 +317,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
                 <div className="text-xs font-medium text-content-strong leading-snug line-clamp-1 mb-1">
                   {doc.title}
                 </div>
-                <div className="text-[10px] font-medium text-content-subtle flex justify-between">
+                <div className="text-xs sm:text-[10px] font-medium text-content-subtle flex justify-between">
                   <span className="uppercase tracking-wider text-teal-600 bg-teal-50 px-1 py-0.5 rounded font-mono">
                     {doc.type || "DOC"}
                   </span>
@@ -332,11 +332,11 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
       </div>
 
       {/* Live Activity (24h) */}
-      <div className="bg-slate-800 rounded-xl p-5 shadow-lg text-white relative overflow-hidden">
+      <div className="bg-slate-800 rounded-xl p-5 shadow-soft-lg text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 -translate-y-4 translate-x-4 opacity-10 pointer-events-none">
           <Globe className="w-32 h-32" />
         </div>
-        <h3 className="text-[10px] font-medium uppercase tracking-widest text-indigo-300 flex items-center gap-2 mb-3 relative z-10">
+        <h3 className="text-xs sm:text-[10px] font-medium uppercase tracking-widest text-indigo-300 flex items-center gap-2 mb-3 relative z-10">
           <Clock className="w-4 h-4 text-indigo-400" /> Live Activity (24h)
         </h3>
         <div className="space-y-3 max-h-[260px] overflow-y-auto custom-scrollbar pr-1 relative z-10">
@@ -347,10 +347,10 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
               <div key={log.id} className="flex gap-2.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
                 <div>
-                  <div className="text-[11px] text-slate-300 font-medium leading-tight">
+                  <div className="text-xs sm:text-[11px] text-slate-300 font-medium leading-tight">
                     <span className="text-white font-medium">{author}</span> {humanizeActivityAction(log.action)}
                   </div>
-                  <div className="text-[9px] text-content-subtle mt-0.5">
+                  <div className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle mt-0.5">
                     {formatDistanceToNow(ensureDate(log.createdAt), {
                       addSuffix: true,
                     })}

@@ -33,8 +33,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="min-h-[400px] flex items-center justify-center p-8">
-          <div className="bg-rose-50 rounded-xl p-8 max-w-md w-full text-center border border-rose-100 shadow-sm">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+          <div className="bg-rose-50 rounded-xl p-8 max-w-md w-full text-center border border-rose-100 shadow-soft">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-soft">
               <AlertTriangle className="w-8 h-8 text-rose-500" />
             </div>
             <h2 className="text-lg font-medium text-slate-800 mb-2">Terjadi Kesalahan Sistem</h2>
@@ -42,13 +42,13 @@ export class ErrorBoundary extends Component<Props, State> {
               Maaf, widget atau komponen ini mengalami gangguan (Crash). Silakan muat ulang halaman.
             </p>
             <div className="bg-white p-3 rounded text-left mb-6 overflow-auto max-h-32 border border-slate-100">
-              <code className="text-[10px] text-rose-500 font-mono">
+              <code className="text-xs sm:text-[10px] text-rose-500 font-mono">
                 {this.state.error?.toString()}
               </code>
             </div>
             <button
               onClick={() => window.location.reload()}
-              className="inline-flex items-center gap-2 bg-slate-800 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 bg-slate-800 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors shadow-soft"
             >
               <RefreshCw className="w-4 h-4" />
               Muat Ulang Halaman

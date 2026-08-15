@@ -52,7 +52,7 @@ export const NodePropertiesOverlay: React.FC<NodePropertiesOverlayProps> = ({
                             handleUpdateActiveNode({ type: e.target.value as FlowNode["type"] });
                             toast.success(`Bentuk bentuk diubah ke ${e.target.value.toUpperCase()}!`);
                           }}
-                          className="bg-surface-sunken border border-border-subtle text-[10px] font-medium text-content-body outline-none p-1 rounded-lg cursor-pointer hover:bg-surface-muted max-w-[120px]"
+                          className="bg-surface-sunken border border-border-subtle text-xs sm:text-[10px] font-medium text-content-body outline-none p-1 rounded-lg cursor-pointer hover:bg-surface-muted max-w-[120px]"
                           title="Ubah jenis bentuk"
                         >
                           <option value="rect">Rectangle</option>
@@ -122,7 +122,7 @@ export const NodePropertiesOverlay: React.FC<NodePropertiesOverlayProps> = ({
                             const nextStyle: FlowNode["fontStyle"] = node.fontStyle === "sans" ? "serif" : node.fontStyle === "serif" ? "mono" : "sans";
                             handleUpdateActiveNode({ fontStyle: nextStyle });
                           }}
-                          className="p-1 px-1.5 hover:bg-surface-muted text-[10px] rounded font-medium uppercase"
+                          className="p-1 px-1.5 hover:bg-surface-muted text-xs sm:text-[10px] rounded font-medium uppercase"
                           title="Format Huruf (Sans / Serif / Mono)"
                         >
                           {node.fontStyle || "sans"}
@@ -145,7 +145,7 @@ export const NodePropertiesOverlay: React.FC<NodePropertiesOverlayProps> = ({
                         {/* Font sizing buttons */}
                         <div className="flex items-center gap-0.5">
                           <button onClick={() => handleUpdateActiveNode({ fontSize: Math.max(9, (node.fontSize || 12) - 1) })} className="p-1 hover:bg-surface-muted text-xs rounded font-medium" title="Perkecil Font">-</button>
-                          <span className="text-[10px] font-mono font-medium px-0.5 whitespace-nowrap">{node.fontSize || 12}px</span>
+                          <span className="text-xs sm:text-[10px] font-mono font-medium px-0.5 whitespace-nowrap">{node.fontSize || 12}px</span>
                           <button onClick={() => handleUpdateActiveNode({ fontSize: Math.min(22, (node.fontSize || 12) + 1) })} className="p-1 hover:bg-surface-muted text-xs rounded font-medium" title="Perbesar Font">+</button>
                         </div>
 

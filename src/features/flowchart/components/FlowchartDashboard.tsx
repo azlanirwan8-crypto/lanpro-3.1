@@ -58,7 +58,7 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
 }) => {
   return (
       <div className="flex-1 flex flex-col p-3 md:p-6 font-sans overflow-y-auto w-full bg-[#f4f7f9] animate-in fade-in duration-700">
-        <div className="flex-1 flex flex-col bg-surface border border-border-subtle/80 rounded-lg shadow-sm overflow-hidden">
+        <div className="flex-1 flex flex-col bg-surface border border-border-subtle/80 rounded-lg shadow-soft overflow-hidden">
           {/* Dashboard Header matching Meeting Notes */}
           <div className="p-6 md:p-7 border-b border-border-subtle/80 bg-surface flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
             <div className="flex items-center gap-3.5">
@@ -102,7 +102,7 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
             <div className="flex-1 overflow-x-auto overflow-y-auto m-6 bg-surface rounded-md border border-border-subtle/60 shadow-xs">
               <ResponsiveTable className="w-full text-left border-collapse min-w-[880px]">
                 <thead>
-                  <tr className="bg-primary/5 border-b border-primary/15 text-[11px] font-semibold text-primary uppercase tracking-wider whitespace-nowrap">
+                  <tr className="bg-primary/5 border-b border-primary/15 text-xs sm:text-[11px] font-semibold text-primary uppercase tracking-wider whitespace-nowrap">
                     <th className="py-3.5 px-4 w-14 text-center">No</th>
                     <th className="py-3.5 px-4 min-w-[180px] max-w-[280px]">Flowchart Title</th>
                     <th className="py-3.5 px-4 w-36">Category</th>
@@ -163,7 +163,7 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
                             {fw.name}
                           </td>
                           <td className="py-3 px-4 whitespace-nowrap">
-                            <span className="inline-block px-2.5 py-1 bg-indigo-50 text-primary border border-indigo-200/80 text-[10px] font-medium rounded-md uppercase">
+                            <span className="inline-block px-2.5 py-1 bg-indigo-50 text-primary border border-indigo-200/80 text-xs sm:text-[10px] font-medium rounded-md uppercase">
                               {fw.category || "Panduan"}
                             </span>
                           </td>
@@ -172,7 +172,7 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
                           </td>
                           <td className="py-3 px-4 whitespace-nowrap">
                             {linkedEpic ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-violet-50 text-violet-700 border border-violet-200 text-[10px] font-medium rounded-md max-w-[180px] truncate" title={linkedEpic.title}>
+                              <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-violet-50 text-violet-700 border border-violet-200 text-xs sm:text-[10px] font-medium rounded-md max-w-[180px] truncate" title={linkedEpic.title}>
                                 🎯 {linkedEpic.title}
                               </span>
                             ) : (
@@ -181,7 +181,7 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
                           </td>
                           <td className="py-3 px-4 text-content-body font-medium whitespace-nowrap">
                             <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-medium shrink-0">
+                              <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs sm:text-[10px] font-medium shrink-0">
                                 {initials}
                               </div>
                               <span className="truncate max-w-[120px]">{createdBy}</span>

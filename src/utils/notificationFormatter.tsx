@@ -71,7 +71,7 @@ const renderStatusBadge = (status: string) => {
   }
 
   return (
-    <span className={`inline-flex items-center px-1.5 py-0 rounded-full text-[10px] font-medium border ${colorClass} mx-0.5`}>
+    <span className={`inline-flex items-center px-1.5 py-0 rounded-full text-xs sm:text-[10px] font-medium border ${colorClass} mx-0.5`}>
       {status}
     </span>
   );
@@ -290,11 +290,11 @@ export const formatNotification = (
       parts.push(processedMsg.substring(lastIndex, startIndex));
     }
 
-    // Push the beautiful bold task identity - Ultra Compact (text-[10px])
+    // Push the beautiful bold task identity - Ultra Compact (text-xs sm:text-[10px])
     const code = match[1];
     const name = match[2];
     parts.push(
-      <span key={`task-${code}-${startIndex}`} className="inline-flex items-center gap-0.5 px-1 py-0 rounded bg-slate-100 hover:bg-slate-200 border border-slate-200/60 text-[10px] font-medium text-slate-800 font-mono transition-colors my-0.5 select-all">
+      <span key={`task-${code}-${startIndex}`} className="inline-flex items-center gap-0.5 px-1 py-0 rounded bg-slate-100 hover:bg-slate-200 border border-slate-200/60 text-xs sm:text-[10px] font-medium text-slate-800 font-mono transition-colors my-0.5 select-all">
         <span className="text-violet-600 font-medium">{code}</span>
         <span className="text-slate-300">|</span>
         <span className="truncate max-w-[120px]">{name}</span>
@@ -308,9 +308,9 @@ export const formatNotification = (
     parts.push(processedMsg.substring(lastIndex));
   }
 
-  // Render finalized beautiful message Node (Compact: text-[11px])
+  // Render finalized beautiful message Node (Compact: text-xs sm:text-[11px])
   const formattedMessage = (
-    <div className="text-[11px] text-slate-500 leading-tight mt-0.5">
+    <div className="text-xs sm:text-[11px] text-slate-500 leading-tight mt-0.5">
       <div className="flex flex-wrap items-center gap-x-0.5">
         {parts.length > 0 ? (
           parts.map((p, i) => <React.Fragment key={i}>{p}</React.Fragment>)
@@ -326,10 +326,10 @@ export const formatNotification = (
         if (statusMatch && statusMatch[1] && statusMatch[2]) {
           return (
             <div className="mt-1 flex items-center gap-1 text-slate-500 bg-slate-50 border border-slate-100 rounded-md p-1 px-1.5 max-w-fit">
-              <span className="text-[9px] font-medium text-slate-400">Transisi:</span>
+              <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-slate-400">Transisi:</span>
               <div className="flex items-center gap-0.5">
                 {renderStatusBadge(statusMatch[1])}
-                <span className="text-slate-400 text-[9px]">➔</span>
+                <span className="text-slate-400 text-xs sm:text-[11px] sm:text-[9px]">➔</span>
                 {renderStatusBadge(statusMatch[2])}
               </div>
             </div>
@@ -337,9 +337,9 @@ export const formatNotification = (
         } else if (toMatch && toMatch[1]) {
           return (
             <div className="mt-1 flex items-center gap-1 text-slate-500 bg-slate-50 border border-slate-100 rounded-md p-1 px-1.5 max-w-fit">
-              <span className="text-[9px] font-medium text-slate-400">Transisi:</span>
+              <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-slate-400">Transisi:</span>
               <div className="flex items-center gap-0.5">
-                <span className="text-slate-400 text-[9px] font-medium">Ke</span>
+                <span className="text-slate-400 text-xs sm:text-[11px] sm:text-[9px] font-medium">Ke</span>
                 {renderStatusBadge(toMatch[1])}
               </div>
             </div>
@@ -350,7 +350,7 @@ export const formatNotification = (
 
       {/* Special Block: Render comments inside stylized blockquotes (Compact: mt-1 pl-2 py-0.5 px-1.5) */}
       {commentBlock && (
-        <div className="mt-1 pl-2 border-l-2 border-violet-500 bg-slate-50/60 py-0.5 px-1.5 rounded-r text-slate-600 italic font-medium text-[11px] max-w-prose">
+        <div className="mt-1 pl-2 border-l-2 border-violet-500 bg-slate-50/60 py-0.5 px-1.5 rounded-r text-slate-600 italic font-medium text-xs sm:text-[11px] max-w-prose">
           "{commentBlock}"
         </div>
       )}

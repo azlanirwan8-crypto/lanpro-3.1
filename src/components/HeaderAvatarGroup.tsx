@@ -66,24 +66,24 @@ export const HeaderAvatarGroup: React.FC<HeaderAvatarGroupProps> = ({ allUsers, 
                 isCurrentUser 
                   ? 'border-indigo-400 ring-2 ring-indigo-100 z-10' 
                   : 'border-white ring-1 ring-slate-100'
-              } relative group-hover:z-20 group-hover:scale-110 transition-all shadow-sm`}
+              } relative group-hover:z-20 group-hover:scale-110 transition-all shadow-soft`}
             />
             {/* Indikator Online: Bullet hijau */}
             <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white absolute bottom-0 right-0 z-20"></span>
             
             {/* Tooltip Nama Pengguna */}
-            <div className="absolute top-10 left-1/2 -translate-x-1/2 px-2.5 py-1.5 bg-slate-800 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-30 flex flex-col items-center">
+            <div className="absolute top-10 left-1/2 -translate-x-1/2 px-2.5 py-1.5 bg-slate-800 text-white text-xs sm:text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-30 flex flex-col items-center">
               <span className="font-medium">
                 {member.displayName || member.name || member.username || "Anggota Tim"} {isCurrentUser ? "(Anda)" : ""}
               </span>
-              <span className="text-[8px] text-slate-300 capitalize mt-0.5">{member.role || "User"}</span>
+              <span className="text-xs sm:text-[10px] sm:text-[8px] text-slate-300 capitalize mt-0.5">{member.role || "User"}</span>
             </div>
           </div>
         );
       })}
       
       {displayUsers.length > 5 && (
-        <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-50 flex items-center justify-center text-[10px] font-medium text-slate-500 shadow-sm ring-1 ring-slate-200 z-0 relative hover:z-10 hover:bg-slate-100 transition-all cursor-default shrink-0">
+        <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-50 flex items-center justify-center text-xs sm:text-[10px] font-medium text-slate-500 shadow-soft ring-1 ring-slate-200 z-0 relative hover:z-10 hover:bg-slate-100 transition-all cursor-default shrink-0">
           +{displayUsers.length - 5}
         </div>
       )}

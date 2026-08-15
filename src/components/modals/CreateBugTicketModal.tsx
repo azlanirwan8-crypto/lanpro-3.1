@@ -86,7 +86,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
               </div>
               <div>
                 <h3 className="text-base font-medium text-slate-800">Buat Tiket Bug Terstruktur</h3>
-                <p className="text-[11px] text-slate-500 font-medium">
+                <p className="text-xs sm:text-[11px] text-slate-500 font-medium">
                   Dibuat dari Test Case #{testCase.rowNum}
                 </p>
               </div>
@@ -102,7 +102,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
 
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+              <label className="text-xs sm:text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
                 JUDUL TIKET BUG *
               </label>
               <input
@@ -116,7 +116,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
 
             {/* Parent Task Searchable Combobox */}
             <div className="space-y-1.5 relative">
-              <label className="text-[10px] font-medium text-danger uppercase tracking-wider block">
+              <label className="text-xs sm:text-[10px] font-medium text-danger uppercase tracking-wider block">
                 TARGET EPIC / TASK UTAMA (PARENT * MANDATORY)
               </label>
 
@@ -182,7 +182,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+                <label className="text-xs sm:text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
                   SEVERITAS BUG
                 </label>
                 <select
@@ -198,7 +198,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+                <label className="text-xs sm:text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
                   ASSIGNEE DEVELOPER
                 </label>
                 <select
@@ -217,7 +217,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
+              <label className="text-xs sm:text-[10px] font-medium text-slate-500 uppercase tracking-wider block">
                 DESKRIPSI BUG
               </label>
               <textarea

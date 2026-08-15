@@ -54,7 +54,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute right-0 mt-2 w-80 sm:w-[380px] bg-surface rounded-xl shadow-lg border border-border-subtle z-50 overflow-hidden origin-top-right"
+                    className="absolute right-0 mt-2 w-80 sm:w-[380px] bg-surface rounded-xl shadow-soft-lg border border-border-subtle z-50 overflow-hidden origin-top-right"
                   >
                   {/* Dropdown Header */}
                   <div className="px-5 py-4 border-b border-border-subtle flex items-center justify-between bg-surface">

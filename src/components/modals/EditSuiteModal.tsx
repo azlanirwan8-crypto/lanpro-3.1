@@ -35,7 +35,7 @@ export const EditSuiteModal: React.FC<EditSuiteModalProps> = ({
           <h3 className="text-sm font-medium text-slate-800 uppercase tracking-wider">Ubah Info Dokumen Suite</h3>
           <div className="space-y-3">
             <div className="space-y-1">
-              <label className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block">Nama Dokumen</label>
+              <label className="text-xs sm:text-[10px] font-medium text-slate-400 uppercase tracking-wider block">Nama Dokumen</label>
               <input
                 type="text"
                 value={editName}

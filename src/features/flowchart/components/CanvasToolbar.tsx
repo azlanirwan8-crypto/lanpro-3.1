@@ -47,8 +47,8 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
                           <Workflow className="w-3.5 h-3.5 text-violet-600" />
                         </div>
                         <div className="text-left font-sans">
-                          <p className="text-[8px] font-medium text-content-subtle uppercase tracking-widest leading-none mb-0.5">Diagram Alur</p>
-                          <span className="text-[11px] font-medium text-content-strong truncate max-w-[150px] block leading-tight">
+                          <p className="text-xs sm:text-[10px] sm:text-[8px] font-medium text-content-subtle uppercase tracking-widest leading-none mb-0.5">Diagram Alur</p>
+                          <span className="text-xs sm:text-[11px] font-medium text-content-strong truncate max-w-[150px] block leading-tight">
                             {currentFlowMetadata?.name || "Untitled Workspace"}
                           </span>
                         </div>
@@ -74,12 +74,12 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
                           {canvasTheme === "miro" ? (
                             <>
                               <Sun className="w-3.5 h-3.5 text-amber-500 fill-amber-200 animate-spin-slow" />
-                              <span className="text-[9px] font-medium uppercase tracking-wider hidden sm:inline px-0.5">Miro Theme</span>
+                              <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase tracking-wider hidden sm:inline px-0.5">Miro Theme</span>
                             </>
                           ) : (
                             <>
                               <Moon className="w-3.5 h-3.5 text-blue-400 fill-blue-950" />
-                              <span className="text-[9px] font-medium uppercase tracking-wider hidden sm:inline px-0.5">Blueprint Theme</span>
+                              <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase tracking-wider hidden sm:inline px-0.5">Blueprint Theme</span>
                             </>
                           )}
                         </button>
@@ -102,7 +102,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
                           title={`Snap to Grid (Saat ini: ${isSnapToGrid ? "Aktif" : "Mati"})`}
                         >
                           <LayoutGrid className={cn("w-3.5 h-3.5", isSnapToGrid ? "text-violet-600" : "text-content-subtle")} />
-                          <span className="text-[9px] font-medium uppercase tracking-wider hidden sm:inline px-0.5">
+                          <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium uppercase tracking-wider hidden sm:inline px-0.5">
                             {isSnapToGrid ? "Snap Grid" : "Free Move"}
                           </span>
                         </button>
@@ -114,13 +114,13 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
                       <div className="bg-surface/70 hover:bg-surface/85 backdrop-blur-md border border-border-subtle/40 p-1 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] flex items-center gap-1.5 transition-all duration-300">
                         <button
                           onClick={handleExportJPG}
-                          className="flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-[10px] font-medium transition-all cursor-pointer"
+                          className="flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-xs sm:text-[10px] font-medium transition-all cursor-pointer"
                         >
                           <Download className="w-3 h-3" /> Ekspor
                         </button>
                         <button
                           onClick={handleExportJSON}
-                          className="flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 rounded-lg text-[10px] font-medium transition-all cursor-pointer"
+                          className="flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 rounded-lg text-xs sm:text-[10px] font-medium transition-all cursor-pointer"
                         >
                           <Database className="w-3 h-3" /> Backup
                         </button>

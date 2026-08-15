@@ -38,7 +38,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) 
 
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-      <div className="grid grid-cols-12 gap-0 bg-slate-50 border-b border-slate-200 text-[10px] font-medium text-slate-500 uppercase tracking-widest p-3">
+      <div className="grid grid-cols-12 gap-0 bg-slate-50 border-b border-slate-200 text-xs sm:text-[10px] font-medium text-slate-500 uppercase tracking-widest p-3">
         <div className="col-span-4 px-2">Nama Field</div>
         <div className="col-span-4 px-2 border-l border-slate-200">Nilai Lama</div>
         <div className="col-span-4 px-2 border-l border-slate-200">Nilai Baru</div>
@@ -66,7 +66,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) 
               
               <div className="col-span-4 px-2 border-l border-slate-100 min-h-[1.5rem] flex items-center">
                 {oldVal === undefined || oldVal === null ? (
-                  <span className="text-[10px] font-medium text-slate-400 italic flex items-center gap-1">
+                  <span className="text-xs sm:text-[10px] font-medium text-slate-400 italic flex items-center gap-1">
                     <Minus className="w-2 h-2" /> Data Baru
                   </span>
                 ) : (
@@ -78,7 +78,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({ oldValues, newValues }) 
 
               <div className="col-span-4 px-2 border-l border-slate-100 min-h-[1.5rem] flex items-center">
                 {newVal === undefined || newVal === null ? (
-                   <span className="text-[10px] font-medium text-rose-400 italic">Dihapus</span>
+                   <span className="text-xs sm:text-[10px] font-medium text-rose-400 italic">Dihapus</span>
                 ) : (
                   <div className="flex items-center gap-2 w-full">
                     {isDifferent && <ArrowRight className="w-3 h-3 text-indigo-300 flex-shrink-0" />}

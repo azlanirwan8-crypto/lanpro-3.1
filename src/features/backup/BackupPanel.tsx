@@ -238,12 +238,12 @@ export const BackupPanel = ({
             <FileText className="w-4 h-4 text-slate-500" />
             <h3 className="text-xs font-medium text-slate-700 uppercase tracking-wider">Hasil Export Database (DataTable)</h3>
           </div>
-          <span className="text-[11px] text-slate-500 font-medium">Total: {exportHistory.length} file</span>
+          <span className="text-xs sm:text-[11px] text-slate-500 font-medium">Total: {exportHistory.length} file</span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
-            <thead className="bg-slate-100/70 text-slate-700 border-b border-slate-200/80 font-medium uppercase tracking-wider text-[11px]">
+            <thead className="bg-slate-100/70 text-slate-700 border-b border-slate-200/80 font-medium uppercase tracking-wider text-xs sm:text-[11px]">
               <tr>
                 <th className="py-2.5 px-3.5">Waktu Export</th>
                 <th className="py-2.5 px-3.5">Nama File Backup</th>
@@ -265,7 +265,7 @@ export const BackupPanel = ({
                     <td className="py-2.5 px-3.5">
                       {item.status === 'processing' && (
                         <div className="space-y-1 w-48">
-                          <div className="flex justify-between text-[10px] text-amber-700 font-medium">
+                          <div className="flex justify-between text-xs sm:text-[10px] text-amber-700 font-medium">
                             <span className="flex items-center gap-1">
                               <Loader2 className="w-3 h-3 animate-spin text-amber-600" />
                               Exporting...
@@ -281,13 +281,13 @@ export const BackupPanel = ({
                         </div>
                       )}
                       {item.status === 'completed' && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs sm:text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
                           <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                           Selesai
                         </span>
                       )}
                       {item.status === 'failed' && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-rose-50 text-rose-700 border border-rose-200">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs sm:text-[11px] font-medium bg-rose-50 text-rose-700 border border-rose-200">
                           <AlertTriangle className="w-3 h-3 text-rose-600" />
                           Gagal
                         </span>
@@ -297,7 +297,7 @@ export const BackupPanel = ({
                       {item.status === 'completed' && (
                         <button
                           onClick={() => handleDownloadItem(item)}
-                          className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-medium text-[11px] transition-all shadow-2xs inline-flex items-center gap-1 cursor-pointer active:scale-95"
+                          className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-medium text-xs sm:text-[11px] transition-all shadow-2xs inline-flex items-center gap-1 cursor-pointer active:scale-95"
                           title="Download Backup"
                         >
                           <Download className="w-3 h-3" />
@@ -306,7 +306,7 @@ export const BackupPanel = ({
                       )}
                       <button
                         onClick={() => handleDeleteItem(item.id)}
-                        className="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded font-medium text-[11px] transition-all shadow-2xs inline-flex items-center gap-1 cursor-pointer active:scale-95"
+                        className="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded font-medium text-xs sm:text-[11px] transition-all shadow-2xs inline-flex items-center gap-1 cursor-pointer active:scale-95"
                         title="Hapus riwayat"
                       >
                         <Trash2 className="w-3 h-3" />

@@ -41,7 +41,7 @@ export const UserBadge = ({ authorId, users = [], className, showRole = false, s
         uid={authorId}
         members={users}
         name={name}
-        className="w-6 h-6 text-[9px] shrink-0 group-hover/avatar:scale-110 transition-transform"
+        className="w-6 h-6 text-xs sm:text-[11px] sm:text-[9px] shrink-0 group-hover/avatar:scale-110 transition-transform"
       />
       {showName && (
         <div className="flex flex-col min-w-0">
@@ -49,7 +49,7 @@ export const UserBadge = ({ authorId, users = [], className, showRole = false, s
             {name}
           </span>
           {showRole && role && (
-            <span className="text-[9px] font-medium text-slate-400 uppercase tracking-wider leading-none mt-0.5">
+            <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-slate-400 uppercase tracking-wider leading-none mt-0.5">
               {role}
             </span>
           )}
@@ -58,7 +58,7 @@ export const UserBadge = ({ authorId, users = [], className, showRole = false, s
 
       {/* Floating Hover Tooltip (NAME ONLY) */}
       <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 hidden group-hover/avatar:flex flex-col items-center z-50 pointer-events-none animate-in fade-in zoom-in-95 duration-150">
-        <div className="bg-slate-900 text-white px-2.5 py-1 rounded-lg text-[10px] font-medium whitespace-nowrap shadow-xl border border-slate-800">
+        <div className="bg-slate-900 text-white px-2.5 py-1 rounded-lg text-xs sm:text-[10px] font-medium whitespace-nowrap shadow-xl border border-slate-800">
           <span>{name}</span>
         </div>
         <div className="w-2 h-2 bg-slate-900 rotate-45 -mt-1"></div>

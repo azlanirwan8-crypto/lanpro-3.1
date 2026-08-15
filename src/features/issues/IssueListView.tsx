@@ -326,7 +326,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                   type="checkbox" 
                   checked={isSelected}
                   onChange={() => handleToggleSelectOne(task.id)}
-                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 shadow-sm transition-all cursor-pointer" 
+                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 shadow-soft transition-all cursor-pointer" 
                 />
              </div>
           </td>
@@ -358,7 +358,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
 
                     {task.type !== 'epic' && (
                       <span 
-                        className="text-[11px] font-mono font-medium text-content-subtle bg-surface-sunken px-1.5 py-0.5 rounded border border-border-subtle select-all shrink-0 uppercase tracking-tighter"
+                        className="text-xs sm:text-[11px] font-mono font-medium text-content-subtle bg-surface-sunken px-1.5 py-0.5 rounded border border-border-subtle select-all shrink-0 uppercase tracking-tighter"
                         title={task.key}
                       >
                         {task.key}
@@ -379,7 +379,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                       {task.title || (task as any).summary || (task as any).name || ''}
                     </span>
 
-                    {!!task.parentId && <span className="text-[10px] text-content-subtle font-medium bg-surface-muted px-1.5 py-0.5 rounded border border-border-subtle shrink-0">Subtask</span>}
+                    {!!task.parentId && <span className="text-xs sm:text-[10px] text-content-subtle font-medium bg-surface-muted px-1.5 py-0.5 rounded border border-border-subtle shrink-0">Subtask</span>}
                     
                     <button 
                       onClick={(e) => { 
@@ -423,8 +423,8 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                 const reporterName = reporterObj?.name || reporterObj?.displayName || reporterObj?.email || (task.reporterId ? 'Unknown' : 'Unassigned');
                 content = (
                   <div className="flex items-center gap-2">
-                    <UserAvatar uid={task.reporterId || ''} user={reporterObj} members={projectMembers} className="w-5 h-5 border border-white shadow-sm ring-1 ring-slate-100" />
-                    <span className={cn("text-[11px] font-medium truncate max-w-[120px]", reporterObj ? "text-content-body" : "text-content-subtle")}>
+                    <UserAvatar uid={task.reporterId || ''} user={reporterObj} members={projectMembers} className="w-5 h-5 border border-white shadow-soft ring-1 ring-slate-100" />
+                    <span className={cn("text-xs sm:text-[11px] font-medium truncate max-w-[120px]", reporterObj ? "text-content-body" : "text-content-subtle")}>
                       {reporterName}
                     </span>
                   </div>
@@ -442,7 +442,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                     masterData={mArr}
                     type="priority"
                     disabled={!isEditable}
-                    className="text-[10px]"
+                    className="text-xs sm:text-[10px]"
                   />
                 );
                 break;
@@ -457,7 +457,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                     masterData={mArr}
                     type="status"
                     disabled={!isEditable}
-                    className="text-[10px]"
+                    className="text-xs sm:text-[10px]"
                   />
                 );
                 break;
@@ -494,7 +494,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                     </div>
                     <span 
                       className={cn(
-                        "text-[10px] font-medium font-mono w-8 text-right shrink-0",
+                        "text-xs sm:text-[10px] font-medium font-mono w-8 text-right shrink-0",
                         progressValue === 100 ? "text-emerald-600" :
                         progressValue === 75 ? "text-violet-600" :
                         progressValue === 50 ? "text-amber-600" :
@@ -519,7 +519,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                     options={resOptions}
                     masterData={mArr}
                     disabled={!isEditable}
-                    className="text-[10px]"
+                    className="text-xs sm:text-[10px]"
                   />
                 );
                 break;
@@ -536,7 +536,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                     options={catOptions}
                     masterData={mArr}
                     disabled={!isEditable}
-                    className="text-[10px]"
+                    className="text-xs sm:text-[10px]"
                   />
                 );
                 break;
@@ -548,7 +548,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                     disabled={!isEditable}
                     initialValue={task.storyPoints || ''}
                     onSave={(val: any) => updateTaskField(task.id, 'storyPoints', val ? Number(val) : null)}
-                    className="bg-transparent border border-transparent hover:border-border-subtle focus:border-indigo-500 rounded px-2 py-1 text-[11px] font-medium text-content-body w-full outline-none transition-colors"
+                    className="bg-transparent border border-transparent hover:border-border-subtle focus:border-indigo-500 rounded px-2 py-1 text-xs sm:text-[11px] font-medium text-content-body w-full outline-none transition-colors"
                     placeholder="-"
                   />
                 );
@@ -578,8 +578,8 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                 content = (
                   <div className="flex gap-1 overflow-hidden max-w-[150px]">
                     {task.labels?.length ? task.labels.map((L, lIdx) => (
-                      <span key={`${L}-${lIdx}`} className="text-[9px] font-medium rounded bg-surface-muted text-content-secondary px-1.5 py-0.5 truncate max-w-[60px]">{L}</span>
-                    )) : <span className="text-[10px] text-slate-300">-</span>}
+                      <span key={`${L}-${lIdx}`} className="text-xs sm:text-[11px] sm:text-[9px] font-medium rounded bg-surface-muted text-content-secondary px-1.5 py-0.5 truncate max-w-[60px]">{L}</span>
+                    )) : <span className="text-xs sm:text-[10px] text-slate-300">-</span>}
                   </div>
                 );
                 break;
@@ -594,7 +594,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                     disabled={!isEditable}
                     initialValue={dateVal ? format(ensureDate(dateVal), 'yyyy-MM-dd') : ''}
                     onSave={(val: any) => updateTaskField(task.id, col.id, val)}
-                    className="bg-transparent border-none text-[10px] font-medium text-content-muted focus:ring-0 active:ring-0 outline-none w-full"
+                    className="bg-transparent border-none text-xs sm:text-[10px] font-medium text-content-muted focus:ring-0 active:ring-0 outline-none w-full"
                   />
                 );
                 break;
@@ -611,14 +611,14 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                     options={relOptions}
                     masterData={mArr}
                     disabled={!isEditable}
-                    className="text-[10px]"
+                    className="text-xs sm:text-[10px]"
                   />
                 );
                 break;
 
               case 'updated':
                 content = (
-                  <span className="text-[10px] font-medium text-content-subtle whitespace-nowrap">
+                  <span className="text-xs sm:text-[10px] font-medium text-content-subtle whitespace-nowrap">
                     {task.updatedAt ? formatDistanceToNow(ensureDate(task.updatedAt), { addSuffix: true }) : '-'}
                   </span>
                 );
@@ -626,7 +626,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
 
               case 'created':
                 content = (
-                  <span className="text-[10px] font-medium text-content-subtle whitespace-nowrap">
+                  <span className="text-xs sm:text-[10px] font-medium text-content-subtle whitespace-nowrap">
                     {task.createdAt ? format(ensureDate(task.createdAt), 'd MMM yyyy') : '-'}
                   </span>
                 );
@@ -676,7 +676,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                               setCurrentView('issueDetail');
                               setActiveContextMenuTaskId(null);
                             }}
-                            className="w-full text-left px-3 py-1.5 text-[11px] font-medium text-content-secondary hover:bg-surface-sunken flex items-center gap-2 cursor-pointer"
+                            className="w-full text-left px-3 py-1.5 text-xs sm:text-[11px] font-medium text-content-secondary hover:bg-surface-sunken flex items-center gap-2 cursor-pointer"
                           >
                              <Eye className="w-3.5 h-3.5 text-content-subtle" />
                              <span>View Details</span>
@@ -688,7 +688,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                                  deleteTask(task.id);
                                  setActiveContextMenuTaskId(null);
                                }}
-                               className="w-full text-left px-3 py-1.5 text-[11px] font-medium text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer border-t border-border-faint"
+                               className="w-full text-left px-3 py-1.5 text-xs sm:text-[11px] font-medium text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer border-t border-border-faint"
                              >
                                 <Trash className="w-3.5 h-3.5 text-red-400" />
                                 <span>Delete Issue</span>
@@ -718,7 +718,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                           <div className="relative">
                             <button 
                                onClick={() => setIsInlineTypeOpen(isInlineTypeOpen === 'inline' ? null : 'inline')} 
-                               className="flex items-center gap-1.5 p-1 bg-surface-sunken border border-border-subtle rounded text-content-secondary hover:border-blue-300 hover:bg-blue-50 transition-all font-medium text-[10px]"
+                               className="flex items-center gap-1.5 p-1 bg-surface-sunken border border-border-subtle rounded text-content-secondary hover:border-blue-300 hover:bg-blue-50 transition-all font-medium text-xs sm:text-[10px]"
                             >
                                {(() => {
                                  const typeData = mArr.find(m => m.type === 'issue_type' && m.label?.toLowerCase() === inlineAddType?.toLowerCase());
@@ -733,7 +733,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                                     <button 
                                       key={t.id}
                                       onClick={() => { setInlineAddType(t.label); setIsInlineTypeOpen(null); }}
-                                      className="w-full text-left px-3 py-2 text-[11px] font-medium text-content-secondary hover:bg-surface-sunken flex items-center gap-2"
+                                      className="w-full text-left px-3 py-2 text-xs sm:text-[11px] font-medium text-content-secondary hover:bg-surface-sunken flex items-center gap-2"
                                     >
                                       {t.icon ? <RenderIcon iconName={t.icon} className="w-3.5 h-3.5" style={{ color: t.color }} /> : <Zap className="w-3.5 h-3.5" style={{ color: t.color }} />}
                                       <span>{t.label}</span>
@@ -792,7 +792,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                     <button 
                       onClick={() => createSubtask(task.id)}
                       disabled={isCreating}
-                      className="p-1 px-2 bg-blue-600 text-white rounded text-[10px] font-medium hover:bg-blue-700 disabled:opacity-50 transition-all"
+                      className="p-1 px-2 bg-blue-600 text-white rounded text-xs sm:text-[10px] font-medium hover:bg-blue-700 disabled:opacity-50 transition-all"
                     >
                       {isCreating ? (
                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -809,7 +809,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                           return next;
                         });
                       }}
-                      className="p-1 px-2 bg-surface-muted text-content-subtle rounded text-[10px] font-medium hover:bg-slate-200 transition-all"
+                      className="p-1 px-2 bg-surface-muted text-content-subtle rounded text-xs sm:text-[10px] font-medium hover:bg-slate-200 transition-all"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -872,7 +872,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  
                  if (activeCount > 0) {
                    return (
-                     <span className="ml-1 bg-primary text-white rounded-full px-1.5 py-0.5 flex items-center justify-center text-[9px] font-semibold leading-none">
+                     <span className="ml-1 bg-primary text-white rounded-full px-1.5 py-0.5 flex items-center justify-center text-xs sm:text-[11px] sm:text-[9px] font-semibold leading-none">
                        {activeCount}
                      </span>
                    );
@@ -883,67 +883,67 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
             
             <div className="flex items-center gap-1.5 flex-wrap max-w-xl">
                {listFilterStatus !== 'All' && (
-                 <span className={cn(styles.filterPill, "flex items-center gap-1 py-1 px-2.5 rounded-full text-[11px] font-medium")}>
+                 <span className={cn(styles.filterPill, "flex items-center gap-1 py-1 px-2.5 rounded-full text-xs sm:text-[11px] font-medium")}>
                     Status: {listFilterStatus}
                     <button type="button" onClick={() => setListFilterStatus('All')} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-1" /></button>
                  </span>
                )}
                {listFilterPriority !== 'All' && (
-                 <span className={cn(styles.filterPillAmber, "flex items-center gap-1 py-1 px-2.5 rounded-full text-[11px] font-medium")}>
+                 <span className={cn(styles.filterPillAmber, "flex items-center gap-1 py-1 px-2.5 rounded-full text-xs sm:text-[11px] font-medium")}>
                     Priority: {listFilterPriority}
                     <button type="button" onClick={() => setListFilterPriority('All')} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-1" /></button>
                  </span>
                )}
                {listFilterAssignee !== 'All' && (
-                 <span className="text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100 flex items-center gap-1 shadow-sm">
+                 <span className="text-xs sm:text-[11px] font-medium text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100 flex items-center gap-1 shadow-soft">
                     Assignee: {projectMembers.find(m => m.uid === listFilterAssignee)?.displayName || 'Unassigned'}
                     <button type="button" onClick={() => setListFilterAssignee('All')} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-0.5" /></button>
                  </span>
                )}
                {listFilterSprint !== 'All' && (
-                 <span className="text-[11px] font-medium text-content-secondary bg-surface-muted px-2.5 py-1 rounded-full border border-border-subtle flex items-center gap-1 shadow-sm">
+                 <span className="text-xs sm:text-[11px] font-medium text-content-secondary bg-surface-muted px-2.5 py-1 rounded-full border border-border-subtle flex items-center gap-1 shadow-soft">
                     Sprint: {listFilterSprint === 'Backlog' ? 'Backlog' : (props.sprints?.find(s => s.id === listFilterSprint)?.name || listFilterSprint)}
                     <button type="button" onClick={() => setListFilterSprint('All')} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-0.5" /></button>
                  </span>
                )}
                {listFilterCategory !== 'All' && (
-                 <span className="text-[11px] font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 flex items-center gap-1 shadow-sm">
+                 <span className="text-xs sm:text-[11px] font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 flex items-center gap-1 shadow-soft">
                     Category: {listFilterCategory}
                     <button type="button" onClick={() => setListFilterCategory('All')} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-0.5" /></button>
                  </span>
                )}
                {listFilterLabel !== 'All' && (
-                 <span className="text-[11px] font-medium text-sky-600 bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100 flex items-center gap-1 shadow-sm">
+                 <span className="text-xs sm:text-[11px] font-medium text-sky-600 bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100 flex items-center gap-1 shadow-soft">
                     Label: {listFilterLabel}
                     <button type="button" onClick={() => setListFilterLabel('All')} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-0.5" /></button>
                  </span>
                )}
                {listFilterEnvironment !== 'All' && (
-                 <span className="text-[11px] font-medium text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-100 flex items-center gap-1 shadow-sm">
+                 <span className="text-xs sm:text-[11px] font-medium text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-100 flex items-center gap-1 shadow-soft">
                     Environment: {listFilterEnvironment}
                     <button type="button" onClick={() => setListFilterEnvironment('All')} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-0.5" /></button>
                  </span>
                )}
                {listFilterProjectRisk !== 'All' && (
-                 <span className="text-[11px] font-medium text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-100 flex items-center gap-1 shadow-sm">
+                 <span className="text-xs sm:text-[11px] font-medium text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-100 flex items-center gap-1 shadow-soft">
                     Risk: {listFilterProjectRisk}
                     <button type="button" onClick={() => setListFilterProjectRisk('All')} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-0.5" /></button>
                  </span>
                )}
                {listFilterRelease !== 'All' && (
-                 <span className="text-[11px] font-medium text-teal-600 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-100 flex items-center gap-1 shadow-sm">
+                 <span className="text-xs sm:text-[11px] font-medium text-teal-600 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-100 flex items-center gap-1 shadow-soft">
                     Release: {listFilterRelease}
                     <button type="button" onClick={() => setListFilterRelease('All')} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-0.5" /></button>
                  </span>
                )}
                {listFilterResolution !== 'All' && (
-                 <span className="text-[11px] font-medium text-violet-600 bg-violet-50 px-2.5 py-1 rounded-full border border-violet-100 flex items-center gap-1 shadow-sm">
+                 <span className="text-xs sm:text-[11px] font-medium text-violet-600 bg-violet-50 px-2.5 py-1 rounded-full border border-violet-100 flex items-center gap-1 shadow-soft">
                     Resolution: {listFilterResolution}
                     <button type="button" onClick={() => setListFilterResolution('All')} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-0.5" /></button>
                  </span>
                )}
                {(listFilterStartDate || listFilterEndDate) && (
-                 <span className="text-[11px] font-medium text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200 flex items-center gap-1 shadow-sm">
+                 <span className="text-xs sm:text-[11px] font-medium text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200 flex items-center gap-1 shadow-soft">
                     <Calendar className="w-3 h-3 text-amber-600 shrink-0" />
                     Date ({listFilterDateType === 'dueDate' ? 'Due' : listFilterDateType === 'startDate' ? 'Start' : listFilterDateType === 'endDate' ? 'End' : listFilterDateType === 'createdAt' ? 'Created' : 'Any'}): {listFilterStartDate || '∞'} to {listFilterEndDate || '∞'}
                     <button type="button" onClick={() => { setListFilterStartDate(''); setListFilterEndDate(''); }} className="hover:text-red-500 font-medium transition-colors outline-none inline-flex items-center"><X className="w-2.5 h-2.5 ml-0.5" /></button>
@@ -955,12 +955,12 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
          <div className="flex items-center gap-2">
             <button 
                onClick={() => setIsConfigureColumnsOpen(true)}
-               className="p-2 bg-surface border border-border-subtle rounded-lg text-content-muted hover:text-indigo-600 hover:border-indigo-200 transition-all shadow-sm"
+               className="p-2 bg-surface border border-border-subtle rounded-lg text-content-muted hover:text-indigo-600 hover:border-indigo-200 transition-all shadow-soft"
                title="Configure Columns"
             >
                <Settings2 className="w-4 h-4" />
             </button>
-            <button className="p-2 bg-surface border border-border-subtle rounded-lg text-content-muted hover:text-content-body transition-all shadow-sm">
+            <button className="p-2 bg-surface border border-border-subtle rounded-lg text-content-muted hover:text-content-body transition-all shadow-soft">
                <MoreHorizontal className="w-4 h-4" />
             </button>
          </div>
@@ -981,7 +981,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {/* Status Filter */}
               <div className="flex flex-col gap-1.5">
-                 <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">Status</label>
+                 <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">Status</label>
                  <select
                     value={listFilterStatus}
                     onChange={(e) => setListFilterStatus(e.target.value)}
@@ -996,7 +996,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
 
               {/* Priority Filter */}
               <div className="flex flex-col gap-1.5">
-                 <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">Priority</label>
+                 <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">Priority</label>
                  <select
                     value={listFilterPriority}
                     onChange={(e) => setListFilterPriority(e.target.value)}
@@ -1013,7 +1013,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
 
               {/* Sprint Filter */}
               <div className="flex flex-col gap-1.5">
-                 <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">Sprint</label>
+                 <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">Sprint</label>
                  <select
                     value={listFilterSprint}
                     onChange={(e) => setListFilterSprint(e.target.value)}
@@ -1029,7 +1029,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
 
               {/* Label Filter */}
               <div className="flex flex-col gap-1.5">
-                 <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">Label</label>
+                 <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">Label</label>
                  <select
                      value={listFilterLabel}
                      onChange={(e) => setListFilterLabel(e.target.value)}
@@ -1047,7 +1047,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4 border-t border-border-faint pt-4">
               {/* Category Filter */}
               <div className="flex flex-col gap-1.5">
-                 <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">Category (Custom)</label>
+                 <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">Category (Custom)</label>
                  <select
                     value={listFilterCategory}
                     onChange={(e) => setListFilterCategory(e.target.value)}
@@ -1062,7 +1062,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
 
               {/* Environment Filter */}
               <div className="flex flex-col gap-1.5">
-                 <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">Environment (Custom)</label>
+                 <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">Environment (Custom)</label>
                  <select
                     value={listFilterEnvironment}
                     onChange={(e) => setListFilterEnvironment(e.target.value)}
@@ -1077,7 +1077,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
 
               {/* Project Risk Filter */}
               <div className="flex flex-col gap-1.5">
-                 <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">Project Risk (Custom)</label>
+                 <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">Project Risk (Custom)</label>
                  <select
                     value={listFilterProjectRisk}
                     onChange={(e) => setListFilterProjectRisk(e.target.value)}
@@ -1092,7 +1092,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
 
               {/* Release Filter */}
               <div className="flex flex-col gap-1.5">
-                 <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">Release (Custom)</label>
+                 <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">Release (Custom)</label>
                  <select
                     value={listFilterRelease}
                     onChange={(e) => setListFilterRelease(e.target.value)}
@@ -1107,7 +1107,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
 
               {/* Resolution Filter */}
               <div className="flex flex-col gap-1.5">
-                 <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">Resolution (Custom)</label>
+                 <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">Resolution (Custom)</label>
                  <select
                     value={listFilterResolution}
                     onChange={(e) => setListFilterResolution(e.target.value)}
@@ -1125,7 +1125,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 border-t border-border-faint pt-4 items-end">
               {/* Date Column Selector */}
               <div className="flex flex-col gap-1.5">
-                 <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">Date Range Type</label>
+                 <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">Date Range Type</label>
                  <select
                     value={listFilterDateType}
                     onChange={(e) => setListFilterDateType(e.target.value)}
@@ -1141,7 +1141,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
 
               {/* Start Date */}
               <div className="flex flex-col gap-1.5">
-                 <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">From Date</label>
+                 <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">From Date</label>
                  <input
                     type="date"
                     value={listFilterStartDate}
@@ -1153,7 +1153,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
               {/* End Date & Reset controls inside grid */}
               <div className="flex items-center gap-3">
                  <div className="flex flex-col gap-1.5 flex-1 font-sans">
-                    <label className="text-[10px] uppercase font-medium text-content-subtle tracking-wider">To Date</label>
+                    <label className="text-xs sm:text-[10px] uppercase font-medium text-content-subtle tracking-wider">To Date</label>
                     <input
                        type="date"
                        value={listFilterEndDate}
@@ -1216,14 +1216,14 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                                type="checkbox" 
                                checked={selectedTaskIds.size === displayRoots.length && displayRoots.length > 0}
                                onChange={handleToggleSelectAll}
-                               className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 shadow-sm transition-all cursor-pointer" 
+                               className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 shadow-soft transition-all cursor-pointer" 
                              />
                            </div>
                         </th>
                         {issueTableColumns.filter((c: any) => c.visible).map((col: any) => (
                            <th 
                              key={col.id} 
-                             className={cn(styles.tableHeaderCell, isCompact ? "py-1 text-[10px]" : "py-2.5")}
+                             className={cn(styles.tableHeaderCell, isCompact ? "py-1 text-xs sm:text-[10px]" : "py-2.5")}
                              style={{ width: col.width }}
                            >
                               <div className="flex items-center justify-between">
@@ -1257,7 +1257,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                                     <tbody
                                        ref={providedDraggable.innerRef}
                                        {...providedDraggable.draggableProps}
-                                       className={cn("divide-y divide-border-faint italic-rows text-[13px]", snapshot.isDragging && "bg-surface-muted/50 shadow-sm border border-indigo-200")}
+                                       className={cn("divide-y divide-border-faint italic-rows text-[13px]", snapshot.isDragging && "bg-surface-muted/50 shadow-soft border border-indigo-200")}
                                        style={providedDraggable.draggableProps.style}
                                     >
                                        {renderIssueRow(root, 0, providedDraggable.dragHandleProps)}
@@ -1281,7 +1281,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
       
       {/* Global Inline Add Bar */}
       <div className="p-2 bg-surface border-t border-border-subtle shrink-0 shadow-[0_-2px_4px_-1px_rgba(0,0,0,0.03)] z-20 animate-in slide-in-from-bottom-2 duration-200">
-         <div className="flex flex-col sm:flex-row sm:items-center gap-2 border border-border-subtle rounded-xl bg-surface-sunken shadow-sm p-1.5 sm:p-1">
+         <div className="flex flex-col sm:flex-row sm:items-center gap-2 border border-border-subtle rounded-xl bg-surface-sunken shadow-soft p-1.5 sm:p-1">
             <div className="flex items-center gap-2 w-full sm:w-auto flex-1 min-w-0">
                <div className="relative pl-1 shrink-0">
                   <button 
@@ -1301,7 +1301,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                           <button 
                             key={t.id}
                             onClick={() => { setInlineAddType(t.label); setIsInlineTypeOpen(null); }}
-                            className="w-full text-left px-3 py-2 text-[11px] font-medium text-content-secondary hover:bg-surface-sunken flex items-center gap-2"
+                            className="w-full text-left px-3 py-2 text-xs sm:text-[11px] font-medium text-content-secondary hover:bg-surface-sunken flex items-center gap-2"
                           >
                             {t.icon ? <RenderIcon iconName={t.icon} className="w-3.5 h-3.5" style={{ color: t.color }} /> : <Zap className="w-3.5 h-3.5" style={{ color: t.color }} />}
                             <span>{t.label}</span>
@@ -1348,7 +1348,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                <button 
                   onClick={() => createGlobalIssue()}
                   disabled={!quickCreateTitle.trim() || isCreating}
-                  className="w-full sm:w-auto px-4 py-1.5 bg-primary hover:bg-primary-hover active:bg-primary-active disabled:opacity-50 disabled:bg-primary/50 text-white text-[11px] font-medium rounded-md uppercase tracking-wider transition-all duration-200 shrink-0 flex items-center justify-center gap-1.5 sm:ml-1 shadow-xs cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-1.5 bg-primary hover:bg-primary-hover active:bg-primary-active disabled:opacity-50 disabled:bg-primary/50 text-white text-xs sm:text-[11px] font-medium rounded-md uppercase tracking-wider transition-all duration-200 shrink-0 flex items-center justify-center gap-1.5 sm:ml-1 shadow-xs cursor-pointer"
                >
                   {isCreating ? (
                      <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -1364,18 +1364,18 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
       {/* Pagination Controls */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2 border-t border-border-subtle bg-surface-sunken shrink-0">
          <div className="flex items-center gap-3">
-            <span className="text-[10px] font-medium text-content-muted">
+            <span className="text-xs sm:text-[10px] font-medium text-content-muted">
                Showing {displayRoots.length === 0 ? 0 : (listPage - 1) * itemsPerPage + 1} to {Math.min(listPage * itemsPerPage, displayRoots.length)} of {displayRoots.length} entries
             </span>
             <div className="flex items-center gap-1.5 pl-2 border-l border-border-subtle">
-               <span className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Per Page:</span>
+               <span className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider">Per Page:</span>
                <select
                   value={itemsPerPage}
                   onChange={(e) => {
                      setItemsPerPage(Number(e.target.value));
                      setListPage(1);
                   }}
-                  className="text-[10px] font-medium bg-surface border border-border-subtle rounded-lg px-2 py-0.5 text-content-body outline-none focus:border-indigo-500 cursor-pointer shadow-sm"
+                  className="text-xs sm:text-[10px] font-medium bg-surface border border-border-subtle rounded-lg px-2 py-0.5 text-content-body outline-none focus:border-indigo-500 cursor-pointer shadow-soft"
                >
                   <option value={10}>10</option>
                   <option value={20}>20</option>
@@ -1391,7 +1391,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
             <button 
                onClick={() => setListPage(p => Math.max(1, p - 1))}
                disabled={listPage === 1}
-               className="px-2.5 py-1 text-[10px] font-medium text-content-secondary bg-surface border border-border-subtle rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-sunken transition-all active:scale-95 cursor-pointer shadow-sm"
+               className="px-2.5 py-1 text-xs sm:text-[10px] font-medium text-content-secondary bg-surface border border-border-subtle rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-sunken transition-all active:scale-95 cursor-pointer shadow-soft"
             >
                Prev
             </button>
@@ -1401,7 +1401,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                      key={i}
                      onClick={() => setListPage(i + 1)}
                      className={cn(
-                        "w-6 h-6 rounded-lg flex items-center justify-center text-[9px] font-medium transition-all cursor-pointer active:scale-95 shrink-0",
+                        "w-6 h-6 rounded-lg flex items-center justify-center text-xs sm:text-[11px] sm:text-[9px] font-medium transition-all cursor-pointer active:scale-95 shrink-0",
                         listPage === i + 1 ? "bg-indigo-600 text-white shadow-md shadow-indigo-100 dark:shadow-none" : "text-content-muted hover:bg-slate-200/80"
                      )}
                   >
@@ -1412,7 +1412,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
             <button 
                onClick={() => setListPage(p => Math.min(Math.ceil(displayRoots.length / itemsPerPage), p + 1))}
                disabled={listPage >= Math.ceil(displayRoots.length / itemsPerPage)}
-               className="px-2.5 py-1 text-[10px] font-medium text-content-secondary bg-surface border border-border-subtle rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-sunken transition-all active:scale-95 cursor-pointer shadow-sm"
+               className="px-2.5 py-1 text-xs sm:text-[10px] font-medium text-content-secondary bg-surface border border-border-subtle rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-surface-sunken transition-all active:scale-95 cursor-pointer shadow-soft"
             >
                Next
             </button>
@@ -1438,15 +1438,15 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
             className="fixed bottom-6 left-1/2 z-50 bg-slate-900/95 backdrop-blur-md border border-slate-700/50 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] px-6 py-3.5 flex flex-wrap items-center gap-6 text-white text-xs font-medium select-none"
           >
             <div className="flex items-center gap-2 border-r border-slate-700 pr-4">
-              <span className="bg-indigo-600 text-white text-[10px] font-medium rounded-full px-2 py-0.5 min-w-[20px] text-center">
+              <span className="bg-indigo-600 text-white text-xs sm:text-[10px] font-medium rounded-full px-2 py-0.5 min-w-[20px] text-center">
                 {selectedTaskIds.size}
               </span>
-              <span className="text-slate-300 font-medium uppercase tracking-wider text-[10px]">Tugas Dipilih</span>
+              <span className="text-slate-300 font-medium uppercase tracking-wider text-xs sm:text-[10px]">Tugas Dipilih</span>
             </div>
 
             {/* Change Status Dropdown */}
             <div className="flex items-center gap-2">
-              <span className="text-content-subtle text-[10px] uppercase tracking-wider">Status:</span>
+              <span className="text-content-subtle text-xs sm:text-[10px] uppercase tracking-wider">Status:</span>
               <select
                 onChange={(e) => {
                   const val = e.target.value;
@@ -1469,7 +1469,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
 
             {/* Change Assignee Dropdown */}
             <div className="flex items-center gap-2">
-              <span className="text-content-subtle text-[10px] uppercase tracking-wider">Assignee:</span>
+              <span className="text-content-subtle text-xs sm:text-[10px] uppercase tracking-wider">Assignee:</span>
               <select
                 onChange={(e) => {
                   const val = e.target.value;
@@ -1509,7 +1509,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                       setSelectedTaskIds(new Set());
                     }
                   }}
-                  className="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-medium rounded-xl px-4 py-2 flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                  className="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-medium rounded-xl px-4 py-2 flex items-center gap-1.5 transition-all shadow-soft cursor-pointer"
                 >
                   <Trash className="w-3.5 h-3.5" />
                   <span>Hapus ({deletableIds.length})</span>

@@ -24,7 +24,7 @@ export const DescriptionEditor: React.FC<Props> = ({ task, onSave, onCancel, onA
   }, [localDescription, onAutoSave, task.description]);
 
   return (
-    <div className="border border-indigo-500 rounded-xl overflow-hidden bg-white shadow-lg ring-4 ring-indigo-500/10 transition-all">
+    <div className="border border-indigo-500 rounded-xl overflow-hidden bg-white shadow-soft-lg ring-4 ring-indigo-500/10 transition-all">
       <textarea
         value={localDescription}
         onChange={(e) => setLocalDescription(e.target.value)}
@@ -41,7 +41,7 @@ export const DescriptionEditor: React.FC<Props> = ({ task, onSave, onCancel, onA
             }
         }}
       />
-      <div className="bg-slate-50 border-t border-slate-100 px-4 py-3 flex justify-between items-center text-[10px] font-medium text-slate-400">
+      <div className="bg-slate-50 border-t border-slate-100 px-4 py-3 flex justify-between items-center text-xs sm:text-[10px] font-medium text-slate-400">
         <span>Markdown fully supported. Auto-saves as you type. Press Ctrl+Enter to save & close, or Escape to cancel.</span>
       </div>
     </div>

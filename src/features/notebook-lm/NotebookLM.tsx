@@ -381,9 +381,9 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
     <div id="notebooklm-container" className="flex flex-col min-h-[calc(100vh-4rem)] bg-slate-50 p-4 md:p-6 text-slate-800 font-sans space-y-4 animate-in fade-in duration-500">
       
       {/* Panel 1: Top Actions */}
-      <div className="bg-white border border-slate-200 rounded-lg p-4 flex items-center justify-between shadow-sm shrink-0">
+      <div className="bg-white border border-slate-200 rounded-lg p-4 flex items-center justify-between shadow-soft shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
+          <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-soft">
             <Sparkles className="w-5 h-5" />
           </div>
           <h1 className="text-sm font-medium text-slate-800 tracking-tight">NotebookLM Studio</h1>
@@ -395,7 +395,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
           <select
             value={selectedModel}
             onChange={(e: any) => setSelectedModel(e.target.value)}
-            className="px-3 py-2 bg-white border border-slate-200/80 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-sm transition-all cursor-pointer"
+            className="px-3 py-2 bg-white border border-slate-200/80 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-soft transition-all cursor-pointer"
           >
             <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
             <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
@@ -405,16 +405,16 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
       </div>
 
       {/* Panel 2: Meta Context */}
-      <div className="bg-white border border-slate-200 rounded-lg p-5 md:p-6 shadow-sm shrink-0">
+      <div className="bg-white border border-slate-200 rounded-lg p-5 md:p-6 shadow-soft shrink-0">
         <div className="flex flex-wrap items-center gap-2 select-none mb-2">
-          <span className="px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-full">
+          <span className="px-2 py-0.5 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-full">
             AI Grounded Workspace
           </span>
-          <span className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
+          <span className="text-xs sm:text-[10px] text-slate-400 font-medium flex items-center gap-1">
             <User className="w-3 h-3" /> {currentUser?.displayName || 'Tim AI'}
           </span>
           <span className="text-slate-300">•</span>
-          <span className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
+          <span className="text-xs sm:text-[10px] text-slate-400 font-medium flex items-center gap-1">
             <Layers className="w-3 h-3" /> {sources.length} Sumber Konteks Aktif
           </span>
         </div>
@@ -426,13 +426,13 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
       </div>
 
       {/* Panel 3: Main Grid (Left Sidebar Sources + Right Work Area) */}
-      <div className="bg-white border border-slate-200 rounded-lg shadow-sm flex-1 flex min-h-[600px] overflow-hidden">
+      <div className="bg-white border border-slate-200 rounded-lg shadow-soft flex-1 flex min-h-[600px] overflow-hidden">
         {/* Left Sidebar: Sources Panel */}
         <aside id="notebooklm-sources-sidebar" className="w-80 border-r border-slate-200/60 bg-slate-50/40 flex flex-col shrink-0">
           <div className="p-4 border-b border-slate-200/60 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-indigo-600" />
-              <span className="text-[10.5px] font-medium uppercase tracking-wider text-slate-700">Sumber Data ({sources.length})</span>
+              <span className="text-xs sm:text-[10.5px] font-medium uppercase tracking-wider text-slate-700">Sumber Data ({sources.length})</span>
             </div>
             <button
               onClick={() => setShowAddModal(true)}
@@ -444,7 +444,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
           </div>
 
           {/* Active stats bar */}
-          <div className="px-4 py-2 bg-slate-100 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800/50 flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400">
+          <div className="px-4 py-2 bg-slate-100 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800/50 flex items-center justify-between text-xs sm:text-[11px] text-slate-600 dark:text-slate-400">
             <span>{activeSources.length} tercentang ({totalActiveWords.toLocaleString()} kata)</span>
             <div className="flex items-center gap-2">
               <button 
@@ -476,7 +476,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
               <div className="text-center py-12 px-4 border border-dashed border-slate-300 dark:border-slate-800 rounded-xl bg-slate-100/50 dark:bg-slate-900/30">
                 <FileCode className="w-8 h-8 text-slate-400 dark:text-slate-600 mx-auto mb-2" />
                 <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">Belum ada sumber data terpasang</p>
-                <p className="text-[11px] text-slate-500 mt-1">Klik tombol "+ Tambah" di atas atau buat Notulen Rapat / Wiki di proyek ini.</p>
+                <p className="text-xs sm:text-[11px] text-slate-500 mt-1">Klik tombol "+ Tambah" di atas atau buat Notulen Rapat / Wiki di proyek ini.</p>
               </div>
             ) : (
               <AnimatePresence>
@@ -495,7 +495,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
                         isSelected
                           ? 'bg-purple-50/90 dark:bg-purple-950/40 border-purple-500 dark:border-purple-500/70 shadow-md ring-1 ring-purple-500/30'
                           : source.active 
-                            ? 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800/80 hover:border-purple-300 dark:hover:border-purple-800/50 shadow-sm' 
+                            ? 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800/80 hover:border-purple-300 dark:hover:border-purple-800/50 shadow-soft' 
                             : 'bg-slate-100/60 dark:bg-slate-950/20 border-slate-200 dark:border-slate-800/50 opacity-60 hover:opacity-100'
                       }`}
                     >
@@ -527,11 +527,11 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
                             </span>
                           </div>
 
-                          <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                          <p className="text-xs sm:text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
                             {source.content || 'Kosong'}
                           </p>
 
-                          <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/50 text-[10px] text-slate-400 dark:text-slate-500">
+                          <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-slate-800/50 text-xs sm:text-[10px] text-slate-400 dark:text-slate-500">
                             <span className="flex items-center gap-1">
                               {source.wordCount} kata
                               {isSelected && <span className="text-purple-600 dark:text-purple-400 font-medium">• Aktif Dibaca</span>}
@@ -563,13 +563,13 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
           {sources.length > 0 && (
             <div className="p-3 bg-white/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800/80 backdrop-blur-md">
               <div className="flex items-center justify-between gap-3 mb-2">
-                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <span className="text-xs sm:text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                   <FileText className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                   <span>Pilih Dokumen Pratinjau ({sources.length}):</span>
                 </span>
                 
                 {selectedSourceId && (
-                  <span className="text-[11px] text-purple-600 dark:text-purple-400 font-medium flex items-center gap-1 bg-purple-50 dark:bg-purple-950/50 px-2.5 py-0.5 rounded-full border border-purple-200 dark:border-purple-800/50">
+                  <span className="text-xs sm:text-[11px] text-purple-600 dark:text-purple-400 font-medium flex items-center gap-1 bg-purple-50 dark:bg-purple-950/50 px-2.5 py-0.5 rounded-full border border-purple-200 dark:border-purple-800/50">
                     <Sparkles className="w-3 h-3" />
                     Transisi Halus Aktif
                   </span>
@@ -617,7 +617,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="px-2 py-0.5 text-[10px] font-medium uppercase rounded bg-purple-200 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200">
+                          <span className="px-2 py-0.5 text-xs sm:text-[10px] font-medium uppercase rounded bg-purple-200 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200">
                             {selectedDoc.type}
                           </span>
                           <h4 className="text-xs font-medium text-slate-800 dark:text-slate-100 truncate">
@@ -631,7 +631,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
 
                       <button
                         onClick={() => handleSendMessage(`Jelaskan secara mendalam isi dari dokumen ${selectedDoc.title}`)}
-                        className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-medium rounded-lg shrink-0 shadow-sm transition-all flex items-center gap-1"
+                        className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-medium rounded-lg shrink-0 shadow-soft transition-all flex items-center gap-1"
                       >
                         <Sparkles className="w-3 h-3" />
                         <span>Analisis Dokumen Ini</span>
@@ -647,7 +647,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
               {/* Chat Conversation Display */}
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
                 {chatHistory.length === 0 ? (
-                  <div className="max-w-2xl mx-auto my-auto text-center py-12 px-6 bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm dark:shadow-xl">
+                  <div className="max-w-2xl mx-auto my-auto text-center py-12 px-6 bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl shadow-soft dark:shadow-xl">
                     <div className="w-12 h-12 bg-purple-100 dark:bg-purple-600/20 rounded-xl border border-purple-200 dark:border-purple-500/30 flex items-center justify-center mx-auto mb-4">
                       <Sparkles className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                     </div>
@@ -691,9 +691,9 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
                       <div className={`max-w-3xl rounded-xl p-4 border ${
                         msg.role === 'user' 
                           ? 'bg-purple-600 dark:bg-purple-900/40 border-purple-500 dark:border-purple-700/50 text-white dark:text-purple-100 rounded-tr-none' 
-                          : 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-none shadow-sm dark:shadow-lg'
+                          : 'bg-white dark:bg-slate-900/90 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-none shadow-soft dark:shadow-soft-lg'
                       }`}>
-                        <div className="flex items-center justify-between gap-4 mb-2 pb-2 border-b border-slate-100 dark:border-slate-800/60 text-[10px] text-slate-400 dark:text-slate-400">
+                        <div className="flex items-center justify-between gap-4 mb-2 pb-2 border-b border-slate-100 dark:border-slate-800/60 text-xs sm:text-[10px] text-slate-400 dark:text-slate-400">
                           <span className="font-medium">{msg.role === 'user' ? 'Anda' : 'NotebookLM AI Assistant'}</span>
                           <span>{msg.timestamp}</span>
                         </div>
@@ -703,7 +703,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
                         </div>
 
                         {msg.role === 'assistant' && (
-                          <div className="flex items-center gap-2 mt-4 pt-2 border-t border-slate-100 dark:border-slate-800/50 text-[11px] text-slate-500 dark:text-slate-400">
+                          <div className="flex items-center gap-2 mt-4 pt-2 border-t border-slate-100 dark:border-slate-800/50 text-xs sm:text-[11px] text-slate-500 dark:text-slate-400">
                             <button
                               onClick={() => handleSaveToNotes('Jawaban NotebookLM', msg.text)}
                               className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-purple-50 dark:hover:bg-purple-900/40 hover:text-purple-700 dark:hover:text-purple-300 border border-slate-200 dark:border-slate-700 rounded-lg transition-all flex items-center gap-1"
@@ -842,10 +842,10 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
                 <div className="flex flex-col items-center justify-center py-20 text-slate-500 dark:text-slate-400 text-xs gap-3">
                   <RefreshCw className="w-8 h-8 animate-spin text-purple-600 dark:text-purple-400" />
                   <span className="font-medium text-slate-800 dark:text-slate-200">Gemini sedang membuat {overviewType}...</span>
-                  <p className="text-[11px] text-slate-500">Membaca dan merangkum {activeSources.length} dokumen terpasang.</p>
+                  <p className="text-xs sm:text-[11px] text-slate-500">Membaca dan merangkum {activeSources.length} dokumen terpasang.</p>
                 </div>
               ) : overviewContent ? (
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm dark:shadow-xl relative">
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-soft dark:shadow-xl relative">
                   <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
                     <span className="font-medium text-purple-700 dark:text-purple-300 uppercase tracking-wider">Hasil Overview ({overviewType.toUpperCase()})</span>
                     <button
@@ -919,7 +919,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
                     setNewNoteContent('');
                     setIsNewNoteModalOpen(true);
                   }}
-                  className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-md text-xs font-medium flex items-center gap-1.5 shadow-sm transition-all"
+                  className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-md text-xs font-medium flex items-center gap-1.5 shadow-soft transition-all"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Catatan Baru</span>
@@ -937,11 +937,11 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {studioNotes.map(note => (
-                    <div key={note.id} className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col justify-between shadow-sm dark:shadow-lg">
+                    <div key={note.id} className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl flex flex-col justify-between shadow-soft dark:shadow-soft-lg">
                       <div>
                         <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100 dark:border-slate-800/80">
                           <h4 className="text-xs font-medium text-purple-700 dark:text-purple-200">{note.title}</h4>
-                          <span className="text-[10px] text-slate-400 dark:text-slate-500">{note.createdAt}</span>
+                          <span className="text-xs sm:text-[10px] text-slate-400 dark:text-slate-500">{note.createdAt}</span>
                         </div>
                         <div className="prose prose-slate dark:prose-invert prose-xs line-clamp-6 leading-relaxed">
                           <Markdown>{note.content}</Markdown>
@@ -954,7 +954,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
                             navigator.clipboard.writeText(note.content);
                             toast.success('Isi catatan tersalin!');
                           }}
-                          className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors flex items-center gap-1 text-[11px]"
+                          className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 transition-colors flex items-center gap-1 text-xs sm:text-[11px]"
                         >
                           <Copy className="w-3 h-3" />
                           <span>Salin</span>
@@ -965,7 +965,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
                             setStudioNotes(prev => prev.filter(n => n.id !== note.id));
                             toast.success('Catatan dihapus.');
                           }}
-                          className="text-slate-400 hover:text-red-500 dark:text-slate-500 dark:hover:text-red-400 transition-colors text-[11px] flex items-center gap-1"
+                          className="text-slate-400 hover:text-red-500 dark:text-slate-500 dark:hover:text-red-400 transition-colors text-xs sm:text-[11px] flex items-center gap-1"
                         >
                           <Trash2 className="w-3 h-3" />
                           <span>Hapus</span>
@@ -1038,12 +1038,12 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
                 <p className="text-xs font-medium text-slate-800 dark:text-slate-200 mb-1">
                   Tarik & Lepaskan Berkas Dokumen ke Sini
                 </p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-xs sm:text-[11px] text-slate-500 dark:text-slate-400">
                   atau <span className="text-purple-600 dark:text-purple-400 font-medium underline">klik untuk memilih dari komputer</span>
                 </p>
               </div>
 
-              <div className="flex items-center gap-1.5 flex-wrap justify-center pt-2 text-[10px] text-slate-400 dark:text-slate-500 font-medium">
+              <div className="flex items-center gap-1.5 flex-wrap justify-center pt-2 text-xs sm:text-[10px] text-slate-400 dark:text-slate-500 font-medium">
                 <span className="px-2 py-0.5 bg-slate-200/60 dark:bg-slate-800 rounded">PDF</span>
                 <span className="px-2 py-0.5 bg-slate-200/60 dark:bg-slate-800 rounded">DOCX / DOC</span>
                 <span className="px-2 py-0.5 bg-slate-200/60 dark:bg-slate-800 rounded">TXT / MD</span>
@@ -1053,7 +1053,7 @@ export const NotebookLM: React.FC<NotebookLMProps> = ({ project, userRole = 'vie
             </div>
 
             <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-800">
-              <span className="text-[11px] text-slate-500 dark:text-slate-400">
+              <span className="text-xs sm:text-[11px] text-slate-500 dark:text-slate-400">
                 Bisa memilih lebih dari 1 berkas sekaligus.
               </span>
               <button

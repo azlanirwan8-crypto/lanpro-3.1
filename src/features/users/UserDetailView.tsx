@@ -401,7 +401,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
     <div className="flex-1 flex flex-col h-full bg-slate-50 dark:bg-slate-950 overflow-y-auto p-3 md:p-6">
       <div className="flex flex-col space-y-5 min-h-full animate-in fade-in duration-700">
         {/* Velzon Sticky Header Bar */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-6 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-6 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-soft">
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
@@ -412,7 +412,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
           </button>
           <div className="h-4 w-px bg-slate-200 dark:bg-slate-800" />
           <div className="flex flex-col">
-            <span className="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 tracking-wider uppercase">
+            <span className="text-xs sm:text-[11px] font-medium text-indigo-600 dark:text-indigo-400 tracking-wider uppercase">
               DETAIL PROFIL & MATRIX HAK AKSES
             </span>
             <h1 className="text-sm font-medium text-slate-800 dark:text-slate-100">
@@ -438,14 +438,14 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
           <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-50 dark:bg-indigo-950/20 rounded-bl-full pointer-events-none opacity-60" />
           
           <div className="relative group cursor-pointer shrink-0 z-10">
-            <UserAvatar user={{ ...user, photoURL: previewUrl || photoURL } as any} className="w-20 h-20 text-2xl shadow-sm border-2 border-white dark:border-slate-800 ring-2 ring-indigo-50 dark:ring-indigo-950 shrink-0" />
+            <UserAvatar user={{ ...user, photoURL: previewUrl || photoURL } as any} className="w-20 h-20 text-2xl shadow-soft border-2 border-white dark:border-slate-800 ring-2 ring-indigo-50 dark:ring-indigo-950 shrink-0" />
             {previewUrl && (
-              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[9px] font-semibold px-2 py-0.5 rounded-full shadow-xs whitespace-nowrap z-20">
+              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-xs sm:text-[11px] sm:text-[9px] font-semibold px-2 py-0.5 rounded-full shadow-xs whitespace-nowrap z-20">
                 Pratinjau
               </span>
             )}
             <label className="absolute inset-0 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity ring-2 ring-indigo-50 dark:ring-indigo-950 border-2 border-white dark:border-slate-800">
-              <span className="text-[10px] font-medium uppercase tracking-wider">{isUploading ? '...' : 'Pilih Foto'}</span>
+              <span className="text-xs sm:text-[10px] font-medium uppercase tracking-wider">{isUploading ? '...' : 'Pilih Foto'}</span>
               <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} disabled={isUploading || isSaving} />
             </label>
           </div>
@@ -491,7 +491,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                   <Mail className="w-3.5 h-3.5" />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-medium text-slate-400">Email Address</div>
+                  <div className="text-xs sm:text-[10px] uppercase font-medium text-slate-400">Email Address</div>
                   <div className="font-medium text-slate-800 dark:text-slate-100 text-xs">{editEmail || 'Tidak tersedia'}</div>
                 </div>
               </div>
@@ -501,7 +501,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                   <Phone className="w-3.5 h-3.5" />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-medium text-slate-400">WhatsApp / HP</div>
+                  <div className="text-xs sm:text-[10px] uppercase font-medium text-slate-400">WhatsApp / HP</div>
                   <div className="font-medium text-slate-800 dark:text-slate-100 text-xs">{editPhone || 'Tidak tersedia'}</div>
                 </div>
               </div>
@@ -511,7 +511,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                   <Building className="w-3.5 h-3.5" />
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-medium text-slate-400">Departemen / Posisi</div>
+                  <div className="text-xs sm:text-[10px] uppercase font-medium text-slate-400">Departemen / Posisi</div>
                   <div className="font-medium text-slate-800 dark:text-slate-100 text-xs">{getDeptName(editDepartment)} • {getPosName(editPosition)}</div>
                 </div>
               </div>
@@ -577,7 +577,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                           <p className="font-medium text-xs text-indigo-950 dark:text-indigo-100">
                             {ROLE_DESCRIPTIONS[editRole].label}
                           </p>
-                          <p className="text-[11px] text-slate-600 dark:text-slate-400">
+                          <p className="text-xs sm:text-[11px] text-slate-600 dark:text-slate-400">
                             {ROLE_DESCRIPTIONS[editRole].desc}
                           </p>
                         </div>
@@ -671,7 +671,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                     <button
                       type="button"
                       onClick={generateRandomPassword}
-                      className="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 font-medium cursor-pointer"
+                      className="text-xs sm:text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 font-medium cursor-pointer"
                     >
                       <Key className="w-3 h-3" /> Buat Password Acak
                     </button>
@@ -693,12 +693,12 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
               <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2.5">
                 <div>
                   <h4 className="font-medium text-slate-800 dark:text-slate-100 text-xs uppercase tracking-wider">Active System Permissions & Overrides</h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-normal mt-0.5">Konfigurasi hak akses modul spesifik untuk akun pengguna ini.</p>
+                  <p className="text-xs sm:text-[11px] text-slate-500 dark:text-slate-400 font-normal mt-0.5">Konfigurasi hak akses modul spesifik untuk akun pengguna ini.</p>
                 </div>
                 <button
                   type="button"
                   onClick={handleResetToRoleDefaults}
-                  className="px-2.5 py-1 text-[11px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-md font-medium transition flex items-center gap-1 shrink-0"
+                  className="px-2.5 py-1 text-xs sm:text-[11px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-md font-medium transition flex items-center gap-1 shrink-0"
                   title="Reset to role default permissions"
                 >
                   <RotateCcw className="w-3 h-3" /> Reset Role Default
@@ -716,9 +716,9 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                 <ResponsiveTable className="w-full text-left text-xs border-collapse">
                   <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800">
                     <tr>
-                      <th className="py-2 px-3 font-medium text-[10px] text-slate-500 dark:text-slate-400 uppercase">Module</th>
+                      <th className="py-2 px-3 font-medium text-xs sm:text-[10px] text-slate-500 dark:text-slate-400 uppercase">Module</th>
                       {(['read', 'create', 'update', 'delete'] as const).map(action => (
-                        <th key={action} className="py-2 px-1 font-medium text-[10px] text-slate-500 dark:text-slate-400 uppercase text-center w-14">
+                        <th key={action} className="py-2 px-1 font-medium text-xs sm:text-[10px] text-slate-500 dark:text-slate-400 uppercase text-center w-14">
                           {action}
                         </th>
                       ))}
@@ -782,7 +782,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                   <Server className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider block">Total Proyek Terkait</span>
+                  <span className="text-xs sm:text-[10px] text-slate-400 font-medium uppercase tracking-wider block">Total Proyek Terkait</span>
                   <span className="text-base font-medium text-slate-800 dark:text-slate-100 leading-none">{userProjectsList.length} Proyek</span>
                 </div>
               </div>
@@ -792,7 +792,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                   <CheckCircle className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider block">Tugas Ditugaskan</span>
+                  <span className="text-xs sm:text-[10px] text-slate-400 font-medium uppercase tracking-wider block">Tugas Ditugaskan</span>
                   <span className="text-base font-medium text-slate-800 dark:text-slate-100 leading-none">{userTasks.length} Tugas</span>
                 </div>
               </div>
@@ -857,7 +857,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
               {/* Sub-Team Subordinate Selection (When Project Admin / Manager / Lead is selected) */}
               {['admin', 'manager', 'lead'].includes(selectedAssignProjectRole.toLowerCase()) && (
                 <div className="pt-2 space-y-1.5 border-t border-indigo-100 dark:border-indigo-900/50">
-                  <label className="text-[11px] font-medium text-indigo-950 dark:text-indigo-200 uppercase tracking-wider block">
+                  <label className="text-xs sm:text-[11px] font-medium text-indigo-950 dark:text-indigo-200 uppercase tracking-wider block">
                     Pilih Sub-Tim / PIC Bawahan (Tim di bawah Project Admin ini):
                   </label>
                   <div className="max-h-36 overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-md p-2 space-y-1 custom-scrollbar">
@@ -879,7 +879,7 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                             className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                           />
                           <span className="font-medium">{u.displayName || u.username || u.email}</span>
-                          <span className="text-[10px] text-slate-400">({u.email})</span>
+                          <span className="text-xs sm:text-[10px] text-slate-400">({u.email})</span>
                         </label>
                       );
                     })}
@@ -912,11 +912,11 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="font-medium text-xs text-slate-800 dark:text-slate-100">{p.name}</div>
-                            <div className="text-[10px] font-mono text-indigo-600 dark:text-indigo-400 uppercase mt-0.5">{p.key}</div>
+                            <div className="text-xs sm:text-[10px] font-mono text-indigo-600 dark:text-indigo-400 uppercase mt-0.5">{p.key}</div>
                           </div>
 
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-medium uppercase px-2 py-0.5 bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 rounded-md border border-indigo-200 dark:border-indigo-800">
+                            <span className="text-xs sm:text-[10px] font-medium uppercase px-2 py-0.5 bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 rounded-md border border-indigo-200 dark:border-indigo-800">
                               {roleInProject}
                             </span>
                             {isAdmin && (
@@ -935,12 +935,12 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                         {/* Tasks in project */}
                         {projectTasks.length > 0 && (
                           <div className="pt-1.5 border-t border-slate-200/60 dark:border-slate-800 space-y-1">
-                            <div className="text-[10px] text-slate-400 font-medium uppercase">Tugas Terdelegasi ({projectTasks.length}):</div>
+                            <div className="text-xs sm:text-[10px] text-slate-400 font-medium uppercase">Tugas Terdelegasi ({projectTasks.length}):</div>
                             <div className="space-y-1">
                               {projectTasks.map(t => (
                                 <div key={t.id} className="flex items-center justify-between text-xs bg-white dark:bg-slate-900 p-1.5 px-2 rounded-md border border-slate-200/80 dark:border-slate-800">
                                   <span className="font-medium text-slate-700 dark:text-slate-300 truncate max-w-[240px]">{t.title}</span>
-                                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">{t.status || 'todo'}</span>
+                                  <span className="text-xs sm:text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">{t.status || 'todo'}</span>
                                 </div>
                               ))}
                             </div>
@@ -969,10 +969,10 @@ export const UserDetailView: React.FC<UserDetailViewProps> = ({
                     <div key={t.id} className="p-2.5 bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 rounded-md flex items-center justify-between">
                       <div>
                         <div className="font-medium text-xs text-slate-800 dark:text-slate-100 truncate max-w-[280px]">{t.title}</div>
-                        <div className="text-[10px] font-mono text-slate-400 uppercase mt-0.5">{t.key || 'TASK'}</div>
+                        <div className="text-xs sm:text-[10px] font-mono text-slate-400 uppercase mt-0.5">{t.key || 'TASK'}</div>
                       </div>
                       <span className={cn(
-                        "text-[10px] font-medium uppercase px-2 py-0.5 rounded-md border",
+                        "text-xs sm:text-[10px] font-medium uppercase px-2 py-0.5 rounded-md border",
                         t.status === 'completed' || t.status === 'done' ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800" : "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800"
                       )}>
                         {t.status || 'todo'}

@@ -161,12 +161,12 @@ export const ProfileEditModal = ({
           <div className="relative group cursor-pointer">
             <UserAvatar user={{ ...userProfile, displayName, username, photoURL: previewUrl || photoURL } as any} className="w-16 h-16 text-2xl" />
             {previewUrl && (
-              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-[9px] font-semibold px-2 py-0.5 rounded-full shadow-xs whitespace-nowrap z-20">
+              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-amber-500 text-white text-xs sm:text-[11px] sm:text-[9px] font-semibold px-2 py-0.5 rounded-full shadow-xs whitespace-nowrap z-20">
                 Pratinjau
               </span>
             )}
             <label className="absolute inset-0 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity">
-              <span className="text-[10px] font-medium uppercase tracking-wider">{isUploading ? '...' : 'Pilih Foto'}</span>
+              <span className="text-xs sm:text-[10px] font-medium uppercase tracking-wider">{isUploading ? '...' : 'Pilih Foto'}</span>
               <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} disabled={isUploading || loading} />
             </label>
           </div>
@@ -231,7 +231,7 @@ export const ProfileEditModal = ({
                 placeholder="••••••••"
                 className="pr-10"
               />
-              {error && <p className="text-[10px] text-red-500 font-medium">{error}</p>}
+              {error && <p className="text-xs sm:text-[10px] text-red-500 font-medium">{error}</p>}
               <button
                 type="button"
                 className="absolute right-3 top-8 text-slate-400 hover:text-slate-600"

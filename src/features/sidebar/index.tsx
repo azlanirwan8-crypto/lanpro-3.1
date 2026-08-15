@@ -49,7 +49,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     if (badgeColor === 'purple') colorClasses = "bg-[#878a99] text-white";
 
     return (
-      <span className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded shadow-xs uppercase tracking-wider shrink-0", colorClasses)}>
+      <span className={cn("text-xs sm:text-[10px] font-medium px-1.5 py-0.5 rounded shadow-xs uppercase tracking-wider shrink-0", colorClasses)}>
         {badge}
       </span>
     );
@@ -95,7 +95,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                 className="flex flex-col"
               >
                 <span className={styles.logoText}>LANPRO</span>
-                <span className="text-[9px] font-medium text-[#878a99] tracking-widest uppercase -mt-1">Project Management</span>
+                <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-[#878a99] tracking-widest uppercase -mt-1">Project Management</span>
               </motion.div>
             )}
           </AnimatePresence>
@@ -120,7 +120,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                 title="Buat Proyek Baru"
               >
                 <Plus className="w-3.5 h-3.5 text-amber-400" />
-                <span className="text-[10px] font-medium uppercase text-amber-300">Baru</span>
+                <span className="text-xs sm:text-[10px] font-medium uppercase text-amber-300">Baru</span>
               </motion.button>
             )}
           </motion.div>
@@ -150,7 +150,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
               {!isSidebarCollapsed && (
                 <>
                   <span className="truncate flex-1 text-left text-xs font-medium">{p.name}</span>
-                  <span className="text-[9px] font-medium px-1.5 py-0.5 rounded bg-black/20 text-[#abb9e8]">{p.key}</span>
+                  <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium px-1.5 py-0.5 rounded bg-black/20 text-[#abb9e8]">{p.key}</span>
                 </>
               )}
             </motion.button>
@@ -188,7 +188,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
             <React.Fragment key={section.id}>
               {!isSidebarCollapsed && (
                 <div className="flex items-center justify-between px-3 mt-5 mb-1.5">
-                  <div className="text-[11px] font-medium text-[#878a99] uppercase tracking-wider">{section.title}</div>
+                  <div className="text-xs sm:text-[11px] font-medium text-[#878a99] uppercase tracking-wider">{section.title}</div>
                 </div>
               )}
               {permittedItems.map((item) => {
@@ -207,7 +207,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                       className={cn(
                         "w-full flex items-center gap-3 px-3 py-2.5 min-h-11 rounded-md transition-all text-xs relative overflow-hidden group",
                         isActive 
-                          ? 'bg-[#364574] text-white font-medium border-l-3 border-amber-400 shadow-sm' 
+                          ? 'bg-[#364574] text-white font-medium border-l-3 border-amber-400 shadow-soft' 
                           : 'text-[#abb9e8] hover:bg-white/5 hover:text-white'
                       )}
                       title={isSidebarCollapsed ? item.label : undefined}
@@ -250,7 +250,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                                   : 'text-[#878a99] hover:text-white hover:bg-white/5'
                               )}
                             >
-                              <span className="text-slate-400 text-[10px]">—</span>
+                              <span className="text-slate-400 text-xs sm:text-[10px]">—</span>
                               <span className="truncate">{subItem.label}</span>
                             </button>
                           );
@@ -307,7 +307,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
             <>
               <div className="flex-1 min-w-0">
                 <div className="text-xs font-medium text-white truncate">{user?.displayName || currentUser?.displayName || currentUser?.username || 'User'}</div>
-                <div className="text-[10px] text-[#878a99] truncate font-mono">{currentUser?.username || 'admin'}</div>
+                <div className="text-xs sm:text-[10px] text-[#878a99] truncate font-mono">{currentUser?.username || 'admin'}</div>
               </div>
               <ChevronDown className={cn("w-4 h-4 text-slate-400 transition-transform duration-200", isUserMenuOpen && "rotate-180")} />
             </>

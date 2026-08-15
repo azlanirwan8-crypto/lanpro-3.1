@@ -44,7 +44,7 @@ export const WikiEmptyState: React.FC<WikiEmptyStateProps> = ({
         >
           {/* Circular backdrop rings with gradient & blur */}
           <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-indigo-100/40 to-violet-100/40 border border-indigo-200/20 blur-md scale-95" />
-          <div className="absolute w-24 h-24 rounded-full bg-white/70 shadow-lg shadow-indigo-600/5 border border-indigo-100/50 flex items-center justify-center" />
+          <div className="absolute w-24 h-24 rounded-full bg-white/70 shadow-soft-lg shadow-indigo-600/5 border border-indigo-100/50 flex items-center justify-center" />
           
           {/* Floating sparks & decorative mini-icons */}
           <motion.div

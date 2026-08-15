@@ -182,3 +182,54 @@ body {
 .animate-shake {
   animation: shake 0.3s ease-in-out;
 }
+
+/* ─── Kehalusan bergaya Velzon ───────────────────────────────────────────────
+ * Velzon terasa halus bukan karena Bootstrap, melainkan karena empat kebiasaan
+ * yang konsisten: transisi pendek di SETIAP perubahan state, bayangan berlapis
+ * yang lembut, radius seragam, dan animasi masuk yang singkat. Keempatnya
+ * direplikasi di sini dengan Tailwind murni.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+/* 1. Transisi bawaan untuk elemen interaktif.
+ *    Durasi 150ms dengan easing standar — cukup terasa, tidak memperlambat.
+ *    Dibatasi pada properti yang murah agar tidak memicu re-layout. */
+button, a, [role="button"], select, input, textarea, summary {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 2. Bayangan berlapis. Satu bayangan tunggal terlihat kasar; dua lapis dengan
+ *    sebaran berbeda meniru cara cahaya jatuh, dan itulah yang membuat kartu
+ *    Velzon terasa "empuk". Nilai alpha diturunkan pada mode gelap karena
+ *    bayangan hitam di atas permukaan gelap tidak terbaca. */
+@utility shadow-soft {
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 2px 8px rgb(15 23 42 / 0.05);
+}
+@utility shadow-soft-lg {
+  box-shadow: 0 2px 4px rgb(15 23 42 / 0.04), 0 12px 32px rgb(15 23 42 / 0.08);
+}
+html.dark .shadow-soft {
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 8px rgb(0 0 0 / 0.28);
+}
+html.dark .shadow-soft-lg {
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.32), 0 12px 32px rgb(0 0 0 / 0.4);
+}
+
+/* 3. Animasi masuk dropdown & popover: memudar sambil sedikit membesar dan
+ *    naik. 120ms dipilih supaya terasa responsif, bukan lamban. */
+@keyframes velzon-in {
+  from { opacity: 0; transform: scale(0.97) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@utility animate-dropdown {
+  animation: velzon-in 120ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 4. Hormati preferensi pengguna yang meminta gerakan dikurangi. Tanpa blok
+ *    ini, seluruh kehalusan di atas justru menjadi gangguan bagi sebagian
+ *    orang — dan itu kegagalan aksesibilitas, bukan sekadar preferensi. */
+@media (prefers-reduced-motion: reduce) {
+  button, a, [role="button"], select, input, textarea, summary { transition-duration: 1ms; }
+  .animate-dropdown { animation: none; }
+}

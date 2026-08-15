@@ -2204,8 +2204,8 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
       {/* VIEW-PORT UTAMA (DASHBOARD DENGAN EMBED VIEWER & TOGGLE KANVAS) */}
       <div className="flex-1 flex flex-col min-h-[600px] bg-transparent relative mb-8">
         {!selectedFlowId ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 bg-surface border border-border-subtle rounded-lg shadow-sm">
-            <div className="w-16 h-16 bg-surface border border-border-faint shadow-sm rounded-xl flex items-center justify-center mb-4 text-violet-600">
+          <div className="flex-1 flex flex-col items-center justify-center p-8 bg-surface border border-border-subtle rounded-lg shadow-soft">
+            <div className="w-16 h-16 bg-surface border border-border-faint shadow-soft rounded-xl flex items-center justify-center mb-4 text-violet-600">
               <FileText className="w-6 h-6 animate-pulse" />
             </div>
             <h2 className="text-base font-medium text-content-strong mb-1">Manajemen Dokumentasi</h2>
@@ -2284,26 +2284,26 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             </div>
 
             {/* Panel 2: Meta Context & Title */}
-            <div className="bg-surface border border-border-subtle rounded-lg p-5 md:p-6 shadow-sm shrink-0">
+            <div className="bg-surface border border-border-subtle rounded-lg p-5 md:p-6 shadow-soft shrink-0">
               <div className="flex flex-wrap items-center gap-2 select-none mb-3">
                 {/* Category Badge */}
                 {currentFlowMetadata?.category === "PRD" && (
-                  <span className="px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider bg-surface-muted text-content-body border border-border-subtle/80 rounded-full">
+                  <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-surface-muted text-content-body border border-border-subtle/80 rounded-full">
                     📄 PRD
                   </span>
                 )}
                 {currentFlowMetadata?.category === "Panduan" && (
-                  <span className="px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200/80 rounded-full">
+                  <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200/80 rounded-full">
                     📖 Panduan
                   </span>
                 )}
                 {currentFlowMetadata?.category === "Laporan" && (
-                  <span className="px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full">
+                  <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full">
                     📊 Laporan
                   </span>
                 )}
                 {!currentFlowMetadata?.category && (
-                  <span className="px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider bg-violet-50 text-violet-700 border border-violet-200/80 rounded-full">
+                  <span className="px-2.5 py-1 text-xs sm:text-[10px] font-medium uppercase tracking-wider bg-violet-50 text-violet-700 border border-violet-200/80 rounded-full">
                     ⚙️ Umum
                   </span>
                 )}
@@ -2316,14 +2316,14 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 <span className="text-slate-300">•</span>
 
                 {/* Date */}
-                <span className="text-[10px] text-content-subtle font-medium flex items-center gap-1">
+                <span className="text-xs sm:text-[10px] text-content-subtle font-medium flex items-center gap-1">
                   Diperbarui {currentFlowMetadata?.lastEditedAt || currentFlowMetadata?.createdAt}
                 </span>
                 
                 {linkedEpic && (
                   <>
                     <span className="text-slate-300">•</span>
-                    <span className="text-[10px] font-medium text-indigo-750 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full truncate max-w-[180px]" title={linkedEpic.title}>
+                    <span className="text-xs sm:text-[10px] font-medium text-indigo-750 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full truncate max-w-[180px]" title={linkedEpic.title}>
                       🎯 Epic: {linkedEpic.title}
                     </span>
                   </>
@@ -2343,7 +2343,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             </div>
 
             {/* Panel 3: Main Viewport (Canvas / Viewer) */}
-            <div className="bg-surface border border-border-subtle rounded-lg shadow-sm flex-1 min-h-[600px] relative flex flex-col overflow-hidden">
+            <div className="bg-surface border border-border-subtle rounded-lg shadow-soft flex-1 min-h-[600px] relative flex flex-col overflow-hidden">
               
               {rightViewMode === "embed" ? (
                 /* 1. EMBED VIEWER (SPLIT PANE) */
@@ -2359,7 +2359,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                       </h4>
                       <button
                         onClick={openUploadDocumentModal}
-                        className="p-2 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded text-xs transition-colors cursor-pointer shadow-sm active:scale-95 flex items-center gap-2"
+                        className="p-2 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded text-xs transition-colors cursor-pointer shadow-soft active:scale-95 flex items-center gap-2"
                         title="Upload Dokumen Baru"
                       >
                         <Plus className="w-4 h-4" /> Tambah Dokumen
@@ -2372,7 +2372,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                           {currentFlowMetadata.documents.map((doc, idx) => (
                             <div 
                               key={doc.id}
-                              className="p-4 rounded-xl border border-border-subtle bg-surface flex flex-col gap-4 shadow-sm hover:shadow hover:border-violet-300 transition-all group"
+                              className="p-4 rounded-xl border border-border-subtle bg-surface flex flex-col gap-4 shadow-soft hover:shadow hover:border-violet-300 transition-all group"
                             >
                               <div className="flex items-start justify-between gap-3">
                                 <div className="w-10 h-10 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center shrink-0">
@@ -2382,7 +2382,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                                   <span className="text-sm font-medium text-content-strong truncate">{doc.name}</span>
                                   <span className="text-xs text-content-muted font-medium truncate mt-0.5">{doc.fileName}</span>
                                   {doc.fileSize && (
-                                    <span className="text-[10px] text-content-subtle mt-1">{(doc.fileSize / 1024 / 1024).toFixed(2)} MB</span>
+                                    <span className="text-xs sm:text-[10px] text-content-subtle mt-1">{(doc.fileSize / 1024 / 1024).toFixed(2)} MB</span>
                                   )}
                                 </div>
                               </div>
@@ -2466,7 +2466,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               title="Quick Yellow Sticky Note"
             >
               <StickyNote className="w-4 h-4 text-amber-500 fill-amber-300" />
-              <span className="text-[7.5px] font-medium uppercase tracking-tight text-amber-600 mt-0.5">Sticky</span>
+              <span className="text-xs sm:text-[10px] sm:text-[7.5px] font-medium uppercase tracking-tight text-amber-600 mt-0.5">Sticky</span>
             </button>
 
             {/* Shapes COLLECTION TRIGGER */}
@@ -2496,7 +2496,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               title="Anak Panah Penghubung shapes"
             >
               <ArrowRight className="w-4 h-4" />
-              <span className="text-[7.5px] font-medium uppercase tracking-tight mt-0.5">Arrow</span>
+              <span className="text-xs sm:text-[10px] sm:text-[7.5px] font-medium uppercase tracking-tight mt-0.5">Arrow</span>
             </button>
 
             <button 
@@ -2505,7 +2505,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               title="Tambahkan Teks dokumentasi"
             >
               <Type className="w-4 h-4 text-slate-505" />
-              <span className="text-[7.5px] font-medium uppercase tracking-tight mt-0.5">Text</span>
+              <span className="text-xs sm:text-[10px] sm:text-[7.5px] font-medium uppercase tracking-tight mt-0.5">Text</span>
             </button>
 
             <div className="w-6 h-px bg-slate-200" />
@@ -2677,13 +2677,13 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
              {/* Miro Coordinate & Element Stats Hover HUD overlay (HIDDEN AS REQUESTED) */}
             {/* <div className={cn(
-              "absolute bottom-16 z-30 p-1.5 px-3 bg-slate-900/95 backdrop-blur-sm border border-slate-800 text-slate-300 shadow-xl rounded-xl flex items-center gap-2 text-[10px] font-mono select-none transition-all duration-300",
+              "absolute bottom-16 z-30 p-1.5 px-3 bg-slate-900/95 backdrop-blur-sm border border-slate-800 text-slate-300 shadow-xl rounded-xl flex items-center gap-2 text-xs sm:text-[10px] font-mono select-none transition-all duration-300",
               // HUD hidden coordinate info
               false ? "left-[356px]" : "left-4"
             )}>
               <span className="flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[9px] text-emerald-400 font-medium uppercase tracking-wider">Canvas</span>
+                <span className="text-xs sm:text-[11px] sm:text-[9px] text-emerald-400 font-medium uppercase tracking-wider">Canvas</span>
               </span>
               <div className="w-px h-3.5 bg-slate-750" />
               <span className="font-medium">X: <span className="text-slate-100">{hoverCoords.x}</span> Y: <span className="text-slate-100">{hoverCoords.y}</span></span>
@@ -2698,13 +2698,13 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             <button
               onClick={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
               className={cn(
-                "absolute bottom-4 z-30 p-2 bg-surface/70 backdrop-blur hover:bg-surface/85 border border-border-subtle/40 text-content-body hover:text-violet-600 shadow-lg rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 text-xs font-medium transition-all duration-300",
+                "absolute bottom-4 z-30 p-2 bg-surface/70 backdrop-blur hover:bg-surface/85 border border-border-subtle/40 text-content-body hover:text-violet-600 shadow-soft-lg rounded-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-1.5 text-xs font-medium transition-all duration-300",
                 isRightSidebarOpen ? "right-[356px]" : "right-4"
               )}
               title="Toggle Panel Properti"
             >
               <Edit3 className="w-3.5 h-3.5 text-current" />
-              <span className="text-[10px] uppercase tracking-wider">Editor Properti</span>
+              <span className="text-xs sm:text-[10px] uppercase tracking-wider">Editor Properti</span>
               <span>{isRightSidebarOpen ? "▶" : "◀"}</span>
             </button>
 
@@ -2746,7 +2746,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               {/* Auto-Align Layout Engine */}
               <button
                 onClick={handleAutoAlignNodes}
-                className="p-1 px-2 text-content-body hover:bg-surface-muted hover:text-violet-605 rounded-xl transition-all flex items-center gap-1 active:scale-95 text-[10px] font-medium"
+                className="p-1 px-2 text-content-body hover:bg-surface-muted hover:text-violet-605 rounded-xl transition-all flex items-center gap-1 active:scale-95 text-xs sm:text-[10px] font-medium"
                 title="Otomatis merapikan format diagram secara horizontal & vertikal"
               >
                 <Sparkles className="w-3.5 h-3.5 text-violet-600 fill-violet-200" />
@@ -2757,9 +2757,9 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               <button
                 onClick={handleSimulateFlow}
                 className={cn(
-                  "p-1 px-2 rounded-xl transition-all flex items-center gap-1 active:scale-95 text-[10px] font-medium",
+                  "p-1 px-2 rounded-xl transition-all flex items-center gap-1 active:scale-95 text-xs sm:text-[10px] font-medium",
                   isSimulating 
-                    ? "bg-red-50 text-red-600 hover:bg-red-100 border border-red-150 shadow-sm" 
+                    ? "bg-red-50 text-red-600 hover:bg-red-100 border border-red-150 shadow-soft" 
                     : "text-content-body hover:bg-surface-muted hover:text-emerald-600"
                 )}
                 title={isSimulating ? "Hentikan Simulasi" : "Jalankan Simulasi Alur Kerja Visual"}
@@ -2807,13 +2807,13 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               {isWorkspaceEditable ? (
                 <button
                   onClick={() => handleSaveWorkspace()}
-                  className="p-2 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-xl flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                  className="p-2 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-xl flex items-center gap-1.5 transition-all shadow-soft active:scale-95"
                   title="Simpan seluruh flowchart ini ke database"
                 >
                   <Save className="w-3.5 h-3.5" />
                 </button>
               ) : (
-                <div className="px-2.5 py-1.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl flex items-center gap-1 text-[10px] font-medium shadow-2xs">
+                <div className="px-2.5 py-1.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl flex items-center gap-1 text-xs sm:text-[10px] font-medium shadow-2xs">
                   <Eye className="w-3.5 h-3.5 text-amber-500" />
                   <span className="hidden sm:inline">Mode Baca Saja</span>
                 </div>
@@ -2843,7 +2843,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 </button>
                 <button
                   onClick={() => setZoomLevel(1)}
-                  className="px-2 text-[10px] font-medium text-content-secondary hover:text-violet-600 w-11 text-center font-mono cursor-pointer transition-colors"
+                  className="px-2 text-xs sm:text-[10px] font-medium text-content-secondary hover:text-violet-600 w-11 text-center font-mono cursor-pointer transition-colors"
                   title="Reset Zoom (100%)"
                 >
                   {Math.round(zoomLevel * 100)}%
@@ -2877,43 +2877,43 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             {isKeyboardHelpOpen && (
               <div className="absolute left-4 right-4 md:left-auto md:right-4 bottom-20 z-40 bg-slate-900/95 backdrop-blur text-white p-4 rounded-xl border border-slate-750 shadow-2xl max-w-sm space-y-3 p-4 select-none">
                 <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-                  <span className="font-medium uppercase tracking-widest text-[9.5px] text-violet-400">Pintasan Keyboard & Tips</span>
+                  <span className="font-medium uppercase tracking-widest text-xs sm:text-[11px] sm:text-[9.5px] text-violet-400">Pintasan Keyboard & Tips</span>
                   <button onClick={() => setIsKeyboardHelpOpen(false)} className="text-content-subtle hover:text-white transition-colors">
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
-                <div className="space-y-2 text-[11px] leading-relaxed">
+                <div className="space-y-2 text-xs sm:text-[11px] leading-relaxed">
                   <div className="flex justify-between items-center">
                     <span className="text-content-subtle font-medium font-sans">Batal Aksi (Undo)</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-[9px] font-medium">Ctrl + Z</kbd>
+                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Ctrl + Z</kbd>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-content-subtle font-medium font-sans">Ulangi Aksi (Redo)</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-[9px] font-medium">Ctrl + Y / Ctrl+Shift+Z</kbd>
+                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Ctrl + Y / Ctrl+Shift+Z</kbd>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-content-subtle font-medium font-sans">Duplikasi Bentuk</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-[9px] font-medium">Ctrl + D</kbd>
+                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Ctrl + D</kbd>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-content-subtle font-medium font-sans">Geser Alur (Nudge)</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-[9px] font-medium">Tombol Panah Arrow (↑↓←→)</kbd>
+                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Tombol Panah Arrow (↑↓←→)</kbd>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-content-subtle font-medium font-sans font-sans">Geser Kelompok Lebar</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-[9px] font-medium">Shift + Panah</kbd>
+                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Shift + Panah</kbd>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-content-subtle font-medium font-sans">Batalkan Pilihan / Tool</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-[9px] font-medium">Esc</kbd>
+                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium">Esc</kbd>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-content-subtle font-medium font-sans">Hapus Element Terpilih</span>
-                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-[9px] font-medium font-sans">Delete / Backspace</kbd>
+                    <kbd className="bg-slate-800 text-slate-100 border border-slate-700 p-0.5 px-1.5 rounded-md font-mono text-xs sm:text-[11px] sm:text-[9px] font-medium font-sans">Delete / Backspace</kbd>
                   </div>
                 </div>
                 <div className="h-px bg-slate-800 my-1" />
-                <p className="text-[10px] text-content-subtle italic font-mono leading-relaxed">
+                <p className="text-xs sm:text-[10px] text-content-subtle italic font-mono leading-relaxed">
                   💡 Tips BNI Doc: Aktifkan mode &ldquo;Arrow&rdquo; dari toolbar sebelah kiri, klik pada komponen awal, lalu klik pada komponen kedua untuk menyambung koneksi anak panah alur secara instan.
                 </p>
               </div>
@@ -2934,7 +2934,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 
                 <div className="flex justify-between items-center bg-surface-sunken p-2.5 rounded-lg border border-border-subtle">
                   <div>
-                    <span className="text-[8.5px] font-medium tracking-wider text-slate-550 text-content-muted uppercase">Selected Component</span>
+                    <span className="text-xs sm:text-[10px] sm:text-[8.5px] font-medium tracking-wider text-slate-550 text-content-muted uppercase">Selected Component</span>
                     <div className="text-content font-medium capitalize flex items-center gap-1.5 mt-0.5 text-xs">
                       <div className="w-2 h-2 rounded bg-violet-500" />
                       {nodes.find(n => n.id === selectedNodeId)?.type || "Unknown"}
@@ -2942,7 +2942,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   </div>
                   <button 
                     onClick={handleDeleteSelected}
-                    className="p-2 bg-rose-50 rounded-lg hover:bg-rose-100 text-rose-600 transition-all active:scale-95 shadow-sm border border-rose-150"
+                    className="p-2 bg-rose-50 rounded-lg hover:bg-rose-100 text-rose-600 transition-all active:scale-95 shadow-soft border border-rose-150"
                     title="Hapus shape"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -2951,7 +2951,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
                 {/* Shape Type Dropper Selector (Miro Dynamic conversion) */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase font-medium text-slate-550 text-content-muted font-medium flex items-center gap-1">
+                  <label className="text-xs sm:text-[10px] uppercase font-medium text-slate-550 text-content-muted font-medium flex items-center gap-1">
                     <Layers className="w-3.5 h-3.5 text-violet-600" />
                     <span>Ubah Bentuk / Tipe Shape</span>
                   </label>
@@ -2983,7 +2983,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
                 {/* Edit inline message */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase font-medium text-slate-550 text-content-muted font-medium">Sunting Teks</label>
+                  <label className="text-xs sm:text-[10px] uppercase font-medium text-slate-550 text-content-muted font-medium">Sunting Teks</label>
                   <textarea
                     value={nodes.find(n => n.id === selectedNodeId)?.label || ""}
                     onChange={(e) => handleUpdateActiveNode({ label: e.target.value })}
@@ -2994,7 +2994,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
                 {/* Shape Theme Colors (Miro aesthetics) */}
                 <div className="space-y-2">
-                  <span className="text-[10px] uppercase font-medium text-slate-550 text-content-muted block font-medium">Warna Palette Miro</span>
+                  <span className="text-xs sm:text-[10px] uppercase font-medium text-slate-550 text-content-muted block font-medium">Warna Palette Miro</span>
                   <div className="grid grid-cols-6 gap-1.5">
                     {Object.keys(colorPalettes).map((colName) => {
                       const isActive = nodes.find(n => n.id === selectedNodeId)?.color === colName;
@@ -3016,7 +3016,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
                 {/* Borders parameters styling */}
                 <div className="space-y-1.5">
-                  <span className="text-[10px] uppercase font-medium text-content-muted block font-medium">Gaya Garis Bingkai</span>
+                  <span className="text-xs sm:text-[10px] uppercase font-medium text-content-muted block font-medium">Gaya Garis Bingkai</span>
                   <div className="grid grid-cols-3 gap-1">
                     {[
                       { l: "Solid", val: "solid" },
@@ -3029,7 +3029,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                           key={st.val}
                           onClick={() => handleUpdateActiveNode({ borderStyle: st.val as any })}
                           className={cn(
-                            "p-1 rounded font-medium text-[10px] text-center border capitalize transition-all",
+                            "p-1 rounded font-medium text-xs sm:text-[10px] text-center border capitalize transition-all",
                             currentVal === st.val 
                               ? "bg-violet-50 text-violet-700 border-violet-200" 
                               : "bg-surface-sunken text-content-secondary border-border-subtle hover:bg-surface-muted"
@@ -3044,10 +3044,10 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
                 {/* Dimension adjustments */}
                 <div className="space-y-2">
-                  <span className="text-[10px] uppercase font-medium text-content-muted block font-medium">Dimensi Ukuran</span>
+                  <span className="text-xs sm:text-[10px] uppercase font-medium text-content-muted block font-medium">Dimensi Ukuran</span>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <span className="text-[9px] text-content-subtle font-medium">Lebar (W)</span>
+                      <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle font-medium">Lebar (W)</span>
                       <input
                         type="number"
                         min="40"
@@ -3058,7 +3058,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                       />
                     </div>
                     <div>
-                      <span className="text-[9px] text-content-subtle font-medium">Tinggi (H)</span>
+                      <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle font-medium">Tinggi (H)</span>
                       <input
                         type="number"
                         min="40"
@@ -3073,11 +3073,11 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
                 {/* Integration with Workspace tasks list (LINKING TASKS BACKLOG TO SHAPES) */}
                 <div className="space-y-1.5 pt-2 border-t border-border-subtle">
-                  <label className="text-[10px] uppercase font-medium text-content-muted flex items-center gap-1 font-medium">
+                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted flex items-center gap-1 font-medium">
                     <Workflow className="w-3.5 h-3.5 text-violet-600" />
                     <span>Link Task Backlog BNI</span>
                   </label>
-                  <p className="text-[9px] text-content-muted mb-2 font-medium">Hubungkan bentuk dengan sprint backlog agar status tersinkronisasi otomatis.</p>
+                  <p className="text-xs sm:text-[11px] sm:text-[9px] text-content-muted mb-2 font-medium">Hubungkan bentuk dengan sprint backlog agar status tersinkronisasi otomatis.</p>
                   
                   <select
                     value={nodes.find(n => n.id === selectedNodeId)?.taskId || ""}
@@ -3098,12 +3098,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               <div className="space-y-4">
                 
                 <div className="bg-surface-sunken p-3 rounded-lg border border-border-subtle">
-                  <span className="text-[8px] font-mono text-content-muted uppercase tracking-widest block font-medium">Selected Relation</span>
+                  <span className="text-xs sm:text-[10px] sm:text-[8px] font-mono text-content-muted uppercase tracking-widest block font-medium">Selected Relation</span>
                   <div className="text-content font-medium mt-1 text-xs">Garis Alur Penghubung</div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase font-medium text-content-muted font-medium">Lebel pada Garis Alur</label>
+                  <label className="text-xs sm:text-[10px] uppercase font-medium text-content-muted font-medium">Lebel pada Garis Alur</label>
                   <input
                     type="text"
                     value={edges.find(e => e.id === selectedEdgeId)?.label || ""}
@@ -3126,11 +3126,11 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               </div>
             ) : (
               <div className="text-center py-16 text-content-muted space-y-3">
-                <div className="w-10 h-10 bg-surface-sunken rounded-full flex items-center justify-center mx-auto text-content-subtle border border-border-subtle shadow-sm">
+                <div className="w-10 h-10 bg-surface-sunken rounded-full flex items-center justify-center mx-auto text-content-subtle border border-border-subtle shadow-soft">
                   <MousePointer className="w-4 h-4 text-violet-600" />
                 </div>
-                <div className="text-[11px] font-medium text-content">Tidak ada komponen dipilih</div>
-                <p className="text-[10px] text-content-muted max-w-[190px] mx-auto leading-relaxed">
+                <div className="text-xs sm:text-[11px] font-medium text-content">Tidak ada komponen dipilih</div>
+                <p className="text-xs sm:text-[10px] text-content-muted max-w-[190px] mx-auto leading-relaxed">
                   Klik satu komponen bentuk, catatan tempel, atau anak panah alir di canvas untuk mengubah properti ornamen.
                 </p>
               </div>
@@ -3190,7 +3190,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             <form onSubmit={handleModalSubmit} className="p-5 space-y-4 text-xs">
               
               <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-content-body">
+                <label className="text-xs sm:text-[11px] font-medium text-content-body">
                   Nama Dokumen / Flowchart <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -3205,7 +3205,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
               {/* Kategori Select */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-content-body">
+                <label className="text-xs sm:text-[11px] font-medium text-content-body">
                   Kategori Dokumen <span className="text-rose-500">*</span>
                 </label>
                 <select
@@ -3221,7 +3221,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
 
               {/* Tautan Eksternal Input */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-content-body">
+                <label className="text-xs sm:text-[11px] font-medium text-content-body">
                   Tautan Eksternal (Google Docs / Sheets / Slides / URL)
                 </label>
                 <input
@@ -3231,14 +3231,14 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   onChange={(e) => setFlowExternalUrl(e.target.value)}
                   className="w-full text-xs font-medium bg-surface-sunken border border-border-subtle rounded-lg p-2.5 text-content-strong placeholder:text-content-subtle focus:bg-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
                 />
-                <p className="text-[10px] text-content-subtle leading-normal">
+                <p className="text-xs sm:text-[10px] text-content-subtle leading-normal">
                   Jika memasukkan link Google Docs/Sheets/Slides, sistem akan mengubah tautan secara otomatis ke mode preview interaktif.
                 </p>
               </div>
 
               {/* Link Epic Option integration */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-content-body flex items-center gap-1.5">
+                <label className="text-xs sm:text-[11px] font-medium text-content-body flex items-center gap-1.5">
                   <Workflow className="w-3.5 h-3.5 text-primary" /> Link Epic Terkait
                 </label>
                 <select
@@ -3253,13 +3253,13 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                     </option>
                   ))}
                 </select>
-                <p className="text-[10px] text-content-subtle leading-relaxed">
+                <p className="text-xs sm:text-[10px] text-content-subtle leading-relaxed">
                   Hubungkan dengan epic utama dari backlog workspace agar dokumentasi diagram alur berkaitan erat dengan milestone tim.
                 </p>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-medium text-content-body">Deskripsi Arsitektur</label>
+                <label className="text-xs sm:text-[11px] font-medium text-content-body">Deskripsi Arsitektur</label>
                 <textarea
                   placeholder="Ketikan ringkasan atau batasan proses flowchart ini..."
                   value={flowDescription}
@@ -3347,7 +3347,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             
             <div className="p-5 flex-1 overflow-y-auto space-y-4 text-xs">
               <div>
-                <label className="block text-[11px] font-medium text-content-body mb-1.5">Nama Dokumen</label>
+                <label className="block text-xs sm:text-[11px] font-medium text-content-body mb-1.5">Nama Dokumen</label>
                 <input
                   type="text"
                   value={uploadDocName}
@@ -3358,7 +3358,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-content-body mb-1.5">Upload File (Max 5MB)</label>
+                <label className="block text-xs sm:text-[11px] font-medium text-content-body mb-1.5">Upload File (Max 5MB)</label>
                 <div className="border border-dashed border-slate-300 rounded-md p-6 flex flex-col items-center justify-center bg-surface-sunken/50 relative overflow-hidden group hover:border-primary transition-colors">
                   <input 
                     type="file" 
@@ -3370,13 +3370,13 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                     <Upload className="w-4 h-4" />
                   </div>
                   <p className="text-xs font-medium text-content-body mb-0.5">Pilih atau Seret File Kesini</p>
-                  <p className="text-[10px] text-content-subtle font-medium">Mendukung PDF, Word, Excel (Max. 5MB)</p>
+                  <p className="text-xs sm:text-[10px] text-content-subtle font-medium">Mendukung PDF, Word, Excel (Max. 5MB)</p>
                   
                   {uploadDocFile && (
                     <div className="mt-3 p-2.5 bg-indigo-50/80 border border-indigo-100 rounded-md w-full flex items-center justify-between">
                       <div className="flex flex-col min-w-0">
                         <span className="text-xs font-medium text-primary truncate">{uploadDocFile.name}</span>
-                        <span className="text-[10px] text-content-muted font-medium">{(uploadDocFile.size / 1024 / 1024).toFixed(2)} MB</span>
+                        <span className="text-xs sm:text-[10px] text-content-muted font-medium">{(uploadDocFile.size / 1024 / 1024).toFixed(2)} MB</span>
                       </div>
                       <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
                     </div>

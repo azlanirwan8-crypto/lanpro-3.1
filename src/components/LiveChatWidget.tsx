@@ -540,7 +540,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
             <img 
               src={url} 
               alt={name} 
-              className="rounded-xl max-w-full h-auto border border-border-subtle/50 shadow-sm max-h-40 object-cover cursor-zoom-in hover:brightness-95 transition-all" 
+              className="rounded-xl max-w-full h-auto border border-border-subtle/50 shadow-soft max-h-40 object-cover cursor-zoom-in hover:brightness-95 transition-all" 
               onClick={() => {
                 const w = window.open();
                 if (w) {
@@ -549,7 +549,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
               }}
               referrerPolicy="no-referrer"
             />
-            <span className="text-[9px] opacity-75 flex items-center gap-1 font-mono tracking-tight">🖼️ {name}</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] opacity-75 flex items-center gap-1 font-mono tracking-tight">🖼️ {name}</span>
           </div>
         );
       } catch (e) {
@@ -575,8 +575,8 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
               <FileText className="w-4 h-4" />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-medium truncate text-content-strong leading-tight">{name}</p>
-              <p className="text-[9px] text-content-muted font-mono">Unduh berkas</p>
+              <p className="text-xs sm:text-[11px] font-medium truncate text-content-strong leading-tight">{name}</p>
+              <p className="text-xs sm:text-[11px] sm:text-[9px] text-content-muted font-mono">Unduh berkas</p>
             </div>
             <Download className="w-3.5 h-3.5 text-content-subtle shrink-0" />
           </a>
@@ -615,7 +615,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
-              className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-rose-500 text-white rounded-full flex items-center justify-center text-[10px] font-medium px-1.5 border border-white shadow-md animate-pulse"
+              className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-rose-500 text-white rounded-full flex items-center justify-center text-xs sm:text-[10px] font-medium px-1.5 border border-white shadow-md animate-pulse"
             >
               {totalUnread}
             </motion.div>
@@ -680,7 +680,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                   {/* Channels / Virtual Bots Section */}
                   {filteredVirtuals.length > 0 && (
                     <div className="bg-surface-sunken/40">
-                      <p className="px-4 pt-2.5 pb-1 text-[9px] font-medium tracking-widest text-content-subtle uppercase">Saluran & Asisten</p>
+                      <p className="px-4 pt-2.5 pb-1 text-xs sm:text-[11px] sm:text-[9px] font-medium tracking-widest text-content-subtle uppercase">Saluran & Asisten</p>
                       {filteredVirtuals.map((virtual) => {
                         const isGroup = virtual.id === "group";
                         const unread = unreadCounts[virtual.id] || 0;
@@ -694,11 +694,11 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                           >
                             <div className="shrink-0">
                               {isGroup ? (
-                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 text-white flex items-center justify-center border border-orange-400 shadow-sm">
+                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 text-white flex items-center justify-center border border-orange-400 shadow-soft">
                                   <Users className="w-4 h-4" />
                                 </div>
                               ) : (
-                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 text-white flex items-center justify-center border border-purple-500 shadow-sm relative">
+                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 text-white flex items-center justify-center border border-purple-500 shadow-soft relative">
                                   <Sparkles className="w-4 h-4 animate-pulse text-yellow-200" />
                                 </div>
                               )}
@@ -710,12 +710,12 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                                   {virtual?.displayName}
                                 </span>
                                 {lastMsg && (
-                                  <span className="text-[9px] text-content-subtle">
+                                  <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle">
                                     {formatTime(lastMsg.timestamp)}
                                   </span>
                                 )}
                               </div>
-                              <p className="text-[10px] text-content-muted truncate mt-0.5 font-medium">
+                              <p className="text-xs sm:text-[10px] text-content-muted truncate mt-0.5 font-medium">
                                 {lastMsg ? (
                                   lastMsg.message.startsWith("[IMAGE:") ? "🖼️ Mengirim gambar..." :
                                   lastMsg.message.startsWith("[FILE:") ? "📂 Mengirim lampiran..." : lastMsg.message
@@ -726,7 +726,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                             </div>
 
                             {unread > 0 && (
-                              <div className="shrink-0 min-w-[16px] h-4 bg-orange-500 text-white rounded-full flex items-center justify-center text-[9px] font-medium px-1.5 animate-bounce">
+                              <div className="shrink-0 min-w-[16px] h-4 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs sm:text-[11px] sm:text-[9px] font-medium px-1.5 animate-bounce">
                                 {unread}
                               </div>
                             )}
@@ -738,7 +738,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
 
                   {/* Direct Message Section */}
                   <div className="bg-surface">
-                    <p className="px-4 pt-3 pb-1 text-[9px] font-medium tracking-widest text-content-subtle uppercase">Rekan Kerja (DM)</p>
+                    <p className="px-4 pt-3 pb-1 text-xs sm:text-[11px] sm:text-[9px] font-medium tracking-widest text-content-subtle uppercase">Rekan Kerja (DM)</p>
                     {filteredUsers.length === 0 ? (
                       <div className="p-6 text-center text-content-subtle text-xs">
                         Tidak ada rekan kerja ditemukan.
@@ -761,7 +761,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                               <UserAvatar user={targetUser} className="w-9 h-9 border border-border-faint text-xs" />
                               {/* Online / Offline Indicator Dot */}
                               <span 
-                                className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white shadow-sm ${
+                                className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white shadow-soft ${
                                   isOnline ? "bg-emerald-500" : "bg-slate-300"
                                 }`}
                               />
@@ -774,12 +774,12 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                                   {targetUser?.displayName || targetUser?.username}
                                 </span>
                                 {lastMsg && (
-                                  <span className="text-[9px] text-content-subtle font-mono">
+                                  <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle font-mono">
                                     {formatTime(lastMsg.timestamp)}
                                   </span>
                                 )}
                               </div>
-                              <p className="text-[10px] text-content-muted truncate mt-0.5">
+                              <p className="text-xs sm:text-[10px] text-content-muted truncate mt-0.5">
                                 {lastMsg ? (
                                   lastMsg.message.startsWith("[IMAGE:") ? "🖼️ Gambar" :
                                   lastMsg.message.startsWith("[FILE:") ? "📂 Lampiran file" : lastMsg.message
@@ -789,7 +789,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
 
                             {/* Unread Count Badge */}
                             {userUnread > 0 && (
-                              <div className="shrink-0 min-w-[16px] h-4 bg-orange-500 text-white rounded-full flex items-center justify-center text-[9px] font-medium px-1.5 shadow-sm">
+                              <div className="shrink-0 min-w-[16px] h-4 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs sm:text-[11px] sm:text-[9px] font-medium px-1.5 shadow-soft">
                                 {userUnread}
                               </div>
                             )}
@@ -838,9 +838,9 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                     <div className="min-w-0">
                       <p className="text-xs font-medium text-white truncate leading-tight flex items-center gap-1">
                         {activeChatUser?.displayName}
-                        {activeChatUser.id === "lanpro-ai" && <span className="px-1 py-0.2 bg-purple-500/20 text-purple-300 text-[8px] font-medium rounded uppercase border border-purple-500/30">AI</span>}
+                        {activeChatUser.id === "lanpro-ai" && <span className="px-1 py-0.2 bg-purple-500/20 text-purple-300 text-xs sm:text-[10px] sm:text-[8px] font-medium rounded uppercase border border-purple-500/30">AI</span>}
                       </p>
-                      <p className="text-[9px] text-content-subtle">
+                      <p className="text-xs sm:text-[11px] sm:text-[9px] text-content-subtle">
                         {activeChatUser.id === "group" ? `${allUsers.length} Anggota Proyek` :
                          activeChatUser.id === "lanpro-ai" ? "Gemini 3.5 Assistant" :
                          onlineUserIds.includes(activeChatUser.id) ? "Sedang Aktif" : "Offline"}
@@ -878,7 +878,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                       placeholder="Filter kata kunci percakapan..."
                       value={msgSearchQuery}
                       onChange={(e) => setMsgSearchQuery(e.target.value)}
-                      className="flex-1 bg-transparent border-none text-[11px] focus:outline-none focus:ring-0 text-content-strong font-medium"
+                      className="flex-1 bg-transparent border-none text-xs sm:text-[11px] focus:outline-none focus:ring-0 text-content-strong font-medium"
                       autoFocus
                     />
                     {msgSearchQuery && (
@@ -894,7 +894,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                   {isLoadingMessages ? (
                     <div className="h-full flex flex-col items-center justify-center gap-1">
                       <Loader2 className="w-5 h-5 text-orange-500 animate-spin" />
-                      <span className="text-[10px] font-medium text-content-subtle">Memuat pesan...</span>
+                      <span className="text-xs sm:text-[10px] font-medium text-content-subtle">Memuat pesan...</span>
                     </div>
                   ) : filteredMessages.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center p-4">
@@ -923,9 +923,9 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                         >
                           {/* Sender name for Group Chat */}
                           {!isSelf && msg.receiverId === "group" && (
-                            <span className="text-[9px] font-medium text-content-muted mb-0.5 ml-1 flex items-center gap-1 select-none">
+                            <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-content-muted mb-0.5 ml-1 flex items-center gap-1 select-none">
                               {senderDisplayName}
-                              <span className="px-1 bg-slate-200 text-content-secondary rounded-[3px] text-[7px] font-medium">
+                              <span className="px-1 bg-slate-200 text-content-secondary rounded-[3px] text-xs sm:text-[10px] sm:text-[7px] font-medium">
                                 {senderProfile?.role || "anggota"}
                               </span>
                             </span>
@@ -933,13 +933,13 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
 
                           {/* Sender name for AI Assistant messages in direct chat */}
                           {!isSelf && msg.senderId === "lanpro-ai" && (
-                            <span className="text-[9px] font-medium text-purple-600 mb-0.5 ml-1 flex items-center gap-0.5 select-none font-sans">
+                            <span className="text-xs sm:text-[11px] sm:text-[9px] font-medium text-purple-600 mb-0.5 ml-1 flex items-center gap-0.5 select-none font-sans">
                               <Sparkles className="w-2.5 h-2.5" /> {senderDisplayName}
                             </span>
                           )}
 
                           <div
-                            className={`max-w-[85%] px-3 py-2 rounded-xl text-xs break-all shadow-sm ${
+                            className={`max-w-[85%] px-3 py-2 rounded-xl text-xs break-all shadow-soft ${
                               isSelf
                                 ? "bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-br-none"
                                 : "bg-surface border border-border-faint text-content-strong rounded-bl-none"
@@ -949,7 +949,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                           </div>
                           
                           {/* Message meta */}
-                          <div className="flex items-center gap-1 mt-1 px-1 text-[9px] text-content-subtle font-mono">
+                          <div className="flex items-center gap-1 mt-1 px-1 text-xs sm:text-[11px] sm:text-[9px] text-content-subtle font-mono">
                             <span>{formatTime(msg.timestamp)}</span>
                             {isSelf && (
                               <span>
@@ -967,8 +967,8 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                   )}
                   {isPartnerTyping && (
                     <div className="flex flex-col items-start space-y-1">
-                      <div className="bg-surface border border-border-faint text-content-strong px-3 py-1.5 rounded-xl rounded-bl-none text-xs shadow-sm flex items-center gap-1.5 text-content-muted font-medium">
-                        <span className="text-[10px] text-content-subtle">
+                      <div className="bg-surface border border-border-faint text-content-strong px-3 py-1.5 rounded-xl rounded-bl-none text-xs shadow-soft flex items-center gap-1.5 text-content-muted font-medium">
+                        <span className="text-xs sm:text-[10px] text-content-subtle">
                           {activeChatUser?.id === "lanpro-ai" ? "LanPro AI sedang mengetik" : `${activeChatUser?.displayName} sedang mengetik`}
                         </span>
                         <span className="flex gap-0.5 items-center justify-center pt-0.5 shrink-0">
@@ -984,7 +984,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
 
                 {/* Simulation Mode Toggle Panel (Only for Direct Human Chat) */}
                 {activeChatUser.id !== "group" && activeChatUser.id !== "lanpro-ai" && (
-                  <div className="px-2.5 py-1 bg-surface-sunken border-t border-border-faint/60 flex items-center justify-between text-[9px] text-content-subtle shrink-0">
+                  <div className="px-2.5 py-1 bg-surface-sunken border-t border-border-faint/60 flex items-center justify-between text-xs sm:text-[11px] sm:text-[9px] text-content-subtle shrink-0">
                     <span className="font-medium flex items-center gap-1">
                       <span className={`w-1.5 h-1.5 rounded-full ${simulationEnabled ? "bg-emerald-400 animate-pulse" : "bg-slate-300"}`} />
                       Simulasi Balasan Otomatis
@@ -992,7 +992,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                     <button
                       type="button"
                       onClick={() => setSimulationEnabled(!simulationEnabled)}
-                      className={`px-1.5 py-0.5 rounded text-[8px] font-medium uppercase tracking-wider transition-colors ${
+                      className={`px-1.5 py-0.5 rounded text-xs sm:text-[10px] sm:text-[8px] font-medium uppercase tracking-wider transition-colors ${
                         simulationEnabled ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" : "bg-slate-200 text-content-secondary hover:bg-slate-300"
                       }`}
                     >
@@ -1011,7 +1011,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                       className="p-3 bg-surface-sunken border-t border-border-faint flex flex-col gap-2 shrink-0 border-b border-border-faint"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-medium tracking-widest text-content-muted uppercase">Kirim Lampiran & Mockup</span>
+                        <span className="text-xs sm:text-[10px] font-medium tracking-widest text-content-muted uppercase">Kirim Lampiran & Mockup</span>
                         <button onClick={() => setIsAttachmentMenuOpen(false)} className="text-content-subtle hover:text-content-secondary">
                           <X className="w-3.5 h-3.5" />
                         </button>
@@ -1028,8 +1028,8 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                             <Image className="w-3.5 h-3.5" />
                           </span>
                           <div className="min-w-0">
-                            <p className="text-[10px] font-medium text-content-strong truncate">UI Mockup Redesign</p>
-                            <p className="text-[8px] text-content-subtle">PNG Mockup Asset</p>
+                            <p className="text-xs sm:text-[10px] font-medium text-content-strong truncate">UI Mockup Redesign</p>
+                            <p className="text-xs sm:text-[10px] sm:text-[8px] text-content-subtle">PNG Mockup Asset</p>
                           </div>
                         </button>
 
@@ -1043,8 +1043,8 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                             <FileText className="w-3.5 h-3.5" />
                           </span>
                           <div className="min-w-0">
-                            <p className="text-[10px] font-medium text-content-strong truncate">Database Blueprint</p>
-                            <p className="text-[8px] text-content-subtle">PDF Schema Spec</p>
+                            <p className="text-xs sm:text-[10px] font-medium text-content-strong truncate">Database Blueprint</p>
+                            <p className="text-xs sm:text-[10px] sm:text-[8px] text-content-subtle">PDF Schema Spec</p>
                           </div>
                         </button>
                       </div>
@@ -1053,7 +1053,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="w-full py-1.5 bg-slate-900 text-white rounded-xl text-[10px] font-medium tracking-wider uppercase flex items-center justify-center gap-1.5 hover:bg-orange-600 transition-colors shadow-sm"
+                        className="w-full py-1.5 bg-slate-900 text-white rounded-xl text-xs sm:text-[10px] font-medium tracking-wider uppercase flex items-center justify-center gap-1.5 hover:bg-orange-600 transition-colors shadow-soft"
                       >
                         <FileUp className="w-3.5 h-3.5" />
                         Unggah File Komputer Anda
@@ -1103,7 +1103,7 @@ export const LiveChatWidget: React.FC<LiveChatWidgetProps> = ({ socket, currentU
                   <button
                     type="submit"
                     disabled={!inputMessage.trim() || isUploading}
-                    className="p-2 bg-slate-900 text-white hover:bg-orange-500 rounded-xl transition-all shadow-sm disabled:opacity-30 disabled:hover:bg-slate-900 flex items-center justify-center shrink-0"
+                    className="p-2 bg-slate-900 text-white hover:bg-orange-500 rounded-xl transition-all shadow-soft disabled:opacity-30 disabled:hover:bg-slate-900 flex items-center justify-center shrink-0"
                     title="Kirim Pesan"
                   >
                     <Send className="w-3.5 h-3.5" />

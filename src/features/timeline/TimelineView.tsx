@@ -187,9 +187,9 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                 <div className="flex flex-col min-w-0 flex-1">
                   <span className="text-xs font-semibold text-slate-800 truncate">{task.title}</span>
                   <div className="flex items-center gap-2 mt-1">
-                    <button onClick={(e) => { e.stopPropagation(); setSelectedTaskForDetail(task); setIsTaskDetailModalOpen(true); }} className="text-[9px] font-semibold text-primary bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/60 rounded-md px-1.5 py-0.5 tracking-tight text-left uppercase transition-colors">{task.key}</button>
+                    <button onClick={(e) => { e.stopPropagation(); setSelectedTaskForDetail(task); setIsTaskDetailModalOpen(true); }} className="text-xs sm:text-[11px] sm:text-[9px] font-semibold text-primary bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/60 rounded-md px-1.5 py-0.5 tracking-tight text-left uppercase transition-colors">{task.key}</button>
                     <div className="w-1 h-1 rounded-full bg-slate-300" />
-                    <span className="text-[9px] font-semibold uppercase text-slate-500 tracking-wider">{task.status}</span>
+                    <span className="text-xs sm:text-[11px] sm:text-[9px] font-semibold uppercase text-slate-500 tracking-wider">{task.status}</span>
                   </div>
                 </div>
               </div>
@@ -198,7 +198,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
         </div>
         <div className="flex-1 flex flex-col overflow-auto relative bg-[#fcfcfc]" ref={timelineMainRef} onScroll={handleTimelineVerticalScroll}>
           <div className="min-w-max relative" style={{ width: `${totalDays * pixelsPerDay}px`, minHeight: '100%' }}>
-            <div className="sticky top-0 z-30 h-[73px] bg-[#F4F5F7] border-b border-gray-200 shadow-sm box-border flex flex-col">
+            <div className="sticky top-0 z-30 h-[73px] bg-[#F4F5F7] border-b border-gray-200 shadow-soft box-border flex flex-col">
               <div className="flex h-8 border-b border-gray-200/50">
                 {timelineZoom !== 'months' ? timelineMonths.map((m: any) => {
                   const mStart = startOfMonth(m);
@@ -208,7 +208,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                   const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
                   return (
                     <div key={m.toISOString()} className="flex items-center px-2 py-1 border-r border-gray-200/50" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                      <span className="text-[11px] font-medium text-gray-600 uppercase tracking-wider">{format(m, 'MMM yyyy')}</span>
+                      <span className="text-xs sm:text-[11px] font-medium text-gray-600 uppercase tracking-wider">{format(m, 'MMM yyyy')}</span>
                     </div>
                   );
                 }) : timelineYears.map((y: any) => {
@@ -219,7 +219,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                   const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
                   return (
                     <div key={y.toISOString()} className="flex items-center px-2 py-1 border-r border-gray-200/50" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                      <span className="text-[11px] font-medium text-gray-600 uppercase tracking-wider">{format(y, 'yyyy')}</span>
+                      <span className="text-xs sm:text-[11px] font-medium text-gray-600 uppercase tracking-wider">{format(y, 'yyyy')}</span>
                     </div>
                   );
                 })}
@@ -227,7 +227,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
               <div className="flex h-10">
                 {timelineZoom === 'days' && timelineDays.map((d: any, i: number) => (
                   <div key={d.toISOString()} className="flex items-center justify-center border-r border-gray-200/50 shrink-0" style={{ width: `${pixelsPerDay}px` }}>
-                    <span className="text-[10px] font-medium text-gray-400">{format(d, 'd')}</span>
+                    <span className="text-xs sm:text-[10px] font-medium text-gray-400">{format(d, 'd')}</span>
                   </div>
                 ))}
                 {timelineZoom === 'weeks' && timelineWeeks.map((w: any, i: number) => {
@@ -238,7 +238,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                   const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
                   return (
                     <div key={w.toISOString()} className="flex items-center justify-center border-r border-gray-200/50 shrink-0" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                      <span className="text-[10px] font-medium text-gray-400">W{format(w, 'w')}</span>
+                      <span className="text-xs sm:text-[10px] font-medium text-gray-400">W{format(w, 'w')}</span>
                     </div>
                   );
                 })}
@@ -250,7 +250,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                   const actualDays = differenceInDays(expectedEnd, actualStart) + 1;
                   return (
                     <div key={m.toISOString()} className="flex items-center justify-center border-r border-gray-200/50 shrink-0" style={{ width: `${actualDays * pixelsPerDay}px` }}>
-                      <span className="text-[10px] font-medium text-gray-400">{format(m, 'MMM')}</span>
+                      <span className="text-xs sm:text-[10px] font-medium text-gray-400">{format(m, 'MMM')}</span>
                     </div>
                   );
                 })}
@@ -288,13 +288,13 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                 return (
                   <div key={task.id} className="h-16 relative border-b border-gray-200 bg-transparent flex items-center">
                     <div
-                      className="absolute top-1/2 -translate-y-1/2 h-8 rounded-full shadow-sm flex items-center transition-all bg-blue-100 border border-blue-200/50 group/bar hover:shadow-md"
+                      className="absolute top-1/2 -translate-y-1/2 h-8 rounded-full shadow-soft flex items-center transition-all bg-blue-100 border border-blue-200/50 group/bar hover:shadow-md"
                       style={{ left: `${left}%`, width: `${width}%`, minWidth: '4px' }}
                     >
                       <div className="absolute -left-1 top-0 bottom-0 w-3 cursor-ew-resize z-20" onMouseDown={(e) => { e.stopPropagation(); setTimelineInteraction({ taskId: task.id, type: 'resize-start', startX: e.clientX, initialStart: start, initialEnd: end }); }} />
                       <div className="absolute -right-1 top-0 bottom-0 w-3 cursor-ew-resize z-20" onMouseDown={(e) => { e.stopPropagation(); setTimelineInteraction({ taskId: task.id, type: 'resize-end', startX: e.clientX, initialStart: start, initialEnd: end }); }} />
                       <div className="flex-1 h-full px-3 flex items-center min-w-0 cursor-grab active:cursor-grabbing overflow-hidden" onMouseDown={(e) => setTimelineInteraction({ taskId: task.id, type: 'move', startX: e.clientX, initialStart: start, initialEnd: end })}>
-                        <span className="text-[10px] font-medium text-blue-700 truncate uppercase tracking-tighter">{task.title}</span>
+                        <span className="text-xs sm:text-[10px] font-medium text-blue-700 truncate uppercase tracking-tighter">{task.title}</span>
                       </div>
                     </div>
                   </div>
@@ -303,7 +303,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
             </div>
             {todayLeft >= 0 && todayLeft <= 100 && (
               <div className="absolute top-0 bottom-0 z-20 border-l-2 border-red-500 border-dashed pointer-events-none" style={{ left: `${todayLeft}%` }}>
-                <div className="bg-red-500 text-white text-[9px] font-medium px-1.5 py-0.5 rounded-sm absolute -top-0 -translate-x-1/2 shadow-sm">TODAY</div>
+                <div className="bg-red-500 text-white text-xs sm:text-[11px] sm:text-[9px] font-medium px-1.5 py-0.5 rounded-sm absolute -top-0 -translate-x-1/2 shadow-soft">TODAY</div>
               </div>
             )}
           </div>
