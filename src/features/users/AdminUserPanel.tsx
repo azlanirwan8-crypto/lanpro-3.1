@@ -31,7 +31,7 @@ const Input = ({ value, onChange, placeholder, type = 'text', className = '', ..
     value={value}
     onChange={onChange}
     placeholder={placeholder}
-    className={`w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder:text-slate-400 placeholder:font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white outline-none transition-all ${className}`}
+    className={`w-full px-4 py-3 bg-surface-sunken border border-border-subtle rounded-xl text-sm font-medium text-content-strong placeholder:text-content-subtle placeholder:font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-surface outline-none transition-all ${className}`}
     {...props}
   />
 );
@@ -457,31 +457,31 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
   const adminUsersCount = users.filter(u => u.role === 'admin').length;
 
   if (loading) {
-    return <div className="p-8 text-center text-slate-500 animate-pulse">Loading users...</div>;
+    return <div className="p-8 text-center text-content-muted animate-pulse">Loading users...</div>;
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 w-full h-full">
+    <div className="flex-1 flex flex-col overflow-hidden bg-surface-sunken w-full h-full">
       <div className="flex-1 overflow-y-auto p-3 md:p-6 w-full animate-in fade-in duration-700">
         <div className="flex flex-col space-y-6 min-h-full">
           {/* Header & Controls */}
-          <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-slate-200/80 dark:border-slate-800/80 p-4 shrink-0">
+          <div className="bg-surface rounded-lg shadow-sm border border-border-subtle/80 p-4 shrink-0">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4">
                 <div className="flex items-center gap-3">
                     <div className="w-9 h-9 bg-blue-50/80 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center border border-blue-100/60 dark:border-blue-900/40 shrink-0">
                         <Users className="w-4.5 h-4.5" />
                     </div>
                     <div>
-                        <h3 className="text-base font-medium text-slate-800 dark:text-slate-100 tracking-tight leading-none">User Management</h3>
-                        <p className="text-slate-400 dark:text-slate-500 font-medium text-[11px] mt-1">Manage user access, roles, and permissions.</p>
+                        <h3 className="text-base font-medium text-content-strong tracking-tight leading-none">User Management</h3>
+                        <p className="text-content-subtle font-medium text-[11px] mt-1">Manage user access, roles, and permissions.</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
                     <button
                         onClick={handleExportCSV}
-                        className="bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 hover:border-slate-300 font-medium py-1.5 px-3 rounded text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-[0.98] shadow-2xs h-8.5"
+                        className="bg-surface-sunken hover:bg-surface-muted text-content-strong border border-border-subtle hover:border-slate-300 font-medium py-1.5 px-3 rounded text-xs flex items-center gap-1.5 cursor-pointer transition-all active:scale-[0.98] shadow-2xs h-8.5"
                     >
-                        <Download className="w-3.5 h-3.5 text-slate-500" /> Export CSV
+                        <Download className="w-3.5 h-3.5 text-content-muted" /> Export CSV
                     </button>
                     <Button
                         onClick={() => setIsInviteModalOpen(true)}
@@ -494,19 +494,19 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
 
             <div className="flex flex-col md:flex-row gap-2">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-content-subtle" />
                     <input
                         type="text"
                         placeholder="Search by name, username, or email..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-9 pr-3 py-1.5 bg-slate-50/50 border border-slate-200/80 rounded focus:bg-white focus:ring-1 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none text-xs h-8.5 font-medium text-slate-800 placeholder:text-slate-400"
+                        className="w-full pl-9 pr-3 py-1.5 bg-surface-sunken/50 border border-border-subtle/80 rounded focus:bg-surface focus:ring-1 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none text-xs h-8.5 font-medium text-content-strong placeholder:text-content-subtle"
                     />
                 </div>
                 <select
                     value={filterRole}
                     onChange={(e) => setFilterRole(e.target.value)}
-                    className="px-3 py-1.5 bg-slate-50/50 border border-slate-200/80 rounded focus:bg-white focus:ring-1 focus:ring-indigo-500/10 outline-none text-slate-700 font-medium text-xs cursor-pointer h-8.5"
+                    className="px-3 py-1.5 bg-surface-sunken/50 border border-border-subtle/80 rounded focus:bg-surface focus:ring-1 focus:ring-indigo-500/10 outline-none text-content-strong font-medium text-xs cursor-pointer h-8.5"
                 >
                     <option value="all">All Roles</option>
                     <option value="admin">Admin</option>
@@ -518,7 +518,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                 <select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="px-3 py-1.5 bg-slate-50/50 border border-slate-200/80 rounded focus:bg-white focus:ring-1 focus:ring-indigo-500/10 outline-none text-slate-700 font-medium text-xs cursor-pointer h-8.5"
+                    className="px-3 py-1.5 bg-surface-sunken/50 border border-border-subtle/80 rounded focus:bg-surface focus:ring-1 focus:ring-indigo-500/10 outline-none text-content-strong font-medium text-xs cursor-pointer h-8.5"
                 >
                     <option value="all">All Status</option>
                     <option value="approved">Approved</option>
@@ -530,46 +530,46 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
 
           {/* Statistics Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 shrink-0">
-              <div className="bg-white p-3.5 rounded-lg border border-slate-200/60 shadow-2xs flex items-center gap-3 transition-all hover:shadow-xs">
+              <div className="bg-surface p-3.5 rounded-lg border border-border-subtle/60 shadow-2xs flex items-center gap-3 transition-all hover:shadow-xs">
                   <div className="w-9 h-9 bg-blue-50/80 text-blue-600 rounded-lg flex items-center justify-center border border-blue-100/40 shrink-0">
                       <Users className="w-4.5 h-4.5" />
                   </div>
                   <div>
-                      <div className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Total User</div>
-                      <div className="text-lg font-medium text-slate-800 leading-none mt-1">{totalUsersCount}</div>
+                      <div className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Total User</div>
+                      <div className="text-lg font-medium text-content-strong leading-none mt-1">{totalUsersCount}</div>
                   </div>
               </div>
-              <div className="bg-white p-3.5 rounded-lg border border-slate-200/60 shadow-2xs flex items-center gap-3 transition-all hover:shadow-xs">
+              <div className="bg-surface p-3.5 rounded-lg border border-border-subtle/60 shadow-2xs flex items-center gap-3 transition-all hover:shadow-xs">
                   <div className="w-9 h-9 bg-emerald-50/80 text-emerald-600 rounded-lg flex items-center justify-center border border-emerald-100/40 shrink-0">
                       <CheckCircle className="w-4.5 h-4.5" />
                   </div>
                   <div>
-                      <div className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Disetujui</div>
-                      <div className="text-lg font-medium text-slate-800 leading-none mt-1">{approvedUsersCount}</div>
+                      <div className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Disetujui</div>
+                      <div className="text-lg font-medium text-content-strong leading-none mt-1">{approvedUsersCount}</div>
                   </div>
               </div>
-              <div className="bg-white p-3.5 rounded-lg border border-slate-200/60 shadow-2xs flex items-center gap-3 transition-all hover:shadow-xs">
+              <div className="bg-surface p-3.5 rounded-lg border border-border-subtle/60 shadow-2xs flex items-center gap-3 transition-all hover:shadow-xs">
                   <div className="w-9 h-9 bg-amber-50/80 text-amber-500 rounded-lg flex items-center justify-center border border-amber-100/40 shrink-0">
                       <Clock className="w-4.5 h-4.5" />
                   </div>
                   <div>
-                      <div className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Menunggu</div>
-                      <div className="text-lg font-medium text-slate-800 leading-none mt-1">{pendingUsersCount}</div>
+                      <div className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Menunggu</div>
+                      <div className="text-lg font-medium text-content-strong leading-none mt-1">{pendingUsersCount}</div>
                   </div>
               </div>
-              <div className="bg-white p-3.5 rounded-lg border border-slate-200/60 shadow-2xs flex items-center gap-3 transition-all hover:shadow-xs">
+              <div className="bg-surface p-3.5 rounded-lg border border-border-subtle/60 shadow-2xs flex items-center gap-3 transition-all hover:shadow-xs">
                   <div className="w-9 h-9 bg-rose-50/80 text-rose-600 rounded-lg flex items-center justify-center border border-rose-100/40 shrink-0">
                       <Shield className="w-4.5 h-4.5" />
                   </div>
                   <div>
-                      <div className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Administrator</div>
-                      <div className="text-lg font-medium text-slate-800 leading-none mt-1">{adminUsersCount}</div>
+                      <div className="text-[10px] font-medium text-content-subtle uppercase tracking-wider">Administrator</div>
+                      <div className="text-lg font-medium text-content-strong leading-none mt-1">{adminUsersCount}</div>
                   </div>
               </div>
           </div>
 
           {/* User List */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200/50 overflow-hidden flex-1 flex flex-col">
+          <div className="bg-surface rounded-xl shadow-sm border border-border-subtle/50 overflow-hidden flex-1 flex flex-col">
             {selectedUserIds.length > 0 && (
             <div className="bg-indigo-50/80 border-b border-indigo-100 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 animate-in slide-in-from-top duration-300">
               <div className="flex items-center gap-2">
@@ -603,7 +603,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                         e.target.value = "";
                       }
                     }}
-                    className="px-3.5 py-1.5 bg-white border border-slate-200 text-slate-750 text-xs font-medium rounded-lg shadow-2xs focus:ring-2 focus:ring-indigo-500/20 outline-none cursor-pointer"
+                    className="px-3.5 py-1.5 bg-surface border border-border-subtle text-slate-750 text-xs font-medium rounded-lg shadow-2xs focus:ring-2 focus:ring-indigo-500/20 outline-none cursor-pointer"
                   >
                     <option value="">Ubah Role Massal...</option>
                     <option value="admin">Administrator</option>
@@ -642,7 +642,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
           <div className="overflow-x-auto flex-1">
             <table className="w-full text-left border-collapse min-w-[900px]">
               <thead>
-                <tr className="bg-slate-50/80 border-b border-slate-100 text-[11px] font-medium text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                <tr className="bg-surface-sunken/80 border-b border-border-faint text-[11px] font-medium text-content-muted uppercase tracking-wider whitespace-nowrap">
                   <th className="py-3.5 px-4 text-center w-12">
                     <input
                       type="checkbox"
@@ -664,22 +664,22 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                   </th>
                   <th
                     onClick={() => handleSort('name')}
-                    className="py-3.5 px-4 w-60 cursor-pointer hover:bg-slate-100/80 transition-colors select-none group"
+                    className="py-3.5 px-4 w-60 cursor-pointer hover:bg-surface-muted/80 transition-colors select-none group"
                   >
                     <div className="flex items-center gap-1.5">
                       <span>User</span>
-                      <span className="text-[10px] text-slate-400 group-hover:text-indigo-600">
+                      <span className="text-[10px] text-content-subtle group-hover:text-indigo-600">
                         {sortField === 'name' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕'}
                       </span>
                     </div>
                   </th>
                   <th
                     onClick={() => handleSort('department')}
-                    className="py-3.5 px-4 w-60 cursor-pointer hover:bg-slate-100/80 transition-colors select-none group"
+                    className="py-3.5 px-4 w-60 cursor-pointer hover:bg-surface-muted/80 transition-colors select-none group"
                   >
                     <div className="flex items-center gap-1.5">
                       <span>Department / Position</span>
-                      <span className="text-[10px] text-slate-400 group-hover:text-indigo-600">
+                      <span className="text-[10px] text-content-subtle group-hover:text-indigo-600">
                         {sortField === 'department' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕'}
                       </span>
                     </div>
@@ -687,22 +687,22 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                   <th className="py-3.5 px-4 w-40">Proyek & Tugas</th>
                   <th
                     onClick={() => handleSort('role')}
-                    className="py-3.5 px-4 w-28 cursor-pointer hover:bg-slate-100/80 transition-colors select-none group"
+                    className="py-3.5 px-4 w-28 cursor-pointer hover:bg-surface-muted/80 transition-colors select-none group"
                   >
                     <div className="flex items-center gap-1.5">
                       <span>Role</span>
-                      <span className="text-[10px] text-slate-400 group-hover:text-indigo-600">
+                      <span className="text-[10px] text-content-subtle group-hover:text-indigo-600">
                         {sortField === 'role' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕'}
                       </span>
                     </div>
                   </th>
                   <th
                     onClick={() => handleSort('status')}
-                    className="py-3.5 px-4 w-28 text-center cursor-pointer hover:bg-slate-100/80 transition-colors select-none group"
+                    className="py-3.5 px-4 w-28 text-center cursor-pointer hover:bg-surface-muted/80 transition-colors select-none group"
                   >
                     <div className="flex items-center justify-center gap-1.5">
                       <span>Status</span>
-                      <span className="text-[10px] text-slate-400 group-hover:text-indigo-600">
+                      <span className="text-[10px] text-content-subtle group-hover:text-indigo-600">
                         {sortField === 'status' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕'}
                       </span>
                     </div>
@@ -710,7 +710,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                   <th className="py-3.5 px-4 w-28 text-center">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100/60">
+              <tbody className="divide-y divide-border-faint/60">
                 {paginatedUsers.map((user) => {
                   const userProjectsCount = (projects || []).filter(p =>
                     (p.members && (p.members.includes(user.id) || p.members.includes(user.uid))) ||
@@ -745,10 +745,10 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                         <div className="flex items-center gap-3.5">
                           <UserAvatar user={user} className="w-9 h-9 text-sm shrink-0" />
                           <div>
-                            <div className="font-medium text-slate-800 text-xs group-hover:text-indigo-600 transition-colors">
+                            <div className="font-medium text-content-strong text-xs group-hover:text-indigo-600 transition-colors">
                               {user?.displayName || user?.username}
                             </div>
-                            <div className="text-[11px] text-slate-500">{user?.email || 'Email tidak tersedia'}</div>
+                            <div className="text-[11px] text-content-muted">{user?.email || 'Email tidak tersedia'}</div>
                             {user.phone && (
                               <div className="text-[10px] font-medium text-emerald-600 flex items-center gap-1 mt-0.5">
                                 <span>WA/HP:</span>
@@ -760,10 +760,10 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                       </td>
                       <td className="py-3.5 px-4">
                           <div className="flex flex-col">
-                              <span className="text-xs font-medium text-slate-700">
+                              <span className="text-xs font-medium text-content-strong">
                                   {user.department ? getDepartmentName(user.department) : '-'}
                               </span>
-                              <span className="text-[10px] text-slate-500 uppercase tracking-widest">
+                              <span className="text-[10px] text-content-muted uppercase tracking-widest">
                                   {user.position ? getPositionName(user.position) : '-'}
                               </span>
                           </div>
@@ -775,7 +775,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                               "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border transition-colors",
                               userProjectsCount > 0
                                 ? "bg-indigo-50/65 text-indigo-700 border-indigo-100/70"
-                                : "bg-slate-50/50 text-slate-400 border-slate-100"
+                                : "bg-surface-sunken/50 text-content-subtle border-border-faint"
                             )}>
                               <Layout className="w-3 h-3 text-indigo-500" />
                               <span>{userProjectsCount} Proyek</span>
@@ -786,7 +786,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                               "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border transition-colors",
                               userTasksCount > 0
                                 ? "bg-violet-50/65 text-violet-700 border-violet-100/70"
-                                : "bg-slate-50/50 text-slate-400 border-slate-100"
+                                : "bg-surface-sunken/50 text-content-subtle border-border-faint"
                             )}>
                               <CheckCircle className="w-3 h-3 text-violet-500" />
                               <span>{userTasksCount} Tugas</span>
@@ -800,7 +800,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                           user.role === 'admin' ? "bg-rose-50 text-rose-600 border-rose-200" :
                           user.role === 'head' ? "bg-purple-50 text-purple-600 border-purple-200" :
                           user.role === 'manager' ? "bg-blue-50 text-blue-600 border-blue-200" :
-                          "bg-slate-50 text-slate-600 border-slate-200"
+                          "bg-surface-sunken text-content-muted border-border-subtle"
                         )}>
                           {user.role}
                         </span>
@@ -868,7 +868,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                 )})}
                 {paginatedUsers.length === 0 && (
                    <tr>
-                       <td colSpan={7} className="py-12 text-center text-slate-500">
+                       <td colSpan={7} className="py-12 text-center text-content-muted">
                            No users found matching your criteria.
                        </td>
                    </tr>
@@ -878,12 +878,12 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
           </div>
 
            {/* Enterprise DataTable Pagination & Entries Controls */}
-           <div className="border-t border-slate-100 p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50/50 mt-auto">
+           <div className="border-t border-border-faint p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 bg-surface-sunken/50 mt-auto">
              <div className="flex items-center gap-3">
-               <span className="text-xs font-medium text-slate-500">
+               <span className="text-xs font-medium text-content-muted">
                  Showing {filteredUsers.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, filteredUsers.length)} of {filteredUsers.length} entries
                </span>
-               <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+               <div className="flex items-center gap-1.5 text-xs text-content-muted font-medium">
                  <span>Rows per page:</span>
                  <select
                    value={itemsPerPage}
@@ -891,7 +891,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                      setItemsPerPage(Number(e.target.value));
                      setCurrentPage(1);
                    }}
-                   className="bg-white border border-slate-200 rounded-md px-2 py-1 text-xs font-medium text-slate-700 outline-none focus:border-indigo-500 cursor-pointer"
+                   className="bg-surface border border-border-subtle rounded-md px-2 py-1 text-xs font-medium text-content-strong outline-none focus:border-indigo-500 cursor-pointer"
                  >
                    <option value={10}>10</option>
                    <option value={25}>25</option>
@@ -917,7 +917,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                        onClick={() => setCurrentPage(i + 1)}
                        className={cn(
                            "w-7 h-7 rounded-lg text-xs font-medium transition-colors",
-                           currentPage === i + 1 ? "bg-indigo-600 text-white shadow-2xs" : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
+                           currentPage === i + 1 ? "bg-indigo-600 text-white shadow-2xs" : "bg-surface border border-border-subtle text-content-muted hover:bg-surface-sunken"
                        )}
                    >
                        {i + 1}
@@ -1001,7 +1001,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                />
                {passwordStrength && (
                  <div className="mt-1.5 space-y-1">
-                   <div className="flex gap-1 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                   <div className="flex gap-1 h-1.5 w-full bg-surface-muted rounded-full overflow-hidden">
                      <div className={cn(
                        "h-full rounded-full transition-all",
                        passwordStrength === 'weak' ? "bg-rose-500 w-1/3" :
@@ -1026,14 +1026,14 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                  <select
                    value={addPeopleDepartment}
                    onChange={(e) => setAddPeopleDepartment(e.target.value)}
-                   className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium appearance-none cursor-pointer focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-white outline-none transition-all"
+                   className="w-full px-4 py-2 bg-surface-sunken border border-border-subtle rounded-xl text-sm font-medium appearance-none cursor-pointer focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-surface outline-none transition-all"
                  >
                    <option value="">Pilih Departemen...</option>
                    {masterData.filter(d => d.type === 'department').map((dep) => (
                      <option key={dep.id} value={dep.id}>{dep.label}</option>
                    ))}
                  </select>
-                 <ChevronDown className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                 <ChevronDown className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-content-subtle" />
                </div>
              </div>
              <div>
@@ -1042,14 +1042,14 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                  <select
                    value={addPeopleJabatan}
                    onChange={(e) => setAddPeopleJabatan(e.target.value)}
-                   className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium appearance-none cursor-pointer focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-white outline-none transition-all"
+                   className="w-full px-4 py-2 bg-surface-sunken border border-border-subtle rounded-xl text-sm font-medium appearance-none cursor-pointer focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-surface outline-none transition-all"
                  >
                    <option value="">Pilih Jabatan...</option>
                    {masterData.filter(d => d.type === 'jabatan').map((j) => (
                      <option key={j.id} value={j.id}>{j.label}</option>
                    ))}
                  </select>
-                 <ChevronDown className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                 <ChevronDown className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-content-subtle" />
                </div>
              </div>
              <div>
@@ -1058,7 +1058,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                  <select
                    value={addPeopleRole}
                    onChange={(e) => setAddPeopleRole(e.target.value)}
-                   className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium appearance-none cursor-pointer focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-white outline-none transition-all"
+                   className="w-full px-4 py-2 bg-surface-sunken border border-border-subtle rounded-xl text-sm font-medium appearance-none cursor-pointer focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 focus:bg-surface outline-none transition-all"
                  >
                    <option value="admin">Administrator (Full Access)</option>
                    <option value="head">Department Head (Head)</option>
@@ -1080,7 +1080,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
                      })
                    }
                  </select>
-                 <ChevronDown className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400" />
+                 <ChevronDown className="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-content-subtle" />
                </div>
              </div>
            </div>
@@ -1152,7 +1152,7 @@ export const AdminUserPanel: React.FC<AdminUserPanelProps> = (props) => {
           maxWidth="max-w-md"
         >
           <div className="space-y-6 py-2">
-            <p className="text-sm text-slate-600 leading-relaxed">
+            <p className="text-sm text-content-muted leading-relaxed">
               {confirmModal.message}
             </p>
             <div className="flex justify-end gap-3 pt-2">
