@@ -406,7 +406,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     const visited = new Set<string>();
 
     const startNodes = nodes.filter(n => !incomingMap.has(n.id));
-    let queue: { id: string; level: number }[] = [];
+    const queue: { id: string; level: number }[] = [];
     
     if (startNodes.length > 0) {
       startNodes.forEach(sn => queue.push({ id: sn.id, level: 0 }));
@@ -498,7 +498,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
     }
 
     const visited = new Set<string>();
-    let queue: string[] = startNodes.map(n => n.id);
+    const queue: string[] = startNodes.map(n => n.id);
 
     while (queue.length > 0 && !simCancelRef.current) {
       const currentId = queue.shift()!;

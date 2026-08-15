@@ -570,7 +570,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
 
       // Render up to 7 Epics on the frontpage
       const epics = tasks.filter(t => (t.type || '').toLowerCase() === 'epic');
-      let epicRowY = summaryTableY + 10.5;
+      const epicRowY = summaryTableY + 10.5;
       
       epics.slice(0, 8).forEach((epic, idx) => {
         const currentY = epicRowY + idx * 8.5;

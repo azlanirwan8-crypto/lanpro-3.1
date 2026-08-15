@@ -1328,7 +1328,7 @@ function AppContainer() {
     try {
       const data = await fetchTasksApi(selectedProject.id);
       if (data.status === "success") {
-        let allTasks = data.data as Task[];
+        const allTasks = data.data as Task[];
         const uniqueAllTasks = Array.from(
           new Map((allTasks || []).filter((t) => t && t.id).map((t) => [t.id, t])).values()
         );

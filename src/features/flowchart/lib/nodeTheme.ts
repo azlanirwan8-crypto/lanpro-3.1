@@ -24,7 +24,7 @@ export const getShapeThemeClasses = (node: FlowNode, isSelected: boolean): strin
   const palette = colorPalettes[node.color] || colorPalettes.indigo;
   const ringClass = isSelected ? "ring-4 ring-offset-2 ring-violet-500 z-30" : "";
 
-  let base = "transition-all duration-300 flex flex-col justify-center items-center text-center p-3 select-none";
+  const base = "transition-all duration-300 flex flex-col justify-center items-center text-center p-3 select-none";
   let borderStyleClass = "border-2";
   if (node.borderStyle === "dashed") borderStyleClass = "border-2 border-dashed";
   if (node.borderStyle === "none") borderStyleClass = "border-0 shadow-none";

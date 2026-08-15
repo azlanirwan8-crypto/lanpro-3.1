@@ -607,7 +607,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
   const getEmbedUrl = (url?: string): string => {
     if (!url) return "";
-    let trimmed = url.trim();
+    const trimmed = url.trim();
     if (trimmed.includes("docs.google.com/document")) {
       if (trimmed.includes("/edit")) {
         return trimmed.split("/edit")[0] + "/preview";

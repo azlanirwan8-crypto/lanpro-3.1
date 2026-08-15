@@ -171,7 +171,7 @@ export const FlowchartEdges: React.FC<FlowchartEdgesProps> = ({
                   } else if (connectorType === "orthogonal") {
                     // Connect each consecutive point and align orthogonally beautiful
                     let current = pathPoints[0];
-                    let parts = [`M ${current.x} ${current.y}`];
+                    const parts = [`M ${current.x} ${current.y}`];
                     for (let i = 1; i < pathPoints.length; i++) {
                       const next = pathPoints[i];
                       if (current.x !== next.x && current.y !== next.y) {
