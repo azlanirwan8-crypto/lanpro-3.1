@@ -58,7 +58,16 @@ export default tseslint.config(
       'no-useless-escape': 'warn',
       '@typescript-eslint/no-require-imports': 'off',
 
-      /* UTANG GAYA WARISAN — diturunkan ke warn secara sadar.
+      /* DINAIKKAN KE ERROR setelah utangnya lunas (fase L3).
+       *
+       * Ketiga aturan di bawah kini nol pelanggaran, sehingga aman dijadikan
+       * penghalang: pelanggaran BARU akan gagal di pre-commit, bukan menumpuk
+       * diam-diam seperti sebelumnya. */
+      'no-empty-pattern': 'error',
+      'no-shadow-restricted-names': 'error',
+      '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
+
+      /* UTANG GAYA WARISAN — masih warn.
        *
        * Kedelapan aturan di bawah menyisakan 32 pelanggaran dari kode yang
        * ditulis sebelum ESLint ada. Sebagai error, keduanya menahan pre-commit
@@ -73,10 +82,8 @@ export default tseslint.config(
       'prefer-const': 'warn',
       'no-prototype-builtins': 'warn',
       '@typescript-eslint/no-unused-expressions': 'warn',
-      'no-shadow-restricted-names': 'warn',
       '@typescript-eslint/no-namespace': 'warn',
       'no-constant-condition': 'warn',
-      '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
     },
   },
   {

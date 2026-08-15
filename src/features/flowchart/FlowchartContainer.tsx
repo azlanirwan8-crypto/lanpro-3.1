@@ -35,13 +35,7 @@ import {
   RefreshCw,
   Upload,
   Image as ImageIcon,
-  Database,
-  Minus,
-  LayoutTemplate,
-  Users,
-  Clock,
   CheckCircle,
-  FileSpreadsheet,
 } from "lucide-react";
 import { toJpeg } from "html-to-image";
 import { Task, Project } from "../../types";
@@ -84,7 +78,6 @@ interface FlowchartViewProps {
 export const FlowchartView: React.FC<FlowchartViewProps> = ({
   selectedProject,
   tasks,
-  projectMembers,
   setSelectedTaskForDetail,
   setIsTaskDetailModalOpen,
   currentUserProfile,

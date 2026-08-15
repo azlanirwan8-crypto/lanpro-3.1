@@ -35,7 +35,6 @@ const parseJwt = (token: string) => {
 
 export const SessionExpiryWarning: React.FC<SessionExpiryWarningProps> = ({
   isLoggedIn,
-  currentUser,
   onLogout,
   onSessionExtended,
 }) => {

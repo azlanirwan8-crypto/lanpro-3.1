@@ -203,7 +203,6 @@ const UncontrolledTextarea = ({
 };
 
 export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
-  projectRole,
   isUpdatingTask,
   isOpen,
   onClose,
@@ -222,31 +221,18 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   newCommentText,
   setNewCommentText,
   handleAddComment,
-  handleFileUpload,
   handleRemoveAttachment,
-  uploadProgress,
   isLoggedIn,
   handleQuickAddSubtask,
   mentionState,
   handleSelectMention,
   handleCommentChange,
-  removeTaskLink,
   handleAddLinkedTask,
   handleRemoveLinkedTask,
   taskLinkTargetId,
   setTaskLinkTargetId,
   taskLinkRelation,
   setTaskLinkRelation,
-  isAddingTaskLink,
-  setIsAddingTaskLink,
-  isAddingExternalLink,
-  setIsAddingExternalLink,
-  newExternalLinkTitle,
-  setNewExternalLinkTitle,
-  newExternalLinkUrl,
-  setNewExternalLinkUrl,
-  handleAddExternalLink,
-  removeExternalLink,
   toggleBlockedStatus,
   handleSuggestStoryPoints,
   handleAddLink,
@@ -1050,7 +1036,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                                   <button
                                     key={member.uid}
                                     className="w-full text-left px-4 py-3 hover:bg-indigo-50 flex items-center gap-3 focus:outline-none focus:bg-indigo-50 transition-all font-medium text-content-secondary"
-                                    onClick={() => handleSelectMention(member?.username!)}
+                                    onClick={() => handleSelectMention(member?.username ?? "")}
                                   >
                                     <UserAvatar
                                       uid={member.uid}

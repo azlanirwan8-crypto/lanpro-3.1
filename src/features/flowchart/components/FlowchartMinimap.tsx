@@ -33,7 +33,6 @@ interface FlowchartMinimapProps {
 
 export const FlowchartMinimap: React.FC<FlowchartMinimapProps> = ({
   nodes,
-  edges,
   panOffset,
   zoomLevel,
   setPanOffset,

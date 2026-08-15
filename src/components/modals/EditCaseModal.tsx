@@ -29,8 +29,6 @@ export const EditCaseModal: React.FC<EditCaseModalProps> = ({
   onExpectedChange,
   editPriority,
   onPriorityChange,
-  editAssignedTo,
-  onAssignedToChange,
   onSubmit,
 }) => {
   if (!testCase) return null;
@@ -44,10 +42,14 @@ export const EditCaseModal: React.FC<EditCaseModalProps> = ({
           exit={{ scale: 0.95, opacity: 0 }}
           className="bg-surface border border-border-subtle/80 rounded-md p-6 max-w-lg w-full shadow-2xl space-y-4"
         >
-          <h3 className="text-sm font-medium text-content-strong uppercase tracking-wider">Ubah Test Case Detail</h3>
+          <h3 className="text-sm font-medium text-content-strong uppercase tracking-wider">
+            Ubah Test Case Detail
+          </h3>
           <div className="space-y-3">
             <div className="space-y-1">
-              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">Judul Test Case</label>
+              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">
+                Judul Test Case
+              </label>
               <input
                 type="text"
                 value={editTitle}
@@ -56,7 +58,9 @@ export const EditCaseModal: React.FC<EditCaseModalProps> = ({
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">Prioritas</label>
+              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">
+                Prioritas
+              </label>
               <select
                 value={editPriority}
                 onChange={(e) => onPriorityChange(e.target.value as any)}
@@ -69,7 +73,9 @@ export const EditCaseModal: React.FC<EditCaseModalProps> = ({
               </select>
             </div>
             <div className="space-y-1">
-              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">Langkah Pengujian</label>
+              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">
+                Langkah Pengujian
+              </label>
               <textarea
                 rows={3}
                 value={editSteps}
@@ -78,7 +84,9 @@ export const EditCaseModal: React.FC<EditCaseModalProps> = ({
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">Hasil yang Diharapkan</label>
+              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">
+                Hasil yang Diharapkan
+              </label>
               <textarea
                 rows={2}
                 value={editExpected}

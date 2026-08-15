@@ -17,8 +17,6 @@ export const EditSuiteModal: React.FC<EditSuiteModalProps> = ({
   onClose,
   editName,
   onNameChange,
-  editAssignedTo,
-  onAssignedToChange,
   onSubmit,
 }) => {
   if (!suite) return null;
@@ -32,10 +30,14 @@ export const EditSuiteModal: React.FC<EditSuiteModalProps> = ({
           exit={{ scale: 0.95, opacity: 0 }}
           className="bg-surface border border-border-subtle/80 rounded-md p-6 max-w-sm w-full shadow-2xl space-y-4"
         >
-          <h3 className="text-sm font-medium text-content-strong uppercase tracking-wider">Ubah Info Dokumen Suite</h3>
+          <h3 className="text-sm font-medium text-content-strong uppercase tracking-wider">
+            Ubah Info Dokumen Suite
+          </h3>
           <div className="space-y-3">
             <div className="space-y-1">
-              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">Nama Dokumen</label>
+              <label className="text-xs sm:text-[10px] font-medium text-content-subtle uppercase tracking-wider block">
+                Nama Dokumen
+              </label>
               <input
                 type="text"
                 value={editName}

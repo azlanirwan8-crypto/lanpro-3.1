@@ -34,9 +34,6 @@ export const safeFormat = (dateValue: any, formatStr: string, fallback: string =
 // --- Components ---
 export const TimelineDatePills = ({
   task,
-  minDate,
-  totalDays,
-  interaction,
   tempDates,
 }: {
   task: Task;

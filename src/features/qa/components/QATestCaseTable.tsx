@@ -1,7 +1,21 @@
 import React, { useState } from "react";
 import {
-  Plus, Sparkles, Download, CheckCircle2, FileSpreadsheet,
-  Edit3, Trash2, Bug, User, ChevronDown, Search, Filter, Eye, UserCheck, Layers, CheckSquare
+  Plus,
+  Sparkles,
+  Download,
+  CheckCircle2,
+  FileSpreadsheet,
+  Edit3,
+  Trash2,
+  Bug,
+  User,
+  ChevronDown,
+  Search,
+  Filter,
+  Eye,
+  UserCheck,
+  Layers,
+  CheckSquare,
 } from "lucide-react";
 import { QATestCase, QATestSuite } from "../types";
 import { UserAvatar } from "../../../components/ui/UserAvatar";
@@ -24,7 +38,10 @@ interface QATestCaseTableProps {
   handleMigrateSuitePhase: () => void;
   setIsAddCaseOpen: (open: boolean) => void;
   setActiveAddTab: (tab: "single" | "bulk") => void;
-  handleStatusChange: (caseId: string, status: "Passed" | "Failed" | "Blocked" | "Retest" | "Pending") => void;
+  handleStatusChange: (
+    caseId: string,
+    status: "Passed" | "Failed" | "Blocked" | "Retest" | "Pending"
+  ) => void;
   activeCasePicDropdownId: string | null;
   setActiveCasePicDropdownId: (id: string | null) => void;
   handleUpdateCasePic: (suiteId: string, caseId: string, assignedTo: string) => void;
@@ -59,9 +76,6 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
   searchTerm,
   setSearchTerm,
   projectMembers,
-  currentUserUid,
-  currentUserRole,
-  lockState,
   isGeneratingAi,
   handleGenerateWithAi,
   handleExportQAReport,
@@ -104,7 +118,8 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
         </div>
         <h3 className="text-sm font-medium text-content-strong">Silakan Pilih Modul Testing</h3>
         <p className="text-xs text-content-subtle font-medium mt-1">
-          Pilih dokumen pengujian di panel sebelah kiri untuk menampilkan matriks eksekusi test case.
+          Pilih dokumen pengujian di panel sebelah kiri untuk menampilkan matriks eksekusi test
+          case.
         </p>
       </div>
     );
@@ -119,7 +134,8 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
   const blockedCasesCount = activeSuite.cases?.filter((c) => c.status === "Blocked").length || 0;
   const retestCasesCount = activeSuite.cases?.filter((c) => c.status === "Retest").length || 0;
   const pendingCasesCount = activeSuite.cases?.filter((c) => c.status === "Pending").length || 0;
-  const passedPercent = totalCasesCount > 0 ? Math.round((passedCasesCount / totalCasesCount) * 100) : 0;
+  const passedPercent =
+    totalCasesCount > 0 ? Math.round((passedCasesCount / totalCasesCount) * 100) : 0;
 
   // Filter cases with search term
   const searchedCases = filteredCases.filter((tc) => {
@@ -145,10 +161,13 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
               <span className="px-2 py-0.5 bg-primary text-white font-medium text-xs sm:text-[11px] sm:text-[9px] rounded-md uppercase tracking-wider">
                 {activeSuite.phase}
               </span>
-              <h2 className="text-base font-medium text-content-strong tracking-tight">{cleanSuiteName}</h2>
+              <h2 className="text-base font-medium text-content-strong tracking-tight">
+                {cleanSuiteName}
+              </h2>
             </div>
             <p className="text-xs sm:text-[11px] text-content-subtle font-medium mt-0.5">
-              Diupload oleh: {activeSuite.uploadedBy} • {new Date(activeSuite.uploadedAt).toLocaleDateString("id-ID")}
+              Diupload oleh: {activeSuite.uploadedBy} •{" "}
+              {new Date(activeSuite.uploadedAt).toLocaleDateString("id-ID")}
             </p>
           </div>
 
@@ -206,27 +225,49 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
         {/* Velzon Compact Micro Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
           <div className="bg-primary/5 border border-primary/10 p-2 rounded-md text-center">
-            <span className="text-xs sm:text-[11px] sm:text-[9px] text-primary font-medium uppercase tracking-wider block">Total Case</span>
-            <span className="text-base font-medium text-primary block mt-0.5">{totalCasesCount}</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-primary font-medium uppercase tracking-wider block">
+              Total Case
+            </span>
+            <span className="text-base font-medium text-primary block mt-0.5">
+              {totalCasesCount}
+            </span>
           </div>
           <div className="bg-surface-sunken p-2 rounded-md border border-border-subtle/60 text-center">
-            <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-muted font-medium uppercase tracking-wider block">Passed Rate</span>
-            <span className="text-base font-medium text-content-strong block mt-0.5">{passedPercent}%</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-muted font-medium uppercase tracking-wider block">
+              Passed Rate
+            </span>
+            <span className="text-base font-medium text-content-strong block mt-0.5">
+              {passedPercent}%
+            </span>
           </div>
           <div className="bg-emerald-50/50 p-2 rounded-md border border-emerald-100 text-center">
-            <span className="text-xs sm:text-[11px] sm:text-[9px] text-success font-medium uppercase tracking-wider block">PASSED</span>
-            <span className="text-base font-medium text-success block mt-0.5">{passedCasesCount}</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-success font-medium uppercase tracking-wider block">
+              PASSED
+            </span>
+            <span className="text-base font-medium text-success block mt-0.5">
+              {passedCasesCount}
+            </span>
           </div>
           <div className="bg-rose-50/50 p-2 rounded-md border border-rose-100 text-center">
-            <span className="text-xs sm:text-[11px] sm:text-[9px] text-danger font-medium uppercase tracking-wider block">FAILED</span>
-            <span className="text-base font-medium text-danger block mt-0.5">{failedCasesCount}</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-danger font-medium uppercase tracking-wider block">
+              FAILED
+            </span>
+            <span className="text-base font-medium text-danger block mt-0.5">
+              {failedCasesCount}
+            </span>
           </div>
           <div className="bg-amber-50/50 p-2 rounded-md border border-amber-100 text-center">
-            <span className="text-xs sm:text-[11px] sm:text-[9px] text-warning font-medium uppercase tracking-wider block">BLOCKED</span>
-            <span className="text-base font-medium text-warning block mt-0.5">{blockedCasesCount}</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-warning font-medium uppercase tracking-wider block">
+              BLOCKED
+            </span>
+            <span className="text-base font-medium text-warning block mt-0.5">
+              {blockedCasesCount}
+            </span>
           </div>
           <div className="bg-surface-sunken p-2 rounded-md border border-border-subtle/60 text-center">
-            <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-muted font-medium uppercase tracking-wider block">RETEST/PEND</span>
+            <span className="text-xs sm:text-[11px] sm:text-[9px] text-content-muted font-medium uppercase tracking-wider block">
+              RETEST/PEND
+            </span>
             <span className="text-base font-medium text-content-body block mt-0.5">
               {retestCasesCount + pendingCasesCount}
             </span>
@@ -280,9 +321,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
             <span className="p-1.5 bg-surface/10 rounded-md">
               <CheckSquare className="w-4 h-4 text-emerald-400" />
             </span>
-            <span className="text-xs font-medium">
-              {selectedCaseIds.length} Task Terpilih
-            </span>
+            <span className="text-xs font-medium">{selectedCaseIds.length} Task Terpilih</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -299,7 +338,10 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
 
               {isBulkPicDropdownOpen && (
                 <>
-                  <div className="fixed inset-0 z-40" onClick={() => setIsBulkPicDropdownOpen(false)} />
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsBulkPicDropdownOpen(false)}
+                  />
                   <div className="absolute right-0 top-full mt-1.5 w-60 bg-surface text-content-strong rounded-md shadow-2xl border border-border-subtle py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
                     <div className="px-3.5 py-1.5 text-xs sm:text-[10px] font-medium uppercase tracking-wider text-primary border-b border-border-faint mb-1">
                       Tetapkan PIC ke {selectedCaseIds.length} Task
@@ -325,8 +367,14 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                             }}
                             className="w-full text-left px-3.5 py-2 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors flex items-center gap-2"
                           >
-                            <UserAvatar uid={mId} members={projectMembers} className="w-4 h-4 shrink-0" />
-                            <span className="truncate">{m.displayName || m.email || m.username}</span>
+                            <UserAvatar
+                              uid={mId}
+                              members={projectMembers}
+                              className="w-4 h-4 shrink-0"
+                            />
+                            <span className="truncate">
+                              {m.displayName || m.email || m.username}
+                            </span>
                           </button>
                         );
                       })}
@@ -349,7 +397,10 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
 
               {isBulkStatusDropdownOpen && (
                 <>
-                  <div className="fixed inset-0 z-40" onClick={() => setIsBulkStatusDropdownOpen(false)} />
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsBulkStatusDropdownOpen(false)}
+                  />
                   <div className="absolute right-0 top-full mt-1.5 w-44 bg-surface text-content-strong rounded-md shadow-2xl border border-border-subtle py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
                     {["Passed", "Failed", "Blocked", "Retest", "Pending"].map((st) => (
                       <button
@@ -473,8 +524,8 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                             tc.priority === "Critical" || tc.priority === "High"
                               ? "bg-rose-50 text-danger border border-rose-200/60"
                               : tc.priority === "Low"
-                              ? "bg-surface-muted text-content-secondary border border-border-subtle/60"
-                              : "bg-amber-50 text-warning border border-amber-200/60"
+                                ? "bg-surface-muted text-content-secondary border border-border-subtle/60"
+                                : "bg-amber-50 text-warning border border-amber-200/60"
                           }`}
                         >
                           {tc.priority || "Medium"}
@@ -492,12 +543,12 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                               tc.status === "Passed"
                                 ? "bg-emerald-50 text-success border-emerald-200"
                                 : tc.status === "Failed"
-                                ? "bg-rose-50 text-danger border-rose-200"
-                                : tc.status === "Blocked"
-                                ? "bg-amber-50 text-warning border-amber-200"
-                                : tc.status === "Retest"
-                                ? "bg-indigo-50 text-indigo-700 border-indigo-200"
-                                : "bg-surface-muted text-content-secondary border-border-subtle"
+                                  ? "bg-rose-50 text-danger border-rose-200"
+                                  : tc.status === "Blocked"
+                                    ? "bg-amber-50 text-warning border-amber-200"
+                                    : tc.status === "Retest"
+                                      ? "bg-indigo-50 text-indigo-700 border-indigo-200"
+                                      : "bg-surface-muted text-content-secondary border-border-subtle"
                             }`}
                           >
                             <option value="Passed">Passed</option>
@@ -517,7 +568,9 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                 }
                               }}
                               className={`w-6 h-6 rounded-full border transition-all flex items-center justify-center shadow-2xs ${
-                                canUpdate ? "cursor-pointer hover:ring-2 hover:ring-primary/30" : "cursor-default"
+                                canUpdate
+                                  ? "cursor-pointer hover:ring-2 hover:ring-primary/30"
+                                  : "cursor-default"
                               } ${
                                 tc.assignedTo
                                   ? "bg-primary/10 border-primary/40"
@@ -530,7 +583,11 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                               }
                             >
                               {tc.assignedTo ? (
-                                <UserAvatar uid={tc.assignedTo} members={projectMembers} className="w-5.5 h-5.5 rounded-full" />
+                                <UserAvatar
+                                  uid={tc.assignedTo}
+                                  members={projectMembers}
+                                  className="w-5.5 h-5.5 rounded-full"
+                                />
                               ) : (
                                 <User className="w-3 h-3 text-content-subtle" />
                               )}
@@ -556,11 +613,15 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                       handleUpdateCasePic(activeSuite.id, tc.id, "");
                                     }}
                                     className={`w-full text-left px-3.5 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors flex items-center justify-between ${
-                                      !tc.assignedTo ? "bg-indigo-50/60 text-primary" : "text-content-body"
+                                      !tc.assignedTo
+                                        ? "bg-indigo-50/60 text-primary"
+                                        : "text-content-body"
                                     }`}
                                   >
                                     <span>Semua PIC Proyek (All Members)</span>
-                                    {!tc.assignedTo && <CheckCircle2 className="w-4 h-4 text-primary" />}
+                                    {!tc.assignedTo && (
+                                      <CheckCircle2 className="w-4 h-4 text-primary" />
+                                    )}
                                   </button>
                                   <div className="max-h-44 overflow-y-auto custom-scrollbar">
                                     {(projectMembers || []).map((m: any) => {
@@ -574,14 +635,24 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                             handleUpdateCasePic(activeSuite.id, tc.id, mId);
                                           }}
                                           className={`w-full text-left px-3.5 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors flex items-center justify-between gap-2 ${
-                                            isSelected ? "bg-indigo-50/60 text-primary" : "text-content-body"
+                                            isSelected
+                                              ? "bg-indigo-50/60 text-primary"
+                                              : "text-content-body"
                                           }`}
                                         >
                                           <div className="flex items-center gap-2 truncate">
-                                            <UserAvatar uid={mId} members={projectMembers} className="w-4 h-4 shrink-0" />
-                                            <span className="truncate">{m.displayName || m.email || m.username}</span>
+                                            <UserAvatar
+                                              uid={mId}
+                                              members={projectMembers}
+                                              className="w-4 h-4 shrink-0"
+                                            />
+                                            <span className="truncate">
+                                              {m.displayName || m.email || m.username}
+                                            </span>
                                           </div>
-                                          {isSelected && <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />}
+                                          {isSelected && (
+                                            <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                                          )}
                                         </button>
                                       );
                                     })}

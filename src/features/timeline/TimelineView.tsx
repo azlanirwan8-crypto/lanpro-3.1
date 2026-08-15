@@ -25,7 +25,6 @@ interface TimelineViewProps {
 
 export const TimelineView: React.FC<TimelineViewProps> = ({
   tasks,
-  selectedProject,
   updateTaskField,
   setSelectedTaskForDetail,
   setIsTaskDetailModalOpen,
