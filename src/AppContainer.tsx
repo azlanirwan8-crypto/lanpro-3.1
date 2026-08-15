@@ -85,6 +85,8 @@ import {
 import { fetchMasterDataAll, updateMasterDataOrder } from "./services/masterDataService";
 import { SessionExpiryWarning } from "./components/SessionExpiryWarning";
 import { GlobalSkeleton } from "./components/GlobalSkeleton";
+import { NotificationsDropdown } from "./components/NotificationsDropdown";
+import { KeyboardShortcutsModal } from "./components/KeyboardShortcutsModal";
 import { RateLimitIndicator } from "./components/RateLimitIndicator";
 import { EnterpriseAuditDashboard } from "./features/enterprise-audit/EnterpriseAuditDashboard";
 import { AppRoutes } from "./routes/AppRoutes";
@@ -3864,156 +3866,20 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
                 )}
               </button>
 
-              {/* Notifications Dropdown */}
-              <AnimatePresence>
-                {isNotificationsOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute right-0 mt-2 w-80 sm:w-[380px] bg-white rounded-xl shadow-lg border border-slate-200 z-50 overflow-hidden origin-top-right"
-                  >
-                  {/* Dropdown Header */}
-                  <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-white">
-                    <h3 className="font-medium text-slate-900 text-[16px]">
-                      Notification
-                    </h3>
-                    <div className="flex items-center gap-2.5">
-                      <span className="bg-violet-100 text-violet-700 text-xs font-medium px-2.5 py-1 rounded-md">
-                        {notifications.filter((n) => !n.read).length} New
-                      </span>
-                      <button
-                        className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-all"
-                        title="Mark all read"
-                        onClick={async () => {
-                          try {
-                            const unread = notifications.filter(
-                              (n) => !n.read,
-                            );
-                            for (const n of unread) {
-                              await markNotificationRead(user?.uid || currentUser?.uid, n.id);
-                            }
-                            fetchNotifications();
-                          } catch (e) {}
-                        }}
-                      >
-                        <Mail className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Notification Items List */}
-                  <div className="max-h-[380px] overflow-y-auto">
-                    {notifications.length === 0 ? (
-                      <div className="p-8 text-center text-slate-400 text-sm italic">
-                        Belum ada notifikasi
-                      </div>
-                    ) : (
-                      <div className="flex flex-col">
-                        {notifications.map((n, index) => {
-                          const parsed = formatNotification(n.type, n.title, n.message);
-                          
-                          const getRelativeTime = (createdAt: any): string => {
-                            if (!createdAt) return "-";
-                            try {
-                              const date = typeof createdAt.toMillis === "function"
-                                ? new Date(createdAt.toMillis())
-                                : new Date(createdAt);
-                              const diffMs = Date.now() - date.getTime();
-                              const diffSec = Math.floor(diffMs / 1000);
-                              const diffMin = Math.floor(diffSec / 60);
-                              const diffHr = Math.floor(diffMin / 60);
-                              const diffDay = Math.floor(diffHr / 24);
-
-                              if (diffSec < 60) return "Just now";
-                              if (diffMin < 60) return `${diffMin}m ago`;
-                              if (diffHr < 24) return `${diffHr}h ago`;
-                              if (diffDay === 1) return "1 day ago";
-                              if (diffDay < 7) return `${diffDay} days ago`;
-                              
-                              return format(date, "dd MMM, HH:mm");
-                            } catch (e) {
-                              return "-";
-                            }
-                          };
-
-                          const formattedTime = getRelativeTime(n.createdAt);
-
-                          return (
-                            <div
-                              key={n.id ? `${n.id}-${index}` : `notif-${index}`}
-                              onClick={async () => {
-                                try {
-                                  if (!n.read) {
-                                    await markNotificationRead(user?.uid || currentUser?.uid, n.id);
-                                    fetchNotifications();
-                                  }
-                                } catch (e) {
-                                  console.error(e);
-                                }
-                                if (n.type === "bug_retest" || (n.title && n.title.toLowerCase().includes("retest")) || (n.message && n.message.toLowerCase().includes("retest"))) {
-                                  setCurrentView("qa");
-                                  setQaInitialStatusFilter("Retest");
-                                  setIsNotificationsOpen(false);
-                                  window.dispatchEvent(new CustomEvent("lanpro_qa_retest_updated", { detail: { taskId: n.relatedId } }));
-                                } else if (n.relatedId) {
-                                  // if it's a task id
-                                  const t = tasks.find(
-                                    (x) => x.id === n.relatedId,
-                                  );
-                                  if (t) {
-                                    setSelectedTaskForDetail(t);
-                                    setIsTaskDetailModalOpen(true);
-                                    setIsNotificationsOpen(false);
-                                  }
-                                }
-                              }}
-                              className="py-3.5 px-5 hover:bg-slate-50/60 transition-all cursor-pointer flex gap-3 items-start relative border-b border-slate-100 last:border-b-0"
-                            >
-                              {/* Left Icon - Compact & circular */}
-                              <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${parsed.iconBgClass || "bg-violet-50 text-violet-600"}`}>
-                                {parsed.icon}
-                              </div>
-
-                              {/* Content Stack */}
-                              <div className="flex-1 min-w-0 pr-4">
-                                <h4 className="text-sm font-medium text-slate-900 leading-snug break-words">
-                                  {parsed.formattedMessage}
-                                </h4>
-                                <span className="mt-1 block text-xs text-slate-400 font-medium">
-                                  {formattedTime}
-                                </span>
-                              </div>
-
-                              {/* Unread indicator dot */}
-                              {!n.read && (
-                                <div className="absolute right-5 top-5 flex h-2 w-2 shrink-0">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600 shadow-xs shadow-indigo-300"></span>
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Dropdown Footer */}
-                  <div className="p-4 border-t border-slate-100 bg-white">
-                    <button
-                      onClick={() => {
-                        setIsNotificationsOpen(false);
-                      }}
-                      className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 px-4 rounded-xl text-sm font-medium transition-all duration-150 text-center block shadow-xs"
-                    >
-                      View all notifications
-                    </button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+              <NotificationsDropdown
+                isNotificationsOpen={isNotificationsOpen}
+                setIsNotificationsOpen={setIsNotificationsOpen}
+                notifications={notifications}
+                currentUser={currentUser}
+                user={user}
+                markNotificationRead={markNotificationRead}
+                setCurrentView={setCurrentView}
+                setSelectedTaskForDetail={setSelectedTaskForDetail}
+                setIsTaskDetailModalOpen={setIsTaskDetailModalOpen}
+                setQaInitialStatusFilter={setQaInitialStatusFilter}
+                fetchNotifications={fetchNotifications}
+                tasks={tasks}
+              />
           </div>
         </div>
         </header>
@@ -4479,48 +4345,10 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
         </Modal>
 
         {/* Keyboard Shortcuts Modal */}
-        <Modal
-          isOpen={isShortcutsModalOpen}
-          onClose={() => setIsShortcutsModalOpen(false)}
-          title="Keyboard Shortcuts"
-          maxWidth="max-w-md"
-        >
-          <div className="space-y-4">
-            <p className="text-xs text-slate-500 font-medium">
-              Use these global shortcuts to navigate and perform common actions more efficiently.
-            </p>
-            <div className="divide-y divide-slate-100">
-              <div className="flex justify-between items-center py-2.5">
-                <span className="text-sm font-medium text-slate-700">Open Create Task Modal</span>
-                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-slate-100 text-slate-800 rounded border border-slate-200 shadow-sm">n</kbd>
-              </div>
-              <div className="flex justify-between items-center py-2.5">
-                <span className="text-sm font-medium text-slate-700">Open Create Project Modal</span>
-                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-slate-100 text-slate-800 rounded border border-slate-200 shadow-sm">p</kbd>
-              </div>
-              <div className="flex justify-between items-center py-2.5">
-                <span className="text-sm font-medium text-slate-700">Focus Search Bar</span>
-                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-slate-100 text-slate-800 rounded border border-slate-200 shadow-sm">/</kbd>
-              </div>
-              <div className="flex justify-between items-center py-2.5">
-                <span className="text-sm font-medium text-slate-700">Toggle Shortcuts Menu</span>
-                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-slate-100 text-slate-800 rounded border border-slate-200 shadow-sm">?</kbd>
-              </div>
-              <div className="flex justify-between items-center py-2.5">
-                <span className="text-sm font-medium text-slate-700">Close Modals / Deselect</span>
-                <kbd className="px-2.5 py-1 text-xs font-medium font-mono bg-slate-100 text-slate-800 rounded border border-slate-200 shadow-sm">Esc</kbd>
-              </div>
-            </div>
-            <div className="pt-2 flex justify-end">
-              <Button
-                onClick={() => setIsShortcutsModalOpen(false)}
-                className="justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-medium"
-              >
-                Got it
-              </Button>
-            </div>
-          </div>
-        </Modal>
+        <KeyboardShortcutsModal
+          isShortcutsModalOpen={isShortcutsModalOpen}
+          setIsShortcutsModalOpen={setIsShortcutsModalOpen}
+        />
 
 
         <Modal
