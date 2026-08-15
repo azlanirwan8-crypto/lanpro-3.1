@@ -1,2 +1,2 @@
-export { IssueListView } from './index.tsx';
+export { IssueListView } from './IssueListView';
 export { TaskDetailModal } from './TaskDetailModal';

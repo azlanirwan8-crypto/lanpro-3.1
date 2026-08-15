@@ -6,15 +6,16 @@
     /* `isolatedModules: true` membuat ts-jest memakai transpileModule: tiap
      * berkas dikompilasi sendiri-sendiri tanpa membangun program TypeScript.
      *
-     * Ini bukan sekadar optimasi kecepatan, melainkan syarat agar test bisa
-     * jalan sama sekali. Dengan program penuh, TypeScript harus meresolusi
-     * `export { DashboardView } from './index.tsx'` (dipakai dua barrel:
-     * features/dashboard dan features/issues). Resolusi itu gagal, sehingga
-     * ekspornya dianggap type-only lalu dibuang, dan ts-jest menerima output
-     * kosong — muncul sebagai "Unable to process ... outDir".
+     * Semula ini WAJIB, bukan pilihan: dua barrel (features/dashboard dan
+     * features/issues) melakukan `export { X } from './index.tsx'` dengan
+     * ekstensi eksplisit, yang gagal diresolusi program penuh sehingga ts-jest
+     * menerima output kosong. Kedua barrel itu sudah dirapikan, jadi alasan
+     * asalnya tidak berlaku lagi.
      *
-     * Type-check tidak hilang: `npm run lint` menjalankan `tsc --noEmit` atas
-     * seluruh proyek. Jest menguji perilaku, tsc menjaga tipe. */
+     * Setelan ini tetap dipertahankan karena manfaat keduanya: seluruh suite
+     * turun dari 63 detik menjadi sekitar 6 detik. Type-check tidak hilang —
+     * `npm run lint` menjalankan `tsc --noEmit` atas seluruh proyek. Jest
+     * menguji perilaku, tsc menjaga tipe. */
     "isolatedModules": true
   }
 }
