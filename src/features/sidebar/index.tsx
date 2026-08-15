@@ -141,7 +141,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
               onClick={() => setSelectedProject(p)}
               className={cn(
                 styles.projectButton,
-                isSidebarCollapsed ? 'justify-center px-0 py-2' : 'gap-2.5 px-3 py-1.5',
+                isSidebarCollapsed ? 'justify-center px-0 py-2 min-h-11' : 'gap-2.5 px-3 py-2 min-h-11',
                 selectedProject?.id === p.id ? styles.projectButtonSelected : styles.projectButtonDefault
               )}
               title={isSidebarCollapsed ? p.name : undefined}
@@ -205,7 +205,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                         setCurrentView(item.id as any);
                       }}
                       className={cn(
-                        "w-full flex items-center gap-3 px-3 py-2 rounded-md transition-all text-xs relative overflow-hidden group",
+                        "w-full flex items-center gap-3 px-3 py-2.5 min-h-11 rounded-md transition-all text-xs relative overflow-hidden group",
                         isActive 
                           ? 'bg-[#364574] text-white font-medium border-l-3 border-amber-400 shadow-sm' 
                           : 'text-[#abb9e8] hover:bg-white/5 hover:text-white'
@@ -220,7 +220,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                           {hasChildren && (
                             <div 
                               onClick={(e) => toggleExpand(item.id, e)}
-                              className="p-1 rounded hover:bg-white/10 text-slate-300 hover:text-white transition-colors ml-1"
+                              className="p-2 min-w-9 min-h-9 flex items-center justify-center rounded hover:bg-white/10 text-slate-300 hover:text-white transition-colors ml-1"
                             >
                               {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
                             </div>
@@ -244,7 +244,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                               key={subItem.id}
                               onClick={() => setCurrentView(subItem.id as any)}
                               className={cn(
-                                "w-full flex items-center gap-2 py-1.5 px-2 rounded text-xs transition-colors text-left",
+                                "w-full flex items-center gap-2 py-2 px-2 min-h-11 rounded text-xs transition-colors text-left",
                                 isSubActive 
                                   ? 'text-white font-medium bg-white/10' 
                                   : 'text-[#878a99] hover:text-white hover:bg-white/5'
@@ -274,7 +274,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                 setIsUserMenuOpen(false);
                 if (onOpenProfile) onOpenProfile();
               }}
-              className="w-full text-left px-4 py-2.5 text-xs font-medium hover:bg-white/10 flex items-center gap-2.5 transition-colors text-slate-200 hover:text-white cursor-pointer"
+              className="w-full text-left px-4 py-3 min-h-11 text-xs font-medium hover:bg-white/10 flex items-center gap-2.5 transition-colors text-slate-200 hover:text-white cursor-pointer"
             >
               <User className="w-4 h-4 text-amber-400" />
               <span>Profil Anda</span>
@@ -285,7 +285,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                 setIsUserMenuOpen(false);
                 handleLogout();
               }}
-              className="w-full text-left px-4 py-2.5 text-xs font-medium hover:bg-red-500/20 flex items-center gap-2.5 transition-colors text-red-400 hover:text-red-300 cursor-pointer"
+              className="w-full text-left px-4 py-3 min-h-11 text-xs font-medium hover:bg-red-500/20 flex items-center gap-2.5 transition-colors text-red-400 hover:text-red-300 cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
               <span>Keluar</span>

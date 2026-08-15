@@ -362,7 +362,7 @@ export const SidebarWidgetsStack: React.FC<SidebarWidgetsStackProps> = ({
         </div>
         <button
           onClick={() => setCurrentView("activity")}
-          className="w-full mt-4 py-2 text-xs font-medium uppercase tracking-wider text-white bg-surface/10 hover:bg-surface/20 rounded-lg transition-colors border border-white/10 cursor-pointer"
+          className="w-full mt-4 py-3 min-h-11 text-xs font-medium uppercase tracking-wider text-white bg-surface/10 hover:bg-surface/20 rounded-lg transition-colors border border-white/10 cursor-pointer"
         >
           View Full Audit Log
         </button>
