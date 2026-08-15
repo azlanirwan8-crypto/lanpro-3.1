@@ -15,6 +15,66 @@ import { validateFileBuffer } from "../../src/lib/fileSecurity";
 
 const AVATAR_ALLOWED_EXT = new Set(['png', 'jpg', 'jpeg', 'webp', 'gif']);
 
+/**
+ * Menyaring nilai avatar yang boleh masuk ke kolom Users.
+ *
+ * Endpoint PUT /api/users/:id sebelumnya menulis apa pun yang dikirim klien ke
+ * kolom avatar tanpa pemeriksaan. Akibatnya di produksi ditemukan satu akun
+ * yang avatarnya berisi URL DOKUMEN lengkap dengan presigned token:
+ *
+ *   /uploads/ERD_PMB_...jpg?token=7acd39a8...&uid=1
+ *
+ * Dua hal salah sekaligus di sana: berkasnya bukan gambar avatar, dan token
+ * akses ikut tersimpan permanen di baris pengguna — padahal token itu milik
+ * uid=1, bukan pemilik akunnya.
+ *
+ * Hanya jalur yang dihasilkan endpoint unggah avatar yang diterima, yaitu
+ * `/uploads/avatar-<sesuatu>.<ext>` tanpa query string. Nilai lain ditolak
+ * menjadi null sehingga UI jatuh ke inisial nama, bukan ke gambar yang salah.
+ */
+export function sanitizeAvatarValue(nilai: unknown): string | null {
+  if (nilai === null || nilai === undefined) return null;
+  if (typeof nilai !== 'string') return null;
+  const v = nilai.trim();
+  if (v === '') return null;
+
+  // Tolak query string: di situlah presigned token menumpang.
+  if (v.includes('?') || v.includes('#')) return null;
+  // Tolak URL absolut dan protokol apa pun (termasuk data: dan javascript:).
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(v) || v.startsWith('//')) return null;
+  // Tolak upaya keluar direktori.
+  if (v.includes('..')) return null;
+
+  const cocok = /^\/uploads\/(avatar-[A-Za-z0-9._-]+)\.([A-Za-z0-9]+)$/.exec(v);
+  if (!cocok) return null;
+  if (!AVATAR_ALLOWED_EXT.has(cocok[2].toLowerCase())) return null;
+  return v;
+}
+
+/**
+ * Menghapus berkas avatar lama saat pengguna menggantinya.
+ *
+ * Tanpa ini setiap penggantian meninggalkan berkas yatim permanen di uploads/.
+ * Kegagalan penghapusan sengaja tidak dilempar: gagal membersihkan berkas lama
+ * tidak boleh menggagalkan pembaruan avatar yang sudah tersimpan di database.
+ */
+function hapusAvatarLama(urlLama: unknown, urlBaru: string): void {
+  const lama = sanitizeAvatarValue(urlLama);
+  if (!lama || lama === urlBaru) return;
+  try {
+    const namaBerkas = path.basename(lama);
+    const jalur = path.join(GLOBAL_UPLOADS_DIR, namaBerkas);
+    // Pastikan hasil join benar-benar masih di dalam direktori unggahan.
+    if (!jalur.startsWith(GLOBAL_UPLOADS_DIR)) return;
+    if (fs.existsSync(jalur)) {
+      fs.unlinkSync(jalur);
+      console.log(`[AVATAR] Berkas lama dihapus: ${namaBerkas}`);
+    }
+  } catch (err) {
+    console.warn('[AVATAR] Gagal menghapus berkas lama:', err);
+  }
+}
+
 const isServerless = !!process.env.VERCEL || !!process.env.AWS_EXECUTION_ENV || process.cwd() === '/var/task' || process.cwd().includes('/var/task');
 const GLOBAL_UPLOADS_DIR = isServerless ? '/tmp/uploads' : path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(GLOBAL_UPLOADS_DIR)) {
@@ -280,10 +340,22 @@ const router = express.Router();
       const avatarUrl = `/uploads/${safeFilename}`;
 
       const connection = await db.getConnection();
+
+      // Ambil avatar lama SEBELUM ditimpa, supaya berkasnya bisa dibersihkan.
+      const [barisLama]: any = await connection.query(
+        "SELECT avatar_url, photoURL, avatarUrl FROM Users WHERE id = ? OR uid = ?",
+        [id, id]
+      );
+      const avatarLama = barisLama?.[0]?.avatar_url || barisLama?.[0]?.photoURL || barisLama?.[0]?.avatarUrl;
+
       await connection.query(
         "UPDATE Users SET avatar_url = ?, photoURL = ?, avatarUrl = ? WHERE id = ? OR uid = ?",
         [avatarUrl, avatarUrl, avatarUrl, id, id]
       );
+
+      // Dibersihkan SETELAH database diperbarui: bila penulisan gagal, berkas
+      // lama harus tetap utuh agar avatar pengguna tidak hilang.
+      hapusAvatarLama(avatarLama, avatarUrl);
 
       const [rows]: any = await connection.query(
         "SELECT id, uid, username, nama_lengkap, email, displayName, role, status, permissions, phone, department, position, COALESCE(avatar_url, photoURL, avatarUrl) AS avatar_url, COALESCE(avatar_url, photoURL, avatarUrl) AS photoURL, createdAt, lastSeen FROM Users WHERE id = ? OR uid = ?",
@@ -337,7 +409,9 @@ const router = express.Router();
       }
 
       let { role, system_role, status, account_status, department, position, permissions, displayName, username, email, phone, passwordHash, password, photoURL, avatar_url } = req.body;
-      const effectiveAvatar = avatar_url || photoURL;
+      // Disaring: nilai avatar dari klien tidak boleh dipercaya begitu saja.
+      // Lihat catatan pada sanitizeAvatarValue.
+      const effectiveAvatar = sanitizeAvatarValue(avatar_url || photoURL) ?? undefined;
 
       // If user is NOT admin, automatically strip out sensitive system/organizational attributes
       if (!isAdmin) {
@@ -416,7 +490,9 @@ const router = express.Router();
     try {
       const { id } = req.user;
       const { displayName, username, email, phone, currentPassword, newPassword, photoURL, avatar_url } = req.body;
-      const effectiveAvatar = avatar_url || photoURL;
+      // Disaring: nilai avatar dari klien tidak boleh dipercaya begitu saja.
+      // Lihat catatan pada sanitizeAvatarValue.
+      const effectiveAvatar = sanitizeAvatarValue(avatar_url || photoURL) ?? undefined;
       const connection = await db.getConnection();
 
       const [users]: any = await connection.query("SELECT * FROM Users WHERE id = ?", [id]);
