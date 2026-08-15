@@ -3644,7 +3644,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
 
           {/* Micro logo for mobile (<1024px) */}
           <div className="absolute top-6 left-6 lg:hidden flex items-center gap-2">
-            <div className="w-7 h-7 bg-[#405189] rounded-lg flex items-center justify-center shadow-md shadow-[#405189]/20">
+            <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center shadow-md shadow-primary/20">
               <ShieldCheck className="text-white w-4 h-4" />
             </div>
             <span className="text-sm font-medium text-slate-900 tracking-tight">
@@ -4129,7 +4129,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
                   type="date"
                   value={newSprintStartDate}
                   onChange={(e: any) => setNewSprintStartDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md text-xs focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 outline-none"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-md text-xs focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none"
                 />
               </div>
               <div>
@@ -4140,14 +4140,14 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
                   type="date"
                   value={newSprintEndDate}
                   onChange={(e: any) => setNewSprintEndDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md text-xs focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 outline-none"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-md text-xs focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none"
                 />
               </div>
             </div>
 
             <Button
               onClick={wrapAppSubmit("createSprint", handleCreateSprint)} disabled={isSubmitting["createSprint"]}
-              className="w-full justify-center bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white shadow-xs py-2.5 rounded-md font-medium text-xs cursor-pointer"
+              className="w-full justify-center bg-primary hover:bg-primary-hover active:bg-primary-active text-white shadow-xs py-2.5 rounded-md font-medium text-xs cursor-pointer"
             >
               Create Phase & Assign Tasks
             </Button>
@@ -4288,7 +4288,7 @@ Respond ONLY with a single JSON object: {"points": number, "reasoning": "string"
                 </Button>
                 <Button
                   onClick={wrapAppSubmit("updateSprint", handleUpdateSprint)} disabled={isSubmitting["updateSprint"]}
-                  className="flex-1 justify-center bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white shadow-xs rounded-md text-xs font-medium py-2 cursor-pointer"
+                  className="flex-1 justify-center bg-primary hover:bg-primary-hover active:bg-primary-active text-white shadow-xs rounded-md text-xs font-medium py-2 cursor-pointer"
                 >
                   Save Changes
                 </Button>

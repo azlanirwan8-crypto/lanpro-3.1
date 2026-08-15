@@ -394,7 +394,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
               {/* Table Header / Action Bar */}
             <div className="p-4 md:p-6 border-b border-slate-200/80 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
               <div className="flex items-center gap-3.5">
-                <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-lg text-[#405189] shadow-2xs">
+                <div className="p-2.5 bg-indigo-50 border border-indigo-100 rounded-lg text-primary shadow-2xs">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
@@ -415,7 +415,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                       setSearchQuery(e.target.value);
                       setCurrentPage(1);
                     }}
-                    className="w-full pl-9 pr-3.5 py-2 bg-white border border-slate-200 rounded-md text-xs placeholder:text-slate-400 outline-none focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 transition-all text-slate-800 shadow-2xs font-medium"
+                    className="w-full pl-9 pr-3.5 py-2 bg-white border border-slate-200 rounded-md text-xs placeholder:text-slate-400 outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all text-slate-800 shadow-2xs font-medium"
                   />
                   <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 </div>
@@ -423,7 +423,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                 {canAdd && (
                   <button
                     onClick={startAddMeeting}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white rounded-md text-xs font-medium transition-all shadow-xs cursor-pointer shrink-0"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md text-xs font-medium transition-all shadow-xs cursor-pointer shrink-0"
                   >
                     <Plus className="w-4 h-4" /> Add Meeting
                   </button>
@@ -435,7 +435,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
             <div className="flex-1 overflow-x-auto overflow-y-auto m-4 md:m-6 bg-white rounded-lg border border-slate-200/80 shadow-2xs">
               <table className="w-full text-left border-collapse min-w-[900px]">
                 <thead>
-                  <tr className="bg-[#405189]/5 border-b border-[#405189]/15 text-[11px] font-medium uppercase tracking-wider text-[#405189] whitespace-nowrap">
+                  <tr className="bg-primary/5 border-b border-primary/15 text-[11px] font-medium uppercase tracking-wider text-primary whitespace-nowrap">
                     <th className="py-3 px-4 w-14 text-center">No</th>
                     <th className="py-3 px-4 min-w-[180px] max-w-[260px]">Meeting Title</th>
                     <th className="py-3 px-4 w-44">Datetime Meeting</th>
@@ -451,7 +451,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                     <tr>
                       <td colSpan={8} className="text-center py-16 text-slate-400">
                         <div className="w-12 h-12 rounded-lg bg-indigo-50/80 border border-indigo-100 flex items-center justify-center mx-auto mb-3 shadow-2xs">
-                          <MessageSquare className="w-6 h-6 text-[#405189]" />
+                          <MessageSquare className="w-6 h-6 text-primary" />
                         </div>
                         <p className="font-medium text-slate-800 text-sm">No meetings found</p>
                         <p className="text-xs text-slate-400 mt-1">Create a new meeting or adjust your search keyword.</p>
@@ -473,7 +473,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                           <td className="py-3 px-4 text-center text-slate-400 font-medium">
                             {String(srNo).padStart(2, "0")}
                           </td>
-                          <td className="py-3 px-4 font-medium text-slate-900 group-hover:text-[#405189] transition-colors">
+                          <td className="py-3 px-4 font-medium text-slate-900 group-hover:text-primary transition-colors">
                             <div className="line-clamp-1">{meeting.title}</div>
                           </td>
                           <td className="py-3 px-4 text-slate-500 font-medium">
@@ -488,7 +488,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                                 href={meeting.meetingLink.startsWith("http") ? meeting.meetingLink : `https://${meeting.meetingLink}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50/80 text-[#405189] hover:bg-indigo-100 rounded-md font-medium truncate max-w-[150px] transition-all text-[11px] border border-indigo-100/80"
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50/80 text-primary hover:bg-indigo-100 rounded-md font-medium truncate max-w-[150px] transition-all text-[11px] border border-indigo-100/80"
                                 title={meeting.meetingLink}
                               >
                                 <Video className="w-3.5 h-3.5 shrink-0" />
@@ -535,7 +535,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                                   setActiveMeetingId(meeting.id!);
                                   setMobileViewMode("detail");
                                 }}
-                                className="p-1.5 text-slate-500 hover:text-[#405189] hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
+                                className="p-1.5 text-slate-500 hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
                                 title="View meeting details and discussion points"
                               >
                                 <Eye className="w-4 h-4" />
@@ -543,7 +543,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                               {(isUserAdmin || isMeetingAuthor(meeting)) && (
                                 <button
                                   onClick={() => startEdit(meeting)}
-                                  className="p-1.5 text-slate-500 hover:text-[#405189] hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
+                                  className="p-1.5 text-slate-500 hover:text-primary hover:bg-indigo-50 rounded-md transition-all cursor-pointer"
                                   title="Edit meeting"
                                 >
                                   <Edit2 className="w-4 h-4" />
@@ -583,7 +583,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                   >
                     Previous
                   </button>
-                  <span className="px-3 py-1.5 bg-[#405189] text-white rounded-md text-xs font-medium shadow-xs">
+                  <span className="px-3 py-1.5 bg-primary text-white rounded-md text-xs font-medium shadow-xs">
                     {currentPage}
                   </span>
                   <button
@@ -619,7 +619,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                         href={activeMeeting.meetingLink.startsWith("http") ? activeMeeting.meetingLink : `https://${activeMeeting.meetingLink}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#405189] hover:bg-[#364473] text-white rounded-md text-xs font-medium transition-all shadow-xs cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary hover:bg-primary-hover text-white rounded-md text-xs font-medium transition-all shadow-xs cursor-pointer"
                       >
                         <Video className="w-3.5 h-3.5" /> Join Meeting <ExternalLink className="w-3 h-3 opacity-80" />
                       </a>
@@ -629,7 +629,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                         onClick={() => startEdit(activeMeeting)}
                         className="px-3.5 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-md text-xs font-medium transition-all cursor-pointer shadow-2xs flex items-center gap-1.5"
                       >
-                        <Edit2 className="w-3.5 h-3.5 text-[#405189]" /> Edit
+                        <Edit2 className="w-3.5 h-3.5 text-primary" /> Edit
                       </button>
                     )}
                     {canDeleteMeeting(activeMeeting) && (
@@ -650,9 +650,9 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                   </h2>
 
                   {activeMeeting.description && (
-                    <div className="mt-4 p-4 border border-indigo-100/80 bg-indigo-50/30 rounded-lg border-l-4 border-l-[#405189] flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                    <div className="mt-4 p-4 border border-indigo-100/80 bg-indigo-50/30 rounded-lg border-l-4 border-l-primary flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
-                        <span className="text-[10px] font-medium text-[#405189] tracking-wider uppercase block mb-1">
+                        <span className="text-[10px] font-medium text-primary tracking-wider uppercase block mb-1">
                           Meeting Description / Agenda
                         </span>
                         <div className="flex items-center gap-2 text-[11px] text-slate-500 mb-2 not-italic">
@@ -721,7 +721,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
             </button>
 
             <div className="flex items-center gap-3 mb-5 pr-10">
-              <div className="w-9 h-9 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center text-[#405189] shrink-0">
+              <div className="w-9 h-9 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center text-primary shrink-0">
                 <Calendar className="w-5 h-5" />
               </div>
               <div>
@@ -738,7 +738,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                 </label>
                 <input
                   disabled={!canModify}
-                  className="w-full px-3.5 py-2 bg-white disabled:bg-slate-50 disabled:text-slate-500 border border-slate-200 focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 rounded-md text-xs font-medium text-slate-800 outline-none transition-all placeholder:text-slate-400 shadow-2xs"
+                  className="w-full px-3.5 py-2 bg-white disabled:bg-slate-50 disabled:text-slate-500 border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-medium text-slate-800 outline-none transition-all placeholder:text-slate-400 shadow-2xs"
                   placeholder="e.g., Sprint 4 Planning & Architecture Review"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
@@ -754,7 +754,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                   <input
                     type="date"
                     disabled={!canModify}
-                    className="w-full px-3.5 py-2 bg-white disabled:bg-slate-50 disabled:text-slate-500 border border-slate-200 focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 rounded-md text-xs font-medium text-slate-800 outline-none transition-all shadow-2xs cursor-pointer"
+                    className="w-full px-3.5 py-2 bg-white disabled:bg-slate-50 disabled:text-slate-500 border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-medium text-slate-800 outline-none transition-all shadow-2xs cursor-pointer"
                     value={newMeetingDate}
                     onChange={(e) => setNewMeetingDate(e.target.value)}
                   />
@@ -768,7 +768,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                   <input
                     type="time"
                     disabled={!canModify}
-                    className="w-full px-3.5 py-2 bg-white disabled:bg-slate-50 disabled:text-slate-500 border border-slate-200 focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 rounded-md text-xs font-medium text-slate-800 outline-none transition-all shadow-2xs cursor-pointer"
+                    className="w-full px-3.5 py-2 bg-white disabled:bg-slate-50 disabled:text-slate-500 border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-medium text-slate-800 outline-none transition-all shadow-2xs cursor-pointer"
                     value={newMeetingTime}
                     onChange={(e) => setNewMeetingTime(e.target.value)}
                   />
@@ -786,7 +786,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                   </div>
                   <input
                     disabled={!canModify}
-                    className="w-full pl-9 pr-3.5 py-2 bg-white disabled:bg-slate-50 disabled:text-slate-500 border border-slate-200 focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 rounded-md text-xs font-medium text-slate-800 outline-none transition-all placeholder:text-slate-400 shadow-2xs"
+                    className="w-full pl-9 pr-3.5 py-2 bg-white disabled:bg-slate-50 disabled:text-slate-500 border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-medium text-slate-800 outline-none transition-all placeholder:text-slate-400 shadow-2xs"
                     placeholder="https://zoom.us/j/... or Google Meet"
                     value={newMeetingLink}
                     onChange={(e) => setNewMeetingLink(e.target.value)}
@@ -800,7 +800,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                 </label>
                 <textarea
                   disabled={!canModify}
-                  className="w-full px-3.5 py-2 bg-white disabled:bg-slate-50 disabled:text-slate-500 border border-slate-200 focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 rounded-md text-xs font-medium text-slate-800 outline-none transition-all resize-none min-h-[80px] placeholder:text-slate-400 shadow-2xs"
+                  className="w-full px-3.5 py-2 bg-white disabled:bg-slate-50 disabled:text-slate-500 border border-slate-200 focus:border-primary focus:ring-1 focus:ring-primary/20 rounded-md text-xs font-medium text-slate-800 outline-none transition-all resize-none min-h-[80px] placeholder:text-slate-400 shadow-2xs"
                   placeholder="Outline key discussion topics..."
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
@@ -822,7 +822,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                   )}
                 </label>
                 
-                <div className="border-2 border-dashed border-slate-200 hover:border-[#405189] rounded-md p-3 text-center bg-slate-50/50 transition-all relative">
+                <div className="border-2 border-dashed border-slate-200 hover:border-primary rounded-md p-3 text-center bg-slate-50/50 transition-all relative">
                   <input
                     type="file"
                     disabled={!canModify}
@@ -849,7 +849,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                   ) : editingMeeting?.fileName && !shouldRemoveMeetingFile ? (
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 truncate">
-                        <FileText className="w-4 h-4 text-[#405189]" />
+                        <FileText className="w-4 h-4 text-primary" />
                         <span className="text-xs font-medium text-slate-800 truncate max-w-[180px]">{editingMeeting.fileName}</span>
                         <span className="text-[10px] text-slate-400">(Existing)</span>
                       </div>
@@ -903,7 +903,7 @@ export const MeetingNotes: React.FC<MeetingNotesProps> = ({
                   type="button"
                   onClick={handleCreateMeeting}
                   disabled={loading || !newTitle.trim()}
-                  className="px-5 py-2 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] disabled:opacity-50 text-white rounded-md text-xs font-medium shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+                  className="px-5 py-2 bg-primary hover:bg-primary-hover active:bg-primary-active disabled:opacity-50 text-white rounded-md text-xs font-medium shadow-xs transition-all flex items-center gap-2 cursor-pointer"
                 >
                   {loading ? (
                     <>

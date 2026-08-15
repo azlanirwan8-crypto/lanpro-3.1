@@ -98,7 +98,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
   if (!activeSuite) {
     return (
       <div className="lg:col-span-9 bg-white border border-slate-200/80 p-10 rounded-md text-center shadow-xs">
-        <div className="w-10 h-10 bg-[#405189]/10 text-[#405189] rounded-md flex items-center justify-center mx-auto mb-2.5">
+        <div className="w-10 h-10 bg-primary/10 text-primary rounded-md flex items-center justify-center mx-auto mb-2.5">
           <FileSpreadsheet className="w-5 h-5" />
         </div>
         <h3 className="text-sm font-medium text-slate-800">Silakan Pilih Modul Testing</h3>
@@ -141,7 +141,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 bg-[#405189] text-white font-medium text-[9px] rounded-md uppercase tracking-wider">
+              <span className="px-2 py-0.5 bg-primary text-white font-medium text-[9px] rounded-md uppercase tracking-wider">
                 {activeSuite.phase}
               </span>
               <h2 className="text-base font-medium text-slate-800 tracking-tight">{cleanSuiteName}</h2>
@@ -159,7 +159,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                   setIsAddCaseOpen(true);
                   setActiveAddTab("single");
                 }}
-                className="px-3 py-1.5 bg-[#405189] hover:bg-[#354473] text-white font-medium rounded-md text-xs flex items-center gap-1 shadow-2xs transition-all cursor-pointer active:scale-95"
+                className="px-3 py-1.5 bg-primary hover:bg-[#354473] text-white font-medium rounded-md text-xs flex items-center gap-1 shadow-2xs transition-all cursor-pointer active:scale-95"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Tambah Task</span>
@@ -170,7 +170,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
               <button
                 onClick={handleGenerateWithAi}
                 disabled={isGeneratingAi}
-                className="px-3 py-1.5 bg-gradient-to-r from-[#405189] to-indigo-600 hover:from-indigo-700 hover:to-indigo-800 disabled:opacity-50 text-white font-medium rounded-md text-xs flex items-center gap-1 shadow-2xs transition-all cursor-pointer active:scale-95"
+                className="px-3 py-1.5 bg-gradient-to-r from-primary to-indigo-600 hover:from-indigo-700 hover:to-indigo-800 disabled:opacity-50 text-white font-medium rounded-md text-xs flex items-center gap-1 shadow-2xs transition-all cursor-pointer active:scale-95"
                 title="Generate test cases dengan AI"
               >
                 <Sparkles className={`w-3.5 h-3.5 ${isGeneratingAi ? "animate-spin" : ""}`} />
@@ -183,7 +183,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
               className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-md text-xs flex items-center gap-1 transition-all cursor-pointer"
               title="Export Laporan Eksekusi QA"
             >
-              <Download className="w-3.5 h-3.5 text-[#405189]" />
+              <Download className="w-3.5 h-3.5 text-primary" />
               <span>Export</span>
             </button>
 
@@ -193,7 +193,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
               canUpdate && (
                 <button
                   onClick={handleMigrateSuitePhase}
-                  className="px-3 py-1.5 bg-[#0ab39c] hover:bg-[#089683] text-white font-medium rounded-md text-xs flex items-center gap-1 shadow-2xs transition-all cursor-pointer active:scale-95"
+                  className="px-3 py-1.5 bg-success hover:bg-[#089683] text-white font-medium rounded-md text-xs flex items-center gap-1 shadow-2xs transition-all cursor-pointer active:scale-95"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>{activeSuite.phase === "SIT" ? "Migrate to UAT" : "Migrate to PTR"}</span>
@@ -204,25 +204,25 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
 
         {/* Velzon Compact Micro Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-          <div className="bg-[#405189]/5 border border-[#405189]/10 p-2 rounded-md text-center">
-            <span className="text-[9px] text-[#405189] font-medium uppercase tracking-wider block">Total Case</span>
-            <span className="text-base font-medium text-[#405189] block mt-0.5">{totalCasesCount}</span>
+          <div className="bg-primary/5 border border-primary/10 p-2 rounded-md text-center">
+            <span className="text-[9px] text-primary font-medium uppercase tracking-wider block">Total Case</span>
+            <span className="text-base font-medium text-primary block mt-0.5">{totalCasesCount}</span>
           </div>
           <div className="bg-slate-50 p-2 rounded-md border border-slate-200/60 text-center">
             <span className="text-[9px] text-slate-500 font-medium uppercase tracking-wider block">Passed Rate</span>
             <span className="text-base font-medium text-slate-800 block mt-0.5">{passedPercent}%</span>
           </div>
           <div className="bg-emerald-50/50 p-2 rounded-md border border-emerald-100 text-center">
-            <span className="text-[9px] text-[#0ab39c] font-medium uppercase tracking-wider block">PASSED</span>
-            <span className="text-base font-medium text-[#0ab39c] block mt-0.5">{passedCasesCount}</span>
+            <span className="text-[9px] text-success font-medium uppercase tracking-wider block">PASSED</span>
+            <span className="text-base font-medium text-success block mt-0.5">{passedCasesCount}</span>
           </div>
           <div className="bg-rose-50/50 p-2 rounded-md border border-rose-100 text-center">
-            <span className="text-[9px] text-[#f06548] font-medium uppercase tracking-wider block">FAILED</span>
-            <span className="text-base font-medium text-[#f06548] block mt-0.5">{failedCasesCount}</span>
+            <span className="text-[9px] text-danger font-medium uppercase tracking-wider block">FAILED</span>
+            <span className="text-base font-medium text-danger block mt-0.5">{failedCasesCount}</span>
           </div>
           <div className="bg-amber-50/50 p-2 rounded-md border border-amber-100 text-center">
-            <span className="text-[9px] text-[#f7b84b] font-medium uppercase tracking-wider block">BLOCKED</span>
-            <span className="text-base font-medium text-[#f7b84b] block mt-0.5">{blockedCasesCount}</span>
+            <span className="text-[9px] text-warning font-medium uppercase tracking-wider block">BLOCKED</span>
+            <span className="text-base font-medium text-warning block mt-0.5">{blockedCasesCount}</span>
           </div>
           <div className="bg-slate-50 p-2 rounded-md border border-slate-200/60 text-center">
             <span className="text-[9px] text-slate-500 font-medium uppercase tracking-wider block">RETEST/PEND</span>
@@ -235,7 +235,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
         {/* ELEGANT TOP RIGHT SEARCH & FILTER BAR */}
         <div className="flex items-center justify-between gap-2.5 pt-2.5 border-t border-slate-100">
           <div className="text-[11px] font-medium text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-            <FileSpreadsheet className="w-3.5 h-3.5 text-[#405189]" />
+            <FileSpreadsheet className="w-3.5 h-3.5 text-primary" />
             <span>Matriks Skenario Test Case ({searchedCases.length})</span>
           </div>
 
@@ -248,13 +248,13 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                 placeholder="Cari scenario..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-7 pr-2.5 py-1 bg-slate-50 border border-slate-200/80 rounded-md text-xs font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#405189]/30 focus:border-[#405189] transition-all w-36 sm:w-48"
+                className="pl-7 pr-2.5 py-1 bg-slate-50 border border-slate-200/80 rounded-md text-xs font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary transition-all w-36 sm:w-48"
               />
             </div>
 
             {/* Elegant Filter Status Select */}
             <div className="relative flex items-center gap-1 bg-slate-50 border border-slate-200/80 rounded-md px-2 py-1 text-xs font-medium text-slate-700">
-              <Filter className="w-3 h-3 text-[#405189]" />
+              <Filter className="w-3 h-3 text-primary" />
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as any)}
@@ -274,7 +274,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
 
       {/* FLOATING BULK ACTIONS TOOLBAR FOR ADMIN / PROJECT ADMIN */}
       {selectedCaseIds.length > 0 && (canUpdate || isAdminRole) && (
-        <div className="bg-gradient-to-r from-[#405189] to-indigo-900 text-white p-3 rounded-md shadow-xl flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="bg-gradient-to-r from-primary to-indigo-900 text-white p-3 rounded-md shadow-xl flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center gap-2">
             <span className="p-1.5 bg-white/10 rounded-md">
               <CheckSquare className="w-4 h-4 text-emerald-400" />
@@ -300,7 +300,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setIsBulkPicDropdownOpen(false)} />
                   <div className="absolute right-0 top-full mt-1.5 w-60 bg-white text-slate-800 rounded-md shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-[#405189] border-b border-slate-100 mb-1">
+                    <div className="px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-primary border-b border-slate-100 mb-1">
                       Tetapkan PIC ke {selectedCaseIds.length} Task
                     </div>
                     <button
@@ -308,7 +308,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                         handleBulkAssignPic("");
                         setIsBulkPicDropdownOpen(false);
                       }}
-                      className="w-full text-left px-3.5 py-2 text-xs font-medium hover:bg-indigo-50 hover:text-[#405189] transition-colors"
+                      className="w-full text-left px-3.5 py-2 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors"
                     >
                       Semua PIC Proyek (All Members)
                     </button>
@@ -322,7 +322,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                               handleBulkAssignPic(mId);
                               setIsBulkPicDropdownOpen(false);
                             }}
-                            className="w-full text-left px-3.5 py-2 text-xs font-medium hover:bg-indigo-50 hover:text-[#405189] transition-colors flex items-center gap-2"
+                            className="w-full text-left px-3.5 py-2 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors flex items-center gap-2"
                           >
                             <UserAvatar uid={mId} members={projectMembers} className="w-4 h-4 shrink-0" />
                             <span className="truncate">{m.displayName || m.email || m.username}</span>
@@ -357,7 +357,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                           handleBulkChangeStatus(st as any);
                           setIsBulkStatusDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3.5 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-[#405189] transition-colors"
+                        className="w-full text-left px-3.5 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors"
                       >
                         Set to {st}
                       </button>
@@ -386,7 +386,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[#405189]/5 border-b border-[#405189]/15 text-[10px] font-medium uppercase tracking-wider text-[#405189]">
+              <tr className="bg-primary/5 border-b border-primary/15 text-[10px] font-medium uppercase tracking-wider text-primary">
                 {/* SELECT ALL CHECKBOX (For Admin / Users with edit access) */}
                 <th className="py-2.5 px-3 w-8 text-center" onClick={(e) => e.stopPropagation()}>
                   {(canUpdate || isAdminRole) && (
@@ -394,7 +394,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                       type="checkbox"
                       checked={isAllSelected}
                       onChange={() => handleToggleSelectAll(searchedCases)}
-                      className="rounded border-slate-300 text-[#405189] focus:ring-[#405189] cursor-pointer"
+                      className="rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
                     />
                   )}
                 </th>
@@ -429,7 +429,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                     <tr
                       key={tc.id || idx}
                       onClick={() => setSelectedTestCase(tc)}
-                      className={`hover:bg-[#405189]/[0.03] transition-colors cursor-pointer group ${
+                      className={`hover:bg-primary/[0.03] transition-colors cursor-pointer group ${
                         isChecked ? "bg-indigo-50/40" : ""
                       }`}
                     >
@@ -440,24 +440,24 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => handleToggleSelectCase(tc.id)}
-                            className="rounded border-slate-300 text-[#405189] focus:ring-[#405189] cursor-pointer"
+                            className="rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
                           />
                         )}
                       </td>
 
                       {/* Row Num */}
-                      <td className="py-2.5 px-3 text-center font-medium text-slate-400 text-xs group-hover:text-[#405189]">
+                      <td className="py-2.5 px-3 text-center font-medium text-slate-400 text-xs group-hover:text-primary">
                         {tc.rowNum || idx + 1}
                       </td>
 
                       {/* Title & Linked Bug Key */}
                       <td className="py-2.5 px-4 font-medium text-slate-800">
                         <div className="flex items-center gap-2">
-                          <span className="line-clamp-1 text-xs group-hover:text-[#405189] transition-colors">
+                          <span className="line-clamp-1 text-xs group-hover:text-primary transition-colors">
                             {tc.title}
                           </span>
                           {tc.linkedBugKey && (
-                            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 bg-rose-50 border border-rose-200/60 rounded text-[9px] font-medium text-[#f06548] shrink-0">
+                            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 bg-rose-50 border border-rose-200/60 rounded text-[9px] font-medium text-danger shrink-0">
                               <Bug className="w-2.5 h-2.5" />
                               {tc.linkedBugKey}
                             </span>
@@ -470,10 +470,10 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                         <span
                           className={`px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-wider inline-block ${
                             tc.priority === "Critical" || tc.priority === "High"
-                              ? "bg-rose-50 text-[#f06548] border border-rose-200/60"
+                              ? "bg-rose-50 text-danger border border-rose-200/60"
                               : tc.priority === "Low"
                               ? "bg-slate-100 text-slate-600 border border-slate-200/60"
-                              : "bg-amber-50 text-[#f7b84b] border border-amber-200/60"
+                              : "bg-amber-50 text-warning border border-amber-200/60"
                           }`}
                         >
                           {tc.priority || "Medium"}
@@ -489,11 +489,11 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                             onChange={(e) => handleStatusChange(tc.id, e.target.value as any)}
                             className={`py-1 px-2.5 rounded-md text-[10px] font-medium uppercase tracking-wider outline-none cursor-pointer transition-all border shadow-2xs ${
                               tc.status === "Passed"
-                                ? "bg-emerald-50 text-[#0ab39c] border-emerald-200"
+                                ? "bg-emerald-50 text-success border-emerald-200"
                                 : tc.status === "Failed"
-                                ? "bg-rose-50 text-[#f06548] border-rose-200"
+                                ? "bg-rose-50 text-danger border-rose-200"
                                 : tc.status === "Blocked"
-                                ? "bg-amber-50 text-[#f7b84b] border-amber-200"
+                                ? "bg-amber-50 text-warning border-amber-200"
                                 : tc.status === "Retest"
                                 ? "bg-indigo-50 text-indigo-700 border-indigo-200"
                                 : "bg-slate-100 text-slate-600 border-slate-200"
@@ -516,10 +516,10 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                 }
                               }}
                               className={`w-6 h-6 rounded-full border transition-all flex items-center justify-center shadow-2xs ${
-                                canUpdate ? "cursor-pointer hover:ring-2 hover:ring-[#405189]/30" : "cursor-default"
+                                canUpdate ? "cursor-pointer hover:ring-2 hover:ring-primary/30" : "cursor-default"
                               } ${
                                 tc.assignedTo
-                                  ? "bg-[#405189]/10 border-[#405189]/40"
+                                  ? "bg-primary/10 border-primary/40"
                                   : "bg-slate-100 border-slate-200/80 text-slate-500"
                               }`}
                               title={
@@ -546,7 +546,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                   }}
                                 />
                                 <div className="absolute right-0 top-full mt-1.5 w-56 bg-white rounded-md shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                                  <div className="px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-[#405189] border-b border-slate-100 mb-1">
+                                  <div className="px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-wider text-primary border-b border-slate-100 mb-1">
                                     Assign PIC Task (Tim Proyek)
                                   </div>
                                   <button
@@ -554,12 +554,12 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                       e.stopPropagation();
                                       handleUpdateCasePic(activeSuite.id, tc.id, "");
                                     }}
-                                    className={`w-full text-left px-3.5 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-[#405189] transition-colors flex items-center justify-between ${
-                                      !tc.assignedTo ? "bg-indigo-50/60 text-[#405189]" : "text-slate-700"
+                                    className={`w-full text-left px-3.5 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors flex items-center justify-between ${
+                                      !tc.assignedTo ? "bg-indigo-50/60 text-primary" : "text-slate-700"
                                     }`}
                                   >
                                     <span>Semua PIC Proyek (All Members)</span>
-                                    {!tc.assignedTo && <CheckCircle2 className="w-4 h-4 text-[#405189]" />}
+                                    {!tc.assignedTo && <CheckCircle2 className="w-4 h-4 text-primary" />}
                                   </button>
                                   <div className="max-h-44 overflow-y-auto custom-scrollbar">
                                     {(projectMembers || []).map((m: any) => {
@@ -572,15 +572,15 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                             e.stopPropagation();
                                             handleUpdateCasePic(activeSuite.id, tc.id, mId);
                                           }}
-                                          className={`w-full text-left px-3.5 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-[#405189] transition-colors flex items-center justify-between gap-2 ${
-                                            isSelected ? "bg-indigo-50/60 text-[#405189]" : "text-slate-700"
+                                          className={`w-full text-left px-3.5 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors flex items-center justify-between gap-2 ${
+                                            isSelected ? "bg-indigo-50/60 text-primary" : "text-slate-700"
                                           }`}
                                         >
                                           <div className="flex items-center gap-2 truncate">
                                             <UserAvatar uid={mId} members={projectMembers} className="w-4 h-4 shrink-0" />
                                             <span className="truncate">{m.displayName || m.email || m.username}</span>
                                           </div>
-                                          {isSelected && <CheckCircle2 className="w-4 h-4 text-[#405189] shrink-0" />}
+                                          {isSelected && <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />}
                                         </button>
                                       );
                                     })}
@@ -597,7 +597,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                         <div className="flex items-center justify-center gap-1">
                           <button
                             onClick={() => setSelectedTestCase(tc)}
-                            className="p-1 text-slate-400 hover:text-[#405189] hover:bg-indigo-50 rounded-md transition-all"
+                            className="p-1 text-slate-400 hover:text-primary hover:bg-indigo-50 rounded-md transition-all"
                             title="Lihat Detail Skenario & Langkah Pengujian"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -606,7 +606,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                           {tc.status === "Failed" && (
                             <button
                               onClick={() => handleOpenCreateBugModal(tc)}
-                              className="p-1 text-[#f06548] hover:bg-rose-50 rounded-md transition-all"
+                              className="p-1 text-danger hover:bg-rose-50 rounded-md transition-all"
                               title="Buat Tiket Bug"
                             >
                               <Bug className="w-3.5 h-3.5" />
@@ -623,7 +623,7 @@ export const QATestCaseTable: React.FC<QATestCaseTableProps> = ({
                                 setCaseEditPriority(tc.priority || "Medium");
                                 setCaseEditAssignedTo(tc.assignedTo || "");
                               }}
-                              className="p-1 text-slate-400 hover:text-[#405189] hover:bg-indigo-50 rounded-md transition-all"
+                              className="p-1 text-slate-400 hover:text-primary hover:bg-indigo-50 rounded-md transition-all"
                               title="Edit Test Case"
                             >
                               <Edit3 className="w-3.5 h-3.5" />

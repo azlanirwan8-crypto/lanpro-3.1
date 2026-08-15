@@ -371,7 +371,7 @@ export const DbExplorerPanel: React.FC<any> = ({
                   {!loading && result && Array.isArray(result) && (
                       <div className="border border-slate-200 rounded-lg overflow-x-auto">
                           <table className="w-full text-left border-collapse text-sm">
-                              <thead className="bg-[#405189]/5 text-[#405189] font-medium uppercase tracking-wider">
+                              <thead className="bg-primary/5 text-primary font-medium uppercase tracking-wider">
                                   <tr>
                                       {result.length > 0 && <th className="p-3 border-b border-slate-200 font-medium w-32">Actions</th>}
                                       {result.length > 0 ? Object.keys(result[0]).map(key => (

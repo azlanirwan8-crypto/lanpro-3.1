@@ -1,5 +1,5 @@
 export const styles = {
-  aside: "fixed inset-y-0 left-0 z-50 transform md:translate-x-0 md:static bg-[#405189] border-r border-[#364574] flex flex-col transition-all duration-300 text-[#abb9e8] select-none",
+  aside: "fixed inset-y-0 left-0 z-50 transform md:translate-x-0 md:static bg-primary border-r border-[#364574] flex flex-col transition-all duration-300 text-[#abb9e8] select-none",
   asideMobileOpen: "translate-x-0 shadow-2xl",
   asideMobileClosed: "-translate-x-full",
   asideCollapsed: "md:w-20",

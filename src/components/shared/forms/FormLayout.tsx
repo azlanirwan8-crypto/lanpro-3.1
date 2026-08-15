@@ -64,7 +64,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
       type="submit"
       onClick={onSubmit}
       disabled={isPending}
-      className="px-4 py-2 bg-[#405189] hover:bg-[#354473] text-white text-xs font-medium rounded-md cursor-pointer shadow-xs disabled:opacity-50 transition-all"
+      className="px-4 py-2 bg-primary hover:bg-[#354473] text-white text-xs font-medium rounded-md cursor-pointer shadow-xs disabled:opacity-50 transition-all"
     >
       {isPending ? "Saving..." : submitLabel}
     </button>

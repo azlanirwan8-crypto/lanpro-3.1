@@ -187,7 +187,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                 <div className="flex flex-col min-w-0 flex-1">
                   <span className="text-xs font-semibold text-slate-800 truncate">{task.title}</span>
                   <div className="flex items-center gap-2 mt-1">
-                    <button onClick={(e) => { e.stopPropagation(); setSelectedTaskForDetail(task); setIsTaskDetailModalOpen(true); }} className="text-[9px] font-semibold text-[#405189] bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/60 rounded-md px-1.5 py-0.5 tracking-tight text-left uppercase transition-colors">{task.key}</button>
+                    <button onClick={(e) => { e.stopPropagation(); setSelectedTaskForDetail(task); setIsTaskDetailModalOpen(true); }} className="text-[9px] font-semibold text-primary bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/60 rounded-md px-1.5 py-0.5 tracking-tight text-left uppercase transition-colors">{task.key}</button>
                     <div className="w-1 h-1 rounded-full bg-slate-300" />
                     <span className="text-[9px] font-semibold uppercase text-slate-500 tracking-wider">{task.status}</span>
                   </div>

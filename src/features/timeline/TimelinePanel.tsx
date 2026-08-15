@@ -1095,7 +1095,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
               className="flex items-center gap-1.5 px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 rounded-md text-xs font-medium shadow-2xs transition-all border border-slate-200/80 cursor-pointer active:scale-95"
               title="Focus First Task"
             >
-              <Target className="w-3.5 h-3.5 text-[#405189]" />
+              <Target className="w-3.5 h-3.5 text-primary" />
               <span>Focus First Task</span>
             </button>
             <button
@@ -1107,7 +1107,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
               className="flex items-center gap-1.5 px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 rounded-md text-xs font-medium shadow-2xs transition-all border border-slate-200/80 cursor-pointer active:scale-95"
               title="Jump to Today"
             >
-              <Calendar className="w-3.5 h-3.5 text-[#0ab39c]" />
+              <Calendar className="w-3.5 h-3.5 text-success" />
               <span>Today</span>
             </button>
           </div>
@@ -1134,7 +1134,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                 }}
                 className={`px-3 py-1 text-xs uppercase tracking-wider rounded-md transition-all cursor-pointer ${
                   timelineZoom === z 
-                    ? 'bg-[#405189]/10 text-[#405189] font-semibold shadow-2xs border border-[#405189]/20' 
+                    ? 'bg-primary/10 text-primary font-semibold shadow-2xs border border-primary/20' 
                     : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50 font-medium'
                 }`}
               >
@@ -1156,7 +1156,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
             <button 
               onClick={() => setIsExportMenuOpen(!isExportMenuOpen)}
               onBlur={() => setTimeout(() => setIsExportMenuOpen(false), 200)}
-              className="h-8 px-3.5 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white rounded-md text-xs font-medium shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
+              className="h-8 px-3.5 bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md text-xs font-medium shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>EXPORT AS</span> <ChevronDown className="w-3 h-3" />
@@ -1167,14 +1167,14 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                   onClick={exportTimelineToPdf}
                   className="w-full text-left px-3.5 py-2 hover:bg-slate-50 text-xs font-medium text-slate-700 flex items-center gap-2 cursor-pointer transition-colors"
                 >
-                  <FileText className="w-4 h-4 text-[#f06548]" />
+                  <FileText className="w-4 h-4 text-danger" />
                   <span>PDF Document</span>
                 </button>
                 <button 
                   onClick={exportTimelineToPng}
                   className="w-full text-left px-3.5 py-2 hover:bg-slate-50 text-xs font-medium text-slate-700 flex items-center gap-2 cursor-pointer transition-colors"
                 >
-                  <ImageIcon className="w-4 h-4 text-[#299cdb]" />
+                  <ImageIcon className="w-4 h-4 text-secondary" />
                   <span>PNG Image</span>
                 </button>
               </div>
@@ -1287,7 +1287,7 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                               setSelectedTaskForDetail(task); 
                               setIsTaskDetailModalOpen(true); 
                             }} 
-                            className="text-[9px] font-semibold text-[#405189] bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/60 rounded-md px-1 py-0.2 tracking-tight text-left uppercase transition-colors"
+                            className="text-[9px] font-semibold text-primary bg-indigo-50/80 hover:bg-indigo-100 border border-indigo-200/60 rounded-md px-1 py-0.2 tracking-tight text-left uppercase transition-colors"
                           >
                             {task.key}
                           </button>
@@ -1567,8 +1567,8 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                 </AnimatePresence>
               </div>
               {todayLeft >= 0 && todayLeft <= 100 && (
-                <div className="absolute top-0 bottom-0 z-20 border-l-2 border-[#f06548] border-dashed pointer-events-none" style={{ left: `${todayLeft}%` }}>
-                  <div className="bg-[#f06548] text-white text-[9px] font-semibold px-2 py-0.5 rounded-md absolute top-1.5 -translate-x-1/2 shadow-sm flex items-center gap-1 z-30 tracking-wider">
+                <div className="absolute top-0 bottom-0 z-20 border-l-2 border-danger border-dashed pointer-events-none" style={{ left: `${todayLeft}%` }}>
+                  <div className="bg-danger text-white text-[9px] font-semibold px-2 py-0.5 rounded-md absolute top-1.5 -translate-x-1/2 shadow-sm flex items-center gap-1 z-30 tracking-wider">
                     <span className="relative flex h-1.5 w-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
@@ -1577,8 +1577,8 @@ export const TimelinePanel: React.FC<TimelineProps> = ({
                   </div>
                   {/* Glowing pulsing indicator dot right below sticky header */}
                   <div className="absolute top-[73px] -translate-x-1/2 flex items-center justify-center w-4 h-4 z-30">
-                    <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-[#f06548]/60 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#f06548] shadow-2xs"></span>
+                    <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-danger/60 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-danger shadow-2xs"></span>
                   </div>
                 </div>
               )}

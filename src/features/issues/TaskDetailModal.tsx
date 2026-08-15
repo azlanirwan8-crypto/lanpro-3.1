@@ -25,7 +25,7 @@ import { confirmDeleteAlert, showSuccessAlert } from '../../lib/sweetalert';
 // --- Local UI Components For Isolation ---
 const Button = ({ children, onClick, variant = 'primary', className = '', disabled = false, size = 'md' }: any) => {
   const variants = {
-    primary: 'bg-[#405189] text-white hover:bg-[#364473] active:bg-[#2d3960] shadow-xs border-transparent',
+    primary: 'bg-primary text-white hover:bg-primary-hover active:bg-primary-active shadow-xs border-transparent',
     secondary: 'bg-white text-slate-700 border-slate-200/80 hover:bg-slate-50 shadow-xs',
     ghost: 'bg-transparent text-slate-500 hover:bg-slate-100 border-transparent',
     danger: 'bg-red-50 text-red-600 border-red-100 hover:bg-red-100 shadow-xs'
@@ -60,7 +60,7 @@ const Textarea = ({ value, onChange, placeholder, rows = 3, className = "" }: an
     placeholder={placeholder}
     rows={rows}
     className={cn(
-      "w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-xs focus:ring-1 focus:ring-[#405189]/20 focus:border-[#405189] outline-none transition-all resize-none font-medium text-slate-700 shadow-2xs",
+      "w-full bg-white border border-slate-200 rounded-md px-3 py-2 text-xs focus:ring-1 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none font-medium text-slate-700 shadow-2xs",
       className
     )}
   />

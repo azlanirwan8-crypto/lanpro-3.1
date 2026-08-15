@@ -71,11 +71,11 @@ export const WikiEmptyState: React.FC<WikiEmptyStateProps> = ({
           </motion.div>
 
           {/* Interactive Core Icon change depending on state */}
-          <div className="z-10 text-[#405189]">
+          <div className="z-10 text-primary">
             {isFiltered ? (
-              <SearchX className="w-11 h-11 text-[#405189]/90" />
+              <SearchX className="w-11 h-11 text-primary/90" />
             ) : (
-              <BookOpen className="w-11 h-11 text-[#405189]/90" />
+              <BookOpen className="w-11 h-11 text-primary/90" />
             )}
           </div>
 
@@ -146,7 +146,7 @@ export const WikiEmptyState: React.FC<WikiEmptyStateProps> = ({
           whileHover={{ scale: 1.02, y: -1 }}
           whileTap={{ scale: 0.98 }}
           onClick={onCreateClick}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white font-medium text-xs rounded-md shadow-xs transition-all cursor-pointer relative overflow-hidden group"
+          className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover active:bg-primary-active text-white font-medium text-xs rounded-md shadow-xs transition-all cursor-pointer relative overflow-hidden group"
         >
           {/* Dynamic shimmer gloss on button hover */}
           <div className="absolute inset-0 w-1/2 h-full bg-white/10 skew-x-12 -translate-x-full group-hover:animate-shimmer pointer-events-none" />

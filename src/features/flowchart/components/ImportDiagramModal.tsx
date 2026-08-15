@@ -62,7 +62,7 @@ export const ImportDiagramModal: React.FC<ImportDiagramModalProps> = ({
             {/* Modal Head */}
             <div className="px-5 py-4 bg-white border-b border-slate-200 flex justify-between items-center shrink-0">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-[#405189]/10 text-[#405189] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
                   <Upload className="w-4 h-4" />
                 </div>
                 <h3 className="font-medium text-sm text-slate-900">

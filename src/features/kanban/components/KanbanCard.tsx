@@ -100,9 +100,9 @@ export const KanbanCard = React.memo<KanbanCardProps>(({ task, mArr, pArr, onCli
           ? "border-l-red-500 border-slate-200/80 dark:border-slate-700/80 hover:border-red-300 dark:hover:border-red-500 hover:shadow-xs"
           : task.priority === 'Medium'
           ? "border-l-amber-500 border-slate-200/80 dark:border-slate-700/80 hover:border-amber-300 dark:hover:border-amber-500 hover:shadow-xs"
-          : "border-l-[#405189] border-slate-200/80 dark:border-slate-700/80 hover:border-[#405189]/50 dark:hover:border-[#405189] hover:shadow-xs",
+          : "border-l-primary border-slate-200/80 dark:border-slate-700/80 hover:border-primary/50 dark:hover:border-primary hover:shadow-xs",
         hasUnfinishedSubtasks && "border-red-300 dark:border-red-800 bg-red-50/10 dark:bg-red-950/30",
-        isDragging && "z-[9999] cursor-grabbing opacity-90 shadow-xl ring-2 ring-[#405189] !transition-none pointer-events-none",
+        isDragging && "z-[9999] cursor-grabbing opacity-90 shadow-xl ring-2 ring-primary !transition-none pointer-events-none",
         shakingTaskId === task.id && "animate-shake"
       )}
     >
@@ -114,7 +114,7 @@ export const KanbanCard = React.memo<KanbanCardProps>(({ task, mArr, pArr, onCli
             ) : (
                <RenderIcon iconName="CheckSquare" className={cn("transition-transform duration-200", isCompact ? "w-3 h-3" : "w-3.5 h-3.5")} />
             )}
-            <span className="font-mono font-semibold text-[11px] text-[#405189] dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/60 px-1.5 py-0.5 rounded-md border border-indigo-200/60">
+            <span className="font-mono font-semibold text-[11px] text-primary dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/60 px-1.5 py-0.5 rounded-md border border-indigo-200/60">
               {task.key}
             </span>
             {task.priority && (

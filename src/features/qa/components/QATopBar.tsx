@@ -35,7 +35,7 @@ export const QATopBar: React.FC<QATopBarProps> = ({
       
       {/* Velzon Header Title Section */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-lg bg-[#405189] text-white flex items-center justify-center font-medium shadow-xs shadow-[#405189]/20 shrink-0">
+        <div className="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center font-medium shadow-xs shadow-primary/20 shrink-0">
           <FileSpreadsheet className="w-5 h-5" />
         </div>
         <div>
@@ -54,11 +54,11 @@ export const QATopBar: React.FC<QATopBarProps> = ({
           <>
             {isLockedBySomeoneElse ? (
               <div className="flex items-center gap-3 w-full md:w-auto">
-                <div className="p-2 bg-rose-50 dark:bg-rose-950/30 text-[#f06548] rounded-md">
+                <div className="p-2 bg-rose-50 dark:bg-rose-950/30 text-danger rounded-md">
                   <Lock className="w-4 h-4 animate-pulse" />
                 </div>
                 <div>
-                  <span className="text-[10px] text-[#f06548] font-bold uppercase tracking-wider block">
+                  <span className="text-[10px] text-danger font-bold uppercase tracking-wider block">
                     DILOCK OLEH LAIN
                   </span>
                   <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 block mt-0.5">
@@ -68,7 +68,7 @@ export const QATopBar: React.FC<QATopBarProps> = ({
                 {(currentUserRole === "admin" || currentUserRole === "head" || currentUserRole === "manager") && (
                   <button
                     onClick={handleForceUnlock}
-                    className="ml-auto md:ml-2 px-2.5 py-1.5 bg-[#f06548] hover:bg-[#d95338] text-white text-[10px] font-semibold uppercase tracking-wider rounded-md transition-all shadow-xs flex items-center gap-1 cursor-pointer"
+                    className="ml-auto md:ml-2 px-2.5 py-1.5 bg-danger hover:bg-[#d95338] text-white text-[10px] font-semibold uppercase tracking-wider rounded-md transition-all shadow-xs flex items-center gap-1 cursor-pointer"
                   >
                     <ShieldAlert className="w-3.5 h-3.5" />
                     Force Unlock
@@ -77,15 +77,15 @@ export const QATopBar: React.FC<QATopBarProps> = ({
               </div>
             ) : (
               <div className="flex items-center gap-3 w-full md:w-auto">
-                <div className="p-2 bg-emerald-50 dark:bg-emerald-950/30 text-[#0ab39c] rounded-md">
+                <div className="p-2 bg-emerald-50 dark:bg-emerald-950/30 text-success rounded-md">
                   <Unlock className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] text-[#0ab39c] font-bold uppercase tracking-wider">
+                    <span className="text-[10px] text-success font-bold uppercase tracking-wider">
                       Anda Memegang Lock
                     </span>
-                    <span className="px-2 py-0.5 bg-[#405189]/10 text-[#405189] dark:text-indigo-300 text-[10px] font-bold rounded-md">
+                    <span className="px-2 py-0.5 bg-primary/10 text-primary dark:text-indigo-300 text-[10px] font-bold rounded-md">
                       {formatTime(remainingTime)}
                     </span>
                   </div>

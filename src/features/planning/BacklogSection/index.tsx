@@ -41,7 +41,7 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
             <LayoutGrid className="w-4 h-4 text-slate-500" />
             <h3 className="font-medium text-slate-800 text-sm tracking-tight">Backlog Tasks</h3>
           </div>
-          <div className="px-2 py-0.5 bg-indigo-50/80 border border-indigo-200/80 rounded-md text-xs font-semibold text-[#405189]">
+          <div className="px-2 py-0.5 bg-indigo-50/80 border border-indigo-200/80 rounded-md text-xs font-semibold text-primary">
             {filteredBacklogTasks.length} Issues
           </div>
         </div>
@@ -53,7 +53,7 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
               placeholder="Search backlog tasks..." 
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 h-[38px] bg-slate-50/70 border border-slate-200/80 rounded-md text-xs font-medium outline-none focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 focus:bg-white transition-all shadow-2xs" 
+              className="w-full pl-8 pr-3 h-[38px] bg-slate-50/70 border border-slate-200/80 rounded-md text-xs font-medium outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 focus:bg-white transition-all shadow-2xs" 
             />
           </div>
           
@@ -90,7 +90,7 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
             ...items.map(task => {
               const dndIndex = _draggablesRenderedCount++;
               return (
-                <div key={task.id} className="mb-2 pl-2 relative border-l-2 border-[#405189]/40">
+                <div key={task.id} className="mb-2 pl-2 relative border-l-2 border-primary/40">
                   {renderDraggableTask(task, dndIndex, 'card')}
                 </div>
               )
@@ -110,7 +110,7 @@ export const BacklogSection: React.FC<BacklogSectionProps> = ({ tasks, masterDat
             ...items.map(task => {
               const dndIndex = _draggablesRenderedCount++;
               return (
-                <div key={task.id} className="mb-2 pl-2 relative border-l-2 border-[#405189]/40">
+                <div key={task.id} className="mb-2 pl-2 relative border-l-2 border-primary/40">
                   {renderDraggableTask(task, dndIndex, 'card')}
                 </div>
               )

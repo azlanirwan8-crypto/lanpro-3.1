@@ -132,7 +132,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                   type="button"
                   disabled={isLoading}
                   onClick={onConfirm}
-                  className="min-w-[5rem] px-4 py-2 bg-[#405189] hover:bg-[#364574] text-white font-normal rounded text-[0.8125rem] shadow-xs transition-all cursor-pointer active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  className="min-w-[5rem] px-4 py-2 bg-primary hover:bg-[#364574] text-white font-normal rounded text-[0.8125rem] shadow-xs transition-all cursor-pointer active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
                   {isLoading && (
                     <svg className="animate-spin h-3.5 w-3.5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -149,7 +149,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                     type="button"
                     disabled={isLoading}
                     onClick={onClose}
-                    className="min-w-[5rem] px-4 py-2 bg-[#f06548] hover:bg-[#d95a40] text-white font-normal rounded text-[0.8125rem] shadow-xs transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                    className="min-w-[5rem] px-4 py-2 bg-danger hover:bg-[#d95a40] text-white font-normal rounded text-[0.8125rem] shadow-xs transition-all cursor-pointer active:scale-95 disabled:opacity-50"
                   >
                     {cancelText}
                   </button>

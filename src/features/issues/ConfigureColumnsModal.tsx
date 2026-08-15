@@ -60,7 +60,7 @@ export const ConfigureColumnsModal: React.FC<ConfigureColumnsModalProps> = ({
                               {...provided.draggableProps}
                               className={cn(
                                 "flex items-center justify-between p-2.5 bg-slate-50/80 rounded-md hover:bg-slate-100/80 transition-colors group border border-slate-200/60",
-                                snapshot.isDragging ? "shadow-md bg-white border-[#405189]/40 z-[70]" : ""
+                                snapshot.isDragging ? "shadow-md bg-white border-primary/40 z-[70]" : ""
                               )}
                             >
                               <div className="flex items-center gap-3">
@@ -74,7 +74,7 @@ export const ConfigureColumnsModal: React.FC<ConfigureColumnsModalProps> = ({
                                     }}
                                     className={cn(
                                       "w-4 h-4 rounded-md border flex items-center justify-center transition-all cursor-pointer",
-                                      col.visible ? "bg-[#405189] border-[#405189]" : "bg-white border-slate-300"
+                                      col.visible ? "bg-primary border-primary" : "bg-white border-slate-300"
                                     )}
                                   >
                                     {col.visible && <Check className="w-3 h-3 text-white" />}
@@ -97,7 +97,7 @@ export const ConfigureColumnsModal: React.FC<ConfigureColumnsModalProps> = ({
           <div className="px-5 py-3.5 border-t border-slate-100 flex justify-end items-center gap-2 bg-slate-50/50">
             <button 
               onClick={onClose}
-              className="px-4 py-2 font-medium bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white rounded-md transition-all text-xs shadow-xs cursor-pointer"
+              className="px-4 py-2 font-medium bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md transition-all text-xs shadow-xs cursor-pointer"
             >
               Close
             </button>

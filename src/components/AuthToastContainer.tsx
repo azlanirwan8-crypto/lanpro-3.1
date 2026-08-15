@@ -506,7 +506,7 @@ const VelzonSweetAlertModal: React.FC<VelzonSweetAlertModalProps> = ({ notificat
           if (onAction) onAction();
           onDismiss();
         }}
-        className="px-8 py-2.5 bg-[#405189] hover:bg-[#364574] text-white rounded-md text-sm font-medium shadow-md transition-all cursor-pointer min-w-[110px]"
+        className="px-8 py-2.5 bg-primary hover:bg-[#364574] text-white rounded-md text-sm font-medium shadow-md transition-all cursor-pointer min-w-[110px]"
       >
         {displayBtnLabel}
       </motion.button>
