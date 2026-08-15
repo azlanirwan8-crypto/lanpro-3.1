@@ -62,7 +62,7 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
           {/* Dashboard Header matching Meeting Notes */}
           <div className="p-6 md:p-7 border-b border-slate-200/80 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
             <div className="flex items-center gap-3.5">
-              <div className="p-3 bg-[#405189]/10 border border-[#405189]/20 rounded-md text-[#405189] shadow-2xs">
+              <div className="p-3 bg-primary/10 border border-primary/20 rounded-md text-primary shadow-2xs">
                 <Workflow className="w-5 h-5" />
               </div>
               <div>
@@ -83,14 +83,14 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
                     setSearchQuery(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="w-full pl-9 pr-4 py-2 bg-slate-50/60 border border-slate-200/80 rounded-md text-xs placeholder:text-slate-400 outline-none focus:bg-white focus:ring-1 focus:ring-[#405189]/20 focus:border-[#405189] transition-all text-slate-700 font-medium shadow-2xs"
+                  className="w-full pl-9 pr-4 py-2 bg-slate-50/60 border border-slate-200/80 rounded-md text-xs placeholder:text-slate-400 outline-none focus:bg-white focus:ring-1 focus:ring-primary/20 focus:border-primary transition-all text-slate-700 font-medium shadow-2xs"
                 />
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               </div>
 
               <button
                 onClick={openCreateModal}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white rounded-md text-xs font-medium transition-all shadow-xs shadow-[#405189]/20 cursor-pointer shrink-0"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md text-xs font-medium transition-all shadow-xs shadow-primary/20 cursor-pointer shrink-0"
               >
                 <Plus className="w-4 h-4" /> Add Flowchart
               </button>
@@ -102,7 +102,7 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
             <div className="flex-1 overflow-x-auto overflow-y-auto m-6 bg-white rounded-md border border-slate-200/60 shadow-xs">
               <ResponsiveTable className="w-full text-left border-collapse min-w-[880px]">
                 <thead>
-                  <tr className="bg-[#405189]/5 border-b border-[#405189]/15 text-[11px] font-semibold text-[#405189] uppercase tracking-wider whitespace-nowrap">
+                  <tr className="bg-primary/5 border-b border-primary/15 text-[11px] font-semibold text-primary uppercase tracking-wider whitespace-nowrap">
                     <th className="py-3.5 px-4 w-14 text-center">No</th>
                     <th className="py-3.5 px-4 min-w-[180px] max-w-[280px]">Flowchart Title</th>
                     <th className="py-3.5 px-4 w-36">Category</th>
@@ -117,14 +117,14 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
                   {currentItems.length === 0 ? (
                     <tr>
                       <td colSpan={8} className="text-center py-20 text-slate-400">
-                        <div className="w-14 h-14 rounded-md bg-[#405189]/10 border border-[#405189]/20 flex items-center justify-center mx-auto mb-3 shadow-2xs">
-                          <Workflow className="w-6 h-6 text-[#405189]" />
+                        <div className="w-14 h-14 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-3 shadow-2xs">
+                          <Workflow className="w-6 h-6 text-primary" />
                         </div>
                         <p className="font-medium text-slate-800 text-sm">No flowcharts found</p>
                         <p className="text-xs text-slate-400 mt-1 mb-4">Create a new flowchart or adjust your search keyword.</p>
                         <button
                           onClick={openCreateModal}
-                          className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white rounded-md text-xs font-medium transition-all shadow-xs shadow-[#405189]/20 cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md text-xs font-medium transition-all shadow-xs shadow-primary/20 cursor-pointer"
                         >
                           <Plus className="w-4 h-4" /> Add Flowchart
                         </button>
@@ -159,11 +159,11 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
                           <td className="py-3 px-4 text-center text-slate-400 font-medium whitespace-nowrap">
                             {String(srNo).padStart(2, "0")}
                           </td>
-                          <td className="py-3 px-4 font-medium text-slate-900 group-hover:text-[#405189] transition-colors max-w-[220px] truncate whitespace-nowrap">
+                          <td className="py-3 px-4 font-medium text-slate-900 group-hover:text-primary transition-colors max-w-[220px] truncate whitespace-nowrap">
                             {fw.name}
                           </td>
                           <td className="py-3 px-4 whitespace-nowrap">
-                            <span className="inline-block px-2.5 py-1 bg-indigo-50 text-[#405189] border border-indigo-200/80 text-[10px] font-medium rounded-md uppercase">
+                            <span className="inline-block px-2.5 py-1 bg-indigo-50 text-primary border border-indigo-200/80 text-[10px] font-medium rounded-md uppercase">
                               {fw.category || "Panduan"}
                             </span>
                           </td>
@@ -181,7 +181,7 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
                           </td>
                           <td className="py-3 px-4 text-slate-700 font-medium whitespace-nowrap">
                             <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-[#405189]/10 text-[#405189] flex items-center justify-center text-[10px] font-medium shrink-0">
+                              <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-medium shrink-0">
                                 {initials}
                               </div>
                               <span className="truncate max-w-[120px]">{createdBy}</span>
@@ -197,7 +197,7 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
                                   handleSelectFlowchart(fw.id);
                                   setIsEditorActive(true);
                                 }}
-                                className="p-1.5 text-slate-500 hover:text-[#405189] hover:bg-[#405189]/10 rounded-md transition-all cursor-pointer"
+                                className="p-1.5 text-slate-500 hover:text-primary hover:bg-primary/10 rounded-md transition-all cursor-pointer"
                                 title="View flowchart canvas"
                               >
                                 <Eye className="w-4 h-4" />
@@ -210,7 +210,7 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
                                       handleSelectFlowchart(fw.id);
                                       setIsEditorActive(true);
                                     }}
-                                    className="p-1.5 text-slate-500 hover:text-[#405189] hover:bg-[#405189]/10 rounded-md transition-all cursor-pointer"
+                                    className="p-1.5 text-slate-500 hover:text-primary hover:bg-primary/10 rounded-md transition-all cursor-pointer"
                                     title="Edit flowchart"
                                   >
                                     <Edit3 className="w-4 h-4" />
@@ -249,7 +249,7 @@ export const FlowchartDashboard: React.FC<FlowchartDashboardProps> = ({
                   >
                     Previous
                   </button>
-                  <span className="px-3.5 py-1.5 bg-[#405189] text-white rounded-md text-xs font-medium shadow-xs">
+                  <span className="px-3.5 py-1.5 bg-primary text-white rounded-md text-xs font-medium shadow-xs">
                     {currentPage}
                   </span>
                   <button

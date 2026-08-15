@@ -47,10 +47,10 @@ export const SprintSection: React.FC<SprintSectionProps> = ({
         return (
           <div key={sprint.id} className={cn(
             "bg-white border rounded-md overflow-hidden transition-all duration-200 shadow-2xs", 
-            sprint.status === 'active' ? (isOverdue ? "border-red-400 ring-2 ring-red-50" : "border-[#405189] ring-2 ring-[#405189]/10") :
-            sprint.status === 'planned' ? "border-slate-200/90 hover:border-[#405189]/40" :
+            sprint.status === 'active' ? (isOverdue ? "border-red-400 ring-2 ring-red-50" : "border-primary ring-2 ring-primary/10") :
+            sprint.status === 'planned' ? "border-slate-200/90 hover:border-primary/40" :
             "border-slate-200/60 bg-slate-50/40 opacity-95",
-            isExpanded && sprint.status !== 'active' ? "border-[#405189]/30" : ""
+            isExpanded && sprint.status !== 'active' ? "border-primary/30" : ""
           )}>
             <div className="px-4 py-3 flex items-center justify-between gap-3 cursor-pointer hover:bg-slate-50/70 transition border-b border-slate-100" onClick={() => setExpandedSprintId(isExpanded ? "" : sprint.id)}>
               <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
@@ -81,7 +81,7 @@ export const SprintSection: React.FC<SprintSectionProps> = ({
                     <div 
                       className={cn(
                         "h-full rounded-full transition-all duration-300",
-                        completionPercentage === 100 ? "bg-emerald-500" : "bg-[#405189]"
+                        completionPercentage === 100 ? "bg-emerald-500" : "bg-primary"
                       )}
                       style={{ width: `${completionPercentage}%` }}
                     />
@@ -96,7 +96,7 @@ export const SprintSection: React.FC<SprintSectionProps> = ({
                   </div>
                   <div className="text-right hidden md:block">
                     <span className="text-[10px] font-medium text-slate-400 block uppercase leading-none">Points</span>
-                    <span className="text-xs font-medium text-[#405189]">{sprintTasks.reduce((acc, t) => acc + (t.storyPoints || 0), 0)}</span>
+                    <span className="text-xs font-medium text-primary">{sprintTasks.reduce((acc, t) => acc + (t.storyPoints || 0), 0)}</span>
                   </div>
 
                   {canEditPlanning && (
@@ -104,7 +104,7 @@ export const SprintSection: React.FC<SprintSectionProps> = ({
                       {sprint.status === 'planned' && (
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleStartSprint(sprint.id); }} 
-                          className="h-7 px-2.5 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white text-xs font-medium rounded-md transition-all flex items-center gap-1 shadow-2xs shrink-0 cursor-pointer"
+                          className="h-7 px-2.5 bg-primary hover:bg-primary-hover active:bg-primary-active text-white text-xs font-medium rounded-md transition-all flex items-center gap-1 shadow-2xs shrink-0 cursor-pointer"
                         >
                           <Zap className="w-3 h-3" /> <span>START</span>
                         </button>
@@ -117,7 +117,7 @@ export const SprintSection: React.FC<SprintSectionProps> = ({
                           <CheckCircle2 className="w-3 h-3" /> <span>COMPLETE</span>
                         </button>
                       )}
-                      <button onClick={(e) => { e.stopPropagation(); setEditingSprint(sprint); setIsEditSprintModalOpen(true); }} className="p-1.5 text-slate-400 hover:text-[#405189] hover:bg-slate-100 rounded-md transition-colors cursor-pointer">
+                      <button onClick={(e) => { e.stopPropagation(); setEditingSprint(sprint); setIsEditSprintModalOpen(true); }} className="p-1.5 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-md transition-colors cursor-pointer">
                         <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button onClick={(e) => { e.stopPropagation(); handleDeleteSprint(sprint.id); }} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer">
@@ -156,7 +156,7 @@ export const SprintSection: React.FC<SprintSectionProps> = ({
                               className={cn(
                                 "min-h-[80px] transition-all duration-200 rounded-md p-2.5 border border-dashed",
                                 snapshot.isDraggingOver 
-                                  ? "bg-[#405189]/10 border-[#405189] shadow-2xs" 
+                                  ? "bg-primary/10 border-primary shadow-2xs" 
                                   : "border-slate-200/80 bg-white",
                                 sprintTasks.length === 0 && !snapshot.isDraggingOver && "border-slate-200"
                               )}

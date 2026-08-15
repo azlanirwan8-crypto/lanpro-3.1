@@ -81,7 +81,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
         >
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="p-2.5 bg-rose-50 text-[#f06548] rounded-md">
+              <div className="p-2.5 bg-rose-50 text-danger rounded-md">
                 <Bug className="w-5 h-5" />
               </div>
               <div>
@@ -110,19 +110,19 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
                 required
                 value={titleInput}
                 onChange={(e) => onTitleChange(e.target.value)}
-                className="w-full text-xs p-3 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800 focus:border-[#405189] focus:outline-none"
+                className="w-full text-xs p-3 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800 focus:border-primary focus:outline-none"
               />
             </div>
 
             {/* Parent Task Searchable Combobox */}
             <div className="space-y-1.5 relative">
-              <label className="text-[10px] font-medium text-[#f06548] uppercase tracking-wider block">
+              <label className="text-[10px] font-medium text-danger uppercase tracking-wider block">
                 TARGET EPIC / TASK UTAMA (PARENT * MANDATORY)
               </label>
 
               <div
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-full text-xs p-3 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800 flex items-center justify-between cursor-pointer hover:border-[#405189]"
+                className="w-full text-xs p-3 bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800 flex items-center justify-between cursor-pointer hover:border-primary"
               >
                 <span className="truncate">
                   {selectedParentTask
@@ -163,14 +163,14 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
                             }}
                             className={`p-2.5 text-xs font-medium flex items-center justify-between cursor-pointer transition-colors ${
                               selectedParentId === pt.id
-                                ? "bg-rose-50/70 text-[#f06548]"
+                                ? "bg-rose-50/70 text-danger"
                                 : "hover:bg-slate-50 text-slate-700"
                             }`}
                           >
                             <span className="truncate">
                               [{pt.key || pt.taskKey || (pt.type ? pt.type.toUpperCase() : "TASK")}] {pt.title}
                             </span>
-                            {selectedParentId === pt.id && <CheckCircle2 className="w-4 h-4 text-[#f06548] shrink-0" />}
+                            {selectedParentId === pt.id && <CheckCircle2 className="w-4 h-4 text-danger shrink-0" />}
                           </div>
                         ))
                       )}
@@ -239,7 +239,7 @@ export const CreateBugTicketModal: React.FC<CreateBugTicketModalProps> = ({
               <button
                 type="submit"
                 disabled={isSubmitting || !selectedParentId}
-                className="flex-1 py-3 bg-[#f06548] hover:bg-[#d95338] text-white text-xs font-medium rounded-md uppercase tracking-wider cursor-pointer shadow-xs flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95"
+                className="flex-1 py-3 bg-danger hover:bg-[#d95338] text-white text-xs font-medium rounded-md uppercase tracking-wider cursor-pointer shadow-xs flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95"
               >
                 <Bug className="w-4 h-4" />
                 <span>{isSubmitting ? "Menyimpan Tiket..." : "SIMPAN & TAUTKAN BUG"}</span>

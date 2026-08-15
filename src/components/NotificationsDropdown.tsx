@@ -54,11 +54,11 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute right-0 mt-2 w-80 sm:w-[380px] bg-white rounded-xl shadow-lg border border-slate-200 z-50 overflow-hidden origin-top-right"
+                    className="absolute right-0 mt-2 w-80 sm:w-[380px] bg-surface rounded-xl shadow-lg border border-border-subtle z-50 overflow-hidden origin-top-right"
                   >
                   {/* Dropdown Header */}
-                  <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-white">
-                    <h3 className="font-medium text-slate-900 text-[16px]">
+                  <div className="px-5 py-4 border-b border-border-subtle flex items-center justify-between bg-surface">
+                    <h3 className="font-medium text-content text-[16px]">
                       Notification
                     </h3>
                     <div className="flex items-center gap-2.5">
@@ -66,7 +66,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                         {notifications.filter((n) => !n.read).length} New
                       </span>
                       <button
-                        className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-all"
+                        className="p-1 text-content-muted hover:text-slate-600 hover:bg-surface-muted rounded-full transition-all"
                         title="Mark all read"
                         onClick={async () => {
                           try {
@@ -88,7 +88,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                   {/* Notification Items List */}
                   <div className="max-h-[380px] overflow-y-auto">
                     {notifications.length === 0 ? (
-                      <div className="p-8 text-center text-slate-400 text-sm italic">
+                      <div className="p-8 text-center text-content-muted text-sm italic">
                         Belum ada notifikasi
                       </div>
                     ) : (
@@ -151,7 +151,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                                   }
                                 }
                               }}
-                              className="py-3.5 px-5 hover:bg-slate-50/60 transition-all cursor-pointer flex gap-3 items-start relative border-b border-slate-100 last:border-b-0"
+                              className="py-3.5 px-5 hover:bg-surface-muted transition-all cursor-pointer flex gap-3 items-start relative border-b border-border-subtle last:border-b-0"
                             >
                               {/* Left Icon - Compact & circular */}
                               <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${parsed.iconBgClass || "bg-violet-50 text-violet-600"}`}>
@@ -160,10 +160,10 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
 
                               {/* Content Stack */}
                               <div className="flex-1 min-w-0 pr-4">
-                                <h4 className="text-sm font-medium text-slate-900 leading-snug break-words">
+                                <h4 className="text-sm font-medium text-content leading-snug break-words">
                                   {parsed.formattedMessage}
                                 </h4>
-                                <span className="mt-1 block text-xs text-slate-400 font-medium">
+                                <span className="mt-1 block text-xs text-content-muted font-medium">
                                   {formattedTime}
                                 </span>
                               </div>
@@ -183,7 +183,7 @@ export const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({
                   </div>
 
                   {/* Dropdown Footer */}
-                  <div className="p-4 border-t border-slate-100 bg-white">
+                  <div className="p-4 border-t border-border-subtle bg-surface">
                     <button
                       onClick={() => {
                         setIsNotificationsOpen(false);

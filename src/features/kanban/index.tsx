@@ -152,7 +152,7 @@ export const BoardView: React.FC<KanbanBoardProps> = (props) => {
                     <div className="flex items-center gap-2">
                         <span className="font-medium text-xs text-slate-800 dark:text-slate-100">Swimlanes</span>
                         <label className="flex items-center gap-1 cursor-pointer bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-[10px] font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-colors select-none">
-                            <input type="checkbox" checked={showEmptySwimlanes} onChange={(e) => setShowEmptySwimlanes(e.target.checked)} className="accent-[#405189] rounded-md cursor-pointer" />
+                            <input type="checkbox" checked={showEmptySwimlanes} onChange={(e) => setShowEmptySwimlanes(e.target.checked)} className="accent-primary rounded-md cursor-pointer" />
                             <span>Empty</span>
                         </label>
                     </div>
@@ -160,7 +160,7 @@ export const BoardView: React.FC<KanbanBoardProps> = (props) => {
                         <select 
                           value={groupBy}
                           onChange={(e) => setGroupBy(e.target.value as any)}
-                          className="bg-indigo-50/80 dark:bg-indigo-950/60 text-[#405189] dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800 rounded-md text-[11px] font-semibold px-2 py-1 cursor-pointer outline-none focus:ring-1 focus:ring-[#405189]/30 max-w-[110px]"
+                          className="bg-indigo-50/80 dark:bg-indigo-950/60 text-primary dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800 rounded-md text-[11px] font-semibold px-2 py-1 cursor-pointer outline-none focus:ring-1 focus:ring-primary/30 max-w-[110px]"
                         >
                           <option value="epic">By Epic</option>
                           <option value="assignee">By Assignee</option>

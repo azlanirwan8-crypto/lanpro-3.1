@@ -697,7 +697,7 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
   return (
     <div className="w-full flex flex-col bg-white border border-slate-200/80 rounded-lg overflow-hidden shadow-2xs">
       {/* Companion Header Banner */}
-      <div className="p-4 sm:p-5 bg-gradient-to-r from-[#1a233a] via-[#405189] to-[#283863] text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0">
+      <div className="p-4 sm:p-5 bg-gradient-to-r from-[#1a233a] via-primary to-[#283863] text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0">
         <div className="flex items-center gap-3">
           <span className="p-2.5 bg-white/10 border border-white/15 rounded-lg text-indigo-200 shadow-2xs">
             <Cpu className="w-5 h-5 animate-pulse" />
@@ -735,27 +735,27 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
             onClick={() => setActiveTab("summary")}
             className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === "summary"
-                ? "bg-white text-[#405189] shadow-2xs border border-slate-200/80"
+                ? "bg-white text-primary shadow-2xs border border-slate-200/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
-            <FileText className="w-3.5 h-3.5 text-[#405189]" /> Ringkasan
+            <FileText className="w-3.5 h-3.5 text-primary" /> Ringkasan
           </button>
           <button
             onClick={() => setActiveTab("chronology")}
             className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === "chronology"
-                ? "bg-white text-[#405189] shadow-2xs border border-slate-200/80"
+                ? "bg-white text-primary shadow-2xs border border-slate-200/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
-            <Brain className="w-3.5 h-3.5 text-[#405189]" /> Kronologi Rapat
+            <Brain className="w-3.5 h-3.5 text-primary" /> Kronologi Rapat
           </button>
           <button
             onClick={() => setActiveTab("conclusions")}
             className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === "conclusions"
-                ? "bg-white text-[#405189] shadow-2xs border border-slate-200/80"
+                ? "bg-white text-primary shadow-2xs border border-slate-200/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
@@ -765,7 +765,7 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
             onClick={() => setActiveTab("suggestions")}
             className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === "suggestions"
-                ? "bg-white text-[#405189] shadow-2xs border border-slate-200/80"
+                ? "bg-white text-primary shadow-2xs border border-slate-200/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
@@ -775,13 +775,13 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
             onClick={() => setActiveTab("actionItems")}
             className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 cursor-pointer relative ${
               activeTab === "actionItems"
-                ? "bg-white text-[#405189] shadow-2xs border border-slate-200/80"
+                ? "bg-white text-primary shadow-2xs border border-slate-200/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
-            <ListChecks className="w-3.5 h-3.5 text-[#405189]" /> Tindak Lanjut
+            <ListChecks className="w-3.5 h-3.5 text-primary" /> Tindak Lanjut
             {activeMeetingData?.tab_tindak_lanjut?.length > 0 && (
-              <span className="ml-1 px-1.5 py-0.5 bg-[#405189] text-white text-[9px] rounded-full font-medium min-w-[16px] text-center inline-block">
+              <span className="ml-1 px-1.5 py-0.5 bg-primary text-white text-[9px] rounded-full font-medium min-w-[16px] text-center inline-block">
                 {activeMeetingData.tab_tindak_lanjut.length}
               </span>
             )}
@@ -790,7 +790,7 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
             onClick={() => setActiveTab("nextPlan")}
             className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === "nextPlan"
-                ? "bg-white text-[#405189] shadow-2xs border border-slate-200/80"
+                ? "bg-white text-primary shadow-2xs border border-slate-200/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
@@ -800,7 +800,7 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
             onClick={() => setActiveTab("toBeScenario")}
             className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === "toBeScenario"
-                ? "bg-white text-[#405189] shadow-2xs border border-slate-200/80"
+                ? "bg-white text-primary shadow-2xs border border-slate-200/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
@@ -810,7 +810,7 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
             onClick={() => setActiveTab("metadata")}
             className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === "metadata"
-                ? "bg-white text-[#405189] shadow-2xs border border-slate-200/80"
+                ? "bg-white text-primary shadow-2xs border border-slate-200/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
@@ -820,7 +820,7 @@ export const AiMeetingCompanion: React.FC<AiMeetingCompanionProps> = ({
             onClick={() => setActiveTab("transcript")}
             className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === "transcript"
-                ? "bg-white text-[#405189] shadow-2xs border border-slate-200/80"
+                ? "bg-white text-primary shadow-2xs border border-slate-200/80"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >

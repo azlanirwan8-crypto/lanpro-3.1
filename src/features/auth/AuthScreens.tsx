@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { VelzonSuccessIcon } from "../../components/AuthToastContainer";
 
 export const AuthHeroPanel = () => (
-  <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-[#364574] via-[#405189] to-[#212529] items-center justify-center p-8 xl:p-12 select-none min-h-screen z-10 overflow-hidden">
+  <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-[#364574] via-primary to-[#212529] items-center justify-center p-8 xl:p-12 select-none min-h-screen z-10 overflow-hidden">
     {/* Floating White Particles Effect */}
     <VelzonFloatingParticles />
 
@@ -223,7 +223,7 @@ export const RegisterScreen = ({
     >
       {/* Velzon Header */}
       <div className="text-center space-y-1.5 mb-6">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#405189] text-white shadow-md shadow-[#405189]/25 mb-1">
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-primary text-white shadow-md shadow-primary/25 mb-1">
           <UserPlus className="w-6 h-6 text-amber-400" />
         </div>
         <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
@@ -249,7 +249,7 @@ export const RegisterScreen = ({
             placeholder="John Doe"
             className={cn(
               "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-              fieldErrors.name ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
+              fieldErrors.name ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
             )}
           />
           {fieldErrors.name && (
@@ -273,7 +273,7 @@ export const RegisterScreen = ({
             placeholder="john.doe@company.com"
             className={cn(
               "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-              fieldErrors.email ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
+              fieldErrors.email ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
             )}
           />
           {fieldErrors.email && (
@@ -298,7 +298,7 @@ export const RegisterScreen = ({
             placeholder="johndoe"
             className={cn(
               "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-              fieldErrors.username ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
+              fieldErrors.username ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
             )}
           />
           {fieldErrors.username && (
@@ -323,13 +323,13 @@ export const RegisterScreen = ({
               placeholder="••••••••"
               className={cn(
                 "w-full pl-4 pr-11 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-                fieldErrors.password ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
+                fieldErrors.password ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
               )}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-[#405189] focus:outline-none cursor-pointer transition-colors"
+              className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-primary focus:outline-none cursor-pointer transition-colors"
               title={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -379,7 +379,7 @@ export const RegisterScreen = ({
         <button
           type="submit"
           disabled={isRegistering}
-          className="w-full bg-[#405189] text-white py-3 rounded-lg font-semibold uppercase tracking-wider text-xs hover:bg-[#364574] transition-all shadow-md shadow-[#405189]/20 active:scale-[0.99] mt-3 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full bg-primary text-white py-3 rounded-lg font-semibold uppercase tracking-wider text-xs hover:bg-[#364574] transition-all shadow-md shadow-primary/20 active:scale-[0.99] mt-3 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isRegistering ? (
             <>
@@ -400,7 +400,7 @@ export const RegisterScreen = ({
         <button
           type="button"
           onClick={onBackToLogin}
-          className="text-[#405189] font-semibold hover:text-[#364574] transition-colors ml-1 cursor-pointer hover:underline"
+          className="text-primary font-semibold hover:text-[#364574] transition-colors ml-1 cursor-pointer hover:underline"
         >
           Sign In
         </button>
@@ -438,7 +438,7 @@ export const RegisterScreen = ({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleSuccessModalConfirm}
-              className="px-8 py-2.5 bg-[#405189] hover:bg-[#364574] text-white rounded-md text-sm font-semibold shadow-md transition-all cursor-pointer min-w-[120px] mt-2"
+              className="px-8 py-2.5 bg-primary hover:bg-[#364574] text-white rounded-md text-sm font-semibold shadow-md transition-all cursor-pointer min-w-[120px] mt-2"
             >
               Ke Halaman Login
             </motion.button>
@@ -461,7 +461,7 @@ export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) =>
       {/* Velzon Center Animated Logo Icon */}
       <div className="relative inline-flex items-center justify-center pt-2">
         <motion.div 
-          className="w-16 h-16 rounded-2xl bg-[#405189] text-white flex items-center justify-center shadow-lg shadow-[#405189]/30 relative z-10"
+          className="w-16 h-16 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30 relative z-10"
           animate={{ scale: [1, 1.05, 1] }}
           transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         >
@@ -469,7 +469,7 @@ export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) =>
         </motion.div>
         {/* Pulsing Outer Ring */}
         <motion.div 
-          className="absolute inset-0 rounded-2xl bg-[#405189]/25"
+          className="absolute inset-0 rounded-2xl bg-primary/25"
           animate={{ scale: [1, 1.4, 1], opacity: [0.6, 0, 0.6] }}
           transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         />
@@ -480,9 +480,9 @@ export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) =>
         <h3 className="text-base font-semibold text-slate-800 tracking-tight flex items-center justify-center gap-1.5">
           <span>{loadingText || "Authenticating..."}</span>
           <span className="flex space-x-1">
-            <span className="w-1.5 h-1.5 bg-[#405189] rounded-full animate-bounce" />
-            <span className="w-1.5 h-1.5 bg-[#405189] rounded-full animate-bounce [animation-delay:0.2s]" />
-            <span className="w-1.5 h-1.5 bg-[#405189] rounded-full animate-bounce [animation-delay:0.4s]" />
+            <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
+            <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.2s]" />
+            <span className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.4s]" />
           </span>
         </h3>
         <p className="text-xs text-slate-400 font-medium">
@@ -493,7 +493,7 @@ export const LoginSkeletonState = ({ loadingText }: { loadingText?: string }) =>
       {/* Velzon Smooth Gradient Progress Bar */}
       <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden relative">
         <motion.div 
-          className="bg-gradient-to-r from-amber-400 via-[#3577f1] to-cyan-400 h-full rounded-full"
+          className="bg-gradient-to-r from-amber-400 via-info to-cyan-400 h-full rounded-full"
           animate={{ width: ["10%", "90%", "35%", "95%"] }}
           transition={{ duration: 2.2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         />
@@ -598,7 +598,7 @@ export const LoginScreen = ({
           >
             {/* Velzon Card Header */}
             <div className="text-center space-y-1.5 mb-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#405189] text-white shadow-md shadow-[#405189]/25 mb-1">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-primary text-white shadow-md shadow-primary/25 mb-1">
                 <ShieldCheck className="w-6 h-6 text-amber-400" />
               </div>
               <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
@@ -625,7 +625,7 @@ export const LoginScreen = ({
                   onChange={(e) => handleUsernameChange(e.target.value)}
                   className={cn(
                     "w-full px-4 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-                    fieldErrors.username ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
+                    fieldErrors.username ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
                   )}
                 />
                 {fieldErrors.username && (
@@ -649,13 +649,13 @@ export const LoginScreen = ({
                     onChange={(e) => handlePasswordChange(e.target.value)}
                     className={cn(
                       "w-full pl-4 pr-11 py-3 bg-slate-50 border rounded-lg focus:bg-white focus:ring-2 transition-all outline-none text-sm font-medium text-slate-900 placeholder:text-slate-400",
-                      fieldErrors.password ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-[#405189]/20 focus:border-[#405189]"
+                      fieldErrors.password ? "border-rose-400 focus:ring-rose-500/20 focus:border-rose-600" : "border-slate-200 focus:ring-primary/20 focus:border-primary"
                     )}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-[#405189] focus:outline-none cursor-pointer transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-primary focus:outline-none cursor-pointer transition-colors"
                     title={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -676,7 +676,7 @@ export const LoginScreen = ({
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-300 text-[#405189] focus:ring-[#405189] cursor-pointer"
+                    className="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
                   />
                   <span className="text-xs font-medium text-slate-600">
                     Remember Me
@@ -688,7 +688,7 @@ export const LoginScreen = ({
               <button
                 type="submit"
                 disabled={loading || !username.trim() || !password.trim()}
-                className="w-full bg-[#405189] text-white py-3 rounded-lg font-semibold uppercase tracking-wider text-xs hover:bg-[#364574] transition-all shadow-md shadow-[#405189]/20 active:scale-[0.99] mt-3 flex items-center justify-center gap-2.5 group cursor-pointer disabled:bg-[#405189]/60 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full bg-primary text-white py-3 rounded-lg font-semibold uppercase tracking-wider text-xs hover:bg-[#364574] transition-all shadow-md shadow-primary/20 active:scale-[0.99] mt-3 flex items-center justify-center gap-2.5 group cursor-pointer disabled:bg-primary/60 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 <span>Sign In</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -700,7 +700,7 @@ export const LoginScreen = ({
               <button
                 type="button"
                 onClick={onRegisterClick}
-                className="text-[#405189] font-semibold hover:text-[#364574] transition-colors ml-1 cursor-pointer hover:underline"
+                className="text-primary font-semibold hover:text-[#364574] transition-colors ml-1 cursor-pointer hover:underline"
               >
                 Sign Up
               </button>

@@ -34,7 +34,7 @@ export const SelectField: React.FC<SelectFieldProps> = ({
       )}
       <select
         {...props}
-        className={`w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md focus:border-[#405189] focus:outline-none font-medium text-slate-800 cursor-pointer transition-all ${
+        className={`w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-md focus:border-primary focus:outline-none font-medium text-slate-800 cursor-pointer transition-all ${
           error ? "border-red-300 focus:border-red-400" : ""
         } ${className}`}
       >

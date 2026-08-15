@@ -28,7 +28,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
           exit={{ scale: 0.95, opacity: 0 }}
           className="bg-white border border-slate-200/80 rounded-md p-6 max-w-sm w-full shadow-2xl space-y-4 text-center"
         >
-          <Trash2 className="w-10 h-10 text-[#f06548] mx-auto" />
+          <Trash2 className="w-10 h-10 text-danger mx-auto" />
           <div>
             <h3 className="text-sm font-medium text-slate-800 uppercase tracking-wider">{title}</h3>
             <p className="text-xs text-slate-500 mt-1">
@@ -44,7 +44,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
             </button>
             <button
               onClick={onConfirm}
-              className="flex-1 py-2.5 bg-[#f06548] hover:bg-[#d95338] text-white text-xs font-medium rounded-md cursor-pointer shadow-xs transition-colors"
+              className="flex-1 py-2.5 bg-danger hover:bg-[#d95338] text-white text-xs font-medium rounded-md cursor-pointer shadow-xs transition-colors"
             >
               Ya, Hapus
             </button>

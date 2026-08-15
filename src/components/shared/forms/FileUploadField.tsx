@@ -28,8 +28,8 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
-      <div className="border-2 border-dashed border-slate-200 hover:border-[#405189] rounded-md p-8 text-center space-y-3 transition-colors bg-slate-50/50 cursor-pointer">
-        <Upload className="w-10 h-10 text-[#405189] mx-auto" />
+      <div className="border-2 border-dashed border-slate-200 hover:border-primary rounded-md p-8 text-center space-y-3 transition-colors bg-slate-50/50 cursor-pointer">
+        <Upload className="w-10 h-10 text-primary mx-auto" />
         <div>
           <p className="text-xs font-medium text-slate-700">Upload file</p>
           {helperText && <p className="text-[10px] text-slate-400 mt-1">{helperText}</p>}
@@ -43,7 +43,7 @@ export const FileUploadField: React.FC<FileUploadFieldProps> = ({
         />
         <label
           htmlFor="file_upload_input"
-          className="inline-block px-4 py-2 bg-[#405189]/10 hover:bg-[#405189]/20 text-[#405189] text-xs font-medium rounded-md cursor-pointer transition-colors"
+          className="inline-block px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-medium rounded-md cursor-pointer transition-colors"
         >
           {file ? file.name : "Choose File"}
         </label>

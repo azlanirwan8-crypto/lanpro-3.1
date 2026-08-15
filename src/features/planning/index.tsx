@@ -91,17 +91,17 @@ export const PlanningView: React.FC<PlanningViewProps> = (props) => {
               className={cn(
                 "transition-all duration-200 ease-out select-none",
                 variant === 'card' ? 
-                  "group bg-white p-3 rounded-md border border-slate-200/80 shadow-2xs cursor-pointer hover:border-[#405189]/40 hover:shadow-xs" : 
-                  "group bg-white flex items-center justify-between p-2.5 px-3 rounded-md border border-slate-200/80 shadow-2xs cursor-pointer hover:bg-slate-50/70 hover:border-[#405189]/40",
+                  "group bg-white p-3 rounded-md border border-slate-200/80 shadow-2xs cursor-pointer hover:border-primary/40 hover:shadow-xs" : 
+                  "group bg-white flex items-center justify-between p-2.5 px-3 rounded-md border border-slate-200/80 shadow-2xs cursor-pointer hover:bg-slate-50/70 hover:border-primary/40",
                 task.isBlocked && "ring-1 ring-red-500/50 bg-red-50/10 border-red-200",
-                snapshot.isDragging && "shadow-xl ring-2 ring-[#405189]/20 scale-[1.02] z-50 bg-white border-[#405189]"
+                snapshot.isDragging && "shadow-xl ring-2 ring-primary/20 scale-[1.02] z-50 bg-white border-primary"
               )}
             >
               {variant === 'card' ? (
                 <div className="flex flex-col gap-1.5">
                   <div className="flex justify-between items-center">
                     <div className="flex gap-2 items-center">
-                      <span className="text-[11px] font-mono font-semibold text-[#405189] bg-indigo-50/80 px-1.5 py-0.5 rounded-md border border-indigo-200/60">{task.key}</span>
+                      <span className="text-[11px] font-mono font-semibold text-primary bg-indigo-50/80 px-1.5 py-0.5 rounded-md border border-indigo-200/60">{task.key}</span>
                       {task.priority && <span className={cn("text-[10px] font-medium uppercase tracking-wider", 
                         task.priority === 'Highest' ? 'text-red-600' : 
                         task.priority === 'High' ? 'text-amber-600' : 
@@ -130,7 +130,7 @@ export const PlanningView: React.FC<PlanningViewProps> = (props) => {
                         </div>
                       )}
                     </div>
-                    <span className="text-[10px] font-medium text-[#405189] bg-indigo-50/80 px-2 py-0.5 rounded-md border border-indigo-200/60">
+                    <span className="text-[10px] font-medium text-primary bg-indigo-50/80 px-2 py-0.5 rounded-md border border-indigo-200/60">
                       {task.status}
                     </span>
                   </div>
@@ -138,7 +138,7 @@ export const PlanningView: React.FC<PlanningViewProps> = (props) => {
               ) : (
                 <div className="flex items-center gap-3 w-full">
                   <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                    <span className="text-[11px] font-mono font-semibold text-[#405189] bg-indigo-50/80 px-1.5 py-0.5 rounded-md border border-indigo-200/60 shrink-0">{task.key}</span>
+                    <span className="text-[11px] font-mono font-semibold text-primary bg-indigo-50/80 px-1.5 py-0.5 rounded-md border border-indigo-200/60 shrink-0">{task.key}</span>
                     <h4 className="text-xs font-medium text-slate-800 truncate">{task.title}</h4>
                   </div>
                   <div className="flex items-center gap-2.5 shrink-0">
@@ -196,7 +196,7 @@ export const PlanningView: React.FC<PlanningViewProps> = (props) => {
                 <div className="flex gap-2">
                   <button 
                     onClick={() => setIsNewSprintModalOpen(true)} 
-                    className="h-8 px-3.5 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white rounded-md text-xs font-medium shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                    className="h-8 px-3.5 bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md text-xs font-medium shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>NEW SPRINT</span>

@@ -847,8 +847,8 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                type="button"
                onClick={() => setIsFiltersPanelOpen(prev => !prev)}
                className={cn(
-                  "flex items-center justify-center gap-1.5 px-3 py-2 sm:px-3.5 bg-white border border-slate-200/80 rounded-md text-slate-700 hover:text-[#405189] hover:border-[#405189]/40 transition-all text-xs font-medium shadow-xs select-none shrink-0 cursor-pointer",
-                  isFiltersPanelOpen && "bg-[#405189]/10 border-[#405189]/30 text-[#405189] hover:bg-[#405189]/15"
+                  "flex items-center justify-center gap-1.5 px-3 py-2 sm:px-3.5 bg-white border border-slate-200/80 rounded-md text-slate-700 hover:text-primary hover:border-primary/40 transition-all text-xs font-medium shadow-xs select-none shrink-0 cursor-pointer",
+                  isFiltersPanelOpen && "bg-primary/10 border-primary/30 text-primary hover:bg-primary/15"
                )}
                title="Toggle Advanced Filtering Panel"
             >
@@ -872,7 +872,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                  
                  if (activeCount > 0) {
                    return (
-                     <span className="ml-1 bg-[#405189] text-white rounded-full px-1.5 py-0.5 flex items-center justify-center text-[9px] font-semibold leading-none">
+                     <span className="ml-1 bg-primary text-white rounded-full px-1.5 py-0.5 flex items-center justify-center text-[9px] font-semibold leading-none">
                        {activeCount}
                      </span>
                    );
@@ -1348,7 +1348,7 @@ export const IssueListView: React.FC<IssueListViewProps> = (props) => {
                <button 
                   onClick={() => createGlobalIssue()}
                   disabled={!quickCreateTitle.trim() || isCreating}
-                  className="w-full sm:w-auto px-4 py-1.5 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] disabled:opacity-50 disabled:bg-[#405189]/50 text-white text-[11px] font-medium rounded-md uppercase tracking-wider transition-all duration-200 shrink-0 flex items-center justify-center gap-1.5 sm:ml-1 shadow-xs cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-1.5 bg-primary hover:bg-primary-hover active:bg-primary-active disabled:opacity-50 disabled:bg-primary/50 text-white text-[11px] font-medium rounded-md uppercase tracking-wider transition-all duration-200 shrink-0 flex items-center justify-center gap-1.5 sm:ml-1 shadow-xs cursor-pointer"
                >
                   {isCreating ? (
                      <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

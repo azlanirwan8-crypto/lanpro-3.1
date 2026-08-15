@@ -96,7 +96,7 @@ export const EditCaseModal: React.FC<EditCaseModalProps> = ({
             </button>
             <button
               onClick={onSubmit}
-              className="px-4 py-2 bg-[#405189] text-white text-xs font-medium rounded-md cursor-pointer shadow-xs active:scale-95"
+              className="px-4 py-2 bg-primary text-white text-xs font-medium rounded-md cursor-pointer shadow-xs active:scale-95"
             >
               Simpan Perubahan
             </button>

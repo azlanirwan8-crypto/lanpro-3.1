@@ -37,7 +37,7 @@ export const AddSuiteModal: React.FC<AddSuiteModalProps> = ({
           className="bg-white border border-slate-200/80 rounded-md p-6 max-w-md w-full shadow-2xl space-y-5"
         >
           <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
-            <div className="w-10 h-10 rounded-md bg-[#405189]/10 text-[#405189] flex items-center justify-center font-medium">
+            <div className="w-10 h-10 rounded-md bg-primary/10 text-primary flex items-center justify-center font-medium">
               <Plus className="w-5 h-5" />
             </div>
             <div>
@@ -57,7 +57,7 @@ export const AddSuiteModal: React.FC<AddSuiteModalProps> = ({
                 required
                 value={suiteName}
                 onChange={(e) => onNameChange(e.target.value)}
-                className="w-full text-xs p-3 bg-slate-50/80 border border-slate-200 rounded-md focus:border-[#405189] focus:ring-2 focus:ring-[#405189]/20 focus:outline-none font-medium text-slate-800"
+                className="w-full text-xs p-3 bg-slate-50/80 border border-slate-200 rounded-md focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none font-medium text-slate-800"
                 placeholder="Masukkan nama dokumen..."
               />
             </div>
@@ -67,7 +67,7 @@ export const AddSuiteModal: React.FC<AddSuiteModalProps> = ({
               <select
                 value={phase}
                 onChange={(e) => onPhaseChange(e.target.value as any)}
-                className="w-full text-xs p-3 bg-slate-50/80 border border-slate-200 rounded-md focus:border-[#405189] focus:outline-none font-medium text-[#405189] cursor-pointer"
+                className="w-full text-xs p-3 bg-slate-50/80 border border-slate-200 rounded-md focus:border-primary focus:outline-none font-medium text-primary cursor-pointer"
               >
                 <option value="SIT">Fase SIT (System Integration Test)</option>
                 <option value="UAT">Fase UAT (User Acceptance Test)</option>
@@ -85,7 +85,7 @@ export const AddSuiteModal: React.FC<AddSuiteModalProps> = ({
               </button>
               <button
                 type="submit"
-                className="px-5 py-2.5 bg-[#405189] hover:bg-[#354473] text-white text-xs font-medium uppercase tracking-wider rounded-md transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
+                className="px-5 py-2.5 bg-primary hover:bg-[#354473] text-white text-xs font-medium uppercase tracking-wider rounded-md transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
               >
                 <Plus className="w-4 h-4" /> Buat Dokumen
               </button>

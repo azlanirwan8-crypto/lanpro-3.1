@@ -2228,7 +2228,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   setSelectedFlowId(null);
                   setCurrentPage(1);
                 }}
-                className="flex items-center gap-1.5 text-xs font-medium text-[#405189] bg-[#405189]/10 hover:bg-[#405189]/15 border border-[#405189]/20 px-3 py-1.5 rounded-md transition-all cursor-pointer shrink-0 shadow-2xs"
+                className="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/15 border border-primary/20 px-3 py-1.5 rounded-md transition-all cursor-pointer shrink-0 shadow-2xs"
               >
                 ← Back to Flowchart List
               </button>
@@ -2266,7 +2266,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-md border border-slate-200/60">
                     <button
                       onClick={(e) => openEditModal(currentFlowMetadata, e)}
-                      className="p-1.5 bg-white hover:bg-slate-50 text-slate-600 hover:text-[#405189] rounded-md transition-all cursor-pointer shadow-2xs border border-slate-200/80"
+                      className="p-1.5 bg-white hover:bg-slate-50 text-slate-600 hover:text-primary rounded-md transition-all cursor-pointer shadow-2xs border border-slate-200/80"
                       title="Edit document metadata"
                     >
                       <Edit3 className="w-4 h-4" />
@@ -3171,7 +3171,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
             {/* Modal Head */}
             <div className="px-5 py-4 bg-white border-b border-slate-200 flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-[#405189]/10 text-[#405189] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
                   <Layers className="w-4 h-4" />
                 </div>
                 <h3 className="font-medium text-sm text-slate-900">
@@ -3199,7 +3199,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   placeholder="Contoh: Penetration Testing Requirements"
                   value={flowName}
                   onChange={(e) => setFlowName(e.target.value)}
-                  className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 transition-all"
+                  className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
                 />
               </div>
 
@@ -3211,7 +3211,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 <select
                   value={flowCategory}
                   onChange={(e) => setFlowCategory(e.target.value)}
-                  className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 focus:bg-white focus:outline-none focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 transition-all"
+                  className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 focus:bg-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
                 >
                   <option value="PRD">PRD (Product Requirements Document)</option>
                   <option value="Panduan">Panduan (Technical Guideline)</option>
@@ -3229,7 +3229,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   placeholder="https://docs.google.com/document/d/... atau URL lain"
                   value={flowExternalUrl}
                   onChange={(e) => setFlowExternalUrl(e.target.value)}
-                  className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 transition-all"
+                  className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
                 />
                 <p className="text-[10px] text-slate-400 leading-normal">
                   Jika memasukkan link Google Docs/Sheets/Slides, sistem akan mengubah tautan secara otomatis ke mode preview interaktif.
@@ -3239,12 +3239,12 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               {/* Link Epic Option integration */}
               <div className="space-y-1.5">
                 <label className="text-[11px] font-medium text-slate-700 flex items-center gap-1.5">
-                  <Workflow className="w-3.5 h-3.5 text-[#405189]" /> Link Epic Terkait
+                  <Workflow className="w-3.5 h-3.5 text-primary" /> Link Epic Terkait
                 </label>
                 <select
                   value={flowEpicId}
                   onChange={(e) => setFlowEpicId(e.target.value)}
-                  className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 focus:bg-white focus:outline-none focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 transition-all"
+                  className="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 focus:bg-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
                 >
                   <option value="">-- Hubungkan dengan Epic --</option>
                   {availableEpics.map((epic) => (
@@ -3264,7 +3264,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   placeholder="Ketikan ringkasan atau batasan proses flowchart ini..."
                   value={flowDescription}
                   onChange={(e) => setFlowDescription(e.target.value)}
-                  className="w-full h-24 text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 transition-all"
+                  className="w-full h-24 text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all"
                 />
               </div>
 
@@ -3279,7 +3279,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#405189] hover:bg-[#364574] text-white font-medium rounded-lg text-xs shadow-xs transition-all"
+                  className="px-4 py-2 bg-primary hover:bg-[#364574] text-white font-medium rounded-lg text-xs shadow-xs transition-all"
                 >
                   {modalMode === "create" ? "Buat Dokumen" : "Simpan Perubahan"}
                 </button>
@@ -3330,7 +3330,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
           <div className="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col border border-slate-200 animate-in zoom-in-95 duration-200">
             <div className="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-md bg-[#405189]/10 text-[#405189] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-md bg-primary/10 text-primary flex items-center justify-center">
                   <FileText className="w-4 h-4" />
                 </div>
                 <h3 className="text-sm font-medium text-slate-900">
@@ -3353,20 +3353,20 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   value={uploadDocName}
                   onChange={(e) => setUploadDocName(e.target.value)}
                   placeholder="Contoh: Spesifikasi Teknis v1.2"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-xs focus:bg-white focus:border-[#405189] focus:ring-1 focus:ring-[#405189]/20 outline-none transition-all placeholder:text-slate-400 text-slate-800 font-medium"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-xs focus:bg-white focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all placeholder:text-slate-400 text-slate-800 font-medium"
                 />
               </div>
 
               <div>
                 <label className="block text-[11px] font-medium text-slate-700 mb-1.5">Upload File (Max 5MB)</label>
-                <div className="border border-dashed border-slate-300 rounded-md p-6 flex flex-col items-center justify-center bg-slate-50/50 relative overflow-hidden group hover:border-[#405189] transition-colors">
+                <div className="border border-dashed border-slate-300 rounded-md p-6 flex flex-col items-center justify-center bg-slate-50/50 relative overflow-hidden group hover:border-primary transition-colors">
                   <input 
                     type="file" 
                     onChange={handleDocumentFileChange}
                     accept=".pdf,.doc,.docx,.xls,.xlsx"
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   />
-                  <div className="w-10 h-10 bg-white shadow-2xs border border-slate-200 rounded-full flex items-center justify-center mb-2.5 group-hover:scale-105 transition-all text-[#405189]">
+                  <div className="w-10 h-10 bg-white shadow-2xs border border-slate-200 rounded-full flex items-center justify-center mb-2.5 group-hover:scale-105 transition-all text-primary">
                     <Upload className="w-4 h-4" />
                   </div>
                   <p className="text-xs font-medium text-slate-700 mb-0.5">Pilih atau Seret File Kesini</p>
@@ -3375,7 +3375,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
                   {uploadDocFile && (
                     <div className="mt-3 p-2.5 bg-indigo-50/80 border border-indigo-100 rounded-md w-full flex items-center justify-between">
                       <div className="flex flex-col min-w-0">
-                        <span className="text-xs font-medium text-[#405189] truncate">{uploadDocFile.name}</span>
+                        <span className="text-xs font-medium text-primary truncate">{uploadDocFile.name}</span>
                         <span className="text-[10px] text-slate-500 font-medium">{(uploadDocFile.size / 1024 / 1024).toFixed(2)} MB</span>
                       </div>
                       <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
@@ -3395,7 +3395,7 @@ export const FlowchartView: React.FC<FlowchartViewProps> = ({
               <button
                 onClick={handleSaveDocument}
                 disabled={!uploadDocName || !uploadDocFile}
-                className="px-4 py-2 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] disabled:opacity-50 text-white text-xs font-medium rounded-md transition-all shadow-xs active:scale-95 cursor-pointer"
+                className="px-4 py-2 bg-primary hover:bg-primary-hover active:bg-primary-active disabled:opacity-50 text-white text-xs font-medium rounded-md transition-all shadow-xs active:scale-95 cursor-pointer"
               >
                 Upload & Simpan
               </button>

@@ -49,7 +49,7 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
         {/* Header Title */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-md bg-[#405189]/10 text-[#405189] flex items-center justify-center font-medium">
+            <div className="w-7 h-7 rounded-md bg-primary/10 text-primary flex items-center justify-center font-medium">
               <FileSpreadsheet className="w-3.5 h-3.5" />
             </div>
             <div>
@@ -59,7 +59,7 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
               <p className="text-[9px] text-slate-400 font-medium">Dokumen & Skenario Pengujian</p>
             </div>
           </div>
-          <span className="px-2 py-0.5 bg-[#405189]/10 text-[#405189] text-[9px] font-medium rounded-md">
+          <span className="px-2 py-0.5 bg-primary/10 text-primary text-[9px] font-medium rounded-md">
             {suitesForFilter.length} Modul
           </span>
         </div>
@@ -70,7 +70,7 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
             <select
               value={phaseFilter}
               onChange={(e) => setPhaseFilter(e.target.value as any)}
-              className="w-full py-1.5 px-2.5 bg-slate-50/80 border border-slate-200 rounded-md text-xs font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#405189]/30 focus:border-[#405189] transition-all cursor-pointer"
+              className="w-full py-1.5 px-2.5 bg-slate-50/80 border border-slate-200 rounded-md text-xs font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary transition-all cursor-pointer"
             >
               <option value="ALL">Semua Fase (ALL)</option>
               <option value="SIT">Fase SIT (System Integration Test)</option>
@@ -82,7 +82,7 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
           {canCreate && (
             <button
               onClick={() => setIsAddSuiteOpen(true)}
-              className="px-2.5 py-1.5 bg-[#405189] hover:bg-[#364473] active:bg-[#2d3960] text-white rounded-md shadow-2xs transition-all flex items-center gap-1 text-xs font-medium cursor-pointer shrink-0"
+              className="px-2.5 py-1.5 bg-primary hover:bg-primary-hover active:bg-primary-active text-white rounded-md shadow-2xs transition-all flex items-center gap-1 text-xs font-medium cursor-pointer shrink-0"
               title="Tambah Modul Testing Baru"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -121,8 +121,8 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
                   onClick={() => setSelectedSuiteId(suite.id)}
                   className={`group p-3 rounded-md border transition-all cursor-pointer relative ${
                     isActive
-                      ? "bg-white border-[#405189] border-l-4 border-l-[#405189] shadow-sm ring-1 ring-[#405189]/20"
-                      : "bg-white border-slate-200/80 hover:border-[#405189]/40 hover:shadow-2xs"
+                      ? "bg-white border-primary border-l-4 border-l-primary shadow-sm ring-1 ring-primary/20"
+                      : "bg-white border-slate-200/80 hover:border-primary/40 hover:shadow-2xs"
                   }`}
                 >
                   {/* Action Buttons Top Right (Visible only to users with edit/delete access) */}
@@ -136,7 +136,7 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
                             setSuiteEditName(cleanTitle);
                             setSuiteEditAssignedTo(suite.assignedTo || "");
                           }}
-                          className="text-slate-400 hover:text-[#405189] transition-all p-1 bg-slate-50 hover:bg-indigo-50 rounded-md border border-slate-100"
+                          className="text-slate-400 hover:text-primary transition-all p-1 bg-slate-50 hover:bg-indigo-50 rounded-md border border-slate-100"
                           title="Ubah Dokumen"
                         >
                           <Edit3 className="w-3 h-3" />
@@ -176,7 +176,7 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
                   </div>
 
                   {/* Suite Title (Clean without duplicate phase suffix) */}
-                  <h4 className="text-xs font-medium text-slate-800 mt-1.5 line-clamp-1 group-hover:text-[#405189] transition-colors pr-10">
+                  <h4 className="text-xs font-medium text-slate-800 mt-1.5 line-clamp-1 group-hover:text-primary transition-colors pr-10">
                     {cleanTitle}
                   </h4>
 
@@ -197,19 +197,19 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
                           }
                         }}
                         className={`flex items-center gap-1 px-2 py-0.5 bg-slate-50 rounded-md border border-slate-200/80 transition-all ${
-                          canUpdate ? "cursor-pointer hover:bg-indigo-50/80 hover:border-[#405189]/50" : "cursor-default"
+                          canUpdate ? "cursor-pointer hover:bg-indigo-50/80 hover:border-primary/50" : "cursor-default"
                         }`}
                         title={canUpdate ? "Assign / Ubah PIC Modul" : "PIC Modul Terdaftar"}
                       >
                         {suite.assignedTo ? (
                           <>
                             <UserAvatar uid={suite.assignedTo} members={projectMembers} className="w-3.5 h-3.5 rounded-full" />
-                            <span className="text-[9px] font-medium text-[#405189] truncate max-w-[80px]">
+                            <span className="text-[9px] font-medium text-primary truncate max-w-[80px]">
                               {matchedMember?.displayName?.split(" ")[0] || matchedMember?.username || "PIC"}
                             </span>
                           </>
                         ) : (
-                          <div className="flex items-center gap-1 text-[#405189]">
+                          <div className="flex items-center gap-1 text-primary">
                             <User className="w-2.5 h-2.5" />
                             <span className="text-[8px] font-medium uppercase">All PIC</span>
                           </div>
@@ -228,7 +228,7 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
                             }}
                           />
                           <div className="absolute right-0 bottom-full mb-1.5 w-56 bg-white rounded-md shadow-2xl border border-slate-200 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                            <div className="px-3 py-1 text-[9px] font-medium uppercase tracking-wider text-[#405189] border-b border-slate-100 mb-1">
+                            <div className="px-3 py-1 text-[9px] font-medium uppercase tracking-wider text-primary border-b border-slate-100 mb-1">
                               Assign PIC Modul (Tim Proyek)
                             </div>
                             <button
@@ -236,12 +236,12 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
                                 e.stopPropagation();
                                 handleUpdateSuitePic(suite.id, "");
                               }}
-                              className={`w-full text-left px-3 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-[#405189] transition-colors flex items-center justify-between ${
-                                !suite.assignedTo ? "bg-indigo-50/60 text-[#405189]" : "text-slate-700"
+                              className={`w-full text-left px-3 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors flex items-center justify-between ${
+                                !suite.assignedTo ? "bg-indigo-50/60 text-primary" : "text-slate-700"
                               }`}
                             >
                               <span>Semua PIC Proyek (All Members)</span>
-                              {!suite.assignedTo && <CheckCircle2 className="w-3.5 h-3.5 text-[#405189]" />}
+                              {!suite.assignedTo && <CheckCircle2 className="w-3.5 h-3.5 text-primary" />}
                             </button>
                             <div className="max-h-40 overflow-y-auto custom-scrollbar">
                               {(projectMembers || []).map((m: any) => {
@@ -254,15 +254,15 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
                                       e.stopPropagation();
                                       handleUpdateSuitePic(suite.id, mId);
                                     }}
-                                    className={`w-full text-left px-3 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-[#405189] transition-colors flex items-center justify-between gap-2 ${
-                                      isSelected ? "bg-indigo-50/60 text-[#405189]" : "text-slate-700"
+                                    className={`w-full text-left px-3 py-1.5 text-xs font-medium hover:bg-indigo-50 hover:text-primary transition-colors flex items-center justify-between gap-2 ${
+                                      isSelected ? "bg-indigo-50/60 text-primary" : "text-slate-700"
                                     }`}
                                   >
                                     <div className="flex items-center gap-1.5 truncate">
                                       <UserAvatar uid={mId} members={projectMembers} className="w-4 h-4 shrink-0" />
                                       <span className="truncate">{m.displayName || m.email || m.username}</span>
                                     </div>
-                                    {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-[#405189] shrink-0" />}
+                                    {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" />}
                                   </button>
                                 );
                               })}
@@ -276,7 +276,7 @@ export const QASuiteSidebar: React.FC<QASuiteSidebarProps> = ({
                   {/* Micro Progress Bar */}
                   <div className="w-full h-1 bg-slate-100 rounded-full mt-2 overflow-hidden">
                     <div
-                      className="h-full bg-[#405189] transition-all duration-500 rounded-full"
+                      className="h-full bg-primary transition-all duration-500 rounded-full"
                       style={{ width: `${percent}%` }}
                     />
                   </div>
