@@ -121,6 +121,44 @@ export async function hapusBerkas(namaBerkas: string): Promise<void> {
   }
 }
 
+/**
+ * Membaca isi berkas. Mengembalikan null bila tidak ada.
+ *
+ * Dipakai jalur unduh dokumen. Pada driver s3 berkas ditarik ke memori lalu
+ * dikirim sebagai respons, bukan lewat sendFile — sebab pada object storage
+ * tidak ada jalur berkas lokal yang bisa dikirim.
+ */
+export async function bacaBerkas(namaBerkas: string): Promise<Buffer | null> {
+  if (DRIVER === "s3") {
+    try {
+      const { GetObjectCommand } = await import("@aws-sdk/client-s3");
+      const klien = await ambilKlien();
+      const hasil: any = await klien.send(
+        new GetObjectCommand({ Bucket: S3_BUCKET, Key: namaBerkas })
+      );
+      const potongan: Buffer[] = [];
+      for await (const bagian of hasil.Body as any) potongan.push(Buffer.from(bagian));
+      return Buffer.concat(potongan);
+    } catch {
+      return null;
+    }
+  }
+
+  const jalur = path.join(GLOBAL_UPLOADS_DIR, namaBerkas);
+  // Pastikan hasil join masih di dalam direktori unggahan.
+  if (!jalur.startsWith(GLOBAL_UPLOADS_DIR)) return null;
+  if (!fs.existsSync(jalur)) return null;
+  return fs.readFileSync(jalur);
+}
+
+/** Apakah berkas ada. Pemeriksaan murah untuk jalur yang hanya perlu tahu itu. */
+export async function adaBerkas(namaBerkas: string): Promise<boolean> {
+  if (DRIVER === "s3") return (await bacaBerkas(namaBerkas)) !== null;
+  const jalur = path.join(GLOBAL_UPLOADS_DIR, namaBerkas);
+  if (!jalur.startsWith(GLOBAL_UPLOADS_DIR)) return false;
+  return fs.existsSync(jalur);
+}
+
 /** Ringkasan konfigurasi untuk keperluan diagnostik (tanpa kredensial). */
 export function ringkasanPenyimpanan() {
   return {
