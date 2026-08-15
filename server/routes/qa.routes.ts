@@ -9,6 +9,7 @@ import { validateFileBuffer, sanitizeFilename } from "../../src/lib/fileSecurity
 import db from "../../src/lib/db";
 import { verifyProjectAccess } from "../middleware/rbac";
 import { generateContentWithFallback } from "../services/ai.service";
+import { simpanBerkas } from "../services/storage.service";
 import {
   QA_SCENARIO_REFINEMENT_SCHEMA,
   QA_TEST_CASE_SUGGESTION_SCHEMA,
@@ -74,18 +75,17 @@ export function setupQARoutes(
         executedByUserId: userId,
         executedByName: userName,
         timestamp,
-        notes:
-          notes ||
-          `Status eksekusi diubah menjadi ${executionStatus.toUpperCase()}`,
+        notes: notes || `Status eksekusi diubah menjadi ${executionStatus.toUpperCase()}`,
         evidences: evidences || [],
       };
 
       currentHistory.push(newLog);
 
-      await conn.query(
-        "UPDATE QATestCases SET history = ? WHERE id = ? AND projectId = ?",
-        [JSON.stringify(currentHistory), testCaseId, projectId]
-      );
+      await conn.query("UPDATE QATestCases SET history = ? WHERE id = ? AND projectId = ?", [
+        JSON.stringify(currentHistory),
+        testCaseId,
+        projectId,
+      ]);
 
       try {
         await conn.query(
@@ -134,9 +134,7 @@ export function setupQARoutes(
         res.json({ status: "success", data: rows });
       } catch (error: any) {
         console.error("GET /api/projects/:projectId/qa-test-suites error:", error);
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -164,9 +162,7 @@ export function setupQARoutes(
         [id, project_id, evaluation_notes.trim(), timestamp]
       );
 
-      console.log(
-        `[QA AI FEEDBACK] Saved learning log ${id} for project ${project_id}`
-      );
+      console.log(`[QA AI FEEDBACK] Saved learning log ${id} for project ${project_id}`);
       return res.json({
         status: "success",
         message: "Feedback berhasil disimpan ke dalam log pembelajaran AI.",
@@ -183,164 +179,146 @@ export function setupQARoutes(
   });
 
   // POST: Bulk Upload QA Test Cases from Excel
-  app.post(
-    "/api/v1/qa/test-case/bulk-upload",
-    upload.single("file"),
-    async (req, res) => {
-      let connection;
-      try {
-        const { projectId, phase, uploaderName } = req.body;
-        const file = req.file;
+  app.post("/api/v1/qa/test-case/bulk-upload", upload.single("file"), async (req, res) => {
+    let connection;
+    try {
+      const { projectId, phase, uploaderName } = req.body;
+      const file = req.file;
 
-        if (!projectId || !phase || !file) {
-          return res.status(400).json({
-            status: "error",
-            message: "Missing required fields (projectId, phase, file)",
-          });
-        }
-
-        const fileBuf = fs.readFileSync(file.path);
-        const fileVal = validateFileBuffer(fileBuf, file.originalname);
-        if (!fileVal.valid) {
-          if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
-          return res.status(400).json({
-            status: "error",
-            message:
-              fileVal.error ||
-              "Gagal Mengunggah Dokumen: Format file tidak didukung atau ukuran melebihi batas maksimum (Max 10MB).",
-          });
-        }
-
-        const ExcelJS = require("exceljs");
-        const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.readFile(file.path);
-        const worksheet = workbook.worksheets[0];
-        const data: any[][] = [];
-        worksheet.eachRow({ includeEmpty: true }, (row: any) => {
-          data.push((row.values as any[]).slice(1));
+      if (!projectId || !phase || !file) {
+        return res.status(400).json({
+          status: "error",
+          message: "Missing required fields (projectId, phase, file)",
         });
+      }
 
-        const headers = data[0] as string[];
-        if (!headers || headers.length < 4) {
-          return res.status(400).json({
-            status: "error",
-            message:
-              "Format kolom tidak sesuai standar (Nama Judul, Deskripsi, Hasil Diharapkan, Level)",
-          });
+      const fileBuf = fs.readFileSync(file.path);
+      const fileVal = validateFileBuffer(fileBuf, file.originalname);
+      if (!fileVal.valid) {
+        if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
+        return res.status(400).json({
+          status: "error",
+          message:
+            fileVal.error ||
+            "Gagal Mengunggah Dokumen: Format file tidak didukung atau ukuran melebihi batas maksimum (Max 10MB).",
+        });
+      }
+
+      const ExcelJS = require("exceljs");
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.readFile(file.path);
+      const worksheet = workbook.worksheets[0];
+      const data: any[][] = [];
+      worksheet.eachRow({ includeEmpty: true }, (row: any) => {
+        data.push((row.values as any[]).slice(1));
+      });
+
+      const headers = data[0] as string[];
+      if (!headers || headers.length < 4) {
+        return res.status(400).json({
+          status: "error",
+          message:
+            "Format kolom tidak sesuai standar (Nama Judul, Deskripsi, Hasil Diharapkan, Level)",
+        });
+      }
+
+      const expectedHeaders = ["Nama Judul", "Deskripsi", "Hasil Diharapkan", "Level"];
+      let headerValid = true;
+      for (let i = 0; i < expectedHeaders.length; i++) {
+        if (!headers[i] || headers[i].trim().toLowerCase() !== expectedHeaders[i].toLowerCase()) {
+          headerValid = false;
+          break;
         }
+      }
 
-        const expectedHeaders = [
-          "Nama Judul",
-          "Deskripsi",
-          "Hasil Diharapkan",
-          "Level",
-        ];
-        let headerValid = true;
-        for (let i = 0; i < expectedHeaders.length; i++) {
-          if (
-            !headers[i] ||
-            headers[i].trim().toLowerCase() !==
-              expectedHeaders[i].toLowerCase()
-          ) {
-            headerValid = false;
-            break;
-          }
-        }
+      if (!headerValid) {
+        return res.status(400).json({
+          status: "error",
+          message:
+            "Format kolom tidak sesuai standar (Nama Judul, Deskripsi, Hasil Diharapkan, Level)",
+        });
+      }
 
-        if (!headerValid) {
-          return res.status(400).json({
-            status: "error",
-            message:
-              "Format kolom tidak sesuai standar (Nama Judul, Deskripsi, Hasil Diharapkan, Level)",
-          });
-        }
+      connection = await db.getConnection();
 
-        connection = await db.getConnection();
+      const newSuiteId = `suite-${Date.now()}`;
+      const newSuiteName = `${file.originalname.replace(/\.[^/.]+$/, "")} (${phase})`;
 
-        const newSuiteId = `suite-${Date.now()}`;
-        const newSuiteName = `${file.originalname.replace(
-          /\.[^/.]+$/,
-          ""
-        )} (${phase})`;
+      await connection.query(
+        `INSERT INTO QATestSuites (id, projectId, name, phase, uploadedBy, uploadedAt, fileName)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [
+          newSuiteId,
+          projectId,
+          newSuiteName,
+          phase,
+          uploaderName || "Unknown",
+          new Date().toISOString(),
+          file.originalname,
+        ]
+      );
+
+      let rowNum = 1;
+      const casesToReturn = [];
+      for (let i = 1; i < data.length; i++) {
+        const row = data[i] as any[];
+        if (!row || row.length === 0 || !row[0]) continue;
+
+        const newCaseId = `case-${Date.now()}-${rowNum}`;
+        const newCase = {
+          id: newCaseId,
+          suiteId: newSuiteId,
+          rowNum: rowNum,
+          title: row[0],
+          steps: row[1] || "",
+          expectedResult: row[2] || "",
+          status: "Pending",
+          priority: row[3] || "Medium",
+          commentsList: [],
+          evidences: [],
+        };
+        casesToReturn.push(newCase);
 
         await connection.query(
-          `INSERT INTO QATestSuites (id, projectId, name, phase, uploadedBy, uploadedAt, fileName)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          `INSERT INTO QATestCases (id, projectId, judul, deskripsi, tipeTesting, prioritas, status, steps, history, createdAt, suiteId, rowNum, modulId, commentsList, evidences, expected)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
-            newSuiteId,
+            newCase.id,
             projectId,
-            newSuiteName,
+            newCase.title,
+            newCase.steps,
             phase,
-            uploaderName || "Unknown",
+            newCase.priority,
+            newCase.status,
+            JSON.stringify(newCase.steps),
+            JSON.stringify([]),
             new Date().toISOString(),
-            file.originalname,
+            newSuiteId,
+            newCase.rowNum,
+            newSuiteId,
+            JSON.stringify([]),
+            JSON.stringify([]),
+            newCase.expectedResult,
           ]
         );
-
-        let rowNum = 1;
-        const casesToReturn = [];
-        for (let i = 1; i < data.length; i++) {
-          const row = data[i] as any[];
-          if (!row || row.length === 0 || !row[0]) continue;
-
-          const newCaseId = `case-${Date.now()}-${rowNum}`;
-          const newCase = {
-            id: newCaseId,
-            suiteId: newSuiteId,
-            rowNum: rowNum,
-            title: row[0],
-            steps: row[1] || "",
-            expectedResult: row[2] || "",
-            status: "Pending",
-            priority: row[3] || "Medium",
-            commentsList: [],
-            evidences: [],
-          };
-          casesToReturn.push(newCase);
-
-          await connection.query(
-            `INSERT INTO QATestCases (id, projectId, judul, deskripsi, tipeTesting, prioritas, status, steps, history, createdAt, suiteId, rowNum, modulId, commentsList, evidences, expected)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [
-              newCase.id,
-              projectId,
-              newCase.title,
-              newCase.steps,
-              phase,
-              newCase.priority,
-              newCase.status,
-              JSON.stringify(newCase.steps),
-              JSON.stringify([]),
-              new Date().toISOString(),
-              newSuiteId,
-              newCase.rowNum,
-              newSuiteId,
-              JSON.stringify([]),
-              JSON.stringify([]),
-              newCase.expectedResult,
-            ]
-          );
-          rowNum++;
-        }
-
-        res.status(201).json({
-          status: "success",
-          message: "Bulk upload berhasil",
-          data: {
-            suiteId: newSuiteId,
-            casesCount: casesToReturn.length,
-          },
-        });
-      } catch (error: any) {
-        console.error("POST /api/v1/qa/test-case/bulk-upload error:", error);
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
-      } finally {
-        if (connection) connection.release();
+        rowNum++;
       }
+
+      res.status(201).json({
+        status: "success",
+        message: "Bulk upload berhasil",
+        data: {
+          suiteId: newSuiteId,
+          casesCount: casesToReturn.length,
+        },
+      });
+    } catch (error: any) {
+      console.error("POST /api/v1/qa/test-case/bulk-upload error:", error);
+      res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
+    } finally {
+      if (connection) connection.release();
     }
-  );
+  });
 
   // POST: Create QA Test Suite
   app.post(
@@ -373,9 +351,7 @@ export function setupQARoutes(
         });
       } catch (error: any) {
         console.error("POST /api/projects/:projectId/qa-test-suites error:", error);
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -408,13 +384,8 @@ export function setupQARoutes(
         );
         res.json({ status: "success", message: "Test Suite updated" });
       } catch (error: any) {
-        console.error(
-          "PUT /api/projects/:projectId/qa-test-suites/:id error:",
-          error
-        );
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        console.error("PUT /api/projects/:projectId/qa-test-suites/:id error:", error);
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -432,20 +403,20 @@ export function setupQARoutes(
         connection = await db.getConnection();
         await connection.beginTransaction();
 
-        await connection.query(
-          "DELETE FROM QATestCases WHERE suiteId = ? AND projectId = ?",
-          [id, projectId]
-        );
+        await connection.query("DELETE FROM QATestCases WHERE suiteId = ? AND projectId = ?", [
+          id,
+          projectId,
+        ]);
 
-        await connection.query(
-          "DELETE FROM QATestCases WHERE modulId = ? AND projectId = ?",
-          [id, projectId]
-        );
+        await connection.query("DELETE FROM QATestCases WHERE modulId = ? AND projectId = ?", [
+          id,
+          projectId,
+        ]);
 
-        await connection.query(
-          "DELETE FROM QATestSuites WHERE id = ? AND projectId = ?",
-          [id, projectId]
-        );
+        await connection.query("DELETE FROM QATestSuites WHERE id = ? AND projectId = ?", [
+          id,
+          projectId,
+        ]);
 
         await connection.commit();
         res.json({
@@ -454,13 +425,8 @@ export function setupQARoutes(
         });
       } catch (error: any) {
         if (connection) await connection.rollback();
-        console.error(
-          "DELETE /api/projects/:projectId/qa-test-suites/:id error:",
-          error
-        );
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        console.error("DELETE /api/projects/:projectId/qa-test-suites/:id error:", error);
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -501,9 +467,7 @@ export function setupQARoutes(
         res.json({ status: "success", data: parsed });
       } catch (error: any) {
         console.error("GET /api/projects/:projectId/qa-test-cases error:", error);
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -559,9 +523,7 @@ export function setupQARoutes(
         res.json({ status: "success", message: "Test Case created" });
       } catch (error: any) {
         console.error("POST /api/projects/:projectId/qa-test-cases error:", error);
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -637,9 +599,7 @@ export function setupQARoutes(
         res.json({ status: "success", message: "Test Case updated" });
       } catch (error: any) {
         console.error("PUT /api/projects/:projectId/qa-test-cases/:id error:", error);
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -655,14 +615,8 @@ export function setupQARoutes(
       let connection;
       try {
         const { projectId, id } = req.params;
-        const {
-          comment,
-          commentsList,
-          evidences,
-          status,
-          linkedBugKey,
-          currentUserName,
-        } = req.body;
+        const { comment, commentsList, evidences, status, linkedBugKey, currentUserName } =
+          req.body;
         const file = req.file;
 
         connection = await db.getConnection();
@@ -673,9 +627,7 @@ export function setupQARoutes(
         );
 
         if (existingRows.length === 0) {
-          return res
-            .status(404)
-            .json({ status: "error", message: "Test case tidak ditemukan." });
+          return res.status(404).json({ status: "error", message: "Test case tidak ditemukan." });
         }
 
         const tc = existingRows[0];
@@ -690,9 +642,7 @@ export function setupQARoutes(
         let finalEvidences = [];
         try {
           finalEvidences =
-            typeof tc.evidences === "string"
-              ? JSON.parse(tc.evidences)
-              : tc.evidences || [];
+            typeof tc.evidences === "string" ? JSON.parse(tc.evidences) : tc.evidences || [];
         } catch (e) {
           finalEvidences = [];
         }
@@ -711,15 +661,18 @@ export function setupQARoutes(
           }
 
           const safeName = fileVal.sanitizedName || sanitizeFilename(file.originalname);
-          const newPath = path.join(GLOBAL_UPLOADS_DIR, safeName);
-          fs.renameSync(file.path, newPath);
 
-          const relativePath = `/uploads/${safeName}`;
+          // Bukti QA disimpan lewat lapisan penyimpanan agar bertahan antar
+          // deploy. Berkas sementara multer dibersihkan setelahnya.
+          const relativePath = await simpanBerkas(safeName, fileBuf, file.mimetype);
+          try {
+            if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
+          } catch {
+            /* diabaikan */
+          }
           finalEvidenceUrl = relativePath;
           finalEvidenceName = file.originalname;
-          finalEvidenceType = file.mimetype.startsWith("video/")
-            ? "video"
-            : "image";
+          finalEvidenceType = file.mimetype.startsWith("video/") ? "video" : "image";
 
           finalEvidences.push({
             id: `ev-${Date.now()}-${Math.floor(Math.random() * 1000000)}`,
@@ -732,8 +685,7 @@ export function setupQARoutes(
         let parsedEvidences = finalEvidences;
         if (evidences) {
           try {
-            parsedEvidences =
-              typeof evidences === "string" ? JSON.parse(evidences) : evidences;
+            parsedEvidences = typeof evidences === "string" ? JSON.parse(evidences) : evidences;
           } catch (e) {}
         }
 
@@ -750,9 +702,7 @@ export function setupQARoutes(
         if (commentsList) {
           try {
             parsedCommentsList =
-              typeof commentsList === "string"
-                ? JSON.parse(commentsList)
-                : commentsList;
+              typeof commentsList === "string" ? JSON.parse(commentsList) : commentsList;
           } catch (e) {}
         }
 
@@ -806,13 +756,8 @@ export function setupQARoutes(
           },
         });
       } catch (error: any) {
-        console.error(
-          "POST /api/projects/:projectId/qa-test-cases/:id/save error:",
-          error
-        );
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        console.error("POST /api/projects/:projectId/qa-test-cases/:id/save error:", error);
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -839,9 +784,7 @@ export function setupQARoutes(
             logs = logRows.map((r: any) => ({
               ...r,
               evidences:
-                typeof r.evidences === "string"
-                  ? JSON.parse(r.evidences || "[]")
-                  : r.evidences,
+                typeof r.evidences === "string" ? JSON.parse(r.evidences || "[]") : r.evidences,
             }));
           }
         } catch (e) {}
@@ -864,9 +807,7 @@ export function setupQARoutes(
         res.json({ status: "success", data: logs || [] });
       } catch (error: any) {
         console.error("GET execution-history error:", error);
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -883,9 +824,7 @@ export function setupQARoutes(
         const { projectId, id } = req.params;
         const { status, notes } = req.body;
         if (!status) {
-          return res
-            .status(400)
-            .json({ status: "error", message: "Status required" });
+          return res.status(400).json({ status: "error", message: "Status required" });
         }
 
         connection = await db.getConnection();
@@ -899,11 +838,7 @@ export function setupQARoutes(
 
         if (tcRows.length > 0) {
           const tc = tcRows[0];
-          const userIdStr =
-            req.user?.uid ||
-            req.user?.id ||
-            req.headers["x-user-id"] ||
-            "guest";
+          const userIdStr = req.user?.uid || req.user?.id || req.headers["x-user-id"] || "guest";
 
           let userNameStr = "Tester";
           try {
@@ -912,15 +847,11 @@ export function setupQARoutes(
               [userIdStr, userIdStr]
             );
             if (uRows && uRows.length > 0) {
-              userNameStr =
-                uRows[0].displayName || uRows[0].username || "Tester";
+              userNameStr = uRows[0].displayName || uRows[0].username || "Tester";
             }
           } catch (e) {}
 
-          if (
-            status.toLowerCase() === "failed" &&
-            !tc.linkedBugKey
-          ) {
+          if (status.toLowerCase() === "failed" && !tc.linkedBugKey) {
             const [keyResult]: any = await connection.query(
               "SELECT taskKey FROM Tasks WHERE projectId = ? ORDER BY createdAt DESC LIMIT 1",
               [projectId]
@@ -989,9 +920,7 @@ export function setupQARoutes(
           let evList = [];
           try {
             evList =
-              typeof tc.evidences === "string"
-                ? JSON.parse(tc.evidences)
-                : tc.evidences || [];
+              typeof tc.evidences === "string" ? JSON.parse(tc.evidences) : tc.evidences || [];
           } catch (e) {}
 
           const activeLinkedKey = createdBugKey || tc.linkedBugKey || null;
@@ -1018,13 +947,8 @@ export function setupQARoutes(
           bugKey: createdBugKey,
         });
       } catch (error: any) {
-        console.error(
-          "PATCH /api/projects/:projectId/qa-test-cases/:id/status error:",
-          error
-        );
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        console.error("PATCH /api/projects/:projectId/qa-test-cases/:id/status error:", error);
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -1040,19 +964,14 @@ export function setupQARoutes(
       try {
         const { projectId, id } = req.params;
         connection = await db.getConnection();
-        await connection.query(
-          "DELETE FROM QATestCases WHERE id = ? AND projectId = ?",
-          [id, projectId]
-        );
+        await connection.query("DELETE FROM QATestCases WHERE id = ? AND projectId = ?", [
+          id,
+          projectId,
+        ]);
         res.json({ status: "success", message: "Test Case deleted" });
       } catch (error: any) {
-        console.error(
-          "DELETE /api/projects/:projectId/qa-test-cases/:id error:",
-          error
-        );
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        console.error("DELETE /api/projects/:projectId/qa-test-cases/:id error:", error);
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -1069,9 +988,7 @@ export function setupQARoutes(
         const { projectId } = req.params;
         const testCases = req.body;
         if (!Array.isArray(testCases)) {
-          return res
-            .status(400)
-            .json({ status: "error", message: "Body must be an array" });
+          return res.status(400).json({ status: "error", message: "Body must be an array" });
         }
 
         connection = await db.getConnection();
@@ -1177,9 +1094,7 @@ export function setupQARoutes(
         });
       } catch (error: any) {
         console.error("POST /api/projects/:projectId/qa-test-cases/sync error:", error);
-        res
-          .status(500)
-          .json({ status: "error", message: "Terjadi kesalahan internal server" });
+        res.status(500).json({ status: "error", message: "Terjadi kesalahan internal server" });
       } finally {
         if (connection) connection.release();
       }
@@ -1249,146 +1164,136 @@ Berikan langkah-langkah pengujian (langkah-langkah nyata yang harus dilakukan te
           data: parsedData,
         });
       } catch (error: any) {
-        console.error(
-          "POST /api/projects/:projectId/qa-test-cases/generate-ai error:",
-          error
-        );
+        console.error("POST /api/projects/:projectId/qa-test-cases/generate-ai error:", error);
         res.status(500).json({
           status: "error",
-          message:
-            error.message || "Gagal membuat skenario uji otomatis dengan AI.",
+          message: error.message || "Gagal membuat skenario uji otomatis dengan AI.",
         });
       }
     }
   );
 
   // POST: AI-Powered QA Test Cases Generator (Bulk based on project context)
-  app.post(
-    "/api/v1/projects/:projectId/qa/generate-test-cases-ai",
-    async (req, res) => {
-      let connection;
-      try {
-        const { projectId } = req.params;
-        const { suiteName, suitePhase, existingCases } = req.body || {};
-        const apiKey = process.env.GEMINI_API_KEY;
-        if (!apiKey) {
-          return res.status(400).json({
-            status: "error",
-            message: "Kunci API Gemini tidak dikonfigurasi pada server.",
-          });
-        }
-
-        connection = await db.getConnection();
-
-        const [meetingsPromise, documentsPromise, tasksPromise] = await Promise.all(
-          [
-            connection.query(
-              "SELECT * FROM Meetings WHERE projectId = ? ORDER BY createdAt DESC",
-              [projectId]
-            ),
-            connection.query(
-              "SELECT * FROM Documents WHERE projectId = ? ORDER BY createdAt DESC",
-              [projectId]
-            ),
-            connection.query(
-              "SELECT * FROM Tasks WHERE projectId = ? AND LOWER(status) NOT IN ('done', 'completed', 'closed') ORDER BY createdAt DESC",
-              [projectId]
-            ),
-          ]
-        );
-
-        const meetingsList = (meetingsPromise[0] as any[]) || [];
-        const documentsList = (documentsPromise[0] as any[]) || [];
-        const tasksList = (tasksPromise[0] as any[]) || [];
-
-        const fourteenDaysAgo = new Date();
-        fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
-
-        const itemsToAggregate: { date: Date; text: string }[] = [];
-
-        meetingsList.forEach((m) => {
-          const date = m.createdAt ? new Date(m.createdAt) : new Date();
-          if (date >= fourteenDaysAgo) {
-            const aiSummaryText = m.aiSummary
-              ? typeof m.aiSummary === "string"
-                ? m.aiSummary
-                : JSON.stringify(m.aiSummary)
-              : "";
-            itemsToAggregate.push({
-              date,
-              text: `[MEETING NOTES]\nTitle: ${m.title || ""}\nDescription: ${
-                m.description || ""
-              }\nTranscript: ${m.transcript || ""}\nSummary: ${aiSummaryText}\nCreated At: ${
-                m.createdAt || ""
-              }\n`,
-            });
-          }
+  app.post("/api/v1/projects/:projectId/qa/generate-test-cases-ai", async (req, res) => {
+    let connection;
+    try {
+      const { projectId } = req.params;
+      const { suiteName, suitePhase, existingCases } = req.body || {};
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        return res.status(400).json({
+          status: "error",
+          message: "Kunci API Gemini tidak dikonfigurasi pada server.",
         });
+      }
 
-        documentsList.forEach((doc) => {
-          const date = doc.createdAt ? new Date(doc.createdAt) : new Date();
+      connection = await db.getConnection();
+
+      const [meetingsPromise, documentsPromise, tasksPromise] = await Promise.all([
+        connection.query("SELECT * FROM Meetings WHERE projectId = ? ORDER BY createdAt DESC", [
+          projectId,
+        ]),
+        connection.query("SELECT * FROM Documents WHERE projectId = ? ORDER BY createdAt DESC", [
+          projectId,
+        ]),
+        connection.query(
+          "SELECT * FROM Tasks WHERE projectId = ? AND LOWER(status) NOT IN ('done', 'completed', 'closed') ORDER BY createdAt DESC",
+          [projectId]
+        ),
+      ]);
+
+      const meetingsList = (meetingsPromise[0] as any[]) || [];
+      const documentsList = (documentsPromise[0] as any[]) || [];
+      const tasksList = (tasksPromise[0] as any[]) || [];
+
+      const fourteenDaysAgo = new Date();
+      fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+
+      const itemsToAggregate: { date: Date; text: string }[] = [];
+
+      meetingsList.forEach((m) => {
+        const date = m.createdAt ? new Date(m.createdAt) : new Date();
+        if (date >= fourteenDaysAgo) {
+          const aiSummaryText = m.aiSummary
+            ? typeof m.aiSummary === "string"
+              ? m.aiSummary
+              : JSON.stringify(m.aiSummary)
+            : "";
           itemsToAggregate.push({
             date,
-            text: `[DOCUMENTATION]\nTitle: ${doc.title || ""}\nDescription: ${
-              doc.description || ""
-            }\nType: ${doc.type || ""}\nCreated At: ${doc.createdAt || ""}\n`,
-          });
-        });
-
-        tasksList.forEach((t) => {
-          const date = t.createdAt ? new Date(t.createdAt) : new Date();
-          itemsToAggregate.push({
-            date,
-            text: `[ACTIVE TASK]\nKey: ${t.taskKey || ""}\nTitle: ${
-              t.title || ""
-            }\nDescription: ${t.description || ""}\nAcceptance Criteria: ${
-              t.acceptanceCriteria || ""
-            }\nPriority: ${t.priority || ""}\nStatus: ${t.status || ""}\nCreated At: ${
-              t.createdAt || ""
+            text: `[MEETING NOTES]\nTitle: ${m.title || ""}\nDescription: ${
+              m.description || ""
+            }\nTranscript: ${m.transcript || ""}\nSummary: ${aiSummaryText}\nCreated At: ${
+              m.createdAt || ""
             }\n`,
           });
+        }
+      });
+
+      documentsList.forEach((doc) => {
+        const date = doc.createdAt ? new Date(doc.createdAt) : new Date();
+        itemsToAggregate.push({
+          date,
+          text: `[DOCUMENTATION]\nTitle: ${doc.title || ""}\nDescription: ${
+            doc.description || ""
+          }\nType: ${doc.type || ""}\nCreated At: ${doc.createdAt || ""}\n`,
         });
+      });
 
-        itemsToAggregate.sort((a, b) => b.date.getTime() - a.date.getTime());
+      tasksList.forEach((t) => {
+        const date = t.createdAt ? new Date(t.createdAt) : new Date();
+        itemsToAggregate.push({
+          date,
+          text: `[ACTIVE TASK]\nKey: ${t.taskKey || ""}\nTitle: ${
+            t.title || ""
+          }\nDescription: ${t.description || ""}\nAcceptance Criteria: ${
+            t.acceptanceCriteria || ""
+          }\nPriority: ${t.priority || ""}\nStatus: ${t.status || ""}\nCreated At: ${
+            t.createdAt || ""
+          }\n`,
+        });
+      });
 
-        let aggregatedPrompt = "";
-        const charLimit = 80000;
-        for (const item of itemsToAggregate) {
-          if (aggregatedPrompt.length + item.text.length > charLimit) {
-            break;
-          }
-          aggregatedPrompt += item.text + "\n";
+      itemsToAggregate.sort((a, b) => b.date.getTime() - a.date.getTime());
+
+      let aggregatedPrompt = "";
+      const charLimit = 80000;
+      for (const item of itemsToAggregate) {
+        if (aggregatedPrompt.length + item.text.length > charLimit) {
+          break;
         }
+        aggregatedPrompt += item.text + "\n";
+      }
 
-        if (aggregatedPrompt.trim().length === 0) {
-          aggregatedPrompt =
-            "Tidak ada meeting notes 14 hari terakhir, dokumen, atau task aktif untuk project ini.";
+      if (aggregatedPrompt.trim().length === 0) {
+        aggregatedPrompt =
+          "Tidak ada meeting notes 14 hari terakhir, dokumen, atau task aktif untuk project ini.";
+      }
+
+      let suiteContextPrompt = "";
+      if (suiteName) {
+        suiteContextPrompt = `\n\nKonteks Tambahan (Fokus Utama):\nAnda sedang menambahkan skenario pengujian baru untuk test suite aktif bernama "${suiteName}" (Fase: ${
+          suitePhase || "SIT"
+        }).\n`;
+        if (existingCases && existingCases.length > 0) {
+          suiteContextPrompt += `Skenario pengujian yang SUDAH ada dalam test suite ini adalah:\n${JSON.stringify(
+            existingCases
+          )}\nHarap fokuskan untuk membuat skenario uji pelengkap yang menguji kasus ekstrem (edge cases) atau alur fungsionalitas lain yang belum tercover di atas, tanpa menduplikasi skenario pengujian yang sudah ada.\n`;
         }
+      }
 
-        let suiteContextPrompt = "";
-        if (suiteName) {
-          suiteContextPrompt = `\n\nKonteks Tambahan (Fokus Utama):\nAnda sedang menambahkan skenario pengujian baru untuk test suite aktif bernama "${suiteName}" (Fase: ${
-            suitePhase || "SIT"
-          }).\n`;
-          if (existingCases && existingCases.length > 0) {
-            suiteContextPrompt += `Skenario pengujian yang SUDAH ada dalam test suite ini adalah:\n${JSON.stringify(
-              existingCases
-            )}\nHarap fokuskan untuk membuat skenario uji pelengkap yang menguji kasus ekstrem (edge cases) atau alur fungsionalitas lain yang belum tercover di atas, tanpa menduplikasi skenario pengujian yang sudah ada.\n`;
-          }
-        }
-
-        const ai = new GoogleGenAI({
-          apiKey: apiKey,
-          httpOptions: {
-            headers: {
-              "User-Agent": "aistudio-build",
-            },
+      const ai = new GoogleGenAI({
+        apiKey: apiKey,
+        httpOptions: {
+          headers: {
+            "User-Agent": "aistudio-build",
           },
-        });
+        },
+      });
 
-        const response = await generateContentWithFallback(ai, {
-          model: "gemini-flash-latest",
-          contents: `Anda adalah Principal QA Engineer dan AI Integration Specialist untuk LanPro.
+      const response = await generateContentWithFallback(ai, {
+        model: "gemini-flash-latest",
+        contents: `Anda adalah Principal QA Engineer dan AI Integration Specialist untuk LanPro.
 Berdasarkan data project teragregasi di bawah ini (yang terdiri dari dokumen fungsional, meeting notes terbaru, dan backlog/acceptance criteria aktif), buatlah daftar skenario uji (test cases) yang komprehensif, terstruktur, sistematis, dan siap pakai untuk tim pengujian.
 ${suiteContextPrompt}
 Format keluaran HARUS berupa array JSON yang mematuhi skema berikut secara ketat.
@@ -1397,40 +1302,36 @@ DATA AGREGASI PROJECT:
 ---
 ${aggregatedPrompt}
 ---`,
-          config: {
-            temperature: 0.2,
-            responseMimeType: "application/json",
-            responseSchema: QA_TEST_CASE_SUGGESTION_SCHEMA,
-          },
-        });
+        config: {
+          temperature: 0.2,
+          responseMimeType: "application/json",
+          responseSchema: QA_TEST_CASE_SUGGESTION_SCHEMA,
+        },
+      });
 
-        const responseText = response.text ? response.text.trim() : "[]";
-        let testCases;
-        try {
-          testCases = JSON.parse(responseText);
-        } catch (parseErr) {
-          console.error("JSON parse error in test cases generation:", parseErr);
-          testCases = [];
-        }
-
-        res.json({
-          status: "success",
-          data: testCases,
-        });
-      } catch (error: any) {
-        console.error(
-          "POST /api/v1/projects/:projectId/qa/generate-test-cases-ai error:",
-          error
-        );
-        res.status(500).json({
-          status: "error",
-          message: error.message || "Gagal membuat test case dengan AI.",
-        });
-      } finally {
-        if (connection) connection.release();
+      const responseText = response.text ? response.text.trim() : "[]";
+      let testCases;
+      try {
+        testCases = JSON.parse(responseText);
+      } catch (parseErr) {
+        console.error("JSON parse error in test cases generation:", parseErr);
+        testCases = [];
       }
+
+      res.json({
+        status: "success",
+        data: testCases,
+      });
+    } catch (error: any) {
+      console.error("POST /api/v1/projects/:projectId/qa/generate-test-cases-ai error:", error);
+      res.status(500).json({
+        status: "error",
+        message: error.message || "Gagal membuat test case dengan AI.",
+      });
+    } finally {
+      if (connection) connection.release();
     }
-  );
+  });
 }
 
 export default setupQARoutes;
