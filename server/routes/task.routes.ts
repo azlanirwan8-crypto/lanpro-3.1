@@ -8,45 +8,17 @@ import { broadcastProjectNotification, sendProjectActivityNotification, checkUpc
 import { optimisticLockingConflicts } from "../config/metrics";
 import { GoogleGenAI, Type } from "@google/genai";
 import xss from "xss";
+import { generateContentWithFallback } from "../services/ai.service";
+import {
+  matchesCaller,
+  recordExecutionRunLog,
+  validateTimelineBoundaries,
+  checkUserPermissionBackend,
+} from "../services/task.service";
 
 const router = express.Router();
 
-// True if `val` (a client-supplied id, e.g. senderId/receiverId/userId in a chat or
-// notification request) actually identifies the authenticated caller — checked
-// against both `id` and `uid` since different tables/flows use either as the
-// user-reference value.
-function matchesCaller(reqUser: any, val: any): boolean {
-  if (val === undefined || val === null) return false;
-  return String(val) === String(reqUser?.id) || String(val) === String(reqUser?.uid);
-}
 
-async function recordExecutionRunLog(
-  connection: any,
-  projectId: string,
-  caseId: string,
-  executionStatus: string,
-  linkedIssueKey: string,
-  executedByUserId: string,
-  executedByName: string,
-  evaluationNotes: string,
-  evidences: any[]
-) {
-  const logId = crypto.randomUUID();
-  await connection.query(
-    `INSERT INTO QATestCaseExecutionLogs (id, projectId, caseId, executionStatus, linkedIssueKey, executedByUserId, executedByName, evaluationNotes, evidences)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [logId, projectId, caseId, executionStatus, linkedIssueKey, executedByUserId, executedByName, evaluationNotes, JSON.stringify(evidences || [])]
-  );
-}
-
-async function generateContentWithFallback(ai: any, options: any) {
-  try {
-    return await ai.models.generateContent(options);
-  } catch (err) {
-    const fallbackOptions = { ...options, model: 'gemini-2.5-flash' };
-    return await ai.models.generateContent(fallbackOptions);
-  }
-}
 
   router.get("/api/projects/:projectId/tasks", verifyProjectAccess(['*']), async (req: any, res) => {
     let connection;
@@ -448,110 +420,7 @@ async function generateContentWithFallback(ai: any, options: any) {
     }
   });
 
-async function validateTimelineBoundaries(connection: any, projectId: string, sprintId: string | null, parentId: string | null, startDate: string | null, endDate: string | null) {
-  // 1. Validate against Sprint (Planning) if sprintId is present
-  if (sprintId && (startDate || endDate)) {
-    const [sprintRows]: any = await connection.query("SELECT startDate, endDate, name FROM Sprints WHERE id = ? AND projectId = ?", [sprintId, projectId]);
-    if (sprintRows.length > 0) {
-      const sprint = sprintRows[0];
-      if (sprint.startDate || sprint.endDate) {
-        const sprintStart = sprint.startDate ? new Date(sprint.startDate).getTime() : null;
-        const sprintEnd = sprint.endDate ? new Date(sprint.endDate).getTime() : null;
-        const itemStart = startDate ? new Date(startDate).getTime() : null;
-        const itemEnd = endDate ? new Date(endDate).getTime() : null;
 
-        if (sprintStart && itemStart && itemStart < sprintStart) {
-          return {
-            code: "PLANNING_BOUNDARY_EXCEEDED",
-            message: `Gagal Menyimpan: Tanggal mulai melampaui rentang jadwal Planning induk (${sprint.name}).`
-          };
-        }
-        if (sprintEnd && itemStart && itemStart > sprintEnd) {
-          return {
-            code: "PLANNING_BOUNDARY_EXCEEDED",
-            message: `Gagal Menyimpan: Tanggal mulai melampaui rentang jadwal Planning induk (${sprint.name}).`
-          };
-        }
-        if (sprintStart && itemEnd && itemEnd < sprintStart) {
-          return {
-            code: "PLANNING_BOUNDARY_EXCEEDED",
-            message: `Gagal Menyimpan: Tanggal selesai melampaui rentang jadwal Planning induk (${sprint.name}).`
-          };
-        }
-        if (sprintEnd && itemEnd && itemEnd > sprintEnd) {
-          return {
-            code: "PLANNING_BOUNDARY_EXCEEDED",
-            message: `Gagal Menyimpan: Tanggal selesai melampaui rentang jadwal Planning induk (${sprint.name}).`
-          };
-        }
-      }
-    }
-  }
-
-  // 2. Validate against Parent Epic if parentId is present
-  if (parentId && (startDate || endDate)) {
-    const [parentRows]: any = await connection.query("SELECT startDate, endDate, title FROM Tasks WHERE id = ? AND projectId = ?", [parentId, projectId]);
-    if (parentRows.length > 0) {
-      const parentEpic = parentRows[0];
-      if (parentEpic.startDate || parentEpic.endDate) {
-        const epicStart = parentEpic.startDate ? new Date(parentEpic.startDate).getTime() : null;
-        const epicEnd = parentEpic.endDate ? new Date(parentEpic.endDate).getTime() : null;
-        const itemStart = startDate ? new Date(startDate).getTime() : null;
-        const itemEnd = endDate ? new Date(endDate).getTime() : null;
-
-        if (epicStart && itemStart && itemStart < epicStart) {
-          return {
-            code: "EPIC_TIMELINE_EXCEEDED",
-            message: "Peringatan: Tanggal mulai task tidak boleh lebih awal dari rentang tanggal Epic induk."
-          };
-        }
-        if (epicEnd && itemStart && itemStart > epicEnd) {
-          return {
-            code: "EPIC_TIMELINE_EXCEEDED",
-            message: "Peringatan: Tanggal mulai task tidak boleh melebihi rentang tanggal Epic induk."
-          };
-        }
-        if (epicStart && itemEnd && itemEnd < epicStart) {
-          return {
-            code: "EPIC_TIMELINE_EXCEEDED",
-            message: "Peringatan: Tanggal selesai task tidak boleh lebih awal dari rentang tanggal Epic induk."
-          };
-        }
-        if (epicEnd && itemEnd && itemEnd > epicEnd) {
-          return {
-            code: "EPIC_TIMELINE_EXCEEDED",
-            message: "Peringatan: Tanggal selesai task tidak boleh melebihi rentang tanggal Epic induk."
-          };
-        }
-      }
-    }
-  }
-
-  return null;
-}
-
-const DEFAULT_PERMISSIONS = {
-  admin: { list: { create: true, read: true, update: true, delete: true } },
-  head: { list: { create: false, read: true, update: false, delete: false } },
-  manager: { list: { create: true, read: true, update: true, delete: true } },
-  user: { list: { create: true, read: true, update: true, delete: false } },
-  viewer: { list: { create: false, read: true, update: false, delete: false } },
-};
-
-function checkUserPermissionBackend(role: string, customPermissions: any, action: 'update' | 'delete'): boolean {
-  const userRole = (role || 'viewer').toLowerCase();
-  const roleDefaults = (DEFAULT_PERMISSIONS as any)[userRole] || DEFAULT_PERMISSIONS.viewer;
-  const defaultVal = roleDefaults.list[action];
-
-  if (customPermissions) {
-    const customList = customPermissions.list || customPermissions.issueList;
-    if (customList && customList[action] !== undefined) {
-      return !!customList[action];
-    }
-  }
-
-  return defaultVal;
-}
 
   router.put("/api/projects/:projectId/tasks/:id", authenticateJWT, verifyProjectAccess(['admin', 'manager', 'head', 'developer', 'member']), async (req, res) => {
     let connection;

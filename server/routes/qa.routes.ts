@@ -9,6 +9,10 @@ import { validateFileBuffer, sanitizeFilename } from "../../src/lib/fileSecurity
 import db from "../../src/lib/db";
 import { verifyProjectAccess } from "../middleware/rbac";
 import { generateContentWithFallback } from "../services/ai.service";
+import {
+  QA_SCENARIO_REFINEMENT_SCHEMA,
+  QA_TEST_CASE_SUGGESTION_SCHEMA,
+} from "../services/qa-ai.schema";
 
 export function setupQARoutes(
   app: Express,
@@ -1227,46 +1231,7 @@ Berikan langkah-langkah pengujian (langkah-langkah nyata yang harus dilakukan te
           config: {
             temperature: 0.3,
             responseMimeType: "application/json",
-            responseSchema: {
-              type: Type.OBJECT,
-              properties: {
-                deskripsi: {
-                  type: Type.STRING,
-                  description:
-                    "Deskripsi skenario uji yang telah diperbaiki, rapi, dan profesional (dalam Bahasa Indonesia).",
-                },
-                expected: {
-                  type: Type.STRING,
-                  description:
-                    "Hasil akhir yang diharapkan secara keseluruhan dari skenario uji ini (dalam Bahasa Indonesia).",
-                },
-                steps: {
-                  type: Type.ARRAY,
-                  items: {
-                    type: Type.OBJECT,
-                    properties: {
-                      id: {
-                        type: Type.STRING,
-                        description: "Nomor langkah berurutan (misal '1', '2', '3')",
-                      },
-                      action: {
-                        type: Type.STRING,
-                        description:
-                          "Tindakan pengujian yang harus dilakukan oleh tester (dalam Bahasa Indonesia)",
-                      },
-                      expectedResult: {
-                        type: Type.STRING,
-                        description:
-                          "Hasil spesifik yang diharapkan dari tindakan tersebut (dalam Bahasa Indonesia)",
-                      },
-                    },
-                    required: ["id", "action", "expectedResult"],
-                  },
-                  description: "Daftar langkah pengujian berurutan.",
-                },
-              },
-              required: ["deskripsi", "expected", "steps"],
-            },
+            responseSchema: QA_SCENARIO_REFINEMENT_SCHEMA,
           },
         });
 
@@ -1435,55 +1400,7 @@ ${aggregatedPrompt}
           config: {
             temperature: 0.2,
             responseMimeType: "application/json",
-            responseSchema: {
-              type: Type.ARRAY,
-              description: "Daftar rekomendasi test case hasil analisis AI",
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  title: {
-                    type: Type.STRING,
-                    description:
-                      "Judul skenario pengujian singkat dan spesifik",
-                  },
-                  description: {
-                    type: Type.STRING,
-                    description:
-                      "Deskripsi detail mengenai apa yang diuji dan tujuannya",
-                  },
-                  fase: {
-                    type: Type.STRING,
-                    description: "Fase testing (SIT, UAT, atau PTR)",
-                    enum: ["SIT", "UAT", "PTR"],
-                  },
-                  steps: {
-                    type: Type.ARRAY,
-                    items: { type: Type.STRING },
-                    description:
-                      "Daftar langkah-langkah konkret pengujian yang harus dijalankan",
-                  },
-                  expected_result: {
-                    type: Type.STRING,
-                    description:
-                      "Hasil akhir yang diharapkan secara keseluruhan setelah langkah-langkah di atas dijalankan",
-                  },
-                  priority: {
-                    type: Type.STRING,
-                    description:
-                      "Prioritas pengujian (HIGH, MEDIUM, atau LOW)",
-                    enum: ["HIGH", "MEDIUM", "LOW"],
-                  },
-                },
-                required: [
-                  "title",
-                  "description",
-                  "fase",
-                  "steps",
-                  "expected_result",
-                  "priority",
-                ],
-              },
-            },
+            responseSchema: QA_TEST_CASE_SUGGESTION_SCHEMA,
           },
         });
 
